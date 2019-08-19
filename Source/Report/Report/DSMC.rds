@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RptDataSource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="DSMC">
+  <ConnectionProperties>
+    <Extension>SQL</Extension>
+    <ConnectString>Data Source=ADMIN-PC\SERVER;Initial Catalog=Mahajan</ConnectString>
+    <Prompt>Specify a user name and password for data source DSMC:</Prompt>
+  </ConnectionProperties>
+  <DataSourceID>e5c73317-5cbd-4855-aeba-7d0e51bb3dec</DataSourceID>
+</RptDataSource>

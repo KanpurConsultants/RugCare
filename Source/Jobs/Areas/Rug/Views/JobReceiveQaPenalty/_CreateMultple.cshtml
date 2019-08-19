@@ -1,0 +1,227 @@
+﻿@model Model.ViewModel.JobReceiveQAPenaltyListViewModel
+@using Core.Common
+
+<style type="text/css">
+    #tbody {
+        height: 250px;
+        overflow-y: scroll;
+        width: 100%;
+    }
+
+    #gbody-modal {
+        height: 250px;
+        overflow-y: scroll;
+        width: 100%;
+    }
+
+    tbody td {
+        padding: 2px 2px 2px 2px;
+    }
+
+    .textRight {
+        text-align: right;
+    }
+</style>
+
+<div class="modal-content">
+    <div class="modal-header" style="border-bottom: 1px solid #8E8888">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> <span class="glyphicon glyphicon-remove"></span></button>
+        <h3>
+            <span style="font-family: Calibri,sans-serif,Verdana;font-weight:bold" class="black"><span class="glyphicon glyphicon-file black"></span> @ViewBag.DocNo</span>
+        </h3>
+    </div>
+    <div>
+        @using (Html.BeginForm("_CreateMultplePost", "JobReceiveQAPenalty", FormMethod.Post, new { enctype = "multipart/form-data", id = "modform" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.DocTypeId)
+
+            <div class="form-horizontal modal-body">
+
+                <div style="padding-right:15px">
+                    <div class="row">
+
+                        <div class="form-horizontal">
+                            @Html.ValidationSummary(true)
+                            
+
+                            <div class="panel panel-default" id="grid">
+                                <div class="panel-heading headrow" style="background-image: -webkit-linear-gradient(top, #428bca 0%, #428bca 50%);color:white">
+                                    <div class="row grid-head">
+                                        <div class="text-left block" style="width: 5%; ">
+                                            Srl.
+                                        </div>
+                                        <div class="block" style="width: 95%;">
+                                            <div class="row">
+                                                <div class="block" style="width: 40%; ">
+                                                    Reason
+                                                </div>
+                                                <div class="block" style="width: 40%;">
+                                                    Remark
+                                                </div>
+                                                <div class="block" style="width: 15%;">
+                                                    Amount
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="panel-info" id="gbody-modal">
+                                    @{int count = 0;
+                                    }
+
+
+                                   @for (int i = 0; i < Model.JobReceiveQAPenaltyViewModel.Count(); i++)
+                                   {
+                                       count++;
+                                    <div class="row crow" style="margin:0px; padding: 0px;padding-top:5px;padding-bottom:5px;">
+                                        @Html.HiddenFor(m => m.JobReceiveQAPenaltyViewModel[i].JobReceiveQAHeaderId)
+                                        @Html.HiddenFor(m => m.JobReceiveQAPenaltyViewModel[i].JobReceiveQALineId)
+
+                                        
+
+                                        <div class="block" style="width:5%">
+                                            @count
+                                        </div>
+
+                                        <div class="block" style="width:95%">
+                                            <div class="row">
+                                                <div class="block" style="width:40%">
+                                                    @Html.TextBoxFor(m => Model.JobReceiveQAPenaltyViewModel[i].ReasonId, new { @class = "form-control BarCodes" })
+                                                    @Html.ValidationMessageFor(m => Model.JobReceiveQAPenaltyViewModel[i].ReasonId, "", new { @class = "text-danger" })
+                                                </div>
+
+                                                <div class="block" style="width:40%">
+                                                    @Html.TextBoxFor(m => Model.JobReceiveQAPenaltyViewModel[i].Remark, "", new { @class = "form-control" })
+                                                </div>
+
+                                                <div class='block text-right pull-middle' style='width:15%'>
+                                                    @Html.TextBoxFor(m => Model.JobReceiveQAPenaltyViewModel[i].Amount, new { @class = "form-control text-right stockplanQty" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                        <hr style='margin-top:0px;margin-bottom:0px' />
+
+                                       }
+
+
+                                </div>
+                            </div>
+
+
+
+                            <div class="modal-footer " style="padding: 19px 20px 0 20px; border-top:1px solid #8E8888">
+
+                                <button class="btn custom left" name="Command:Edit" type="submit" id="submit"><h2 style="margin:0px"><span class="glyphicon glyphicon-floppy-disk black"></span> </h2></button>
+
+                            </div>
+
+                            
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer " style="padding: 19px 20px 0 20px; border-top:1px solid #8E8888">
+
+
+                </div>
+            </div>
+                                                                }
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+
+        $('.BarCodes').select2({
+            minimumInputLength: 0,
+            multiple: false,
+            placeholder:'Reason',
+            ajax: {
+                url: function () { return '/Rug/JobReceiveQAPenalty/GetReasons/' },
+                dataType: 'json',
+                type: "GET",
+                quietMillis: 500,
+                data: function (term, page) {
+                    return {
+                        pageSize: 20,
+                        pageNum: page,
+                        searchTerm: term,
+                        //filter: $(this).closest('div.row.crow').find('.RefLineId').val()
+                        filter: 448
+                    };
+                },
+                results: function (data, page) {
+                    var more = (page * 20) < data.Total;
+                    return { results: data.Results, more: more };
+                }
+            },
+            initSelection: function (element, callback) {
+
+                var xval = element.val();
+                if (xval != 0) {
+                    $.ajax({
+                        cache: false,
+                        type: "POST",
+                        url: '/ComboHelpList/SetSingleReason',
+                        data: { Ids: element.val() },
+                        success: function (data) {
+                            callback(data);
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            alert('Failed to Retrive Qty' + thrownError);
+                        }
+                    })
+                }
+            }
+
+        });
+
+
+        $(':submit').click(function () {
+            $('.row.crow.grid-body').each(function () {
+
+                var elem = $(this).find('.BarCodes:first');
+                if (elem)
+                {
+                    var UidName = $(this).find('.UIDName:first');
+                    $(UidName).val($(elem).select2('data').text);
+                }
+            })
+            return;
+
+        })
+
+        var IsSaved = false;
+        var ValidationCount = 0;
+
+        $('form').submit(function (event) {
+
+            if (!IsSaved) {
+                if (!ValidateData()) {
+                    return false;
+                }
+                IsSaved = true;
+                return IsSaved;
+            }
+            else {
+                return false;
+            }
+
+
+        });
+
+        function ValidateData() {
+            var TempValue;
+            var ValidationMessage="";
+            return  (ValidationMessage=="");
+
+        }
+
+    });
+
+</script>

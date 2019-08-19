@@ -1,0 +1,73 @@
+﻿@model IEnumerable<Model.ViewModels.WeavingRetensionViewModel>
+@using GridMvc.Html;
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!-- modal placeholder-->
+<div id='myModal' class='modal fade in'>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id='myModalContent'></div>
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-default">
+
+    <div class="panel-heading">
+
+        <h3>
+            <span style="font-family: Calibri,sans-serif,Verdana;font-weight:bold" class="black"><span class="glyphicon glyphicon-list black"></span>WeavingRetension List</span>
+        </h3>
+        <hr style="margin-top:0px;margin-bottom:0px" />
+
+        <div class="panel-info">
+        
+            <div class="btn-group">
+                @Html.ActionLink(" ", "Create", "WeavingRetension", null, new { @class = "cbtn btn-circle glyphicon glyphicon-plus toolbar", @title = "Add New", @data_toggle = "tooltip" })
+                @Html.ActionLink(" ", "Delete", "WeavingRetension", null, new { @class = "cbtn btn-circle glyphicon glyphicon-trash toolbar", @title = "Delete", @data_toggle = "tooltip", @id = "DeleteRecord", @data_modal = "" })
+            </div>
+            <div class="btn-group">
+                <a class="cbtn btn-circle glyphicon glyphicon-option-horizontal dropdown-toggle" aria-expanded="false" style="padding-top: 6px;padding-bottom: 6px;" href="#" data-toggle="dropdown" id="dropdownMenu1">
+                </a>
+                <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1">
+                    <li><a href="@Url.Action("History", "WeavingRetension")"><span class="glyphicon glyphicon-user"> </span> Email</a></li>
+                    <li role="separator" class="divider"></li>
+                    <li><a target="_blank" href="@Url.Action("Report", "WeavingRetension")"><span class="glyphicon glyphicon-stats"> </span> Report</a></li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+    <div class="panel-info" style="padding-left:5px;padding-top:2px">
+
+        @Html.Grid(Model).Columns(columns =>
+   {
+       columns.Add(foo => foo.WeavingRetensionId, true);
+       columns.Add(foo => foo.ProductCategoryName).Sortable(true).Titled("Category").Filterable(true);
+       columns.Add(foo => foo.ProductQualityName).Sortable(true).Titled("Quality").Filterable(true);
+       columns.Add(foo => foo.PersonName).Sortable(true).Titled("Person").Filterable(true);
+       columns.Add(foo => foo.RetensionPer).Sortable(true).Titled("%").Filterable(true);
+       columns.Add(foo => foo.MinimumAmount).Sortable(true).Titled("Minimum Amount").Filterable(true);
+       columns.Add(true).RenderValueAs(m => "<a href='/Rug/WeavingRetension/Edit/" + m.WeavingRetensionId + "' hidden class='RecEditurl'></a><a href='/Rug/WeavingRetension/Delete/" + m.WeavingRetensionId + "' hidden class='RecDelurl'></a>");
+   }).WithPaging(25).EmptyText("No records found.")
+    </div>
+</div>
+<script type="text/javascript">
+
+    $('table.grid-table td').dblclick(function () {
+        var $this = $(this);
+        var row = $this.closest("tr");
+        var editid = row.find('[data-name="WeavingRetensionId"]').text();
+        var url = '@Url.Action("Edit", "WeavingRetension")' + "/" + editid;
+        window.location.href = url;
+
+    });
+
+    $(document).ready(function () {
+        enableModalTransitions();
+    })
+
+</script>

@@ -1,0 +1,159 @@
+﻿@model Model.ViewModel.JobReceiveQAPenaltyListViewModel
+@using Core.Common
+
+<style type="text/css">
+    #tbody {
+        height: 250px;
+        overflow-y: scroll;
+        width: 100%;
+    }
+
+    #gbody-modal {
+        height: 250px;
+        overflow-y: scroll;
+        width: 100%;
+    }
+
+    tbody td {
+        padding: 2px 2px 2px 2px;
+    }
+
+    .textRight {
+        text-align: right;
+    }
+</style>
+
+<div class="modal-content">
+    <div class="modal-header" style="border-bottom: 1px solid #8E8888">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> <span class="glyphicon glyphicon-remove"></span></button>
+        <h3>
+            <span style="font-family: Calibri,sans-serif,Verdana;font-weight:bold" class="black"><span class="glyphicon glyphicon-file black"></span> @ViewBag.DocNo</span>
+        </h3>
+    </div>
+    <div>
+        @using (Html.BeginForm("_CreateMultplePost", "JobReceiveQAPenalty", FormMethod.Post, new { enctype = "multipart/form-data", id = "modform" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal modal-body">
+
+                <div style="padding-right:15px">
+                    <div class="row">
+
+                        <div class="form-horizontal">
+                            @Html.ValidationSummary(true)
+                            
+
+                            <div class="panel panel-default" id="grid">
+                                <div class="panel-heading headrow" style="background-image: -webkit-linear-gradient(top, #428bca 0%, #428bca 50%);color:white">
+                                    <div class="row grid-head">
+                                        <div class="text-left block" style="width: 5%; ">
+                                            Srl.
+                                        </div>
+                                        <div class="block" style="width: 95%;">
+                                            <div class="row">
+                                                <div class="block" style="width: 40%; ">
+                                                    Reason
+                                                </div>
+                                                <div class="block" style="width: 40%;">
+                                                    Remark
+                                                </div>
+                                                <div class="block" style="width: 15%;">
+                                                    Amount
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="panel-info" id="gbody-modal">
+                                    @{int count = 0;
+                                    }
+
+
+                                   @for (int i = 0; i < Model.JobReceiveQAPenaltyViewModel.Count(); i++)
+                                   {
+                                       count++;
+                                    <div class="row crow" style="margin:0px; padding: 0px;padding-top:5px;padding-bottom:5px;">
+                                        @Html.HiddenFor(m => m.JobReceiveQAPenaltyViewModel[i].JobReceiveQAHeaderId)
+                                        @Html.HiddenFor(m => m.JobReceiveQAPenaltyViewModel[i].JobReceiveQALineId)
+
+                                        
+
+                                        <div class="block" style="width:5%">
+                                            @count
+                                        </div>
+
+                                        <div class="block" style="width:95%">
+                                            <div class="row">
+                                                <div class="block" style="width:40%">
+                                                    @Html.TextBoxFor(m => Model.JobReceiveQAPenaltyViewModel[i].ReasonName, "", new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(m => Model.JobReceiveQAPenaltyViewModel[i].ReasonName, "", new { @class = "text-danger" })
+                                                </div>
+
+                                                <div class="block" style="width:40%">
+                                                    @Html.TextBoxFor(m => Model.JobReceiveQAPenaltyViewModel[i].Remark, "", new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(m => Model.JobReceiveQAPenaltyViewModel[i].Remark, "", new { @class = "text-danger" })
+                                                </div>
+
+                                                <div class='block text-right pull-middle' style='width:15%'>
+                                                    @Html.TextBoxFor(m => Model.JobReceiveQAPenaltyViewModel[i].Amount, new { @class = "form-control text-right stockplanQty" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                        <hr style='margin-top:0px;margin-bottom:0px' />
+
+                                       }
+
+
+                                </div>
+                            </div>
+
+
+
+                            <div class="modal-footer " style="padding: 19px 20px 0 20px; border-top:1px solid #8E8888">
+
+                                <button class="btn custom left" name="Command:Edit" type="submit" id="submit"><h2 style="margin:0px"><span class="glyphicon glyphicon-floppy-disk black"></span> </h2></button>
+
+                            </div>
+
+                            
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer " style="padding: 19px 20px 0 20px; border-top:1px solid #8E8888">
+
+
+                </div>
+            </div>
+                                                                }
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    CustomSelectFunction($(".ReasonName"), '/ComboHelpList/GetProducts', '/ComboHelpList/SetSingleProducts', ' ', false, 0);
+
+    $('.EditProduct').click(function () {
+        var $Block = $(this).closest('div.row.crow');
+        var ProdId = parseInt($Block.find('input.ProdId').val());
+        var ProdName = $Block.find('input.ProdName').val();
+
+
+        if (ProdId && ProdName) {
+            var ProdElemId = $Block.find('input.ProdId').attr('id');
+            var ProdElemName = $Block.find('input.ProdId').attr('name');
+            $Block.find('input.ProdId').remove();
+            var elem = '<input type="text" class="form-control multiple-modal ProdHelpList ProdId" style="display:inline;margin-bottom:3px" tabindex="-1" id="' + ProdElemId + '" name="' + ProdElemName + '"/>'
+            var Container = $Block.find('div.ReplacableProduct:first');
+            Container.html(elem);
+            CustomSelectFunction($('.ProdHelpList', $Block), '/ComboHelpList/GetProducts', '/ComboHelpList/SetSingleProducts', ' ', false, 0);
+            $('.ProdHelpList', $Block).select2("data", { id: ProdId, text: ProdName });
+        }
+
+    })
+
+
+</script>

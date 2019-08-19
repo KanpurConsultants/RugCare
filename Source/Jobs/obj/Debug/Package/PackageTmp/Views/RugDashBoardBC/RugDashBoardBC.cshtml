@@ -1,0 +1,546 @@
+﻿@{
+    ViewBag.Title = "DashBoard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<link href="@Url.Content("~/bootstrap/css/bootstrap.min.css")" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+<link href="@Url.Content("~//AdminLTE/css/AdminLTE.css")" rel="stylesheet" type="text/css">
+<link href="@Url.Content("~/AdminLTE/dist/css/skins/_all-skins.min.css")" rel="stylesheet" type="text/css">
+<link href="@Url.Content("~/AdminLTE/plugins/iCheck/flat/blue.css")" rel="stylesheet" type="text/css">
+<link href="@Url.Content("~/AdminLTE/plugins/morris/morris.css")" rel="stylesheet" type="text/css">
+<link href="@Url.Content("~/AdminLTE/plugins/jvectormap/jquery-jvectormap-1.2.2.css")" rel="stylesheet" type="text/css">
+<link href="@Url.Content("~/AdminLTE/plugins/datepicker/datepicker3.css")" rel="stylesheet" type="text/css">
+<link href="@Url.Content("~/AdminLTE/plugins/daterangepicker/daterangepicker-bs3.css")" rel="stylesheet" type="text/css">
+<link href="@Url.Content("~/AdminLTE/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css")" rel="stylesheet" type="text/css">
+
+
+
+
+
+<div class="row">
+    @* 1 BlockSummary*@
+    <div class="col-md-3 col-sm-6 col-xs-12" id="SaleOrderBalanceSummary">
+        <div class="info-box">
+            <span class="info-box-icon bg-aqua"><i class="fa fa-bar-chart-o"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">Sale Order Balance</span>
+                <b><span style="font-size: 18px;font-weight:bold" id="SaleOrderBalanceSummary_Area"></span><span style="font-size: 14px;font-weight:bold">  [Sq. Yard]</span> </b><br />
+                <b><span id="SaleOrderBalanceSummary_Qty"></span><span style="font-size:x-small ">  [Pcs]</span> </b>               
+            </div>
+        </div>
+    </div>
+
+    @* 2 BlockSummary*@
+    <div class="col-md-3 col-sm-6 col-xs-12" id="UnExecuteSummary">
+        <div class="info-box">
+            <span class="info-box-icon bg-yellow"><i class="fa fa-briefcase"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">Un-Executed</span>
+                <b><span style="font-size: 18px;font-weight:bold" id="UnExecuteSummary_Area"></span><span style="font-size: 14px;font-weight:bold">  [Sq. Yard]</span> </b><br />
+                <b><span id="UnExecuteSummary_Qty"></span><span style="font-size:x-small ">  [Pcs]</span> </b>  
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="clearfix visible-sm-block"></div>
+    @* 3 BlockSummary*@
+    <div class="col-md-3 col-sm-6 col-xs-12" id="SaleSummary">
+        <div class="info-box">
+            <span class="info-box-icon bg-red"><i class="fa fa-line-chart"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">Current Month Sale</span>
+                <span class="info-box-number" id="SaleInvoiceSummary_Month"><span style="font-size:x-small">  [Month]</span></span>
+                <span id="SaleInvoiceSummary_Week"></span><span style="font-size:x-small">  [Week]</span>
+                <br />
+                <span id="SaleInvoiceSummary_Today"></span><span style="font-size:x-small">  [Today]</span>
+            </div>
+        </div>
+    </div>
+
+    @* 4 BlockSummary*@
+    <div class="col-md-3 col-sm-6 col-xs-12" id="CreditorsSummary">
+        <div class="info-box">
+            <span class="info-box-icon bg-green"><i class="fa fa-user-times"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">Creditors</span>
+                <span class="info-box-number" id="CreditorsAmount"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    @* 1 BlockDetail*@
+    <div class="col-md-6" id="SaleOrderBalanceDetail" style="display:none;">
+        <div class="nav-tabs-custom " style="border-top:solid;border-top-color:#3c8dbc">
+            <ul class="nav nav-tabs pull-right ">
+                <li class="pull-left header"><i class="fa fa-inbox"></i>Sale Order Balance</li>
+                <li class="pull-right header"><button type="button" id="SaleOrderBalanceDetailClose" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button></li>
+                <li class="active"><a href="#SaleOrderBalanceDetailCategoryWise" data-toggle="tab">Category</a></li>
+                <li><a href="#SaleOrderBalanceDetailQualityWise" data-toggle="tab">Quality</a></li>
+                <li><a href="#SaleOrderBalanceDetailBuyerWise" data-toggle="tab">Buyer</a></li>
+            </ul>
+            <div class="tab-content no-padding">
+                <div class="chart tab-pane active" id="SaleOrderBalanceDetailCategoryWise" style="position: relative; height: 300px;"></div>
+                <div class="chart tab-pane" id="SaleOrderBalanceDetailQualityWise" style="position: relative; height: 300px;"></div>
+                <div class="chart tab-pane" id="SaleOrderBalanceDetailBuyerWise" style="position: relative; height: 300px;"></div>
+            </div>
+        </div>
+    </div>
+    @* 2 BlockDetail*@
+    <div class="col-md-6" id="UnExecuteDetail" style="display:none;">
+        <div class="nav-tabs-custom " style="border-top:solid;border-top-color:#3c8dbc">
+            <ul class="nav nav-tabs pull-right ">
+                <li class="pull-left header"><i class="fa fa-inbox"></i>Un Execute Detail</li>
+                <li class="pull-right header"><button type="button" id="UnExecuteDetailClose" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button></li>
+                <li class="active"><a href="#UnExecuteDetailCategoryWise" data-toggle="tab">Category</a></li>
+                <li><a href="#UnExecuteDetailBranchWise" data-toggle="tab">Branch</a></li>
+                <li><a href="#UnExecuteDetailBuyerWise" data-toggle="tab">Buyer</a></li>
+            </ul>
+            <div class="tab-content no-padding">
+                <div class="chart tab-pane active" id="UnExecuteDetailCategoryWise" style="position: relative; height: 300px;"></div>
+                <div class="chart tab-pane" id="UnExecuteDetailBranchWise" style="position: relative; height: 300px;"></div>
+                <div class="chart tab-pane" id="UnExecuteDetailBuyerWise" style="position: relative; height: 300px;"></div>
+            </div>
+        </div>
+    </div>
+    @* 3 BlockDetail*@
+    <div class="col-md-6" id="SaleInvoiceDetail" style="display:none;">
+        <div class="nav-tabs-custom " style="border-top:solid;border-top-color:#3c8dbc">
+            <ul class="nav nav-tabs pull-right ">
+                <li class="pull-left header"><i class="fa fa-inbox"></i>Sale Detail</li>
+                <li class="pull-right header"><button type="button" id="SaleInvoiceDetailClose" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button></li>
+                <li class="active"><a href="#SaleInvoiceDetailCategoryWise" data-toggle="tab">Category</a></li>
+                <li><a href="#SaleInvoiceDetailQualityWise" data-toggle="tab">Quality</a></li>
+                <li><a href="#SaleInvoiceDetailBuyerWise" data-toggle="tab">Buyer</a></li>
+            </ul>
+            <div class="tab-content no-padding">
+                <div class="chart tab-pane active" id="SaleInvoiceDetailCategoryWise" style="position: relative; height: 300px;"></div>
+                <div class="chart tab-pane" id="SaleInvoiceDetailQualityWise" style="position: relative; height: 300px;"></div>
+                <div class="chart tab-pane" id="SaleInvoiceDetailBuyerWise" style="position: relative; height: 300px;"></div>
+            </div>
+        </div>
+    </div>
+
+    @* 4 BlockDetail*@
+    <div class="col-md-6" id="DebtorsDetail" style="display:none">
+        <div class="nav-tabs-custom" style="border-top:solid;border-top-color:#3c8dbc">
+            <ul class="nav nav-tabs pull-right">
+                <li class="pull-left header"><i class="fa fa-inbox"></i> Debtors Detail</li>
+                <li><button type="button" id="DebtorsDetailClose" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button></li>
+            </ul>
+            <div class="tab-content no-padding">
+                <div class="chart tab-pane active" id="DebtorsDetailTable" style="position: relative; height: 300px;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    @* 5 BlockSummary*@
+    <div class="col-md-3 col-sm-6 col-xs-12" id="StockSummary">
+        <div class="info-box">
+            <span class="info-box-icon bg-aqua"><i class="fa fa-cart-plus"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">Stock</span>
+                <b><span style="font-size: 18px;font-weight:bold" id="StockSummary_Area"></span><span style="font-size: 14px;font-weight:bold">  [Sq. Yard]</span> </b><br />
+                <b><span id="StockSummary_Qty"></span><span style="font-size:x-small ">  [Pcs]</span> </b>  
+
+            </div>
+        </div>
+    </div>
+    @* 6 BlockSummary*@
+    <div class="col-md-3 col-sm-6 col-xs-12" id="ToBeIssueSummary">
+        <div class="info-box">
+            <span class="info-box-icon bg-yellow"><i class="fa fa-bank"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">To Be Issue</span>
+                <b><span style="font-size: 18px;font-weight:bold" id="ToBeIssueSummary_Area"></span><span style="font-size: 14px;font-weight:bold">  [Sq. Yard]</span> </b><br />
+                <b><span id="ToBeIssueSummary_Qty"></span><span style="font-size:x-small ">  [Pcs]</span> </b>  
+            </div>
+        </div>
+    </div>
+
+    <div class="clearfix visible-sm-block"></div>
+    @* 7 BlockSummary*@
+    <div class="col-md-3 col-sm-6 col-xs-12" id="ProductionSummary">
+        <div class="info-box">
+            <span class="info-box-icon bg-red"><i class="fa fa-shopping-cart"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">Current Month Production</span>
+                <span class="info-box-number" id="ProductionSummary_Month"><span style="font-size:x-small">  [Month]</span></span>
+                <span id="ProductionSummary_Week"></span><span style="font-size:x-small">  [Week]</span>
+                <br />
+                <span id="ProductionSummary_Today"></span><span style="font-size:x-small">  [Today]</span>
+            </div>
+        </div>
+    </div>
+
+    @* 8 BlockSummary*@
+    <div class="col-md-3 col-sm-6 col-xs-12" id="DebtorsSummary">
+        <div class="info-box">
+            <span class="info-box-icon bg-green"><i class="fa fa-user-plus"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">Debtors</span>
+                <span class="info-box-number" id="DebtorsAmount"></span>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+<div class="row">
+    @* 5 BlockDetail*@
+    <div class="col-md-6" id="StockDetail" style="display:none;">
+        <div class="nav-tabs-custom " style="border-top:solid;border-top-color:#3c8dbc">
+            <ul class="nav nav-tabs pull-right ">
+                <li class="pull-left header"><i class="fa fa-inbox"></i>Stock Detail</li>
+                <li class="pull-right header"><button type="button" id="StockDetailClose" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button></li>
+                <li class="active"><a href="#StockDetailCategoryWise" data-toggle="tab">Category</a></li>
+                <li><a href="#StockDetailQualityWise" data-toggle="tab">Quality</a></li>
+                <li><a href="#StockDetailBuyerWise" data-toggle="tab">Buyer</a></li>
+            </ul>
+            <div class="tab-content no-padding">
+                <div class="chart tab-pane active" id="StockDetailCategoryWise" style="position: relative; height: 300px;"></div>
+                <div class="chart tab-pane" id="StockDetailQualityWise" style="position: relative; height: 300px;"></div>
+                <div class="chart tab-pane" id="StockDetailBuyerWise" style="position: relative; height: 300px;"></div>
+            </div>
+        </div>
+    </div>
+    @* 6 BlockDetail*@
+    <div class="col-md-6" id="ToBeIssueDetail" style="display:none;">
+        <div class="nav-tabs-custom " style="border-top:solid;border-top-color:#3c8dbc">
+            <ul class="nav nav-tabs pull-right ">
+                <li class="pull-left header"><i class="fa fa-inbox"></i>To Be Issue Detail</li>
+                <li class="pull-right header"><button type="button" id="ToBeIssueDetailClose" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button></li>
+                <li class="active"><a href="#ToBeIssueDetailCategoryWise" data-toggle="tab">Category</a></li>
+                <li><a href="#ToBeIssueDetailQualityWise" data-toggle="tab">Quality</a></li>
+                <li><a href="#ToBeIssueDetailBuyerWise" data-toggle="tab">Buyer</a></li>
+            </ul>
+            <div class="tab-content no-padding">
+                <div class="chart tab-pane active" id="ToBeIssueDetailCategoryWise" style="position: relative; height: 300px;"></div>
+                <div class="chart tab-pane" id="ToBeIssueDetailQualityWise" style="position: relative; height: 300px;"></div>
+                <div class="chart tab-pane" id="ToBeIssueDetailBuyerWise" style="position: relative; height: 300px;"></div>
+            </div>
+        </div>
+    </div>
+    @* 7 BlockDetail*@
+    <div class="col-md-6" id="ProductionDetail" style="display:none;">
+        <div class="nav-tabs-custom " style="border-top:solid;border-top-color:#3c8dbc">
+            <ul class="nav nav-tabs pull-right ">
+                <li class="pull-left header"><i class="fa fa-inbox"></i>Production Detail</li>
+                <li class="pull-right header"><button type="button" id="ProductionDetailClose" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button></li>
+                <li class="active"><a href="#ProductionDetailCategoryWise" data-toggle="tab">Category</a></li>
+                <li><a href="#ProductionDetailQualityWise" data-toggle="tab">Quality</a></li>
+                <li><a href="#ProductionDetailBuyerWise" data-toggle="tab">Buyer</a></li>
+            </ul>
+            <div class="tab-content no-padding">
+                <div class="chart tab-pane active" id="ProductionDetailCategoryWise" style="position: relative; height: 300px;"></div>
+                <div class="chart tab-pane" id="ProductionDetailQualityWise" style="position: relative; height: 300px;"></div>
+                <div class="chart tab-pane" id="ProductionDetailBuyerWise" style="position: relative; height: 300px;"></div>
+            </div>
+        </div>
+    </div>
+    @* 8 BlockDetail*@
+    <div class="col-md-6" id="CashBalanceDetail" style="display:none">
+        <div class="nav-tabs-custom"style="border-top:solid;border-top-color:#3c8dbc" >
+            <ul class="nav nav-tabs pull-right">
+                <li class="pull-left header"><i class="fa fa-inbox"></i> Cash Balance Detail</li>
+                <li><button type="button" id="CashBalanceDetailClose" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button></li>
+                <li  class="active"><a href="#CashBalanceDetailLedgerAccountWise" data-toggle="tab">Accounts</a></li>
+                <li><a href="#CashBalanceDetailBranchWise" data-toggle="tab">Branch</a></li>
+            </ul>
+            <div class="tab-content no-padding">
+                <div class="chart tab-pane active" id="CashBalanceDetailLedgerAccountWise" style="position: relative; height: 300px;"></div>
+                <div class="chart tab-pane" id="CashBalanceDetailBranchWise" style="position: relative; height: 300px;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="row">
+    @* 9 BlockSummary*@
+    <div class="col-md-3 col-sm-6 col-xs-12" id="OnLoomSummary">
+        <div class="info-box">
+            <span class="info-box-icon bg-aqua"><i class="fa fa-barcode"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">ON LOOM</span>
+                <b><span style="font-size: 18px;font-weight:bold" id="OnLoomSummary_Area"></span><span style="font-size: 14px;font-weight:bold">  [Sq. Yard]</span> </b><br />
+                <b><span id="OnLoomSummary_Qty"></span><span style="font-size:x-small ">  [Pcs]</span> </b>  
+            </div>
+        </div>
+    </div>
+    @* 10 BlockSummary*@
+    <div class="col-md-3 col-sm-6 col-xs-12" id="DyeingOrderBalanceSummary">
+        <div class="info-box">
+            <span class="info-box-icon bg-yellow"><i class="fa fa-briefcase"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">Dyeing Order Balance</span>
+                <b><span style="font-size: 18px;font-weight:bold" id="DyeingOrderBalanceSummary_KG"></span><span style="font-size: 14px;font-weight:bold">  [KG]</span> </b><br />
+            </div>
+        </div>
+    </div>
+    <div class="clearfix visible-sm-block"></div>
+    @* 11 BlockSummary*@
+    <div class="col-md-3 col-sm-6 col-xs-12" id="SaleOrderStatusSummary">
+        <div class="info-box">
+            <span class="info-box-icon bg-red"><i class="fa fa-bar-chart-o"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">Sale Order Status</span>
+                <span style="color:red" id="SOHighRisk"></span><span style="font-size:small ; color : red">  [High Risk]</span>
+                <br />
+                <span style="color:deeppink" id="SOLowRisk"></span><span style="font-size:small; color :deeppink">  [Low Risk]</span>
+                <br />
+                <span style="color:green" id="SOOnTime"></span><span style="font-size:small; color : green">  [On Time]</span>
+            </div>
+        </div>
+    </div>
+
+    @* 12 BlockSummary*@
+    <div class="col-md-3 col-sm-6 col-xs-12" id="LoanBalanceSummary">
+        <div class="info-box">
+            <span class="info-box-icon bg-green"><i class="fa fa-briefcase"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">Loan Balance</span>
+                <b><span style="font-size: 18px;font-weight:bold" id="LoanBalanceAmount"></span><span style="font-size: 14px;font-weight:bold">  [INR]</span> </b><br />
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    @* 9 BlockDetail*@
+    <div class="col-md-6" id="OnLoomDetail" style="display:none;">
+        <div class="nav-tabs-custom " style="border-top:solid;border-top-color:#3c8dbc">
+            <ul class="nav nav-tabs pull-right ">
+                <li class="pull-left header"><i class="fa fa-inbox"></i>On Loom Detail</li>
+                <li class="pull-right header"><button type="button" id="OnLoomDetailClose" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button></li>
+                <li class="active"><a href="#OnLoomDetailCategoryWise" data-toggle="tab">Category</a></li>
+                <li><a href="#OnLoomDetailJobWorkerWise" data-toggle="tab">JobWorker</a></li>
+                <li><a href="#OnLoomDetailBuyerWise" data-toggle="tab">Buyer</a></li>
+            </ul>
+            <div class="tab-content no-padding">
+                <div class="chart tab-pane active" id="OnLoomDetailCategoryWise" style="position: relative; height: 300px;"></div>
+                <div class="chart tab-pane" id="OnLoomDetailJobWorkerWise" style="position: relative; height: 300px;"></div>
+                <div class="chart tab-pane" id="OnLoomDetailBuyerWise" style="position: relative; height: 300px;"></div>
+            </div>
+        </div>
+    </div>
+
+
+    @* 10 BlockDetail*@
+    <div class="col-md-6" id="DyeingOrderBalanceDetail" style="display:none;">
+        <div class="nav-tabs-custom " style="border-top:solid;border-top-color:#3c8dbc">
+            <ul class="nav nav-tabs pull-right ">
+                <li class="pull-left header"><i class="fa fa-inbox"></i>Dyeing Order Balance</li>
+                <li class="pull-right header"><button type="button" id="DyeingOrderBalanceDetailClose" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button></li>
+                <li class="active"><a href="#DyeingOrderBalanceDetailProductWise" data-toggle="tab">Product</a></li>
+                <li><a href="#DyeingOrderBalanceDetailMonthWise" data-toggle="tab">Month</a></li>
+                <li><a href="#DyeingOrderBalanceDetailJobWorkerWise" data-toggle="tab">JobWorker</a></li>
+            </ul>
+            <div class="tab-content no-padding">
+                <div class="chart tab-pane active" id="DyeingOrderBalanceDetailProductWise" style="position: relative; height: 300px;"></div>
+                <div class="chart tab-pane" id="DyeingOrderBalanceDetailMonthWise" style="position: relative; height: 300px;"></div>
+                <div class="chart tab-pane" id="DyeingOrderBalanceDetailJobWorkerWise" style="position: relative; height: 300px;"></div>
+            </div>
+        </div>
+    </div>
+
+
+    @* 11 BlockDetail*@
+    <div class="col-md-6" id="WorkshopSaleDetail" style="display:none;">
+        <div class="nav-tabs-custom"style="border-top:solid;border-top-color:#3c8dbc" >
+            <ul class="nav nav-tabs pull-right ">
+                <li class="pull-left header"><i class="fa fa-inbox"></i> Workshop Sale Detail</li>
+                <li class="pull-right header"><button type="button" id="WorkshopSaleDetailClose" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button></li>
+                <li class="active"><a href="#WorkshopSaleDetailProductTypeWise" data-toggle="tab">Type</a></li>
+                <li><a href="#WorkshopSaleDetailProductGroupWise" data-toggle="tab">Group</a></li>
+            </ul>
+            <div class="tab-content no-padding">
+                <div class="chart tab-pane active" id="WorkshopSaleDetailProductTypeWise" style="position: relative; height: 300px;"></div>
+                <div class="chart tab-pane" id="WorkshopSaleDetailProductGroupWise" style="position: relative; height: 300px;"></div>
+            </div>
+        </div>
+    </div>
+
+
+    @* 12 BlockDetail*@
+    <div class="col-md-6" id="LoanBalanceDetail" style="display:none;">
+        <div class="nav-tabs-custom " style="border-top:solid;border-top-color:#3c8dbc">
+            <ul class="nav nav-tabs pull-right ">
+                <li class="pull-left header"><i class="fa fa-inbox"></i>Loan Balance</li>
+                <li class="pull-right header"><button type="button" id="LoanBalanceDetailClose" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button></li>
+                <li class="active"><a href="#LoanBalanceDetailDepartmentWise" data-toggle="tab">Department</a></li>
+                <li><a href="#LoanBalanceDetailMonthWise" data-toggle="tab">Month</a></li>
+                <li><a href="#LoanBalanceDetailLedgerAccountWise" data-toggle="tab">Party</a></li>
+            </ul>
+            <div class="tab-content no-padding">
+                <div class="chart tab-pane active" id="LoanBalanceDetailDepartmentWise" style="position: relative; height: 300px;"></div>
+                <div class="chart tab-pane" id="LoanBalanceDetailMonthWise" style="position: relative; height: 300px;"></div>
+                <div class="chart tab-pane" id="LoanBalanceDetailLedgerAccountWise" style="position: relative; height: 300px;"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="box box-default">
+            <div class="box-header with-border">
+                <h3 class="box-title">Current Month Production (Branch Wise)<span style="font-size:x-small">  [In Sq. Yard]</span></h3>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                        <i class="fa fa-minus"></i>
+                    </button>
+                    <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="chart-responsive">
+                            <canvas id="ProductionPieChart" height="150"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-md-4" id="ProductionPieChartHint">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <i class="fa fa-bar-chart-o"></i>
+                <h3 class="box-title">Sales (Month Wise)<span style="font-size:x-small">  [In Lac USD]</span></h3>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                        <i class="fa fa-minus"></i>
+                    </button>
+                    <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="chart">
+                    <canvas id="SaleInvoiceBarChart" style="height:230px"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="~/AdminLTE/plugins/jQuery/jQuery-2.2.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+<script>
+    $.widget.bridge('uibutton', $.ui.button);
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script src="@Url.Content("~/AdminLTE/plugins/morris/morris.min.js")"></script>
+<script src="@Url.Content("~/AdminLTE/plugins/sparkline/jquery.sparkline.min.js")"></script>
+<script src="@Url.Content("~/AdminLTE/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js")"></script>
+<script src="@Url.Content("~/AdminLTE/plugins/jvectormap/jquery-jvectormap-world-mill-en.js")"></script>
+
+<script src="~/AdminLTE/plugins/flot/js/excanvas.js"></script>
+<script src="~/AdminLTE/plugins/flot/js/jquery.colorhelpers.js"></script>
+<script src="~/AdminLTE/plugins/chartjs/Chart.js"></script>
+
+<script src="@Url.Content("~/AdminLTE/plugins/knob/jquery.knob.js")"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
+<script src="@Url.Content("~/AdminLTE/plugins/daterangepicker/daterangepicker.js")"></script>
+<script src="@Url.Content("~/AdminLTE/plugins/datepicker/bootstrap-datepicker.js")"></script>
+<script src="@Url.Content("~/AdminLTE/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js")"></script>
+<script src="@Url.Content("~/AdminLTE/plugins/slimScroll/jquery.slimscroll.min.js")"></script>
+<script src="@Url.Content("~/AdminLTE/plugins/fastclick/fastclick.js")"></script>
+<script src="@Url.Content("~/AdminLTE/dist/js/app.min.js")"></script>
+
+
+
+
+
+<script src="~/Scripts/RugDashBoardBC.js"></script>
+
+<script src="~/AdminLTE/plugins/Charts/ChartsJs.js"></script>
+
+
+<script type="text/javascript">
+    function Expand_Detail(Summary_DivId, Detail_DivId) {
+        $(Summary_DivId).click(function () {
+            var IsVisibleDiv = $(Detail_DivId).is(":visible");
+            $(Detail_DivId).slideToggle();
+
+            if (IsVisibleDiv == false) {
+                $('html, body').animate({
+                    //scrollTop: $(Detail_DivId).offset().top
+                    'scrollTop': $(Detail_DivId).position().top
+                }, 1000);
+            }
+        });
+    }
+
+    @* 1 BlockExpand*@
+    Expand_Detail('#SaleOrderBalanceSummary', "#SaleOrderBalanceDetail")
+    Expand_Detail('#SaleOrderBalanceDetailClose', "#SaleOrderBalanceDetail")
+
+    @* 2 BlockExpand*@
+    Expand_Detail('#UnExecuteSummary', "#UnExecuteDetail")
+    Expand_Detail('#UnExecuteDetailClose', "#UnExecuteDetail")
+
+
+    @* 3 BlockExpand*@
+    Expand_Detail('#SaleSummary', "#SaleInvoiceDetail")
+    Expand_Detail('#SaleInvoiceDetailClose', "#SaleInvoiceDetail")
+
+    @* 4 BlockExpand*@
+
+
+
+     @* 5 BlockExpand*@
+    Expand_Detail('#StockSummary', "#StockDetail")
+    Expand_Detail('#StockDetailClose', "#StockDetail")
+
+     @* 6 BlockExpand*@
+    Expand_Detail('#ToBeIssueSummary', "#ToBeIssueDetail")
+    Expand_Detail('#ToBeIssueDetailClose', "#ToBeIssueDetail")
+
+    @* 7 BlockExpand*@
+    Expand_Detail('#ProductionSummary', "#ProductionDetail")
+    Expand_Detail('#ProductionDetailClose', "#ProductionDetail")
+
+    @* 8 BlockExpand*@
+
+
+    @* 9 BlockExpand*@
+    Expand_Detail('#OnLoomSummary', "#OnLoomDetail")
+    Expand_Detail('#OnLoomDetailClose', "#OnLoomDetail")
+
+
+    @* 10 BlockExpand*@
+    Expand_Detail('#DyeingOrderBalanceSummary', "#DyeingOrderBalanceDetail")
+    Expand_Detail('#DyeingOrderBalanceDetailClose', "#DyeingOrderBalanceDetail")
+
+
+    @* 11 BlockExpand*@
+
+    @* 12 BlockExpand*@
+    Expand_Detail('#LoanBalanceSummary', "#LoanBalanceDetail")
+    Expand_Detail('#LoanBalanceDetailClose', "#LoanBalanceDetail")
+
+    
+</script>
+
