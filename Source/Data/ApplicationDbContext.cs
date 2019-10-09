@@ -331,6 +331,7 @@ namespace Data.Models
         public DbSet<FinishedProduct> FinishedProduct { get; set; }
         public DbSet<ProductAttributes> ProductAttributes { get; set; }
         public DbSet<BomDetail> BomDetail { get; set; }
+        public DbSet<ProductQualityBomDetail> ProductQualityBomDetail { get; set; }
         public DbSet<ProductCategory> ProductCategory { get; set; }
         public DbSet<ProductCategorySettings> ProductCategorySettings { get; set; }
         public DbSet<ProductCategoryProcessSettings> ProductCategoryProcessSettings { get; set; }

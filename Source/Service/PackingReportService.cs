@@ -13,11 +13,11 @@ namespace Service
     {
         IEnumerable<PackingReportDataViewModel> PackingReportDetail(PackingReportFilterSettings Settings);
         IQueryable<ComboBoxResult> GetCustomSaleOrders(string term);
-        IQueryable<ComboBoxResult> GetPackings(string term);
-        IEnumerable<ComboBoxResult> GetBuyerSpecificationPackings(string term, string PackingHeaderId, string BuyerSpecification3);
-        IEnumerable<ComboBoxResult> GetBuyerSpecification1Packings(string term, string PackingHeaderId, string BuyerSpecification3, string BuyerSpecification);
-        IEnumerable<ComboBoxResult> GetBuyerSpecification2Packings(string term, string PackingHeaderId, string BuyerSpecification3, string BuyerSpecification, string BuyerSpecification1);
-        IEnumerable<ComboBoxResult> GetBuyerSpecification3Packings(string term, string PackingHeaderId);
+        IQueryable<ComboBoxResult> GetPackings(string term, string BuyerId);
+        IEnumerable<ComboBoxResult> GetBuyerSpecificationPackings(string term, string BuyerId, string PackingHeaderId, string BuyerSpecification3);
+        IEnumerable<ComboBoxResult> GetBuyerSpecification1Packings(string term, string BuyerId, string PackingHeaderId, string BuyerSpecification3, string BuyerSpecification);
+        IEnumerable<ComboBoxResult> GetBuyerSpecification2Packings(string term, string BuyerId, string PackingHeaderId, string BuyerSpecification3, string BuyerSpecification, string BuyerSpecification1);
+        IEnumerable<ComboBoxResult> GetBuyerSpecification3Packings(string term, string BuyerId, string PackingHeaderId);
     }
 
     public class PackingReportService : IPackingReportService
@@ -49,7 +49,7 @@ namespace Service
             return list;
         }
 
-        public IQueryable<ComboBoxResult> GetPackings(string term)
+        public IQueryable<ComboBoxResult> GetPackings(string term, string BuyerId)
         {
 
             var list = (from p in db.PackingHeader
@@ -58,6 +58,7 @@ namespace Service
                         join B in db.Persons on p.BuyerId equals B.PersonID into BTable
                         from BTab in BTable.DefaultIfEmpty()
                         where 1 == 1
+                        && (string.IsNullOrEmpty(BuyerId) ? 1 == 1 : (p.BuyerId.ToString().ToLower().Contains(BuyerId.ToLower()) ))
                         && (string.IsNullOrEmpty(term) ? 1 == 1 : (p.DocNo.ToLower().Contains(term.ToLower()) || TYTab.DocumentTypeShortName.ToLower().Contains(term.ToLower()) || BTab.Code.ToLower().Contains(term.ToLower())))
                         group new { p, TYTab, BTab } by new { p.PackingHeaderId } into Result
                         orderby Result.Max(m => m.p.DocNo)
@@ -71,7 +72,7 @@ namespace Service
             return list;
         }
 
-        public IEnumerable<ComboBoxResult> GetBuyerSpecificationPackings(string term, string PackingHeaderId, string BuyerSpecification3)
+        public IEnumerable<ComboBoxResult> GetBuyerSpecificationPackings(string term, string BuyerId, string PackingHeaderId, string BuyerSpecification3)
         {
             string mQry = "";
             mQry = @"SELECT DISTINCT  PB.BuyerSpecification AS Code, PB.BuyerSpecification AS Name
@@ -82,6 +83,11 @@ namespace Service
                     LEFT JOIN web.SaleEnquiryLineExtendeds PB WITH (Nolock) ON PB.SaleEnquiryLineId = SEL.SaleEnquiryLineId 
                     WHERE PB.BuyerSpecification IS NOT NULL ";
 
+            if (BuyerId != "")
+            {
+                mQry = mQry + " AND H.BuyerId IN ( " + BuyerId + " ) ";
+            }
+
             if (PackingHeaderId != "")
             {
                 mQry = mQry + " AND H.PackingHeaderId IN ( " + PackingHeaderId + " ) ";
@@ -90,6 +96,11 @@ namespace Service
             if (BuyerSpecification3 != "")
             {
                 mQry = mQry + " AND PB.BuyerSpecification3 IN (SELECT Items FROM [dbo].[Split] ('" + BuyerSpecification3 + "', ',')) ";
+            }
+
+            if (term != "")
+            {
+                mQry = mQry + " AND PB.BuyerSpecification LIKE '%" + term + "%'";
             }
 
             IEnumerable<PackingReportBuyerSpecificationFilter> DT = db.Database.SqlQuery<PackingReportBuyerSpecificationFilter>(mQry).ToList();
@@ -106,7 +117,7 @@ namespace Service
             return list;
         }
 
-        public IEnumerable<ComboBoxResult> GetBuyerSpecification1Packings(string term, string PackingHeaderId, string BuyerSpecification3, string BuyerSpecification)
+        public IEnumerable<ComboBoxResult> GetBuyerSpecification1Packings(string term, string BuyerId, string PackingHeaderId, string BuyerSpecification3, string BuyerSpecification)
         {
             string mQry = "";
             mQry = @"SELECT DISTINCT  PB.BuyerSpecification1 AS Code, PB.BuyerSpecification1 AS Name
@@ -116,6 +127,11 @@ namespace Service
                     LEFT JOIN web.SaleEnquiryLines SEL WITH (Nolock) ON SEL.SaleEnquiryLineId = SOL.ReferenceDocLineId 
                     LEFT JOIN web.SaleEnquiryLineExtendeds PB WITH (Nolock) ON PB.SaleEnquiryLineId = SEL.SaleEnquiryLineId 
                     WHERE PB.BuyerSpecification1 IS NOT NULL ";
+
+            if (BuyerId != "")
+            {
+                mQry = mQry + " AND H.BuyerId IN ( " + BuyerId + " ) ";
+            }
 
             if (PackingHeaderId != "")
             {
@@ -132,6 +148,11 @@ namespace Service
                 mQry = mQry + " AND PB.BuyerSpecification IN (SELECT Items FROM [dbo].[Split] ('" + BuyerSpecification + "', ',')) ";
             }
 
+            if (term != "")
+            {
+                mQry = mQry + " AND PB.BuyerSpecification1 LIKE '%" + term + "%'";
+            }
+
             IEnumerable<PackingReportBuyerSpecificationFilter> DT = db.Database.SqlQuery<PackingReportBuyerSpecificationFilter>(mQry).ToList();
 
 
@@ -146,7 +167,7 @@ namespace Service
             return list;
         }
 
-        public IEnumerable<ComboBoxResult> GetBuyerSpecification2Packings(string term, string PackingHeaderId, string BuyerSpecification3, string BuyerSpecification, string BuyerSpecification1)
+        public IEnumerable<ComboBoxResult> GetBuyerSpecification2Packings(string term, string BuyerId, string PackingHeaderId, string BuyerSpecification3, string BuyerSpecification, string BuyerSpecification1)
         {
             string mQry = "";
             mQry = @"SELECT DISTINCT  PB.BuyerSpecification2 AS Code, PB.BuyerSpecification2 AS Name
@@ -156,6 +177,11 @@ namespace Service
                     LEFT JOIN web.SaleEnquiryLines SEL WITH (Nolock) ON SEL.SaleEnquiryLineId = SOL.ReferenceDocLineId 
                     LEFT JOIN web.SaleEnquiryLineExtendeds PB WITH (Nolock) ON PB.SaleEnquiryLineId = SEL.SaleEnquiryLineId 
                     WHERE PB.BuyerSpecification2 IS NOT NULL ";
+
+            if (BuyerId != "")
+            {
+                mQry = mQry + " AND H.BuyerId IN ( " + BuyerId + " ) ";
+            }
 
             if (PackingHeaderId != "")
             {
@@ -176,6 +202,12 @@ namespace Service
             {
                 mQry = mQry + " AND PB.BuyerSpecification1 IN (SELECT Items FROM [dbo].[Split] ('" + BuyerSpecification1 + "', ',')) ";
             }
+
+            if (term != "")
+            {
+                mQry = mQry + " AND PB.BuyerSpecification2 LIKE '%" + term + "%'";
+            }
+
             IEnumerable<PackingReportBuyerSpecificationFilter> DT = db.Database.SqlQuery<PackingReportBuyerSpecificationFilter>(mQry).ToList();
 
 
@@ -190,7 +222,7 @@ namespace Service
             return list;
         }
 
-        public IEnumerable<ComboBoxResult> GetBuyerSpecification3Packings(string term, string PackingHeaderId)
+        public IEnumerable<ComboBoxResult> GetBuyerSpecification3Packings(string term, string BuyerId, string PackingHeaderId)
         {
             string mQry = "";
             mQry = @"SELECT DISTINCT  PB.BuyerSpecification3 AS Code, PB.BuyerSpecification3 AS Name
@@ -201,9 +233,19 @@ namespace Service
                     LEFT JOIN web.SaleEnquiryLineExtendeds PB WITH (Nolock) ON PB.SaleEnquiryLineId = SEL.SaleEnquiryLineId 
                     WHERE PB.BuyerSpecification3 IS NOT NULL ";
 
+            if (BuyerId != "")
+            {
+                mQry = mQry + " AND H.BuyerId IN ( " + BuyerId + " ) ";
+            }
+
             if (PackingHeaderId != "")
             {
                 mQry = mQry + " AND H.PackingHeaderId IN ( " + PackingHeaderId + " ) ";
+            }
+
+            if (term != "")
+            {
+                mQry = mQry + " AND PB.BuyerSpecification3 LIKE '%" + term + "%'";
             }
 
             IEnumerable<PackingReportBuyerSpecificationFilter> DT = db.Database.SqlQuery<PackingReportBuyerSpecificationFilter>(mQry).ToList();
@@ -324,9 +366,7 @@ namespace Service
             return SaleOrderInventoryStatusList;
 
         }
-
-
-
+        
 
         public void Dispose()
         {

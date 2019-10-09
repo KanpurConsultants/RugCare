@@ -162,8 +162,14 @@ namespace Jobs.Areas.Rug.Controllers
 
             if (ErrorMsg != "")
             {
-                TempData["CSEXC"] = ErrorMsg;
-                return View("Summary", vm);
+                ModelState.AddModelError("ProcessId", ErrorMsg);
+            }
+
+            if (ErrorMsg != "")
+            {
+                //TempData["CSEXC"] = ErrorMsg;
+                return Json(new { Success = false, Url = ErrorMsg });
+                //return View("Summary", vm);
             }
 
 

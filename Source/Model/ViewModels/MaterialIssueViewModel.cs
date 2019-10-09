@@ -166,6 +166,10 @@ namespace Model.ViewModel
         public int? ProdOrderLineId { get; set; }
         public string ProdOrderLineName { get; set; }
 
+        [Display(Name = "SaleOrderLine")]
+        public int? SaleOrderLineId { get; set; }
+        public string SaleOrderLineName { get; set; }
+
         [MaxLength(50)]
         public string Specification { get; set; }
         public decimal ? Rate { get; set; }

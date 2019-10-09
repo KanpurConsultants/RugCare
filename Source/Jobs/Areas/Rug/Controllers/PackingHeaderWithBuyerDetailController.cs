@@ -492,7 +492,7 @@ namespace Jobs.Areas.Rug.Controllers
                         DocStatus = packingheader.Status,
                     }));
 
-                    return RedirectToAction("Index").Success("Data saved successfully");
+                    return RedirectToAction("Index", new { id = svm.DocTypeId }).Success("Data saved successfully");
                 }
                 #endregion
             }

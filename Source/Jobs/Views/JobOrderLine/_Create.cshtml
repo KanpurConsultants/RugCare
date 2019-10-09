@@ -926,7 +926,7 @@ else
                     cache: false,
                     type: "POST",
                     url: "@(Url.Action("GetUnitConversionDetailJson"))",
-                    data: { prodid: $("#ProductId").val(), UnitId: $("#UnitId").val(), DealUnitId: $("#DealUnitId").val(),JobOrderId:$('#JobOrderHeaderId').val() },
+                    data: { prodid: $("#ProductId").val(), UnitId: $("#UnitId").val(), DealUnitId: $("#DealUnitId").val(),JobOrderId:$('#JobOrderHeaderId').val(), UnitConversionForId:$('#UnitConversionForId').val() },
 
                     success: function (data) {
                         $("#UnitConversionMultiplier").val(data.Value);

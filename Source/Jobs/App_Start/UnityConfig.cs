@@ -842,6 +842,9 @@ namespace Jobs.App_Start
             container.RegisterType<IRepository<BomDetail>, Repository<BomDetail>>();
             container.RegisterType<IBomDetailService, BomDetailService>(new PerRequestLifetimeManager());
 
+            container.RegisterType<IRepository<ProductQualityBomDetail>, Repository<ProductQualityBomDetail>>();
+            container.RegisterType<IProductQualityBomDetailService, ProductQualityBomDetailService>(new PerRequestLifetimeManager());
+
             container.RegisterType<IRepository<ProductProcess>, Repository<ProductProcess>>();
             container.RegisterType<IProductProcessService, ProductProcessService>(new PerRequestLifetimeManager());
 
@@ -2274,6 +2277,7 @@ namespace Jobs.App_Start
             Mapper.CreateMap<RateListLine, RateListLine>();
             Mapper.CreateMap<RateListHeader, RateListHeader>();
             Mapper.CreateMap<UnitConversion, UnitConversion>();
+            Mapper.CreateMap<UnitConversionFor, UnitConversionFor>();
             Mapper.CreateMap<ExcessMaterialSettings, ExcessMaterialSettings>();
             Mapper.CreateMap<MaterialRequestSettings, MaterialRequestSettings>();
             Mapper.CreateMap<RequisitionSetting, RequisitionSetting>();

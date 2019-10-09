@@ -118,7 +118,7 @@ namespace Jobs.Areas.Rug.Controllers
                 }
 
 
-                cmd.CommandTimeout = 400;
+                cmd.CommandTimeout = 1000;
                 SqlDataAdapter sqlDataAapter = new SqlDataAdapter(cmd);
                 sqlDataAapter.SelectCommand.CommandType = CommandType.StoredProcedure;
                 dsRep.EnforceConstraints = false;

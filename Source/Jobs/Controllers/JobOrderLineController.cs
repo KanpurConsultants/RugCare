@@ -1560,6 +1560,7 @@ namespace Jobs.Controllers
 
 
                     templine.SalesTaxGroupProductId = svm.SalesTaxGroupProductId;
+                    templine.UnitConversionForId = svm.UnitConversionForId;
                     templine.DueDate = s.DueDate;
                     templine.ProductId = s.ProductId;
                     templine.ProductUidId = s.ProductUidId;
@@ -2351,7 +2352,19 @@ namespace Jobs.Controllers
             int UnitConversionForIdValue = UnitConversionForId ==null   ? (int)Header.UnitConversionForId : (int)UnitConversionForId ;
             
 			UnitConversion uc = new UnitConversionService(_unitOfWork).GetUnitConversion(prodid, UnitId, UnitConversionForIdValue, DealUnitId);
+            int[] array = new int[3];
+            decimal UnitConversionMultiplier=0;
 
+            array[0] = 10;
+            array[1] = 11;
+            array[2] = 12;
+
+            if (uc == null && UnitId== "PCS" && DealUnitId == "FT" && array.Contains(UnitConversionForIdValue))
+            {
+
+                UnitConversionMultiplier = new UnitConversionService(_unitOfWork).GetCustomUnitConversionMultiplier(prodid, UnitId, UnitConversionForIdValue, DealUnitId);
+
+            }
 
             byte DecimalPlaces = new UnitService(_unitOfWork).Find(DealUnitId).DecimalPlaces;
             string Text;
@@ -2362,6 +2375,11 @@ namespace Jobs.Controllers
             {
                 Text = uc.Multiplier.ToString();
                 Value = uc.Multiplier.ToString();
+            }
+            else if (UnitConversionMultiplier != 0)
+            {
+                Text = UnitConversionMultiplier.ToString();
+                Value = UnitConversionMultiplier.ToString();
             }
             else
             {

@@ -135,6 +135,7 @@ namespace Jobs.Areas.Rug.Controllers
 
                     ProductQuality ExRec = Mapper.Map<ProductQuality>(temp);
 
+                    temp.TermsAndConditions = pt.TermsAndConditions;
                     temp.ProductQualityName = pt.ProductQualityName;
                     temp.LossQty = pt.LossQty;
                     temp.IsActive = pt.IsActive;

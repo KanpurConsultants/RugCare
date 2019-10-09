@@ -1214,33 +1214,9 @@
                     async: false,
                     type: "POST",
                     url: "@(Url.Action("GetSaleOrderLineIdListForProductUidJson"))",
-                    data: { ProductUidId: $("#ProductUidId").val(), PackingHeaderId: $("#PackingHeaderId").val() } ,
+                    data: { ProductUidId: $("#ProductUidId").val(), PackingHeaderId: $("#PackingHeaderId").val(), PackingLineId: $("#PackingLineId").val() } ,
                     success: function (data) {
                         SaleOrderLineId.html('');
-                        if(data.length!=0)
-                        {
-                            $.each(data, function (id, option) {
-                                SaleOrderLineId.append($('<option> </option>').val(option.SaleOrderLineId).html(option.SaleOrderNo));
-                            });
-                        }
-                    },
-                    error: function (xhr, ajaxOptions, thrownError) {
-                        alert('Failed to Retrive Sale Order List.' + thrownError);
-                    }
-                });
-
-
-                $.ajax({
-                    cache: false,
-                    async: false,
-                    type: "POST",
-                    url: "@(Url.Action("GetSaleOrderLineIdListJson"))",
-                    data: { ProductId: $("#ProductId").val(), PackingHeaderId: $("#PackingHeaderId").val(), PackingLineId: $("#PackingLineId").val() },
-                    success: function (data) {
-                        SaleOrderLineId.html('');
-                        //SaleOrderLineId.append($('<option></option>').html('-Please Select-'));
-
-                        //alert($("#ProductId").select2('data').text);
                         if(data.length!=0)
                         {
                             $.each(data, function (id, option) {
@@ -1252,7 +1228,7 @@
                         }
                         else
                         {
-                            //alert("P");
+                            //alert("P1");
                             if ($('#CreateExtraSaleOrder').val().toString().toUpperCase()== "FALSE")
                             {
                                 $('#errormsg').remove();

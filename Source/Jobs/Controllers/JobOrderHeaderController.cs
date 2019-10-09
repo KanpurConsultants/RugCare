@@ -1037,9 +1037,17 @@ namespace Jobs.Controllers
             ViewBag.IndexStatus = IndexType;
             JobOrderHeaderViewModel s = _JobOrderHeaderService.GetJobOrderHeader(id);
 
+            //List<StockProcess> SL = context.StockProcess.Where(m => m.CostCenterId == s.CostCenterId).ToList();
+
+            //if (SL.Count > 0)
+            //{
+            //    s.LockReason = "Material Issued !";
+            //}
+
             if (s.Status != (int)StatusConstants.Drafted)
                 if (new RolePermissionService(_unitOfWork).IsActionAllowed(UserRoles, s.DocTypeId, s.ProcessId, this.ControllerContext.RouteData.Values["controller"].ToString(),"Edit") == false)
                     return RedirectToAction("DetailInformation", new { id = id, IndexType = IndexType }).Warning("You don't have permission to do this task.");
+
 
 
             #region DocTypeTimeLineValidation

@@ -82,6 +82,7 @@ namespace Model.DatabaseViews
         [Key]
         public int SaleOrderLineId { get; set; }
         public decimal BalanceQty { get; set; }
+        public decimal ? SaleOrderPlanBalanceToCancel { get; set; }
         public decimal Rate { get; set; }
         public decimal BalanceAmount { get; set; }
         public int SaleOrderHeaderId { get; set; }

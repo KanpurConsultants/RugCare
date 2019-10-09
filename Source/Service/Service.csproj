@@ -116,6 +116,7 @@
     <Compile Include="AdminSetupService.cs" />
     <Compile Include="AreaService.cs" />
     <Compile Include="BinLocationService.cs" />
+    <Compile Include="ProductQualityBomDetailService.cs" />
     <Compile Include="CasteService.cs" />
     <Compile Include="ChargeGroupPersonCalculationService.cs" />
     <Compile Include="ChargeGroupSettingsService.cs" />

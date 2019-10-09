@@ -703,17 +703,21 @@
             var TempValue;
             var ValidationMessage="";
 
-
+            var Temp =$('#ProductGroupName').val();
+            var Temp1 = Temp.replace(" ", "");
+            var TempProductGroupName = Temp1.replace("-", "");
 
             //Checking for dulicate key value
             if(DocId<=0)
             {
-                TempValue= $('#ProductGroupName').DuplicateCheckForCreate({ name: 'ProductGroup', value: $('#ProductGroupName').val(), doctype: 0 });
+                //TempValue= $('#ProductGroupName').DuplicateCheckForCreate({ name: 'ProductGroup', value: $('#ProductGroupName').val(), doctype: 0 });
+                TempValue= $('#ProductGroupName').DuplicateCheckForCreate({ name: 'ProductGroup', value: TempProductGroupName, doctype: 0 });
                 if (TempValue){ ValidationMessage=$('#ProductGroupName').val() + " already exist <br />";}
             }
             else
             {
-                test = $('#ProductGroupName').DuplicateCheckForEdit({ name: 'ProductGroup', value: $('#ProductGroupName').val(), doctype: 0,headerId:DocId });
+                //test = $('#ProductGroupName').DuplicateCheckForEdit({ name: 'ProductGroup', value: $('#ProductGroupName').val(), doctype: 0,headerId:DocId });
+                test = $('#ProductGroupName').DuplicateCheckForEdit({ name: 'ProductGroup', value: TempProductGroupName, doctype: 0,headerId:DocId });
                 if (TempValue) {ValidationMessage+=$('#ProductGroupName').val() + " already exist <br />";}
             }
             if(TempValue)

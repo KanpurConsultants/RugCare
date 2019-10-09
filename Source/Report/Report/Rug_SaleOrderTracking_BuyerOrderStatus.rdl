@@ -1060,7 +1060,6 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                   </TablixCells>
@@ -6767,6 +6766,9 @@
                   </Group>
                   <SortExpressions>
                     <SortExpression>
+                      <Value>=Fields!Order_Date.Value</Value>
+                    </SortExpression>
+                    <SortExpression>
                       <Value>=Fields!OrderNo.Value</Value>
                     </SortExpression>
                   </SortExpressions>
@@ -6815,7 +6817,7 @@
         <Height>5.75209in</Height>
         <Style />
       </Body>
-      <Width>13.19505in</Width>
+      <Width>13.14045in</Width>
       <Page>
         <PageHeader>
           <Height>0.29458in</Height>

@@ -5,6 +5,15 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<!-- modal placeholder-->
+<div id='myModal' class='modal fade in'>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div id='myModalContent'></div>
+        </div>
+    </div>
+</div>
+
 @using (Html.BeginForm("Post", "ProductQuality", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
@@ -78,8 +87,46 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.TermsAndConditions, "Terms & Conditions", new { @class = "control-label col-md-4 col-sm-2" })
+                            <div class="col-md-7 col-sm-10">
+                                @Html.TextAreaFor(m => m.TermsAndConditions, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.TermsAndConditions, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr />
+                    <div class="row">
+                        <h4 class="col-md-12 black" style="margin-top:15px">
+                            <span class="glyphicon glyphicon-shopping-cart"></span>
+                            1.BOM Detail
+                        </h4>
+                    </div>
+
+                    <div class="panel-info">
+                        <h5 style="padding:5px 0 3px 0;margin:0px;font-weight:bold">
+                            <span class="glyphicon glyphicon-plus-sign"></span>
+                            @Html.ActionLink("Add New Row ", "_Create", "ProductQualityConsumptionLine", new { id = @Model.ProductQualityId }, new { data_modal = "", id = "btnCreate", @class = "toolbar", @title = "Add New", @data_toggle = "tooltip" })
+                        </h5>
+                    </div>
+
+                    <div style="padding-right:15px">
+                        <table class="table table-hover ctable">
+                            <thead id="header">
+                            </thead>
+
+                            <tbody id="Result"></tbody>
+                        </table>
+                    </div>
+
+
+
                 </div>
             </div>
+
+
         </div>
     </div>
 
@@ -94,60 +141,135 @@
             this.value = this.value.toUpperCase() ;
     });
     });
+
+    $(document).ready(function(){
+        enableModalTransitions();
+    })
 </script>
 
 <script type="text/javascript">
-  var IsSaved=false;
-    var ValidationCount=0;
+    var form_clean;
+    $(document).ready(function () {
 
-    $('form').submit(function(event){
-
-        if(!IsSaved)
-        {
-            if(!ValidateData())
-            {
-                return false;
-            }
-            IsSaved=true;
-            return IsSaved;
-        }
-        else
-        {
-            return false;
-        }
-
-
+        //Calling the function to load the table data/ Line information
+        LoadProducts();
     });
 
 
-    function ValidateData() {
-        var DocId=@Model.ProductQualityId;
-        var TempValue;
-        var ValidationMessage="";
+    var id=@Model.ProductQualityId;
+    if(id==null||id==0)
+    {
+        $(document).find('a#btnCreate').removeAttr('href').removeAttr('data-modal');
+    }
 
 
 
-        //Checking for dulicate key value
-        if(DocId<=0)
-        {
-            TempValue= $('#ProductQualityName').DuplicateCheckForCreate({ name: 'ProductQuality', value: $('#ProductQualityName').val(), doctype: 0 });
-            if (TempValue){ ValidationMessage=$('#ProductQualityName').val() + " already exist <br />";}
-        }
-        else
-        {
-            test = $('#ProductQualityName').DuplicateCheckForEdit({ name: 'ProductQuality', value: $('#ProductQualityName').val(), doctype: 0,headerId:DocId });
-            if (TempValue) {ValidationMessage+=$('#ProductQualityName').val() + " already exist <br />";}
-        }
-        if(TempValue)
-        {
-            if($('#validationerrormsg').length==0){
-                $('.panel-info').filter(':eq(1)').before('<div class="alert alert-danger" role="alert" id="validationerrormsg">'+ValidationMessage+'</div>');}
-            else
-            {
-                $('#validationerrormsg').html(ValidationMessage);
+    //Reloading the table contents on modal hide
+    $('#myModal').on('hidden.bs.modal', function () {
+        LoadProducts();
+    });
+
+
+    //To focus on the first element on modal load
+    $('#myModal').on('shown.bs.modal', function () {
+        $("#ProductId").select2("focus");
+    });
+
+
+
+    //Loading the Table data or Line Information
+    function LoadProducts() {
+        var groupId=@Model.ProductQualityId;
+        var link="/Rug/ProductQualityConsumptionLine/IndexContent/"+groupId;
+        $.ajax({
+            url: link,
+            type: "GET",
+            success: function (data) {
+                var row = ""
+                var srno=1;
+                var head="<tr style='background-color:#428bca'>  <th style='width:10px'><input type='hidden'  /></th> <th style='width:10px'>Sr.No</th><th class='center' style='width:50px'>Process</th>  <th class='center' style='width:50px'>Product</th> <th class='center' style='width:50px'>Qty</th>  <th style='width:10px'></th>       <th style='width:10px'></th>  </tr>"
+                if(data.length!=0)
+                {
+                    $.each(data, function (index, item) {
+                        row += "<tr><td><input type='hidden' class='id' value='" + item.ProductQualityBomDetailId + "'/></td> <td>"+srno+"</td> <td>" + item.ProcessName + "</td> <td>" + item.ProductName + "</td> <td>" + item.Qty + "</td> <td><a class='rowEditBlue hidden' Modify href='/Rug/ProductQualityConsumptionLine/_Edit/"+item.ProductQualityBomDetailId+"' ></a></td>       <td><a class='glyphicon glyphicon-trash' data-modal='' delete='' href='/Rug/ProductQualityConsumptionLine/_Edit/"+item.ProductQualityBomDetailId+"' ></a></td>  </tr>";
+                        srno++;
+                    });
+
+                    $('#ProductContentName').attr('readonly','true');
+                }
+                else
+                {
+                    row+="<tr><td>No Items Found.</td></tr>";
+                }
+                $("#header").html(head);
+                $("#Result").html(row);
+            },
+            error: function (result) {
+                alert("Error");
             }
-        }
-        return  (ValidationMessage=="");
+        });
+    }
+
+
+    //For Populating Modal PopUp on DoubleClick Of Row
+    $('#Result').on("dblclick",'tr',function(){
+        var text = $(this).find(".id").val();
+        var editurl=$(this).find('a[Modify]').attr('href');
+        $('#myModalContent').load(editurl, function () {
+            //alert('2');
+            $('#myModal').modal({
+                backdrop: 'static',
+                keyboard: true
+            }, 'show');
+
+            bindForm1(this);
+        });
+    });
+
+
+    //For Handling Modal PopUp on Clicking Delete Icon
+    $('#Result').on("click",'a[delete]', function (e) {
+        $('#myModalContent').load(this.href, function () {
+            //alert('2');
+            $('#myModal').modal({
+                backdrop: 'static',
+                keyboard: true
+            }, 'show');
+
+            bindForm1(this);
+        });
+        return false;
+    });
+
+
+    //For posting the data through ajax and render the contents sent back from the server
+    function bindForm1(dialog) {
+        //alert("binding");
+        $('form', dialog).submit(function () {
+            //alert(this.action);
+            $.ajax({
+                url: this.action,
+                type: this.method,
+                data: $(this).serialize(),
+                success: function (result) {
+                    if (result.success) {
+                        $('#myModal').modal('hide');
+                        //Refresh
+                        //location.reload();
+                        //alert('Data Saved');
+                    }else if(!result.success)
+                    {
+                        $('#myModalContent').html(result);
+                        bindForm1();
+                    }
+                    else {
+                        $('#myModalContent').html(result);
+                        bindForm1();
+                    }
+                }
+            });
+            return false;
+        });
 
     }
 

@@ -168,13 +168,14 @@ namespace Jobs.Areas.Rug.Controllers
                                                   join pg in db.ProductGroups on fp.ProductGroupId equals pg.ProductGroupId
                                                   join pd in db.ProductDesigns on fp.ProductDesignId equals pd.ProductDesignId
                                                   join rll in db.RateListLine.Where(i => i.ProductId != null) on new { x = p.ProductId, y = rh.RateListHeaderId }
-                                                 equals new { x = (int)rll.ProductId, y = rll.RateListHeaderId } into rlltable
+                                                  equals new { x = (int)rll.ProductId, y = rll.RateListHeaderId } into rlltable
                                                   from rlltab in rlltable.DefaultIfEmpty()
                                                   where rh.RateListHeaderId == Fvm.RateListHeaderId && (Pending ? rlltab == null : 1 == 1) && (All ? 1 == 1 : fp.IsSample == Sample)
                                                   where rh.RateListHeaderId == Fvm.RateListHeaderId && (Pending ? rlltab == null : 1 == 1) && (All ? 1 == 1 : fp.IsSample == Sample)
                                                   && (string.IsNullOrEmpty(Fvm.ProductCollection) ? 1 == 1 : Collections.Contains(fp.ProductCollectionId.ToString()))
                                                   && (string.IsNullOrEmpty(Fvm.ProductCategory) ? 1 == 1 : Category.Contains(fp.ProductCategoryId.ToString()))
                                                   && rh.DivisionId == fp.DivisionId && fp.IsActive == true
+                                                  && fp.IsConsumptionPcsWise == false
                                                    && (Fvm.DisContinued == "All" ? 1 == 1 : fp.DiscontinuedDate == null)
                                                   group new { pg, fp, rlltab, pcol, pcat, pd, PQ } by pg.ProductGroupId into g
                                                   select new ProductViewModel

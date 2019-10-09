@@ -48,7 +48,7 @@ namespace Model.Models
         public bool? isVisibleSalesTaxProductCode { get; set; }
         public bool? isVisibleMainWeightinBOM { get; set; }
         public bool? isVisibleConsumptionPcsWise { get; set; }
-
+        public bool? isMapCreateAutomatic { get; set; }
 
         [ForeignKey("ProductDesign")]
         public int? ProductDesignId { get; set; }

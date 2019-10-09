@@ -62,7 +62,7 @@ namespace Service
                             from tab in table.DefaultIfEmpty()
                             join t2 in ((ApplicationDbContext)_context).Roles on tab.RoleId equals t2.Id into table2
                             from tab2 in table2.DefaultIfEmpty()
-                            where tab.ExpiryDate == null
+                            where tab.ExpiryDate == null && p.EmailConfirmed == true 
                             select new UserRoleViewModel
                             {
                                 UserName = p.UserName,
@@ -72,7 +72,6 @@ namespace Service
                             }).ToList();
 
             var GroupedRolesList = (from p in UserRole
-                                    where p.IsActive != false
                                     group p by p.UserId into g
                                     orderby g.Max(m => m.UserName)
                                     select new UserRoleViewModel

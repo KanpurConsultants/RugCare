@@ -51,7 +51,7 @@
                                 <div class="form-group" style="margin-top:15px">
                                     @Html.LabelFor(model => model.SizeName, "Size Name", new { @class = "control-label col-md-4 col-sm-2" })
                                     <div class="col-md-7 col-sm-10">
-                                        @Html.TextBoxFor(m => m.SizeName, null, new { @class = "form-control col-xs-6 required" })
+                                        @Html.TextBoxFor(m => m.SizeName, null, new { @class = "form-control col-xs-6 required", @readonly = true })
                                         @Html.ValidationMessageFor(m => m.SizeName)
                                     </div>
                                 </div>
@@ -308,9 +308,16 @@
                 }
             }
 
-            if ($('#ProductShapeId').val() == "1")
+            if ($('#Length').val() == $('#Width').val() && $('#LengthFraction').val() == $('#WidthFraction').val())
             {
-                SizeName = SizeName +" RD";
+                if ($('#ProductShapeId').val() == "1")
+                {
+                    SizeName = SizeName +" RD";
+                }
+                else
+                {
+                    SizeName = SizeName +" SQ";
+                }
             }
 
             $('#SizeName').val(SizeName);
@@ -387,18 +394,18 @@
     }
 
     function calculateAreaPerimeter(){
-        if($('#ProductShapeId option:selected').text()=="Circle")
-        {
-            $("#Area").val(((3.141*(LengthA/2)*(LengthA/2)).toFixed(3)));
-            //$('#Perimeter').val(((2*3.141*(LengthA/2)).toFixed(0)));
-            $('#Perimeter').val(Math.floor((2*3.141*(LengthA/2))));
-        }
-        else if($('#ProductShapeId option:selected').text()=="Rectangle" || $('#ProductShapeId option:selected').text()=="Square")
-        {
+        //if($('#ProductShapeId option:selected').text()=="Circle")
+        //{
+        //    $("#Area").val(((3.141*(LengthA/2)*(LengthA/2)).toFixed(3)));
+        //    //$('#Perimeter').val(((2*3.141*(LengthA/2)).toFixed(0)));
+        //    $('#Perimeter').val(Math.floor((2*3.141*(LengthA/2))));
+        //}
+        //else if($('#ProductShapeId option:selected').text()=="Rectangle" || $('#ProductShapeId option:selected').text()=="Square")
+        //{
             $("#Area").val((LengthA*WidthA).toFixed(3));
             //$('#Perimeter').val((2*(LengthA+WidthA)).toFixed(0));
             $('#Perimeter').val(Math.floor((2*(LengthA+WidthA))));
-        }
+        //}
     }
 
     $('#ProductShapeId').change(calculateLenghtWidth);

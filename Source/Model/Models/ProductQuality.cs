@@ -27,6 +27,8 @@ namespace Model.Models
         public int ProductTypeId { get; set; }
         public virtual ProductType ProductType { get; set; }
 
+        public string TermsAndConditions { get; set; }
+
         public Decimal Weight { get; set; }
         public Decimal ? LossQty { get; set; }
 

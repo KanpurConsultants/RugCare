@@ -620,6 +620,18 @@ namespace Jobs.Controllers
             if (svm.Qty <= 0)
                 ModelState.AddModelError("Qty", "The Qty field is required");
 
+            if (svm.ProductUidId > 0)
+            {
+                ProductUid PU = new ProductUidService(_unitOfWork).Find((int)svm.ProductUidId);
+                if (PU.LastTransactionPersonId != temp.PersonId)
+                {
+                    Person  JW = new PersonService(_unitOfWork).Find((int)PU.LastTransactionPersonId);
+                    ModelState.AddModelError("ProductUidId", "ProductUid is Issued To "+ JW.Name);
+                }
+                    
+            }
+                
+
             if (svm.StockLineId <= 0)
             {
                 ViewBag.LineMode = "Create";

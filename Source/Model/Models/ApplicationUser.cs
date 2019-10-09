@@ -16,7 +16,7 @@ namespace Model.Models
         public string LastName { get; set; }
 
         [Display(Name = "Is Active ?")]
-        public Boolean IsActive { get; set; }
+        public Boolean ? IsActive { get; set; }
 
         // HomeTown will be stored in the same table as Users
         //public string HomeTown { get; set; }

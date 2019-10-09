@@ -271,6 +271,15 @@ namespace Jobs.Controllers
                 {
                     ModelState.AddModelError("DrCr", "The DrCr field is required");
                 }
+                if (svm.CostCenterId !=null  && svm.LedgerAccountId != null)
+                {
+                    CostCenter CC = new CostCenterService(_unitOfWork).Find((int)svm.CostCenterId);
+                    if (CC.LedgerAccountId != svm.LedgerAccountId)
+                    {
+                        ModelState.AddModelError("CostCenterId", "The CostCenterId is Invalid");
+                    }
+                    
+                }
             }
 
             bool BeforeSave = true;
@@ -1608,6 +1617,8 @@ namespace Jobs.Controllers
                             PartyDocDate = LedgerHeaderTab.PartyDocDate ?? LedgerHeaderTab.DocDate,
                             BalanceAmount = LedgerBalanceTab.Balance,
                             BillAmount = L.AmtDr != 0 ? L.AmtDr : L.AmtCr,
+                            CostCenterId = L.CostCenterId,
+                            CostCenterName = L.CostCenter.CostCenterName,
                             LedgerAccountId = L.LedgerAccountId,
                             LedgerAccountName = L.LedgerAccount.LedgerAccountName
                         }).FirstOrDefault();

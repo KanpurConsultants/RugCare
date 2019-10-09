@@ -85,37 +85,47 @@ namespace Service
 
 
 
-            var temp1 = (from p in db.ViewRugSize
-                         join t in db.FinishedProduct on p.ProductId equals t.ProductId
-                         join SS in db.Size on p.StandardSizeID equals SS.SizeId into StandardSizeTable
-                         from StandardSizeTab in StandardSizeTable.DefaultIfEmpty()
-                         join MS in db.Size on p.ManufaturingSizeID equals MS.SizeId into ManufacturingSizeTable
-                         from ManufacturingSizeTab in ManufacturingSizeTable.DefaultIfEmpty()
-                         join FS in db.Size on p.FinishingSizeID equals FS.SizeId into FinishingSizeTable
-                         from FinishingSizeTab in FinishingSizeTable.DefaultIfEmpty()
-                         join Sts in db.Size on p.StencilSizeId equals Sts.SizeId into StencilSizeTable
-                         from StencilSizeTab in StencilSizeTable.DefaultIfEmpty()
-                         join Mps in db.Size on p.MapSizeId equals Mps.SizeId into MapSizeTable
-                         from MapSizeTab in MapSizeTable.DefaultIfEmpty()
-                         where p.StandardSizeID == id && t.ProductCategoryId == productcategoryId
-                         group new { p, StandardSizeTab, ManufacturingSizeTab, FinishingSizeTab, StencilSizeTab, MapSizeTab } by new { p.ManufaturingSizeID, p.StandardSizeID, p.FinishingSizeID, p.StencilSizeId, p.MapSizeId } into ta
-                         orderby ta.Count() descending
-                         select new ProductSizeIndexViewModel
-                         {
-                             ProductStandardSizeId = ta.Key.StandardSizeID ?? 0,
-                             ProductManufacturingSizeId = ta.Key.ManufaturingSizeID ?? 0,
-                             FinishingSizeId = ta.Key.FinishingSizeID ?? 0,
-                             ProductStencilId = ta.Key.StencilSizeId ?? 0,
-                             ProductMapSizeId = ta.Key.MapSizeId ?? 0,
-                             ProductStandardSizeName = ta.FirstOrDefault().StandardSizeTab.SizeName + ta.FirstOrDefault().StandardSizeTab.ProductShape.ProductShapeShortName,
-                             ProductManufacturingSizeName = ta.FirstOrDefault().ManufacturingSizeTab.SizeName + ta.FirstOrDefault().ManufacturingSizeTab.ProductShape.ProductShapeShortName,
-                             FinishingSizeName = ta.FirstOrDefault().FinishingSizeTab.SizeName + ta.FirstOrDefault().FinishingSizeTab.ProductShape.ProductShapeShortName,
-                             ProductStencilSizeName = ta.FirstOrDefault().StencilSizeTab.SizeName + ta.FirstOrDefault().StencilSizeTab.ProductShape.ProductShapeShortName,
-                             ProductMapSizeName = ta.FirstOrDefault().MapSizeTab.SizeName + ta.FirstOrDefault().MapSizeTab.ProductShape.ProductShapeShortName,
-                         }).Take(1).FirstOrDefault();
+            //var temp1 = (from p in db.ViewRugSize
+            //             join t in db.FinishedProduct on p.ProductId equals t.ProductId
+            //             join SS in db.Size on p.StandardSizeID equals SS.SizeId into StandardSizeTable
+            //             from StandardSizeTab in StandardSizeTable.DefaultIfEmpty()
+            //             join MS in db.Size on p.ManufaturingSizeID equals MS.SizeId into ManufacturingSizeTable
+            //             from ManufacturingSizeTab in ManufacturingSizeTable.DefaultIfEmpty()
+            //             join FS in db.Size on p.FinishingSizeID equals FS.SizeId into FinishingSizeTable
+            //             from FinishingSizeTab in FinishingSizeTable.DefaultIfEmpty()
+            //             join Sts in db.Size on p.StencilSizeId equals Sts.SizeId into StencilSizeTable
+            //             from StencilSizeTab in StencilSizeTable.DefaultIfEmpty()
+            //             join Mps in db.Size on p.MapSizeId equals Mps.SizeId into MapSizeTable
+            //             from MapSizeTab in MapSizeTable.DefaultIfEmpty()
+            //             where p.StandardSizeID == id && t.ProductCategoryId == productcategoryId
+            //             group new { p, StandardSizeTab, ManufacturingSizeTab, FinishingSizeTab, StencilSizeTab, MapSizeTab } by new { p.ManufaturingSizeID, p.StandardSizeID, p.FinishingSizeID, p.StencilSizeId, p.MapSizeId } into ta
+            //             orderby ta.Count() descending
+            //             select new ProductSizeIndexViewModel
+            //             {
+            //                 ProductStandardSizeId = ta.Key.StandardSizeID ?? 0,
+            //                 ProductManufacturingSizeId = ta.Key.ManufaturingSizeID ?? 0,
+            //                 FinishingSizeId = ta.Key.FinishingSizeID ?? 0,
+            //                 ProductStencilId = ta.Key.StencilSizeId ?? 0,
+            //                 ProductMapSizeId = ta.Key.MapSizeId ?? 0,
+            //                 ProductStandardSizeName = ta.FirstOrDefault().StandardSizeTab.SizeName + ta.FirstOrDefault().StandardSizeTab.ProductShape.ProductShapeShortName,
+            //                 ProductManufacturingSizeName = ta.FirstOrDefault().ManufacturingSizeTab.SizeName + ta.FirstOrDefault().ManufacturingSizeTab.ProductShape.ProductShapeShortName,
+            //                 FinishingSizeName = ta.FirstOrDefault().FinishingSizeTab.SizeName + ta.FirstOrDefault().FinishingSizeTab.ProductShape.ProductShapeShortName,
+            //                 ProductStencilSizeName = ta.FirstOrDefault().StencilSizeTab.SizeName + ta.FirstOrDefault().StencilSizeTab.ProductShape.ProductShapeShortName,
+            //                 ProductMapSizeName = ta.FirstOrDefault().MapSizeTab.SizeName + ta.FirstOrDefault().MapSizeTab.ProductShape.ProductShapeShortName,
+            //             }).Take(1).FirstOrDefault();
 
 
+            string mQry = @"SELECT  H.StandardSizeID ProductStandardSizeId, H.ManufaturingSizeID ProductManufacturingSizeId, 
+                            H.FinishingSizeID FinishingSizeId, isnull(H.StencilSizeID,0) ProductStencilId, H.MapSizeID ProductMapSizeId,
+                            H.StandardSizeName ProductStandardSizeName, H.ManufaturingSizeName ProductManufacturingSizeName,
+                            H.FinishingSizeName FinishingSizeName, H.StencilSizeName ProductStencilSizeName,
+                            H.MapSizeName ProductMapSizeName
+                            FROM Web.ViewRugSize H WITH(Nolock)
+                            LEFT JOIN web.Products P WITH(Nolock) ON P.ProductId = H.ProductId
+                            WHERE H.ManufaturingSizeID IS NOT NULL  AND P.ProductCategoryId = " + productcategoryId + " AND H.StandardSizeID = " + id + " ";
 
+            IEnumerable<ProductSizeIndexViewModel> ProductSizeIndexViewModelList = db.Database.SqlQuery<ProductSizeIndexViewModel>(mQry).ToList();
+            var temp1 = ProductSizeIndexViewModelList.FirstOrDefault();
             //if (temp1.FinishingSizeName == null)
             //    temp1.FinishingSizeName = "";
             //if (temp1.ProductManufacturingSizeName == null)

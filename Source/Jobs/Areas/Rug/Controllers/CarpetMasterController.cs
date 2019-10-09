@@ -247,7 +247,7 @@ namespace Jobs.Areas.Rug.Controllers
                         //    CreateTraceForProduct(fp.ProductName, (int)Prod.StencilSizeId, j);
                         //}
                     }
-                    if (fp.MapType != "N/A")
+                    if (fp.MapType != "N/A" )
                     {
                         j--;
                         //CreateMap(fp.ProductName, (int)Prod.MapSizeId, j);
@@ -1860,6 +1860,16 @@ namespace Jobs.Areas.Rug.Controllers
                 ModelState.AddModelError("ProductName", "The Product Name and product group name should not be same.");
             }
 
+            Size S = db.Size.Find(vm.ManufacturingSizeId);
+            Colour C = db.Colour.Find(vm.ColourId);
+
+            string ProductName = vm.ProductGroupName.Replace("-","") + "-" + S.SizeName + "-" + C.ColourName;
+
+            if (vm.ProductName != ProductName)
+            {
+                ModelState.AddModelError("ProductName", "The Product Name is Not Valid.");
+            }
+
 
             if (ModelState.IsValid)
             {
@@ -2541,9 +2551,9 @@ namespace Jobs.Areas.Rug.Controllers
                         //}
                     }
 
-                    if (pro.MapType != "N/A")
+                    if (pro.MapType != "N/A" && vm.CarpetSkuSettings.isMapCreateAutomatic ==true )
                     {
-                        //CreateMap(vm.ProductName, vm.MapSizeId, -2);
+                        CreateMap(vm.ProductName, vm.MapSizeId, -2);
                     }
 
 
@@ -3272,9 +3282,9 @@ namespace Jobs.Areas.Rug.Controllers
                         //}
                     }
 
-                    if (vm.MapType != "N/A")
+                    if (vm.MapType != "N/A" && vm.CarpetSkuSettings.isMapCreateAutomatic == true)
                     {
-                        //CreateMap(vm.ProductName, vm.MapSizeId, -2);
+                        CreateMap(vm.ProductName, vm.MapSizeId, -2);
                     }
 
 
@@ -3978,77 +3988,77 @@ namespace Jobs.Areas.Rug.Controllers
             }
         }
 
-        //public void CreateMap(string ProductName, int MapSizeId, int MapProductId)
-        //{
-        //    string MapName = "";
-        //    MapName = ProductName + "-Map";
+        public void CreateMap(string ProductName, int MapSizeId, int MapProductId)
+        {
+            string MapName = "";
+            MapName = ProductName + "-Map";
 
-        //    var temp = (from P in db.Product where P.ProductName == MapName select P).FirstOrDefault();
+            var temp = (from P in db.Product where P.ProductName == MapName select P).FirstOrDefault();
 
-        //    if (temp == null)
-        //    {
-        //        Product ProductMap = new Product();
-        //        ProductMap.ProductId = MapProductId;
-        //        ProductMap.ProductName = MapName;
-        //        if (MapName.Length <= 50)
-        //        {
-        //            ProductMap.ProductCode = MapName;
-        //        }
-        //        else
-        //        {
-        //            ProductMap.ProductCode = MapName.Substring(0, 50);
-        //        }
-        //        ProductMap.ProductGroupId = new ProductGroupService(_unitOfWork).Find(ProductGroupConstants.Map).ProductGroupId;
-        //        ProductMap.UnitId = UnitConstants.Pieces;
-        //        ProductMap.IsActive = true;
-        //        ProductMap.DivisionId = (int)System.Web.HttpContext.Current.Session["DivisionId"];
-        //        ProductMap.CreatedDate = DateTime.Now;
-        //        ProductMap.ModifiedDate = DateTime.Now;
-        //        ProductMap.CreatedBy = User.Identity.Name;
-        //        ProductMap.ModifiedBy = User.Identity.Name;
-        //        ProductMap.IsActive = true;
+            if (temp == null)
+            {
+                Product ProductMap = new Product();
+                ProductMap.ProductId = MapProductId;
+                ProductMap.ProductName = MapName;
+                if (MapName.Length <= 50)
+                {
+                    ProductMap.ProductCode = MapName;
+                }
+                else
+                {
+                    ProductMap.ProductCode = MapName.Substring(0, 50);
+                }
+                ProductMap.ProductGroupId = new ProductGroupService(_unitOfWork).Find(ProductGroupConstants.Map).ProductGroupId;
+                ProductMap.UnitId = UnitConstants.Pieces;
+                ProductMap.IsActive = true;
+                ProductMap.DivisionId = (int)System.Web.HttpContext.Current.Session["DivisionId"];
+                ProductMap.CreatedDate = DateTime.Now;
+                ProductMap.ModifiedDate = DateTime.Now;
+                ProductMap.CreatedBy = User.Identity.Name;
+                ProductMap.ModifiedBy = User.Identity.Name;
+                ProductMap.IsActive = true;
 
-        //        ProductMap.ObjectState = Model.ObjectState.Added;
-        //        new ProductService(_unitOfWork).Create(ProductMap);
-
-
+                ProductMap.ObjectState = Model.ObjectState.Added;
+                new ProductService(_unitOfWork).Create(ProductMap);
 
 
 
-        //        UnitConversion UnitConvMap = new UnitConversion();
-        //        UnitConvMap.UnitConversionId = MapProductId;
-        //        UnitConvMap.CreatedBy = User.Identity.Name;
-        //        UnitConvMap.CreatedDate = DateTime.Now;
-        //        UnitConvMap.ModifiedBy = User.Identity.Name;
-        //        UnitConvMap.ModifiedDate = DateTime.Now;
-        //        UnitConvMap.ProductId = ProductMap.ProductId;
-        //        UnitConvMap.FromQty = 1;
-        //        UnitConvMap.FromUnitId = UnitConstants.Pieces;
-        //        UnitConvMap.ToUnitId = UnitConstants.SqYard;
-        //        UnitConvMap.UnitConversionForId = (byte)UnitConversionFors.Standard;
-        //        //UnitConvMap.ToQty = new SizeService(_unitOfWork).Find(MapSizeId).Area;
 
 
-        //        //For Calculating Area in Sq.Yard.
-        //        Decimal AreaInSqFeet = new SizeService(_unitOfWork).Find(MapSizeId).Area;
-        //        UnitConvMap.ToQty = FConvertSqFeetToSqYard(AreaInSqFeet);
+                UnitConversion UnitConvMap = new UnitConversion();
+                UnitConvMap.UnitConversionId = MapProductId;
+                UnitConvMap.CreatedBy = User.Identity.Name;
+                UnitConvMap.CreatedDate = DateTime.Now;
+                UnitConvMap.ModifiedBy = User.Identity.Name;
+                UnitConvMap.ModifiedDate = DateTime.Now;
+                UnitConvMap.ProductId = ProductMap.ProductId;
+                UnitConvMap.FromQty = 1;
+                UnitConvMap.FromUnitId = UnitConstants.Pieces;
+                UnitConvMap.ToUnitId = UnitConstants.SqYard;
+                UnitConvMap.UnitConversionForId = (byte)UnitConversionFors.Standard;
+                //UnitConvMap.ToQty = new SizeService(_unitOfWork).Find(MapSizeId).Area;
 
-        //        new UnitConversionService(_unitOfWork).Create(UnitConvMap);
+
+                //For Calculating Area in Sq.Yard.
+                Decimal AreaInSqFeet = new SizeService(_unitOfWork).Find(MapSizeId).Area;
+                UnitConvMap.ToQty = FConvertSqFeetToSqYard(AreaInSqFeet);
+
+                new UnitConversionService(_unitOfWork).Create(UnitConvMap);
 
 
-        //        ProductSize Mapsize = new ProductSize();
-        //        Mapsize.ProductSizeId = MapProductId;
-        //        Mapsize.ProductSizeTypeId = (int)(ProductSizeTypeConstants.StandardSize);
-        //        Mapsize.SizeId = MapSizeId;
-        //        Mapsize.ProductId = ProductMap.ProductId;
-        //        Mapsize.CreatedBy = User.Identity.Name;
-        //        Mapsize.CreatedDate = DateTime.Now;
-        //        Mapsize.ModifiedBy = User.Identity.Name;
-        //        Mapsize.ModifiedDate = DateTime.Now;
-        //        Mapsize.IsActive = true;
-        //        new ProductSizeService(_unitOfWork).Create(Mapsize);
-        //    }
-        //}
+                ProductSize Mapsize = new ProductSize();
+                Mapsize.ProductSizeId = MapProductId;
+                Mapsize.ProductSizeTypeId = (int)(ProductSizeTypeConstants.StandardSize);
+                Mapsize.SizeId = MapSizeId;
+                Mapsize.ProductId = ProductMap.ProductId;
+                Mapsize.CreatedBy = User.Identity.Name;
+                Mapsize.CreatedDate = DateTime.Now;
+                Mapsize.ModifiedBy = User.Identity.Name;
+                Mapsize.ModifiedDate = DateTime.Now;
+                Mapsize.IsActive = true;
+                new ProductSizeService(_unitOfWork).Create(Mapsize);
+            }
+        }
 
         public Decimal FConvertSqFeetToSqYard(Decimal SqFeet)
         {

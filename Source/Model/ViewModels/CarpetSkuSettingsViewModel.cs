@@ -44,6 +44,9 @@ namespace Model.ViewModel
         public bool isVisibleSalesTaxProductCode { get; set; }
         public bool isVisibleConsumptionPcsWise { get; set; }
 
+        public bool isMapCreateAutomatic { get; set; }
+        
+
         public int? ProductDesignId { get; set; }
         public string ProductDesignName { get; set; }
 

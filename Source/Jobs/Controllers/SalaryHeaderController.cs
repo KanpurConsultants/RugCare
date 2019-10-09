@@ -1805,9 +1805,9 @@ namespace Jobs.Controllers
                             LedgerAdj.DrLedgerId = OtherAdditionLedger.LedgerId;
 
                             if (OtherAdditionLedger.Amount >= OtherAddition_RunningBalance)
-                                LedgerAdj.Amount = OtherAddition_RunningBalance;
+                                LedgerAdj.Amount = -OtherAddition_RunningBalance;
                             else
-                                LedgerAdj.Amount = OtherAdditionLedger.Amount;
+                                LedgerAdj.Amount = -OtherAdditionLedger.Amount;
 
                             LedgerAdj.SiteId = Header.SiteId;
                             LedgerAdj.CreatedDate = DateTime.Now;

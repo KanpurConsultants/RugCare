@@ -95,6 +95,7 @@ namespace Jobs.Areas.Rug.Controllers
             //List<TypeImportStockTransferFromTextFile> ImportData = new List<TypeImportStockTransferFromTextFile>();
 
             DataTable dataTable = new DataTable();
+            dataTable.Columns.Add("Sr");
             dataTable.Columns.Add("DocTypeId");
             dataTable.Columns.Add("DocDate");
             dataTable.Columns["DocDate"].DataType = System.Type.GetType("System.DateTime");
@@ -127,6 +128,7 @@ namespace Jobs.Areas.Rug.Controllers
 
                     var dr = dataTable.NewRow();
                     dr["DocTypeId"] = id;
+                    dr["Sr"] = i;
                     dr["DocDate"] = DateTime.Now.Date;
                     dr["DivisionId"] = (int)System.Web.HttpContext.Current.Session["DivisionId"];
                     dr["SiteId"] = (int)System.Web.HttpContext.Current.Session["SiteId"];

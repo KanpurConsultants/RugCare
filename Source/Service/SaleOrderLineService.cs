@@ -32,7 +32,7 @@ namespace Service
         string GetBuyerSKU(int ProductId, int SaleOrderHEaderId);
         SaleOrderLineBalance GetSaleOrder(int LineId);
         SaleOrderLineViewModel GetSaleOrderDetailForInvoice(int id);
-
+        IQueryable<ComboBoxResult> GetSaleOrderLineForProduct(int id, string term);
         IQueryable<ComboBoxResult> GetCustomProducts(int Id, string term);
     }
 
@@ -96,6 +96,27 @@ namespace Service
 
             //            ).FirstOrDefault();
         }
+
+        public IQueryable<ComboBoxResult> GetSaleOrderLineForProduct(int id, string term)
+        {
+
+            int SiteId = (int)System.Web.HttpContext.Current.Session["SiteId"];
+            int DivisionId = (int)System.Web.HttpContext.Current.Session["DivisionId"];
+
+
+            return (from p in db.SaleOrderLine
+                    join H in db.SaleOrderHeader on p.SaleOrderHeaderId equals H.SaleOrderHeaderId into tableH
+                    from tabH in tableH.DefaultIfEmpty()
+                    where p.ProductId == id
+                    && tabH.SiteId == SiteId && tabH.DivisionId == DivisionId && tabH.Status != (int)StatusConstants.Closed
+                    orderby p.SaleOrderLineId
+                    select new ComboBoxResult
+                    {
+                        text = tabH.DocNo,
+                        id = p.SaleOrderLineId.ToString(),
+                    });
+        }
+
         public SaleOrderLineViewModel GetSaleOrderLineModel(int id)
         {
             //return _unitOfWork.Repository<SaleOrderLine>().Query().Get().Where(m => m.SaleOrderLineId == id).FirstOrDefault();

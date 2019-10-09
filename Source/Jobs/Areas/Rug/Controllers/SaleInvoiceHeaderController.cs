@@ -424,6 +424,10 @@ namespace Jobs.Areas.Rug.Controllers
                     saledispatchheader.Status = (int)StatusConstants.Drafted;
                     _SaleDispatchHeaderService.Create(saledispatchheader);
 
+                    PackingLine PL = new PackingLineService(_unitOfWork).GetPackingLineForHeaderId((int)saledispatchheader.PackingHeaderId).First();
+                    PL.GrossWeight = (Decimal)svm.GrossWeight;
+                    PL.NetWeight = (Decimal)svm.NetWeight;
+                    new PackingLineService(_unitOfWork).Update(PL);
 
                     try
                     {
@@ -500,6 +504,7 @@ namespace Jobs.Areas.Rug.Controllers
                     saleinvoiceheaderdetail.OrderDate = svm.OrderDate;
                     saleinvoiceheaderdetail.OrderNo = svm.OrderNo;
                     saleinvoiceheaderdetail.OtherRefrence = svm.OtherRefrence;
+                    saleinvoiceheaderdetail.BuyerOtherthanConsignee = svm.BuyerOtherthanConsignee;
                     saleinvoiceheaderdetail.PlaceOfPreCarriage = svm.PlaceOfPreCarriage;
                     saleinvoiceheaderdetail.PortOfLoading = svm.PortOfLoading;
                     saleinvoiceheaderdetail.PreCarriageBy = svm.PreCarriageBy;
@@ -540,6 +545,10 @@ namespace Jobs.Areas.Rug.Controllers
                     saledispatchheader.ModifiedBy = User.Identity.Name;
                     _SaleDispatchHeaderService.Update(saledispatchheader);
 
+                    PackingLine PL = new PackingLineService(_unitOfWork).GetPackingLineForHeaderId((int)saledispatchheader.PackingHeaderId).First();
+                    PL.GrossWeight = (Decimal)svm.GrossWeight;
+                    PL.NetWeight = (Decimal)svm.NetWeight;
+                    new PackingLineService(_unitOfWork).Update(PL);
 
                     LogList.Add(new LogTypeViewModel
                     {
@@ -642,6 +651,16 @@ namespace Jobs.Areas.Rug.Controllers
             }
 
             SaleDispatchHeader sd = _SaleDispatchHeaderService.GetSaleDispatchHeader((int)s.SaleDispatchHeaderId);
+            
+            var Weight = (from L in db.PackingLine
+                          where L.PackingHeaderId == sd.PackingHeaderId
+                          group L by L.PackingHeaderId into g
+                              select new
+                              {
+                                  PackingHeaderId = g.Key,
+                                  GrossWeight = g.Sum(m => m.GrossWeight),
+                                  NetWeight = g.Sum(m => m.NetWeight),
+                              }).FirstOrDefault();
 
             SaleInvoiceHeaderIndexViewModel svm = Mapper.Map<SaleInvoiceHeaderDetail, SaleInvoiceHeaderIndexViewModel>(s);
 
@@ -651,6 +670,8 @@ namespace Jobs.Areas.Rug.Controllers
             svm.Transporter = sd.Transporter;
             svm.DeliveryTermsId = sd.DeliveryTermsId;
             svm.ShipMethodId = sd.ShipMethodId.Value;
+            svm.GrossWeight = Weight.GrossWeight;
+            svm.NetWeight = Weight.NetWeight;
             svm.Remark = sd.Remark;
             ViewBag.Mode = "Edit";
             PrepareViewBag(s.DocTypeId);

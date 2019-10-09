@@ -95,6 +95,7 @@ namespace Jobs.Areas.Rug.Controllers
 
         public ActionResult Index(int id, string IndexType)//DocumentTypeId
         {
+            string CompanyName = ConfigurationManager.AppSettings["CompanyName"];
             if (IndexType == "PTS")
             {
                 return RedirectToAction("Index_PendingToSubmit", new { id });
@@ -104,8 +105,11 @@ namespace Jobs.Areas.Rug.Controllers
                 return RedirectToAction("Index_PendingToReview", new { id });
             }
             var JobReceiveHeader = new WeavingReceiveQACombinedService(db).GetJobReceiveHeaderList(id, User.Identity.Name);
+                        
+
             ViewBag.Name = new DocumentTypeService(_unitOfWork).Find(id).DocumentTypeName;
             ViewBag.id = id;
+            ViewBag.CompanyName = CompanyName;
             ViewBag.PendingToSubmit = PendingToSubmitCount(id);
             ViewBag.PendingToReview = PendingToReviewCount(id);
             ViewBag.IndexStatus = "All";
@@ -891,6 +895,50 @@ namespace Jobs.Areas.Rug.Controllers
 
             return Json(unitconversionjson);
         }
+
+        public JsonResult getWeavingReceiveHeaderIdjson(string CarpetNo)
+        {
+            ProductUid PU = new ProductUidService(_unitOfWork).FGetProductUidByName(CarpetNo);
+            var DivisionId = (int)System.Web.HttpContext.Current.Session["DivisionId"];
+            var SiteId = (int)System.Web.HttpContext.Current.Session["SiteId"];
+
+            List<SelectListItem> unitconversionjson = new List<SelectListItem>();
+
+            if (PU != null)
+            {
+                JobReceiveHeaderViewModel uc = new WeavingReceiveQACombinedService(db).GetJobReceiveHeader_ByProductUId(PU.ProductUIDId);
+
+
+                if (uc != null && uc.SiteId == SiteId && uc.DivisionId == DivisionId)
+                {
+                    unitconversionjson.Add(new SelectListItem
+                    {
+                        Text = uc.JobReceiveHeaderId.ToString(),
+                        Value = uc.JobReceiveHeaderId.ToString()
+                    });
+                }
+                else
+                {
+                    unitconversionjson.Add(new SelectListItem
+                    {
+                        Text = "0",
+                        Value = "0"
+                    });
+                }
+            }
+            else
+            {
+                unitconversionjson.Add(new SelectListItem
+                {
+                    Text = "0",
+                    Value = "0"
+                });
+            }
+
+
+            return Json(unitconversionjson);
+        }
+
 
         //public JsonResult GetProductDetailJson(int ProductId, string DealUnitId)
         //{
@@ -2507,7 +2555,7 @@ namespace Jobs.Areas.Rug.Controllers
                                                             from JobReceiveHeaderMainBranchTab in JobReceiveHeaderMainBranchTable.DefaultIfEmpty()
                                                             join S in db.Site on H.SiteId equals S.SiteId into SiteTable from SiteTab in SiteTable.DefaultIfEmpty()
                                                             where H.DocTypeId == id && JobReceiveHeaderMainBranchTab.JobReceiveHeaderId == null && H.SiteId != MainBranchId 
-                                                            orderby H.DocDate descending
+                                                            orderby SiteTab.SiteName, H.DocDate descending, H.DocNo 
                                                             select new PendingWeavingReceives
                                                             {
                                                                 JobReceiveHeaderId = H.JobReceiveHeaderId,

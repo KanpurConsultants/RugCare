@@ -176,14 +176,14 @@
                                     </div>
                                     
 
-                                    <div class="col-md-6">
+                                    @*<div class="col-md-6">
                                         <div class="form-group">
                                             @Html.LabelFor(model => model.SaleOrderHeaderId, "Sale Order", new { @class = "control-label col-md-4 col-sm-2" })
                                             <div class="col-xs-6">
                                                 @Html.TextBoxFor(m => m.SaleOrderHeaderId, null, new { @class = "form-control col-xs-6" })
                                             </div>
                                         </div>
-                                    </div> 
+                                    </div>*@ 
 
                                     <div class="col-md-6">
                                         <div class="form-group">
@@ -335,12 +335,27 @@
         CustomSelectFunction($("#ProductGroup"), '/ComboHelpList/GetProductGroup', '/ComboHelpList/SetProductGroup', ' ', true, 0);
         CustomSelectFunction($("#DocTypeId"), '/ComboHelpList/GetDocumentType_ForSaleOrder', '/ComboHelpList/SetDocumentType', ' ', true, 0);
         CustomSelectFunction($("#Product"), '/ComboHelpList/GetProducts', '/ComboHelpList/SetProducts', ' ', true, 0);
-        CustomSelectFunction($("#PackingHeaderId"), '/PackingReport/GetPackings', '/PackingReport/SetPackings', ' ', true, 0);
         CustomSelectFunction($("#SaleOrderHeaderId"), '/Display_SaleOrderInventoryStatus/GetSaleOrders', '/Display_SaleOrderInventoryStatus/SetSaleOrder', ' ', true, 0);
-        CustomSelectFunction2_WithFilter($("#BuyerQuality"), '/PackingReport/GetBuyerSpecification3Packings', '/ComboHelpList/SetBuyerSpecifications3', ' ', true, 0, ' ', false, $('#PackingHeaderId').val());
-        CustomSelectFunctionForMultiFilter($("#BuyerDesign"), '/PackingReport/GetBuyerSpecificationPackings', '/ComboHelpList/SetBuyerSpecifications', ' ', true, 0, $("#PackingHeaderId").val(), $("#BuyerQuality").val(), "", "");
-        CustomSelectFunctionForMultiFilter($("#BuyerSize"), '/PackingReport/GetBuyerSpecification1Packings', '/ComboHelpList/SetBuyerSpecifications1', ' ', true, 0, $("#PackingHeaderId").val(), $("#BuyerQuality").val(), $("#BuyerDesign").val(), "");
-        CustomSelectFunctionForMultiFilter($("#BuyerColour"), '/PackingReport/GetBuyerSpecification2Packings', '/ComboHelpList/SetBuyerSpecifications2', ' ', true, 0, $("#PackingHeaderId").val(), $("#BuyerQuality").val(), $("#BuyerDesign").val(), $("#BuyerSize").val());
+        CustomSelectFunctionForMultiFilter($("#PackingHeaderId"), '/PackingReport/GetPackings', '/PackingReport/SetPackings', ' ', true, 0, $("#Buyer").val(),"", "", "", "");
+        CustomSelectFunctionForMultiFilter($("#BuyerQuality"), '/PackingReport/GetBuyerSpecification3Packings', '/ComboHelpList/SetBuyerSpecifications3', ' ', true, 0, $("#Buyer").val(), $("#PackingHeaderId").val(), "", "", "");
+        CustomSelectFunctionForMultiFilter($("#BuyerDesign"), '/PackingReport/GetBuyerSpecificationPackings', '/ComboHelpList/SetBuyerSpecifications', ' ', true, 0, $("#Buyer").val(), $("#PackingHeaderId").val(), $("#BuyerQuality").val(), "", "");
+        CustomSelectFunctionForMultiFilter($("#BuyerSize"), '/PackingReport/GetBuyerSpecification1Packings', '/ComboHelpList/SetBuyerSpecifications1', ' ', true, 0, $("#Buyer").val(), $("#PackingHeaderId").val(), $("#BuyerQuality").val(), $("#BuyerDesign").val(), "");
+        CustomSelectFunctionForMultiFilter($("#BuyerColour"), '/PackingReport/GetBuyerSpecification2Packings', '/ComboHelpList/SetBuyerSpecifications2', ' ', true, 0, $("#Buyer").val(), $("#PackingHeaderId").val(), $("#BuyerQuality").val(), $("#BuyerDesign").val(), $("#BuyerSize").val());
+
+        $("#Buyer").change(function () {
+            $("#PackingHeaderId").select2("data", { id: "", text: "" });
+            $("#BuyerQuality").select2("data", { id: "", text: "" });
+            $("#BuyerDesign").select2("data", { id: "", text: "" });
+            $("#BuyerSize").select2("data", { id: "", text: "" });
+            $("#BuyerColour").select2("data", { id: "", text: "" });
+
+            CustomSelectFunctionForMultiFilter($("#PackingHeaderId"), '/PackingReport/GetPackings', '/PackingReport/SetPackings', ' ', true, 0, $("#Buyer").val(), "", "", "", "");
+            CustomSelectFunctionForMultiFilter($("#BuyerQuality"), '/PackingReport/GetBuyerSpecification3Packings', '/ComboHelpList/SetBuyerSpecifications3', ' ', true, 0, $("#Buyer").val(), $("#PackingHeaderId").val(), "", "", "");
+            CustomSelectFunctionForMultiFilter($("#BuyerDesign"), '/PackingReport/GetBuyerSpecificationPackings', '/ComboHelpList/SetBuyerSpecifications', ' ', true, 0, $("#Buyer").val(), $("#PackingHeaderId").val(), $("#BuyerQuality").val(), "", "");
+            CustomSelectFunctionForMultiFilter($("#BuyerSize"), '/PackingReport/GetBuyerSpecification1Packings', '/ComboHelpList/SetBuyerSpecifications1', ' ', true, 0, $("#Buyer").val(), $("#PackingHeaderId").val(), $("#BuyerQuality").val(), $("#BuyerDesign").val(), "");
+            CustomSelectFunctionForMultiFilter($("#BuyerColour"), '/PackingReport/GetBuyerSpecification2Packings', '/ComboHelpList/SetBuyerSpecifications2', ' ', true, 0, $("#Buyer").val(), $("#PackingHeaderId").val(), $("#BuyerQuality").val(), $("#BuyerDesign").val(), $("#BuyerSize").val());
+
+        });
 
         $("#PackingHeaderId").change(function () {
             $("#BuyerQuality").select2("data", { id: "", text: "" });
@@ -348,10 +363,10 @@
             $("#BuyerSize").select2("data", { id: "", text: "" });
             $("#BuyerColour").select2("data", { id: "", text: "" });
 
-            CustomSelectFunction2_WithFilter($("#BuyerQuality"), '/PackingReport/GetBuyerSpecification3Packings', '/ComboHelpList/SetBuyerSpecifications3', ' ', true, 0, ' ', false, $('#PackingHeaderId').val());
-            CustomSelectFunctionForMultiFilter($("#BuyerDesign"), '/PackingReport/GetBuyerSpecificationPackings', '/ComboHelpList/SetBuyerSpecifications', ' ', true, 0, $("#PackingHeaderId").val(), $("#BuyerQuality").val(), "", "");
-            CustomSelectFunctionForMultiFilter($("#BuyerSize"), '/PackingReport/GetBuyerSpecification1Packings', '/ComboHelpList/SetBuyerSpecifications1', ' ', true, 0, $("#PackingHeaderId").val(), $("#BuyerQuality").val(), $("#BuyerDesign").val(), "");
-            CustomSelectFunctionForMultiFilter($("#BuyerColour"), '/PackingReport/GetBuyerSpecification2Packings', '/ComboHelpList/SetBuyerSpecifications2', ' ', true, 0, $("#PackingHeaderId").val(), $("#BuyerQuality").val(), $("#BuyerDesign").val(), $("#BuyerSize").val());
+            CustomSelectFunctionForMultiFilter($("#BuyerQuality"), '/PackingReport/GetBuyerSpecification3Packings', '/ComboHelpList/SetBuyerSpecifications3', ' ', true, 0, $("#Buyer").val(), $("#PackingHeaderId").val(), "", "", "");
+            CustomSelectFunctionForMultiFilter($("#BuyerDesign"), '/PackingReport/GetBuyerSpecificationPackings', '/ComboHelpList/SetBuyerSpecifications', ' ', true, 0, $("#Buyer").val(), $("#PackingHeaderId").val(), $("#BuyerQuality").val(), "", "");
+            CustomSelectFunctionForMultiFilter($("#BuyerSize"), '/PackingReport/GetBuyerSpecification1Packings', '/ComboHelpList/SetBuyerSpecifications1', ' ', true, 0, $("#Buyer").val(),  $("#PackingHeaderId").val(), $("#BuyerQuality").val(), $("#BuyerDesign").val(), "");
+            CustomSelectFunctionForMultiFilter($("#BuyerColour"), '/PackingReport/GetBuyerSpecification2Packings', '/ComboHelpList/SetBuyerSpecifications2', ' ', true, 0, $("#Buyer").val(),  $("#PackingHeaderId").val(), $("#BuyerQuality").val(), $("#BuyerDesign").val(), $("#BuyerSize").val());
 
         });
 
@@ -361,9 +376,9 @@
             $("#BuyerSize").select2("data", { id: "", text: "" });
             $("#BuyerColour").select2("data", { id: "", text: "" });
 
-            CustomSelectFunctionForMultiFilter($("#BuyerDesign"), '/PackingReport/GetBuyerSpecificationPackings', '/ComboHelpList/SetBuyerSpecifications', ' ', true, 0, $("#PackingHeaderId").val(), $("#BuyerQuality").val(), "", "");
-            CustomSelectFunctionForMultiFilter($("#BuyerSize"), '/PackingReport/GetBuyerSpecification1Packings', '/ComboHelpList/SetBuyerSpecifications1', ' ', true, 0, $("#PackingHeaderId").val(), $("#BuyerQuality").val(), $("#BuyerDesign").val(), "");
-            CustomSelectFunctionForMultiFilter($("#BuyerColour"), '/PackingReport/GetBuyerSpecification2Packings', '/ComboHelpList/SetBuyerSpecifications2', ' ', true, 0, $("#PackingHeaderId").val(), $("#BuyerQuality").val(), $("#BuyerDesign").val(), $("#BuyerSize").val());
+            CustomSelectFunctionForMultiFilter($("#BuyerDesign"), '/PackingReport/GetBuyerSpecificationPackings', '/ComboHelpList/SetBuyerSpecifications', ' ', true, 0, $("#Buyer").val(), $("#PackingHeaderId").val(), $("#BuyerQuality").val(), "", "");
+            CustomSelectFunctionForMultiFilter($("#BuyerSize"), '/PackingReport/GetBuyerSpecification1Packings', '/ComboHelpList/SetBuyerSpecifications1', ' ', true, 0, $("#Buyer").val(), $("#PackingHeaderId").val(), $("#BuyerQuality").val(), $("#BuyerDesign").val(), "");
+            CustomSelectFunctionForMultiFilter($("#BuyerColour"), '/PackingReport/GetBuyerSpecification2Packings', '/ComboHelpList/SetBuyerSpecifications2', ' ', true, 0, $("#Buyer").val(), $("#PackingHeaderId").val(), $("#BuyerQuality").val(), $("#BuyerDesign").val(), $("#BuyerSize").val());
 
         });
 
@@ -372,19 +387,19 @@
             $("#BuyerSize").select2("data", { id: "", text: "" });
             $("#BuyerColour").select2("data", { id: "", text: "" });
 
-            CustomSelectFunctionForMultiFilter($("#BuyerSize"), '/PackingReport/GetBuyerSpecification1Packings', '/ComboHelpList/SetBuyerSpecifications1', ' ', true, 0, $("#PackingHeaderId").val(), $("#BuyerQuality").val(), $("#BuyerDesign").val(), "");
-            CustomSelectFunctionForMultiFilter($("#BuyerColour"), '/PackingReport/GetBuyerSpecification2Packings', '/ComboHelpList/SetBuyerSpecifications2', ' ', true, 0, $("#PackingHeaderId").val(), $("#BuyerQuality").val(), $("#BuyerDesign").val(), $("#BuyerSize").val());
+            CustomSelectFunctionForMultiFilter($("#BuyerSize"), '/PackingReport/GetBuyerSpecification1Packings', '/ComboHelpList/SetBuyerSpecifications1', ' ', true, 0, $("#Buyer").val(), $("#PackingHeaderId").val(), $("#BuyerQuality").val(), $("#BuyerDesign").val(), "");
+            CustomSelectFunctionForMultiFilter($("#BuyerColour"), '/PackingReport/GetBuyerSpecification2Packings', '/ComboHelpList/SetBuyerSpecifications2', ' ', true, 0, $("#Buyer").val(),  $("#PackingHeaderId").val(), $("#BuyerQuality").val(), $("#BuyerDesign").val(), $("#BuyerSize").val());
 
         });
 
 
         $("#BuyerSize").change(function () {
             $("#BuyerColour").select2("data", { id: "", text: "" });
-            CustomSelectFunctionForMultiFilter($("#BuyerColour"), '/PackingReport/GetBuyerSpecification2Packings', '/ComboHelpList/SetBuyerSpecifications2', ' ', true, 0, $("#PackingHeaderId").val(), $("#BuyerQuality").val(), $("#BuyerDesign").val(), $("#BuyerSize").val());
+            CustomSelectFunctionForMultiFilter($("#BuyerColour"), '/PackingReport/GetBuyerSpecification2Packings', '/ComboHelpList/SetBuyerSpecifications2', ' ', true, 0, $("#Buyer").val(), $("#PackingHeaderId").val(), $("#BuyerQuality").val(), $("#BuyerDesign").val(), $("#BuyerSize").val());
 
         });
 
-        function CustomSelectFunctionForMultiFilter(ElementId, GetAction, SetAction, placehold, IsMultiple, MinLength, filter1, filter2, filter3, filter4) {
+        function CustomSelectFunctionForMultiFilter(ElementId, GetAction, SetAction, placehold, IsMultiple, MinLength, filter1, filter2, filter3, filter4, filter5) {
             var geturl = GetAction;
             //The url we will send our get request to
             var attendeeUrl = GetAction;
@@ -416,6 +431,7 @@
                             filter2: filter2,
                             filter3: filter3,
                             filter4: filter4,
+                            filter5: filter5,
                         };
                     },
                     results: function (data, page) {

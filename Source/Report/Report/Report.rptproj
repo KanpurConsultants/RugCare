@@ -560,6 +560,14 @@
       <FullPath>Currency.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>DailyIssueRegister_BC.rdl</Name>
+      <FullPath>DailyIssueRegister_BC.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>DailyIssueRegister_BC_WithPurjaNo.rdl</Name>
+      <FullPath>DailyIssueRegister_BC_WithPurjaNo.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>DailyPackingReview.rdl</Name>
       <FullPath>DailyPackingReview.rdl</FullPath>
     </ProjectItem>
@@ -870,6 +878,10 @@
     <ProjectItem>
       <Name>DyeingReceipt_ProductPrint_WithLossQty.rdl</Name>
       <FullPath>DyeingReceipt_ProductPrint_WithLossQty.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>DyeingReceipt_ProductPrint_WithLossQty_WithoutPassQty.rdl</Name>
+      <FullPath>DyeingReceipt_ProductPrint_WithLossQty_WithoutPassQty.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>DyeingReceipt_ProductPrint_WithLot.rdl</Name>
@@ -3337,6 +3349,10 @@
       <FullPath>Rug_HisabOfPurja_Bhadohi.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Rug_HisabOfPurja_LagatDetail.rdl</Name>
+      <FullPath>Rug_HisabOfPurja_LagatDetail.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>Rug_HisabOfPurja_Order.rdl</Name>
       <FullPath>Rug_HisabOfPurja_Order.rdl</FullPath>
     </ProjectItem>
@@ -3389,12 +3405,28 @@
       <FullPath>Rug_SaleInvoice_Excel_Print_Bhadohi_Meter.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Rug_SaleInvoice_Excel_WithGST_Print_Bhadohi.rdl</Name>
+      <FullPath>Rug_SaleInvoice_Excel_WithGST_Print_Bhadohi.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Rug_SaleInvoice_Excel_WithGST_Print_Bhadohi_Meter.rdl</Name>
+      <FullPath>Rug_SaleInvoice_Excel_WithGST_Print_Bhadohi_Meter.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>Rug_SaleInvoice_Print_Bhadohi.rdl</Name>
       <FullPath>Rug_SaleInvoice_Print_Bhadohi.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Rug_SaleInvoice_Print_Bhadohi_Meter.rdl</Name>
       <FullPath>Rug_SaleInvoice_Print_Bhadohi_Meter.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Rug_SaleInvoice_WithGST_Print_Bhadohi.rdl</Name>
+      <FullPath>Rug_SaleInvoice_WithGST_Print_Bhadohi.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Rug_SaleInvoice_WithGST_Print_Bhadohi_Meter.rdl</Name>
+      <FullPath>Rug_SaleInvoice_WithGST_Print_Bhadohi_Meter.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Rug_SaleInvoicePrint_Bhadohi_PackingList.rdl</Name>
@@ -5364,20 +5396,8 @@
       <FullPath>YearlyListOfPurja.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Rug_SaleInvoice_WithGST_Print_Bhadohi.rdl</Name>
-      <FullPath>Rug_SaleInvoice_WithGST_Print_Bhadohi.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Rug_SaleInvoice_WithGST_Print_Bhadohi_Meter.rdl</Name>
-      <FullPath>Rug_SaleInvoice_WithGST_Print_Bhadohi_Meter.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Rug_SaleInvoice_Excel_WithGST_Print_Bhadohi.rdl</Name>
-      <FullPath>Rug_SaleInvoice_Excel_WithGST_Print_Bhadohi.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Rug_SaleInvoice_Excel_WithGST_Print_Bhadohi_Meter.rdl</Name>
-      <FullPath>Rug_SaleInvoice_Excel_WithGST_Print_Bhadohi_Meter.rdl</FullPath>
+      <Name>WeavingAdvancePrint.rdl</Name>
+      <FullPath>WeavingAdvancePrint.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>

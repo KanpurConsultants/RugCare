@@ -30,6 +30,7 @@ namespace Service
         IQueryable<ComboBoxResult> TempGetCustomProduct(int filter, string term, int? PersonId);        
         IQueryable<ComboBoxResult> GetCustomPerson(int Id, string term);
         JobReceiveHeaderViewModel GetJobReceiveHeader_ByReferenceId(int ReferenceDocId, int ReferenceDocTypeId);
+        JobReceiveHeaderViewModel GetJobReceiveHeader_ByProductUId(int ProductUId);
     }
 
     public class WeavingReceiveQACombinedService : IWeavingReceiveQACombinedService
@@ -64,6 +65,23 @@ namespace Service
 
             return pt;
         }
+
+        public JobReceiveHeaderViewModel GetJobReceiveHeader_ByProductUId(int ProductUId)
+        {
+            var pt = (from H in db.ProductUid
+                      join JRH in db.JobReceiveHeader on H.GenDocId equals JRH.JobReceiveHeaderId into JRHTable
+                      from JRHTab in JRHTable.DefaultIfEmpty()
+                      where H.ProductUIDId == ProductUId && JRHTab.DocTypeId ==448
+                      select new JobReceiveHeaderViewModel
+                      {
+                          JobReceiveHeaderId = JRHTab.JobReceiveHeaderId,
+                          SiteId= JRHTab.SiteId,
+                          DivisionId = JRHTab.DivisionId,
+                      }).FirstOrDefault();
+
+            return pt;
+        }
+
 
         public JobReceiveHeader Create(WeavingReceiveQACombinedViewModel pt, string UserName)
         {
@@ -206,7 +224,7 @@ namespace Service
                 JobReceiveLine.DealQty = pt.DealQty / Qty;
                 JobReceiveLine.DealUnitId = pt.DealUnitId;
 
-                if (pt.LastWeight != null)
+                if (pt.LastWeight != null && pt.LastWeight != 0)
                     JobReceiveLine.Weight = pt.LastWeight == 0 ? pt.Weight : pt.Weight - (decimal)pt.LastWeight;
                 else
                     //JobReceiveLine.Weight = pt.Weight;
@@ -520,7 +538,13 @@ namespace Service
                 JobReceiveQALine.DealQty = JobReceiveLine.DealQty;
                 JobReceiveQALine.FailDealQty = 0;
                 //JobReceiveQALine.Weight = JobReceiveLine.Weight;
-                JobReceiveQALine.Weight = pt.Weight / Qty;
+                //JobReceiveQALine.Weight = pt.Weight / Qty;
+
+                if (pt.LastWeight != null && pt.LastWeight != 0)
+                    JobReceiveQALine.Weight = pt.LastWeight == 0 ? pt.Weight : pt.Weight - (decimal)pt.LastWeight;
+                else
+                    JobReceiveQALine.Weight = pt.Weight / Qty;
+
                 JobReceiveQALine.PenaltyRate = JobReceiveLine.PenaltyRate;
                 JobReceiveQALine.PenaltyAmt = JobReceiveLine.PenaltyAmt;
                 JobReceiveQALine.Remark = JobReceiveLine.Remark;

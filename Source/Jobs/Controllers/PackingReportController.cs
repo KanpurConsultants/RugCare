@@ -270,7 +270,7 @@ namespace Jobs.Controllers
 
         public ActionResult GetBuyerSpecificationPackings(string searchTerm, int pageSize, int pageNum, string filter1, string filter2, string filter3, string filter4)
         {
-            var Query = _PackingReportService.GetBuyerSpecificationPackings(searchTerm, filter1, filter2);
+            var Query = _PackingReportService.GetBuyerSpecificationPackings(searchTerm, filter1, filter2, filter3);
             var temp = Query.Skip(pageSize * (pageNum - 1))
                 .Take(pageSize)
                 .ToList();
@@ -290,7 +290,7 @@ namespace Jobs.Controllers
 
         public ActionResult GetBuyerSpecification1Packings(string searchTerm, int pageSize, int pageNum, string filter1, string filter2, string filter3, string filter4)
         {
-            var Query = _PackingReportService.GetBuyerSpecification1Packings(searchTerm, filter1, filter2, filter3);
+            var Query = _PackingReportService.GetBuyerSpecification1Packings(searchTerm, filter1, filter2, filter3, filter4);
             var temp = Query.Skip(pageSize * (pageNum - 1))
                 .Take(pageSize)
                 .ToList();
@@ -307,9 +307,9 @@ namespace Jobs.Controllers
                 JsonRequestBehavior = JsonRequestBehavior.AllowGet
             };
         }
-        public ActionResult GetBuyerSpecification2Packings(string searchTerm, int pageSize, int pageNum, string filter1, string filter2, string filter3, string filter4)
+        public ActionResult GetBuyerSpecification2Packings(string searchTerm, int pageSize, int pageNum, string filter1, string filter2, string filter3, string filter4, string filter5)
         {
-            var Query = _PackingReportService.GetBuyerSpecification2Packings(searchTerm, filter1, filter2, filter3, filter4);
+            var Query = _PackingReportService.GetBuyerSpecification2Packings(searchTerm, filter1, filter2, filter3, filter4, filter5);
             var temp = Query.Skip(pageSize * (pageNum - 1))
                 .Take(pageSize)
                 .ToList();
@@ -326,9 +326,9 @@ namespace Jobs.Controllers
                 JsonRequestBehavior = JsonRequestBehavior.AllowGet
             };
         }
-        public ActionResult GetBuyerSpecification3Packings(string searchTerm, int pageSize, int pageNum, string filter)
+        public ActionResult GetBuyerSpecification3Packings(string searchTerm, int pageSize, int pageNum, string filter1, string filter2)
         {
-            var Query = _PackingReportService.GetBuyerSpecification3Packings(searchTerm, filter);
+            var Query = _PackingReportService.GetBuyerSpecification3Packings(searchTerm, filter1, filter2);
             var temp = Query.Skip(pageSize * (pageNum - 1))
                 .Take(pageSize)
                 .ToList();
@@ -346,9 +346,9 @@ namespace Jobs.Controllers
             };
         }
 
-        public ActionResult GetPackings(string searchTerm, int pageSize, int pageNum)
+        public ActionResult GetPackings(string searchTerm, int pageSize, int pageNum, string filter1)
         {
-            var Query = _PackingReportService.GetPackings(searchTerm);
+            var Query = _PackingReportService.GetPackings(searchTerm, filter1);
             var temp = Query.Skip(pageSize * (pageNum - 1))
                 .Take(pageSize)
                 .ToList();

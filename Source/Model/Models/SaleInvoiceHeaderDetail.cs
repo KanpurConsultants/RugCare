@@ -75,6 +75,9 @@ namespace Model.Models
         [Display(Name = "Other Reference")]
         public string OtherRefrence { get; set; }
 
+        [Display(Name = "Buyer Other than Consignee")]
+        public string BuyerOtherthanConsignee { get; set; }
+
         [Display(Name = "Terms Of Sale")]
         public string TermsOfSale { get; set; }
 

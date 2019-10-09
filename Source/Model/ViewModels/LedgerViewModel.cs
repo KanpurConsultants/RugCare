@@ -239,6 +239,8 @@ namespace Model.ViewModels
         public int LedgerId { get; set; }
         public int LedgerAccountId { get; set; }
         public string LedgerAccountName { get; set; }
+        public int? CostCenterId { get; set; }
+        public string CostCenterName { get; set; }
         public string LedgerHeaderDocNo { get; set; }
         public DateTime LedgerHeaderDocDate { get; set; }
         public string PartyDocNo { get; set; }

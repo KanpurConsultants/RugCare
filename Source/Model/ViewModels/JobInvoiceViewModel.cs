@@ -78,6 +78,7 @@ namespace Model.ViewModel
         public decimal? TotalQty { get; set; }
         public decimal? TotalAmount { get; set; }
         public int? DecimalPlaces { get; set; }
+        public int? LedgerHeaderId { get; set; }
         public bool? IsLedgerAdjusted { get; set; }
         public string AdditionalInfo { get; set; }
         public string ReturnNature { get; set; }

@@ -334,12 +334,16 @@
                 type: "POST",
                 data: $('form#Summary').serialize(),
                 success: function (result) {
-                    if (result.Success) {
+                    if (result.Success)
+                    {
                         Lock = false;
                         window.location.href = result.Url;
-                    } else {
+                    }
+                    else
+                    {
                         Lock = false;
-                        alert("Error in Updating.");
+                        alert(result.Url);
+                        //alert("Error in Updating.");
                     }
                 },
                 error: function () {

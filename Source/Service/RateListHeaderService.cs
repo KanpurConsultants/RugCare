@@ -127,7 +127,7 @@ namespace Service
                               select p.ProcessId).ToArray();
 
             var pt = (from p in db.RateListHeader
-                      where p.SiteId == SiteId && p.DivisionId == DivisionId&& ProcessIds.Contains(p.ProcessId)
+                      where p.SiteId == SiteId && p.DivisionId == DivisionId&& ProcessIds.Contains(p.ProcessId) && p.DealUnitId != "Pcs"
                       orderby p.RateListName
                       select new RateListHeaderViewModel
                       {
@@ -159,13 +159,13 @@ namespace Service
             int SiteId = (int)System.Web.HttpContext.Current.Session["SiteId"];
             int DivisionId = (int)System.Web.HttpContext.Current.Session["DivisionId"];
 
-            var ProcessIds = (from p in db.ProcessSettings
-                              where p.RateListMenuId == MenuId
-                              && p.SiteId == SiteId && p.DivisionId == DivisionId
-                              select p.ProcessId).ToArray();
+            //var ProcessIds = (from p in db.ProcessSettings
+            //                  where p.RateListMenuId == MenuId
+            //                  && p.SiteId == SiteId && p.DivisionId == DivisionId
+            //                  select p.ProcessId).ToArray();
 
             var pt = (from p in db.RateListHeader
-                      where p.SiteId == SiteId && p.DivisionId == DivisionId && ProcessIds.Contains(p.ProcessId)
+                      where p.SiteId == SiteId && p.DivisionId == DivisionId && p.DealUnitId =="Pcs"
                       orderby p.RateListName
                       select new RateListHeaderViewModel
                       {

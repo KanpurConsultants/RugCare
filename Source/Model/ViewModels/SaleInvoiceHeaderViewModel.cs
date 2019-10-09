@@ -125,6 +125,9 @@ namespace Model.ViewModels
         [Display(Name = "Packing Material Description")]
         public string PackingMaterialDescription { get; set; }
 
+        [Display(Name = "Buyer Other than Consignee")]
+        public string BuyerOtherthanConsignee { get; set; }
+
         [Display(Name = "Kinds Of Packages")]
         public Decimal KindsOfackages { get; set; }
 

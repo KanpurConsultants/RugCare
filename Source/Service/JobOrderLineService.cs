@@ -1572,10 +1572,9 @@ namespace Service
             else { FilterUnitConversonFor = new string[] { "NA" }; }
 
             var temp = (from P in db.UnitConversonFor
-                        where 1==1
-                        && (string.IsNullOrEmpty(term) ? 1 == 1 : P.UnitconversionForName.ToLower().Contains(term.ToLower())
-                        && (string.IsNullOrEmpty(settings.filterUnitConversionFors) ? 1==1 : FilterUnitConversonFor.Contains(P.UnitconversionForId.ToString()))
-                        )
+                        where 1 == 1
+                        && (string.IsNullOrEmpty(term) ? 1 == 1 : P.UnitconversionForName.ToLower().Contains(term.ToLower()))
+                        && (string.IsNullOrEmpty(settings.filterUnitConversionFors) ? 1 == 1 : FilterUnitConversonFor.Contains(P.UnitconversionForId.ToString()))
                         select new ComboBoxResult
                         {
                             id = P.UnitconversionForId.ToString(),

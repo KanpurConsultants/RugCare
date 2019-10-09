@@ -283,6 +283,7 @@
 
         $('#LedgerAccountId').change(function()
         {
+            $("#CostCenterId").select2("data", { id: "", text: "" });
             CustomSelectFunctionForLedgerId_Adjusted($("#ReferenceId"), '/LedgerLine/GetLedgerIds_Adusted', '/ComboHelpList/SetSingleLedger', ' ', false, 0, $('#LedgerAccountId','.modal-body').val(),Nature, $('#LedgerHeaderId', '.modal-body').val());
             CustomSelectFunctionForLedgerId_Adjusted($("#SupplementaryForLedgerId"), '/LedgerLine/GetLedgerIds_Supplementary', '/ComboHelpList/SetSingleLedger', ' ', false, 0, $('#LedgerAccountId','.modal-body').val(),Nature, $('#LedgerHeaderId', '.modal-body').val());
         })
@@ -418,6 +419,7 @@
             $("#ReferenceId").attr('readonly','true');
             if ($("#ReferenceId").val() != null && $("#ReferenceId").val() != 0)
             {
+                $("#CostCenterId").attr('readonly','true');
                 $("#LedgerAccountId").attr('readonly','true');
                 $("#Amount").attr('readonly','true');
             }
@@ -446,12 +448,16 @@
                             $("#Amount").val(data.BalanceAmount)
                             $('#LedgerAccountId').select2("data",{id:data.LedgerAccountId,text:data.LedgerAccountName})
                             $("#LedgerAccountId").attr('readonly','true');
+                            $('#CostCenterId').select2("data",{id:data.CostCenterId,text:data.CostCenterName})
+                            $("#CostCenterId").attr('readonly','true');
                         }
                         else
                         {
                             $("#Amount").val(0);
                             $('#LedgerAccountId').select2("data",{id:'',text:''})
                             $("#LedgerAccountId").removeAttr('readonly');
+                            $('#CostCenterId').select2("data",{id:'',text:''})
+                            $("#CostCenterId").removeAttr('readonly');
                         }
                     },
                     error: function (xhr, ajaxOptions, thrownError) {
@@ -488,7 +494,8 @@
                 data: { CostCenterId:$('#CostCenterId','.modal-body').val() },
                 success: function (data) {
                     if(data.Success){
-                        $('#LedgerAccountId').select2("data",{id:data.Id,text:data.Name}).attr('readonly','true').trigger('change');
+                        //$('#LedgerAccountId').select2("data",{id:data.Id,text:data.Name}).attr('readonly','true').trigger('change');
+                        $('#LedgerAccountId').select2("data",{id:data.Id,text:data.Name}).attr('readonly','true');
                         if($('#BaseValue').is(':hidden'))
                             $('#Amount').focus();
                         else if($('#BaseValue').is(':visible'))

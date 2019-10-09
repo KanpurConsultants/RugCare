@@ -392,11 +392,12 @@ namespace Service
 	                        LEFT JOIN Web.LedgerLines LL ON L.LedgerLineId = LL.LedgerLineId
 	                        LEFT JOIN Web.LedgerHeaders H ON L.LedgerHeaderId = H.LedgerHeaderId
 	                        LEFT JOIN Web.DocumentTypes D ON H.DocTypeId = D.DocumentTypeId
-	                        LEFT JOIN (
-		                        SELECT La.CrLedgerId, Sum(La.Amount) AS AdjustedAmount
+	                        LEFT JOIN 
+	                        (
+		                        SELECT La.DrLedgerId, Sum(-La.Amount) AS AdjustedAmount
 		                        FROM Web.LedgerAdjs La
-		                        GROUP BY La.CrLedgerId
-	                        ) AS VAdj ON L.LedgerId = VAdj.CrLedgerId
+		                        GROUP BY La.DrLedgerId
+	                        ) AS VAdj ON L.LedgerId = VAdj.DrLedgerId
 	                        WHERE D.DocumentTypeName = 'Credit Note'
                             AND IsNull(L.AmtCr,0) - IsNull(VAdj.AdjustedAmount,0) > 0
 	                        GROUP BY E.EmployeeId
@@ -622,18 +623,19 @@ namespace Service
                         ) AS VDBT ON E.EmployeeId = VDBT.EmployeeId
                          LEFT JOIN 
                         (
-	                        SELECT E.EmployeeId, Sum(IsNull(L.AmtCr,0) - IsNull(VAdj.AdjustedAmount,0)) AS CNTAmount, Min(L.LedgerId) As LoanLedgerId
+	                        SELECT  E.EmployeeId, Sum(IsNull(L.AmtCr,0) - IsNull(VAdj.AdjustedAmount,0)) AS CNTAmount, Min(L.LedgerId) As LoanLedgerId
 	                        FROM Web.Employees E
 	                        LEFT JOIN Web.LedgerAccounts A ON E.PersonID = A.PersonId
 	                        LEFT JOIN Web.Ledgers L ON A.LedgerAccountId = L.LedgerAccountId
 	                        LEFT JOIN Web.LedgerLines LL ON L.LedgerLineId = LL.LedgerLineId
 	                        LEFT JOIN Web.LedgerHeaders H ON L.LedgerHeaderId = H.LedgerHeaderId
 	                        LEFT JOIN Web.DocumentTypes D ON H.DocTypeId = D.DocumentTypeId
-	                        LEFT JOIN (
-		                        SELECT La.CrLedgerId, Sum(La.Amount) AS AdjustedAmount
+	                        LEFT JOIN 
+	                        (
+		                        SELECT La.DrLedgerId, Sum(-La.Amount) AS AdjustedAmount
 		                        FROM Web.LedgerAdjs La
-		                        GROUP BY La.CrLedgerId
-	                        ) AS VAdj ON L.LedgerId = VAdj.CrLedgerId
+		                        GROUP BY La.DrLedgerId
+	                        ) AS VAdj ON L.LedgerId = VAdj.DrLedgerId
 	                        WHERE D.DocumentTypeName = 'Credit Note'
                             AND IsNull(L.AmtCr,0) - IsNull(VAdj.AdjustedAmount,0) > 0
 	                        GROUP BY E.EmployeeId

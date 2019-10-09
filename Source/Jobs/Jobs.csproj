@@ -288,6 +288,7 @@
     <Compile Include="Areas\Rug\Controllers\CarpetSkuSettingsController.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Areas\Rug\Controllers\ProductQualityConsumptionLineController.cs" />
     <Compile Include="Controllers\DocumentTypeTimeExtensionRequestController.cs" />
     <Compile Include="Areas\Rug\Controllers\WeavingRetension.cs" />
     <Compile Include="Areas\Rug\Controllers\CostingHeaderController.cs" />
@@ -449,6 +450,7 @@
     <Compile Include="Controllers\BusinessSessionLineController.cs" />
     <Compile Include="Controllers\EmployeeSalaryChangeWizardController.cs" />
     <Compile Include="Controllers\SaleInvoiceCustomController.cs" />
+    <Compile Include="Controllers\ProductUIDExchangeController.cs" />
     <Compile Include="Controllers\TaxReturnController.cs" />
     <Compile Include="Controllers\SalaryWizardController.cs" />
     <Compile Include="Controllers\LedgerAccountMergingController.cs" />
@@ -3703,6 +3705,8 @@
     <Content Include="Views\DocumentTypeTimeExtensionRequest\Details.cshtml" />
     <Content Include="Views\DocumentTypeTimeExtensionRequest\Edit.cshtml" />
     <Content Include="Views\DocumentTypeTimeExtensionRequest\Index.cshtml" />
+    <Content Include="Areas\Rug\Views\ProductQualityConsumptionLine\_Create.cshtml" />
+    <Content Include="Areas\Rug\Views\ProductQualityConsumptionLine\_Edit.cshtml" />
     <None Include="Properties\PublishProfiles\Jobs.kanpurconsultants.com - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\Jobs.pubxml" />
     <None Include="Properties\PublishProfiles\Purchase.pubxml" />
@@ -5427,6 +5431,18 @@
     <Content Include="Views\PersonGodown\Create.cshtml" />
     <Content Include="Views\PersonGodown\Index.cshtml" />
     <Content Include="Views\JobInvoiceReceiveHeader\_Reason.cshtml" />
+    <Content Include="Views\ProductUIDExchange\_Create.cshtml" />
+    <Content Include="Views\ProductUIDExchange\_Filters.cshtml" />
+    <Content Include="Views\ProductUIDExchange\_Reason.cshtml" />
+    <Content Include="Views\ProductUIDExchange\_Results.cshtml" />
+    <Content Include="Views\ProductUIDExchange\_ResultsReceiveProductBom.cshtml" />
+    <Content Include="Views\ProductUIDExchange\Create.cshtml" />
+    <Content Include="Views\ProductUIDExchange\Delete.cshtml" />
+    <Content Include="Views\ProductUIDExchange\DocumentTypeList.cshtml" />
+    <Content Include="Views\ProductUIDExchange\Edit.cshtml" />
+    <Content Include="Views\ProductUIDExchange\Index.cshtml" />
+    <Content Include="Views\ProductUIDExchange\PendingToApprove.cshtml" />
+    <Content Include="Views\ProductUIDExchange\PendingToSubmit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

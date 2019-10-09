@@ -501,12 +501,65 @@
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-md-6">
                                             <div class="form-group">
-                                                @Html.LabelFor(model => model.OtherRefrence, "Other Refrence", new { @class = "control-label col-xs-2" })
-                                                <div class="col-xs-9">
-                                                    @Html.TextBoxFor(m => m.OtherRefrence, new { @class = "form-control col-xs-6" })
+                                                @Html.LabelFor(model => model.GrossWeight, "Gross Weight", new { @class = "control-label col-xs-4" })
+                                                <div class="col-xs-6">
+                                                    @Html.TextBoxFor(m => m.GrossWeight, new { @class = "form-control col-xs-6" })
+                                                    @Html.ValidationMessageFor(model => model.GrossWeight)
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.NetWeight, "Net Weight", new { @class = "control-label col-xs-4" })
+                                                <div class="col-xs-6">
+                                                    @Html.TextBoxFor(m => m.NetWeight, new { @class = "form-control col-xs-6" })
+                                                    @Html.ValidationMessageFor(model => model.NetWeight)
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.OtherRefrence, "Other Refrence", new { @class = "control-label col-xs-4" })
+                                                <div class="col-xs-6">
+                                                    @Html.TextAreaFor(m => m.OtherRefrence, new { @class = "form-control col-xs-6" })
                                                     @Html.ValidationMessageFor(model => model.OtherRefrence)
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.BuyerOtherthanConsignee, "Buyer Other than Consignee", new { @class = "control-label col-xs-4" })
+                                                <div class="col-xs-6">
+                                                    @Html.TextAreaFor(m => m.BuyerOtherthanConsignee, new { @class = "form-control col-xs-6" })
+                                                    @Html.ValidationMessageFor(model => model.BuyerOtherthanConsignee)
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.NotifyParty, "Notify Party", new { @class = "control-label col-xs-4" })
+                                                <div class="col-xs-6">
+                                                    @Html.TextAreaFor(m => m.NotifyParty, new { @class = "form-control col-xs-6" })
+                                                    @Html.ValidationMessageFor(model => model.NotifyParty)
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.PackingMaterialDescription, "Packing Material Description", new { @class = "control-label col-xs-4" })
+                                                <div class="col-xs-6">
+                                                    @Html.TextAreaFor(m => m.PackingMaterialDescription, new { @class = "form-control col-xs-6" })
+                                                    @Html.ValidationMessageFor(model => model.PackingMaterialDescription)
                                                 </div>
                                             </div>
                                         </div>
@@ -524,27 +577,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                @Html.LabelFor(model => model.NotifyParty, "Notify Party", new { @class = "control-label col-xs-4" })
-                                                <div class="col-xs-6">
-                                                    @Html.TextBoxFor(m => m.NotifyParty, new { @class = "form-control col-xs-6" })
-                                                    @Html.ValidationMessageFor(model => model.NotifyParty)
-                                                </div>
-                                            </div>
-                                        </div>
 
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                @Html.LabelFor(model => model.PackingMaterialDescription, "Packing Material Description", new { @class = "control-label col-xs-4" })
-                                                <div class="col-xs-6">
-                                                    @Html.TextBoxFor(m => m.PackingMaterialDescription, new { @class = "form-control col-xs-6" })
-                                                    @Html.ValidationMessageFor(model => model.PackingMaterialDescription)
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
 
                                     <div class="row">
                                         <div class="col-md-12">

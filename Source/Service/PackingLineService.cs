@@ -56,7 +56,7 @@ namespace Service
         IQueryable<ComboBoxResult> GetCustomProductsWithBuyerSku(int Id, string term);
         IQueryable<ComboBoxResult> GetCustomProducts(int Id, string term);
 
-        IEnumerable<PendingOrderListForPacking> FGetPendingOrderListForPackingForProductUid(int ProductUidId, int BuyerId);
+        IEnumerable<PendingOrderListForPacking> FGetPendingOrderListForPackingForProductUid(int ProductUidId, int BuyerId, int PackingLineId);
 
         IEnumerable<PackingLineViewModel> GetPackingLineListForIndex(int PackingHeaderId);
         IEnumerable<PackingLineViewModel> GetSaleOrdersForFilters(PackingFilterViewModel vm);
@@ -781,12 +781,13 @@ namespace Service
             return FifoSaleOrderLineList;
         }
 
-        public IEnumerable<PendingOrderListForPacking> FGetPendingOrderListForPackingForProductUid(int ProductUidId, int BuyerId)
+        public IEnumerable<PendingOrderListForPacking> FGetPendingOrderListForPackingForProductUid(int ProductUidId, int BuyerId, int PackingLineId)
         {
             SqlParameter SqlParameterProductUidId = new SqlParameter("@ProductUidId", ProductUidId);
             SqlParameter SqlParameterBuyerId = new SqlParameter("@BuyerId", BuyerId);
+            SqlParameter SqlParameterPackingLineId = new SqlParameter("@PackingLineId", PackingLineId);
 
-            IEnumerable<PendingOrderListForPacking> FifoSaleOrderLineList = db.Database.SqlQuery<PendingOrderListForPacking>("" + ConfigurationManager.AppSettings["DataBaseSchema"] + ".ProcGetPendingOrderListForPackingForProductUid @ProductUidId, @BuyerId", SqlParameterProductUidId, SqlParameterBuyerId).ToList();
+            IEnumerable<PendingOrderListForPacking> FifoSaleOrderLineList = db.Database.SqlQuery<PendingOrderListForPacking>("" + ConfigurationManager.AppSettings["DataBaseSchema"] + ".ProcGetPendingOrderListForPackingForProductUid @ProductUidId, @BuyerId, @PackingLineId", SqlParameterProductUidId, SqlParameterBuyerId, SqlParameterPackingLineId).ToList();
 
             return FifoSaleOrderLineList;
         }

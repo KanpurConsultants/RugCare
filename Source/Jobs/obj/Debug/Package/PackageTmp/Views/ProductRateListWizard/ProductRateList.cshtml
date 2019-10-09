@@ -155,6 +155,7 @@
                     d.ProductCollection = Filters.ProductCollection.length > 0 ? $.map(Filters.ProductCollection, function (val, i) { return (val.id) }).join(',') : "";
                     d.SOD = Filters.SOD ? Filters.SOD : null;
                     d.DisContinued = Filters.DisContinued ? Filters.DisContinued : null;
+                    d.RateListHeaderId = RatLHId;
                 },
             },
             columns: [

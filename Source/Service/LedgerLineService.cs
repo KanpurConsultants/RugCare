@@ -353,13 +353,14 @@ namespace Service
             return (from p in PendingLedgerViewModel
                     where (string.IsNullOrEmpty(term) ? 1 == 1 : p.LedgerHeaderDocNo.ToLower().Contains(term.ToLower())
                     || string.IsNullOrEmpty(term) ? 1 == 1 : p.PartyDocNo.ToLower().Contains(term.ToLower())
+                    || string.IsNullOrEmpty(term) ? 1 == 1 : p.CostCenterName.ToLower().Contains(term.ToLower())
                     || string.IsNullOrEmpty(term) ? 1 == 1 : p.LedgerAccountName.ToLower().Contains(term.ToLower()))
                     select new ComboBoxResult
                     {
                         id = p.LedgerId.ToString(),
                         text = p.LedgerHeaderDocNo,
                         AProp1 = p.LedgerAccountName,
-                        AProp2 = "Party Doc No : " + p.PartyDocNo + ", Party Doc Date : " + p.PartyDocDate,
+                        AProp2 = "Party Doc No : " + p.PartyDocNo + ", Party Doc Date : " + p.PartyDocDate + ", Cost Center : " + p.CostCenterName,
                         TextProp1 = "Balance Amount : " + p.BalanceAmount,
                         TextProp2 = "Bill Amount : " + p.BillAmount
                     });

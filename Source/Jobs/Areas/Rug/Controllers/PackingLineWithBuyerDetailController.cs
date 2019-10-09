@@ -183,17 +183,39 @@ namespace Jobs.Areas.Rug.Controllers
             var LastTrRec = (from p in db.PackingLine
                              join Pu in db.ProductUid on p.ProductUidId equals Pu.ProductUIDId into PUTable
                              from PUTab in PUTable.DefaultIfEmpty()
+                             join PL in db.PackingLineExtended on p.PackingLineId equals PL.PackingLineId into PLTable
+                             from PLTab in PLTable.DefaultIfEmpty()
+                             join S in db.SaleOrderLine on p.SaleOrderLineId equals S.SaleOrderLineId into STable
+                             from STab in STable.DefaultIfEmpty()
+                             join SE in db.SaleEnquiryLine on STab.ReferenceDocLineId equals SE.SaleEnquiryLineId into SETable
+                             from SETab in SETable.DefaultIfEmpty()
+                             join SEE in db.SaleEnquiryLineExtended on SETab.SaleEnquiryLineId equals SEE.SaleEnquiryLineId into SEETable
+                             from SEETab in SEETable.DefaultIfEmpty()
                              where p.PackingHeaderId == Id
                              orderby p.PackingLineId descending
                              select new
                              {
                                  ProductName = p.Product.ProductName,
-                                 Barcode= PUTab.ProductUidName ==null ? p.LotNo : PUTab.ProductUidName,
-                                 BaleNo=p.BaleNo,
+                                 BuyerSKU = SEETab.BuyerSpecification+"-"+ SEETab.BuyerSpecification1 + "-" + SEETab.BuyerSpecification2 ,
+                                 Barcode = PUTab.ProductUidName ==null ? p.LotNo : PUTab.ProductUidName,
+                                 Length = (decimal)PLTab.Length,
+                                 Width = (decimal)PLTab.Width,
+                                 BaleNo =p.BaleNo,
                                  Qty = p.Qty,
                              }).FirstOrDefault();
-                   
 
+
+
+
+            var Total = (from L in db.PackingLine
+                                   where L.PackingHeaderId == Id
+                                   group new { L } by new { L.PackingHeaderId } into Result
+                                   select new
+                                   {
+                                       Qty = Result.Sum(i => i.L.Qty),
+                                       DealQty = Result.Sum(i => i.L.DealQty),
+                                       Bale = Result.Select(i => i.L.BaleNo).Distinct().Count()
+                                   }).FirstOrDefault();
 
             if (LastTrRec != null)
             {
@@ -201,7 +223,8 @@ namespace Jobs.Areas.Rug.Controllers
                                    where p.PackingHeaderId == Id && p.BaleNo == LastTrRec.BaleNo
                                    select p.Qty).Sum();
 
-                ViewBag.StockLastTransaction = "Last Line -Barcode : " + LastTrRec.Barcode + ", Bale No : " + LastTrRec.BaleNo + "-" + BaleQty.ToString("N0") + ", Product : " + LastTrRec.ProductName + ", " + "Qty : " + LastTrRec.Qty;
+                ViewBag.StockLastTransaction = "Last Line -Barcode : " + LastTrRec.Barcode + ", Bale No : " + LastTrRec.BaleNo + "-" + BaleQty.ToString("N0") + ", Product : " + LastTrRec.ProductName + ", BuyerSKU : " + LastTrRec.BuyerSKU + ", Size : " + LastTrRec.Length.ToString("N2") + "X" + LastTrRec.Width.ToString("N2") + " , " + "Qty : " + LastTrRec.Qty.ToString("N0")
+                                               + ", " + "Total Qty : " + Total.Qty.ToString("N0") + ", " + "Deal Qty : " + Total.DealQty.ToString("N2") + ", " + "Bale : " + Total.Bale.ToString("N0");
             }
             return PartialView("_Create", s);
         }
@@ -232,6 +255,18 @@ namespace Jobs.Areas.Rug.Controllers
 
             PackingSetting PackingSetting = new PackingSettingService(_unitOfWork).GetPackingSettingForDocument(packingheader.DocTypeId, packingheader.DivisionId, packingheader.SiteId);
             //s.PackingSettings = Mapper.Map<PackingSetting, PackingSettingsViewModel>(PackingSetting);
+
+            Product Pro = new ProductService(_unitOfWork).Find((int)svm.ProductId);
+            Decimal UnitConversionMultiplier = 0;
+            Decimal DealQty = 0;
+            UnitConversionMultiplier = new ProductService(_unitOfWork).GetUnitConversionMultiplier(1, Pro.UnitId, (Decimal)svm.Length, (Decimal)svm.Width, svm.Height, svm.DealUnitId, db, svm.DocTypeId);
+
+            DealQty = Math.Round(UnitConversionMultiplier,2) * svm.Qty;
+
+            if ( DealQty !=svm.DealQty)
+            {
+                svm.DealQty = DealQty;
+            }
 
             if (PackingSetting.isPostedInSaleInvoice == true)
             {
@@ -620,99 +655,108 @@ namespace Jobs.Areas.Rug.Controllers
                     System.Web.HttpContext.Current.Session["CurrentRollNoList"] = CurrentRollNoList;
 
 
-                    //#region "Update Product Buyer"
-                    //ProductBuyer productbuyer = (from p in db.ProductBuyer
-                    //                         where p.BuyerId  == packingheader.BuyerId && p.ProductId == svm.ProductId
-                    //                         select p).AsNoTracking().FirstOrDefault();
-                    //if (productbuyer == null)
-                    //{
-                    //    List<LogTypeViewModel> LogListProductBuyer = new List<LogTypeViewModel>();
-                    //    ProductBuyer ExRecProductBuyer = new ProductBuyer();
+                    #region "Update Product Buyer"
+                    if (svm.SaleOrderLineId != null)
+                    {
+                        SaleOrderLine SaleOrderLine = db.SaleOrderLine.Where(m => m.SaleOrderLineId == svm.SaleOrderLineId).FirstOrDefault();
+                        if (SaleOrderLine != null)                        {
+                            SaleEnquiryLine SEL = new SaleEnquiryLineService(_unitOfWork).Find((int)SaleOrderLine.ReferenceDocLineId);
+                            if (SEL != null)
+                            {
+                                SaleEnquiryLineExtended productbuyer = (from p in db.SaleEnquiryLineExtended
+                                                             where p.SaleEnquiryLineId == SEL.SaleEnquiryLineId 
+                                                             select p).AsNoTracking().FirstOrDefault();
+                                if (productbuyer == null)
+                                {
+                                    List<LogTypeViewModel> LogListProductBuyer = new List<LogTypeViewModel>();
+                                    SaleEnquiryLineExtended ExRecProductBuyer = new SaleEnquiryLineExtended();
 
-                    //    ExRecProductBuyer.BuyerId = (int)packingheader.BuyerId;
-                    //    ExRecProductBuyer.ProductId = (int)svm.ProductId;
-                    //    ExRecProductBuyer.BuyerSku = svm.BuyerSku;
-                    //    ExRecProductBuyer.BuyerSpecification = svm.BuyerSpecification;
-                    //    ExRecProductBuyer.BuyerSpecification1 = svm.BuyerSpecification1;
-                    //    ExRecProductBuyer.BuyerSpecification2 = svm.BuyerSpecification2;
-                    //    ExRecProductBuyer.BuyerSpecification3 = svm.BuyerSpecification3;
-                    //    ExRecProductBuyer.ObjectState = Model.ObjectState.Added;
-                    //    ExRecProductBuyer.CreatedDate = DateTime.Now;
-                    //    ExRecProductBuyer.CreatedBy = User.Identity.Name;
-                    //    ExRecProductBuyer.ModifiedDate = DateTime.Now;
-                    //    ExRecProductBuyer.ModifiedBy = User.Identity.Name;
-                    //    new ProductBuyerService(_unitOfWork).Create(ExRecProductBuyer);
+                                    ExRecProductBuyer.SaleEnquiryLineId = productbuyer.SaleEnquiryLineId;                
+                                    ExRecProductBuyer.BuyerSku = svm.BuyerSku;
+                                    ExRecProductBuyer.BuyerSpecification = svm.BuyerSpecification;
+                                    ExRecProductBuyer.BuyerSpecification1 = svm.BuyerSpecification1;
+                                    ExRecProductBuyer.BuyerSpecification2 = svm.BuyerSpecification2;
+                                    ExRecProductBuyer.BuyerSpecification3 = svm.BuyerSpecification3;
+                                    ExRecProductBuyer.ObjectState = Model.ObjectState.Added;
+                                    new SaleEnquiryLineExtendedService(_unitOfWork).Create(ExRecProductBuyer);
 
-                    //    LogListProductBuyer.Add(new LogTypeViewModel
-                    //    {
-                    //        ExObj = ExRecProductBuyer,
-                    //        Obj = ExRecProductBuyer,
-                    //    });
-                    //    XElement ModificationsProductBuyer = new ModificationsCheckService().CheckChanges(LogListProductBuyer);
-
-
-
-                    //    //Saving the Activity Log
-
-                    //    LogActivity.LogActivityDetail(LogVm.Map(new ActiivtyLogViewModel
-                    //    {
-                    //        DocTypeId = packingheader.DocTypeId,
-                    //        DocId = packingline.PackingHeaderId,
-                    //        DocLineId = packingline.PackingLineId,
-                    //        ActivityType = (int)ActivityTypeContants.Modified,
-                    //        DocNo = packingheader.DocNo,
-                    //        xEModifications = ModificationsProductBuyer,
-                    //        DocDate = packingheader.DocDate,
-                    //        DocStatus = (int)StatusConstants.Modified,
-                    //    }));
-
-
-                    //}
-                    //else
-                    //{
-                    //    if (productbuyer.BuyerSku != svm.BuyerSku || productbuyer.BuyerSpecification != svm.BuyerSpecification || productbuyer.BuyerSpecification1 != svm.BuyerSpecification1 || productbuyer.BuyerSpecification2 != svm.BuyerSpecification2 || productbuyer.BuyerSpecification3 != svm.BuyerSpecification3)
-                    //    {
-                    //        List<LogTypeViewModel> LogListProductBuyer = new List<LogTypeViewModel>();
-                    //        ProductBuyer ExRecProductBuyer = new ProductBuyer();
-                    //        ExRecProductBuyer = Mapper.Map<ProductBuyer>(productbuyer);
-
-                    //        productbuyer.BuyerSku = svm.BuyerSku;
-                    //        productbuyer.BuyerSpecification = svm.BuyerSpecification;
-                    //        productbuyer.BuyerSpecification1 = svm.BuyerSpecification1;
-                    //        productbuyer.BuyerSpecification2 = svm.BuyerSpecification2;
-                    //        productbuyer.BuyerSpecification3 = svm.BuyerSpecification3;
-                    //        new ProductBuyerService(_unitOfWork).Update(productbuyer);
-
-                    //        LogListProductBuyer.Add(new LogTypeViewModel
-                    //        {
-                    //            ExObj = ExRecProductBuyer,
-                    //            Obj = productbuyer,
-                    //        });
-                    //        XElement ModificationsProductBuyer = new ModificationsCheckService().CheckChanges(LogListProductBuyer);
+                                    LogListProductBuyer.Add(new LogTypeViewModel
+                                    {
+                                        ExObj = ExRecProductBuyer,
+                                        Obj = ExRecProductBuyer,
+                                    });
+                                    XElement ModificationsProductBuyer = new ModificationsCheckService().CheckChanges(LogListProductBuyer);
 
 
 
-                    //        //Saving the Activity Log
+                                    //Saving the Activity Log
 
-                    //        LogActivity.LogActivityDetail(LogVm.Map(new ActiivtyLogViewModel
-                    //        {
-                    //            DocTypeId = packingheader.DocTypeId,
-                    //            DocId = packingline.PackingHeaderId,
-                    //            DocLineId = packingline.PackingLineId,
-                    //            ActivityType = (int)ActivityTypeContants.Modified,
-                    //            DocNo = packingheader.DocNo,
-                    //            xEModifications = ModificationsProductBuyer,
-                    //            DocDate = packingheader.DocDate,
-                    //            DocStatus = (int)StatusConstants.Modified,
-                    //        }));
-
-                    //        //End of Saving the Activity Log
-                    //    }
-                    //}
-                    //#endregion
+                                    LogActivity.LogActivityDetail(LogVm.Map(new ActiivtyLogViewModel
+                                    {
+                                        DocTypeId = packingheader.DocTypeId,
+                                        DocId = packingline.PackingHeaderId,
+                                        DocLineId = packingline.PackingLineId,
+                                        ActivityType = (int)ActivityTypeContants.Modified,
+                                        DocNo = packingheader.DocNo,
+                                        xEModifications = ModificationsProductBuyer,
+                                        DocDate = packingheader.DocDate,
+                                        DocStatus = (int)StatusConstants.Modified,
+                                    }));
 
 
-                    if (PackingSetting.isPostedInSaleInvoice == true)
+                                }
+                                else
+                                {
+                                    if (productbuyer.BuyerSku != svm.BuyerSku || productbuyer.BuyerSpecification != svm.BuyerSpecification || productbuyer.BuyerSpecification1 != svm.BuyerSpecification1 || productbuyer.BuyerSpecification2 != svm.BuyerSpecification2 || productbuyer.BuyerSpecification3 != svm.BuyerSpecification3)
+                                    {
+                                        List<LogTypeViewModel> LogListProductBuyer = new List<LogTypeViewModel>();
+                                        SaleEnquiryLineExtended ExRecProductBuyer = new SaleEnquiryLineExtended();
+                                        ExRecProductBuyer = Mapper.Map<SaleEnquiryLineExtended>(productbuyer);
+
+                                        productbuyer.BuyerSku = svm.BuyerSku;
+                                        productbuyer.BuyerSpecification = svm.BuyerSpecification;
+                                        productbuyer.BuyerSpecification1 = svm.BuyerSpecification1;
+                                        productbuyer.BuyerSpecification2 = svm.BuyerSpecification2;
+                                        productbuyer.BuyerSpecification3 = svm.BuyerSpecification3;
+                                        new SaleEnquiryLineExtendedService(_unitOfWork).Update(productbuyer);
+
+                                        LogListProductBuyer.Add(new LogTypeViewModel
+                                        {
+                                            ExObj = ExRecProductBuyer,
+                                            Obj = productbuyer,
+                                        });
+                                        XElement ModificationsProductBuyer = new ModificationsCheckService().CheckChanges(LogListProductBuyer);
+
+
+
+                                        //        //Saving the Activity Log
+
+                                        LogActivity.LogActivityDetail(LogVm.Map(new ActiivtyLogViewModel
+                                        {
+                                            DocTypeId = packingheader.DocTypeId,
+                                            DocId = packingline.PackingHeaderId,
+                                            DocLineId = packingline.PackingLineId,
+                                            ActivityType = (int)ActivityTypeContants.Modified,
+                                            DocNo = packingheader.DocNo,
+                                            xEModifications = ModificationsProductBuyer,
+                                            DocDate = packingheader.DocDate,
+                                            DocStatus = (int)StatusConstants.Modified,
+                                        }));
+
+                                        //End of Saving the Activity Log
+                                    }
+                                }
+
+                            }
+
+                        }
+                    }
+
+
+            #endregion
+
+
+            if (PackingSetting.isPostedInSaleInvoice == true)
                     {
 
                         SaleDispatchHeader saledispatchheader = db.SaleDispatchHeader.Where(m=>m.PackingHeaderId == packingheader.PackingHeaderId).FirstOrDefault();
@@ -902,49 +946,106 @@ namespace Jobs.Areas.Rug.Controllers
 
                     }
 
-                    //    #region "Update Product Buyer"
-                    //    ProductBuyer productbuyer = (from p in db.ProductBuyer
-                    //                             where p.BuyerId == packingheader.BuyerId && p.ProductId == svm.ProductId
-                    //                             select p).AsNoTracking().FirstOrDefault();
-                    //if (productbuyer.BuyerSku != svm.BuyerSku || productbuyer.BuyerSpecification != svm.BuyerSpecification || productbuyer.BuyerSpecification1 != svm.BuyerSpecification1 || productbuyer.BuyerSpecification2 != svm.BuyerSpecification2 || productbuyer.BuyerSpecification3 != svm.BuyerSpecification3)
-                    //{
-                    //    List<LogTypeViewModel> LogListProductBuyer = new List<LogTypeViewModel>();
-                    //    ProductBuyer ExRecProductBuyer = new ProductBuyer();
-                    //    ExRecProductBuyer = Mapper.Map<ProductBuyer>(productbuyer);
+                    #region "Update Product Buyer"
+                    if (svm.SaleOrderLineId != null)
+                    {
+                        SaleOrderLine SaleOrderLine = db.SaleOrderLine.Where(m => m.SaleOrderLineId == svm.SaleOrderLineId).FirstOrDefault();
+                        if (SaleOrderLine != null)
+                        {
+                            SaleEnquiryLine SEL = new SaleEnquiryLineService(_unitOfWork).Find((int)SaleOrderLine.ReferenceDocLineId);
+                            if (SEL != null)
+                            {
+                                SaleEnquiryLineExtended productbuyer = (from p in db.SaleEnquiryLineExtended
+                                                                        where p.SaleEnquiryLineId == SEL.SaleEnquiryLineId
+                                                                        select p).AsNoTracking().FirstOrDefault();
+                                if (productbuyer == null)
+                                {
+                                    List<LogTypeViewModel> LogListProductBuyer = new List<LogTypeViewModel>();
+                                    SaleEnquiryLineExtended ExRecProductBuyer = new SaleEnquiryLineExtended();
 
-                    //    productbuyer.BuyerSku = svm.BuyerSku;
-                    //    productbuyer.BuyerSpecification = svm.BuyerSpecification;
-                    //    productbuyer.BuyerSpecification1 = svm.BuyerSpecification1;
-                    //    productbuyer.BuyerSpecification2 = svm.BuyerSpecification2;
-                    //    productbuyer.BuyerSpecification3 = svm.BuyerSpecification3;
-                    //    new ProductBuyerService(_unitOfWork).Update(productbuyer);
+                                    ExRecProductBuyer.SaleEnquiryLineId = productbuyer.SaleEnquiryLineId;
+                                    ExRecProductBuyer.BuyerSku = svm.BuyerSku;
+                                    ExRecProductBuyer.BuyerSpecification = svm.BuyerSpecification;
+                                    ExRecProductBuyer.BuyerSpecification1 = svm.BuyerSpecification1;
+                                    ExRecProductBuyer.BuyerSpecification2 = svm.BuyerSpecification2;
+                                    ExRecProductBuyer.BuyerSpecification3 = svm.BuyerSpecification3;
+                                    ExRecProductBuyer.ObjectState = Model.ObjectState.Added;
+                                    new SaleEnquiryLineExtendedService(_unitOfWork).Create(ExRecProductBuyer);
 
-                    //    LogListProductBuyer.Add(new LogTypeViewModel
-                    //    {
-                    //        ExObj = ExRecProductBuyer,
-                    //        Obj = productbuyer,
-                    //    });
-                    //    XElement ModificationsProductBuyer = new ModificationsCheckService().CheckChanges(LogListProductBuyer);
+                                    LogListProductBuyer.Add(new LogTypeViewModel
+                                    {
+                                        ExObj = ExRecProductBuyer,
+                                        Obj = ExRecProductBuyer,
+                                    });
+                                    XElement ModificationsProductBuyer = new ModificationsCheckService().CheckChanges(LogListProductBuyer);
 
 
 
-                    //    //Saving the Activity Log
+                                    //Saving the Activity Log
 
-                    //    LogActivity.LogActivityDetail(LogVm.Map(new ActiivtyLogViewModel
-                    //    {
-                    //        DocTypeId = packingheader.DocTypeId,
-                    //        DocId = packingline.PackingHeaderId,
-                    //        DocLineId = packingline.PackingLineId,
-                    //        ActivityType = (int)ActivityTypeContants.Modified,
-                    //        DocNo = packingheader.DocNo,
-                    //        xEModifications = ModificationsProductBuyer,
-                    //        DocDate = packingheader.DocDate,
-                    //        DocStatus = (int)StatusConstants.Modified,
-                    //    }));
+                                    LogActivity.LogActivityDetail(LogVm.Map(new ActiivtyLogViewModel
+                                    {
+                                        DocTypeId = packingheader.DocTypeId,
+                                        DocId = packingline.PackingHeaderId,
+                                        DocLineId = packingline.PackingLineId,
+                                        ActivityType = (int)ActivityTypeContants.Modified,
+                                        DocNo = packingheader.DocNo,
+                                        xEModifications = ModificationsProductBuyer,
+                                        DocDate = packingheader.DocDate,
+                                        DocStatus = (int)StatusConstants.Modified,
+                                    }));
 
-                    //    //End of Saving the Activity Log
-                    //}
-                    //#endregion
+
+                                }
+                                else
+                                {
+                                    if (productbuyer.BuyerSku != svm.BuyerSku || productbuyer.BuyerSpecification != svm.BuyerSpecification || productbuyer.BuyerSpecification1 != svm.BuyerSpecification1 || productbuyer.BuyerSpecification2 != svm.BuyerSpecification2 || productbuyer.BuyerSpecification3 != svm.BuyerSpecification3)
+                                    {
+                                        List<LogTypeViewModel> LogListProductBuyer = new List<LogTypeViewModel>();
+                                        SaleEnquiryLineExtended ExRecProductBuyer = new SaleEnquiryLineExtended();
+                                        ExRecProductBuyer = Mapper.Map<SaleEnquiryLineExtended>(productbuyer);
+
+                                        productbuyer.BuyerSku = svm.BuyerSku;
+                                        productbuyer.BuyerSpecification = svm.BuyerSpecification;
+                                        productbuyer.BuyerSpecification1 = svm.BuyerSpecification1;
+                                        productbuyer.BuyerSpecification2 = svm.BuyerSpecification2;
+                                        productbuyer.BuyerSpecification3 = svm.BuyerSpecification3;
+                                        new SaleEnquiryLineExtendedService(_unitOfWork).Update(productbuyer);
+
+                                        LogListProductBuyer.Add(new LogTypeViewModel
+                                        {
+                                            ExObj = ExRecProductBuyer,
+                                            Obj = productbuyer,
+                                        });
+                                        XElement ModificationsProductBuyer = new ModificationsCheckService().CheckChanges(LogListProductBuyer);
+
+
+
+                                        //        //Saving the Activity Log
+
+                                        LogActivity.LogActivityDetail(LogVm.Map(new ActiivtyLogViewModel
+                                        {
+                                            DocTypeId = packingheader.DocTypeId,
+                                            DocId = packingline.PackingHeaderId,
+                                            DocLineId = packingline.PackingLineId,
+                                            ActivityType = (int)ActivityTypeContants.Modified,
+                                            DocNo = packingheader.DocNo,
+                                            xEModifications = ModificationsProductBuyer,
+                                            DocDate = packingheader.DocDate,
+                                            DocStatus = (int)StatusConstants.Modified,
+                                        }));
+
+                                        //End of Saving the Activity Log
+                                    }
+                                }
+
+                            }
+
+                        }
+                    }
+
+
+                    #endregion
 
 
                     LogList.Add(new LogTypeViewModel
@@ -2311,12 +2412,12 @@ namespace Jobs.Areas.Rug.Controllers
             }
         }
 
-        public JsonResult GetSaleOrderLineIdListForProductUidJson(int ProductUidId, int PackingHeaderId)
+        public JsonResult GetSaleOrderLineIdListForProductUidJson(int ProductUidId, int PackingHeaderId,  int PackingLineId)
         {
             if (ProductUidId != 0 && PackingHeaderId != 0)
             {
                 int BuyerId = (from H in db.PackingHeader where H.PackingHeaderId == PackingHeaderId select new { BuyerId = H.BuyerId }).FirstOrDefault().BuyerId;
-                List<PendingOrderListForPacking> saleorderlistforproductjson = _PackingLineService.FGetPendingOrderListForPackingForProductUid(ProductUidId, BuyerId).ToList();
+                List<PendingOrderListForPacking> saleorderlistforproductjson = _PackingLineService.FGetPendingOrderListForPackingForProductUid(ProductUidId, BuyerId, PackingLineId).ToList();
                 return Json(saleorderlistforproductjson);
             }
             else

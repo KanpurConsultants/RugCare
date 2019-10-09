@@ -113,6 +113,9 @@ namespace Jobs.Controllers
                     {
                         return View("_Results", vm).Danger("Qty Exceeding Bal Qty");
                     }
+
+
+
                     if (item.Qty > 0)
                     {
                         SaleOrderCancelLine line = new SaleOrderCancelLine();

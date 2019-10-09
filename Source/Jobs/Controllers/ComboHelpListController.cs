@@ -2574,6 +2574,33 @@ namespace Jobs.Controllers
             return Json(ProductJson);
         }
 
+        public ActionResult GetProduct(string searchTerm, int pageSize, int pageNum, int? filter)
+        {
+            //Get the paged results and the total count of the results for this query. ProductCacheKeyHint
+            //var productCacheKeyHint = ConfigurationManager.AppSettings["ProductGroupCacheKeyHint"];
+
+            //THis statement has been changed because GetProductHelpList was calling again and again. 
+
+            AutoCompleteComboBoxRepositoryAndHelper ar = new AutoCompleteComboBoxRepositoryAndHelper(cbl.GetProductHelpList());
+            //AutoCompleteComboBoxRepositoryAndHelper ar = new AutoCompleteComboBoxRepositoryAndHelper(null, productCacheKeyHint);
+
+            if (RefreshData.RefreshProductData == true) { RefreshData.RefreshProductData = false; }
+
+
+            List<ComboBoxList> prodLst = ar.GetListForComboBox(searchTerm, pageSize, pageNum);
+            int prodCount = ar.GetCountForComboBox(searchTerm, pageSize, pageNum);
+
+            //Translate the attendees into a format the select2 dropdown expects
+            ComboBoxPagedResult pagedAttendees = ar.TranslateToComboBoxFormat(prodLst, prodCount);
+
+            //Return the data as a jsonp result
+            return new JsonpResult
+            {
+                Data = pagedAttendees,
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet
+            };
+        }
+
 
 
         public ActionResult GetProductGroup(string searchTerm, int pageSize, int pageNum,int ? filter)
@@ -4518,6 +4545,26 @@ namespace Jobs.Controllers
                 Data = pagedAttendees,
                 JsonRequestBehavior = JsonRequestBehavior.AllowGet
             };
+        }
+
+        public JsonResult SetSingleSaleOrderLine(int Ids)
+        {
+            ComboBoxResult SaleOrderJson = new ComboBoxResult();
+
+            var SaleOrderHeader = (from p in db.SaleOrderLine
+                                                           join H in db.SaleOrderHeader on p.SaleOrderHeaderId equals H.SaleOrderHeaderId into tableH
+                                                           from tabH in tableH.DefaultIfEmpty()
+                                                           where p.ProductId == Ids
+                                                      select new SaleOrderLineBalance
+                                                      {
+                                                          SaleOrderLineId = p.SaleOrderLineId,
+                                                          SaleOrderDocNo = p.SaleOrderHeader.DocNo
+                                                      });
+
+            SaleOrderJson.id = SaleOrderHeader.FirstOrDefault().SaleOrderLineId.ToString();
+            SaleOrderJson.text = SaleOrderHeader.FirstOrDefault().SaleOrderDocNo;
+
+            return Json(SaleOrderJson);
         }
 
         public JsonResult SetSingleSaleOrder(int Ids)

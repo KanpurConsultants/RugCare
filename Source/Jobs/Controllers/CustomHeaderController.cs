@@ -122,6 +122,7 @@ namespace Jobs.Controllers
                 foreach (var pta in vm.DocumentTypeHeaderAttributes)
                 {
                     if (pta.DataType == "Number")
+                    {
                         if (pta.Value != null)
                         {
                             var count = pta.Value.Count(x => x == '.');
@@ -133,6 +134,22 @@ namespace Jobs.Controllers
                                     ModelState.AddModelError("", pta.Name + " should be a numeric value.");
                             }
                         }
+                    }
+                    else if (pta.DataType == "Date")
+                    {
+                        if (pta.Value != null)
+                        {
+                            DateTime dDate;
+                            if (DateTime.TryParse(pta.Value, out dDate))
+                            {
+                                String.Format("{0:d/MM/yyyy}", dDate);
+                            }
+                            else
+                            {
+                                ModelState.AddModelError("", pta.Name + " should be a Date value.");
+                            }
+                        }
+                    }
 
                 }
             }

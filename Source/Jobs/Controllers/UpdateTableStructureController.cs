@@ -106,6 +106,60 @@ namespace Module
 
             try
             {
+                if ((int)ExecuteScaler("SELECT Count(*) AS Cnt FROM INFORMATION_SCHEMA.Tables WHERE TABLE_NAME = 'ProductQualityBomDetails'") == 0)
+                {
+                    mQry = @"CREATE TABLE Web.ProductQualityBomDetails
+	                        (
+	                        ProductQualityBomDetailId    INT IDENTITY NOT NULL,
+	                        ProductQualityId  INT NOT NULL,
+	                        BatchQty       DECIMAL (18, 4) NOT NULL,
+	                        ProductId      INT NOT NULL,
+	                        Qty            DECIMAL (18, 4) NOT NULL,
+	                        ProcessId      INT,
+	                        Dimension1Id   INT,
+	                        Dimension2Id   INT,
+	                        DevloperNotes  NVARCHAR (max),
+	                        CreatedBy      NVARCHAR (max),
+	                        ModifiedBy     NVARCHAR (max),
+	                        CreatedDate    DATETIME NOT NULL,
+	                        ModifiedDate   DATETIME NOT NULL,
+	                        OMSId          NVARCHAR (50),
+	                        Dimension4Id   INT,
+	                        Dimension3Id   INT,
+	                        MBQ            DECIMAL (18, 4),
+	                        StdCost        DECIMAL (18, 4),
+	                        StdTime        DECIMAL (18, 4),
+	                        CONSTRAINT [PK_Web.ProductQualityBomDetails] PRIMARY KEY (ProductQualityBomDetailId),
+	                        CONSTRAINT [FK_Web.ProductQualityBomDetails_Web.Products_ProductQualityId] FOREIGN KEY (ProductQualityId) REFERENCES Web.ProductQualities  (ProductQualityId),
+	                        CONSTRAINT [FK_Web.ProductQualityBomDetails_Web.Dimension1_Dimension1Id] FOREIGN KEY (Dimension1Id) REFERENCES Web.Dimension1 (Dimension1Id),
+	                        CONSTRAINT [FK_Web.ProductQualityBomDetails_Web.Dimension2_Dimension2Id] FOREIGN KEY (Dimension2Id) REFERENCES Web.Dimension2 (Dimension2Id),
+	                        CONSTRAINT [FK_Web.ProductQualityBomDetails_Web.Processes_ProcessId] FOREIGN KEY (ProcessId) REFERENCES Web.Processes (ProcessId),
+	                        CONSTRAINT [FK_Web.ProductQualityBomDetails_Web.Products_ProductId] FOREIGN KEY (ProductId) REFERENCES Web.Products (ProductId),
+	                        CONSTRAINT [FK_Web.ProductQualityBomDetails_Web.Dimension4_Dimension4Id] FOREIGN KEY (Dimension4Id) REFERENCES Web.Dimension4 (Dimension4Id),
+	                        CONSTRAINT [FK_Web.ProductQualityBomDetails_Web.Dimension3_Dimension3Id] FOREIGN KEY (Dimension3Id) REFERENCES Web.Dimension3 (Dimension3Id)
+	                        )
+
+
+                            CREATE INDEX [IX_ProductQualityId]	ON Web.ProductQualityBomDetails (ProductQualityId)
+                            CREATE INDEX [IX_ProductId]	ON Web.ProductQualityBomDetails (ProductId)
+                            CREATE INDEX [IX_ProcessId]	ON Web.ProductQualityBomDetails (ProcessId)
+                            CREATE INDEX [IX_Dimension1Id]	ON Web.ProductQualityBomDetails (Dimension1Id)
+                            CREATE INDEX [IX_Dimension2Id]	ON Web.ProductQualityBomDetails (Dimension2Id)
+
+                            ";
+                    ExecuteQuery(mQry);
+                }
+            }
+            catch (Exception ex)
+            {
+                RecordError(ex);
+            }
+
+
+
+
+            try
+            {
                 if ((int)ExecuteScaler("SELECT Count(*) AS Cnt FROM INFORMATION_SCHEMA.Tables WHERE TABLE_NAME = 'PersonGodowns'") == 0)
                 {
                     mQry = @"	CREATE TABLE Web.PersonGodowns
@@ -457,6 +511,7 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
 
             AddFields("ProductUidHeaders", "GenLineId", "INT");
 
+            AddFields("SaleInvoiceHeaderDetail", "BuyerOtherthanConsignee", "NVARCHAR (Max)");
             AddFields("SaleInvoiceHeaderDetail", "FreightRemark", "NVARCHAR (50)");
             AddFields("SaleInvoiceHeaderDetail", "InsuranceRemark", "NVARCHAR (50)");
             AddFields("SaleInvoiceHeaderDetail", "Deduction", "Decimal(18,4)");
@@ -2030,6 +2085,7 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
             AddFields("Products", "DefaultDimension3Id", "Int", "Dimension3");
             AddFields("Products", "DefaultDimension4Id", "Int", "Dimension4");
 
+            AddFields("ProductQualities", "TermsAndConditions", "nvarchar(Max)");
 
             AddFields("SaleInvoiceHeaders", "TermsAndConditions", "nvarchar(Max)");
             AddFields("SaleInvoiceSettings", "isVisibleTermsAndConditions", "BIT");
@@ -2270,6 +2326,7 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
 
             AddFields("CarpetSkuSettings", "isVisibleSalesTaxProductCode", "Bit");
             AddFields("CarpetSkuSettings", "isVisibleConsumptionPcsWise", "Bit");
+            AddFields("CarpetSkuSettings", "isMapCreateAutomatic", "Bit");
             AddFields("CarpetSkuSettings", "SalesTaxProductCodeCaption", "nvarchar(50)");
 
             AddFields("ProductCategories", "DefaultSalesTaxProductCodeId", "Int", "SalesTaxProductCodes");

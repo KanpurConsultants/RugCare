@@ -4,6 +4,8 @@ using System;
 using LedgerDocumentEvents;
 using System.Linq;
 using Core.Common;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace Jobs.Controllers
 {
@@ -22,7 +24,7 @@ namespace Jobs.Controllers
             //_afterHeaderDelete += LedgerEvents__afterHeaderDelete;
             //_onLineSaveBulk += LedgerEvents__onLineSaveBulk;
             _onLineDelete += LedgerEvents__onLineDelete;
-            //_onHeaderSubmit += LedgerEvents__onHeaderSubmit;
+            _onHeaderSubmit += LedgerEvents__onHeaderSubmit;
             _onHeaderDelete += LedgerEvents__onHeaderDelete;
             _onWizardSave += LedgerEvents__onWizardSave;
         }
@@ -66,125 +68,82 @@ namespace Jobs.Controllers
             }
         }
 
-        #region Submit
-        //void LedgerEvents__onHeaderSubmit(object sender, LedgerEventArgs EventArgs, ref ApplicationDbContext db)
-        //{
-        //    var Temp = db.Ledger.Local.Where(m => m.LedgerHeaderId == EventArgs.DocId).ToList();
+        void LedgerEvents__onHeaderSubmit(object sender, LedgerEventArgs EventArgs, ref ApplicationDbContext db)
+        {
 
-        //    ApplicationDbContext DbContext = new ApplicationDbContext();
-
-        //    var LedgerHeader = (from p in DbContext.LedgerHeader
-        //                        where p.LedgerHeaderId == EventArgs.DocId
-        //                        select p
-        //                    ).FirstOrDefault();
-
-        //    var CostCenterIds = Temp.Select(m => m.CostCenterId).ToArray();
-
-        //    var LedgersForCostCenters = (from p in DbContext.Ledger
-        //                                 join t in DbContext.LedgerHeader on p.LedgerHeaderId equals t.LedgerHeaderId
-        //                                 where CostCenterIds.Contains(p.CostCenterId) && p.LedgerHeaderId != LedgerHeader.LedgerHeaderId
-        //                                 && t.DocTypeId == LedgerHeader.DocTypeId && p.CostCenterId != null
-        //                                 group p by p.CostCenterId into g
-        //                                 select g).ToList();
-
-        //    var DocType = (from p in DbContext.DocumentType
-        //                   where p.DocumentTypeName == TransactionDoctypeConstants.SchemeIncentive
-        //                   || p.DocumentTypeName == TransactionDoctypeConstants.WeavingDebitNote
-        //                   || p.DocumentTypeName == TransactionDoctypeConstants.WeavingPayment
-        //                   || p.DocumentTypeName == TransactionDoctypeConstants.WeavingTDS
-        //                   || p.DocumentTypeName == TransactionDoctypeConstants.WeavingTimeIncentive
-        //                   || p.DocumentTypeName == TransactionDoctypeConstants.WeavingTimePenalty
-        //                   || p.DocumentTypeName == TransactionDoctypeConstants.WeavingCreditNote
-        //                   || p.DocumentTypeName == TransactionDoctypeConstants.SmallChunksBazarPenalty
-        //                   || p.DocumentTypeName == TransactionDoctypeConstants.PurjaAmtTransfer
-        //                   select p).ToList();
+            int Id = EventArgs.DocId;
+            string ErrorText = "";
+            string ConnectionString = (string)System.Web.HttpContext.Current.Session["DefaultConnectionString"];
 
 
-        //    DbContext.Dispose();
+            try
+            {
+                var Ledger = (from H in db.LedgerHeader
+                             join D in db.DocumentType on H.DocTypeId equals D.DocumentTypeId into DocumentTypeTable
+                             from DocumentTypeTab in DocumentTypeTable.DefaultIfEmpty()
+                             where H.LedgerHeaderId == EventArgs.DocId
+                             select new { DocTypeName = DocumentTypeTab.DocumentTypeName, Status = H.Status }).FirstOrDefault();
 
-        //    var GroupedTemp = (from p in Temp
-        //                       where p.CostCenterId != null
-        //                       group p by p.CostCenterId into g
-        //                       select g).ToList();
+                if (Ledger.DocTypeName == "Purja Amt Transfer")
+                {
+                    //using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
+                    //{
+                    //    sqlConnection.Open();
+                    //    DataSet ds = new DataSet();
 
-        //    var CostCenterREcords = (from p in db.CostCenterStatusExtended
-        //                             where CostCenterIds.Contains(p.CostCenterId)
-        //                             select p).ToList();
+                    //    using (SqlCommand cmd = new SqlCommand("Web.SpLedgerAdj_PurjaAmtTransfer"))
+                    //    {
+                    //        cmd.CommandType = CommandType.StoredProcedure;
+                    //        cmd.Connection = sqlConnection;
+                    //        cmd.Parameters.AddWithValue("@LedgerHeaderId", Id);
+                    //        cmd.CommandTimeout = 1000;
+
+                    //        using (SqlDataAdapter adp = new SqlDataAdapter(cmd))
+                    //        {
+                    //            adp.Fill(ds);
+                    //        }
+
+                    //        //cmd.Connection.Open();
+                    //        //cmd.ExecuteNonQuery();
+                    //        //cmd.Connection.Close();
+                    //    }
+
+                    //    if (ds.Tables[0].Rows.Count == 0)
+                    //    {
+
+                    //    }
+                    //    else
+                    //    {
+                    //        for (int j = 0; j <= ds.Tables[0].Rows.Count - 1; j++)
+                    //        {
+                    //            if (ds.Tables[0].Rows[j]["Result"].ToString() != "")
+                    //            {
+                    //                ErrorText = ErrorText + ds.Tables[0].Rows[j]["Result"].ToString();
+                    //            }
+                    //        }
+                    //    }
+
+                    //}
+
+                    //if (ErrorText != "" && ErrorText != "Success")
+                    //    throw new Exception("Something Went Wrong !" + ErrorText);
+                }
+            }
+
+            catch (Exception ex)
+            {
+                //Header.Status = (int)StatusConstants.Drafted;
+                //new StockHeaderService(_unitOfWork).Update(Header);
+                //_unitOfWork.Save();
+                throw new Exception("Something Went Wrong !" + ex.Message);
+                //throw ex;
+            }
 
 
-        //    if (DocType.Select(m => m.DocumentTypeId).ToArray().Contains(LedgerHeader.DocTypeId))
-        //    {
 
-        //        foreach (var item in GroupedTemp)
-        //        {
-        //            if (item.Max(m => m.CostCenterId).HasValue)
-        //            {
-        //                var CostCenterStatus = CostCenterREcords.Where(m => m.CostCenterId == item.Max(x => x.CostCenterId)).FirstOrDefault();
 
-        //                var TempDocType = DocType.Where(m => m.DocumentTypeId == LedgerHeader.DocTypeId).FirstOrDefault();
+        }
 
-        //                var ExistingLedgers = LedgersForCostCenters.Where(m => m.Key == item.Max(x => x.CostCenterId)).FirstOrDefault();
-
-        //                switch (TempDocType.DocumentTypeName)
-        //                {
-        //                    case TransactionDoctypeConstants.PurjaAmtTransfer:
-        //                        {
-        //                            CostCenterStatus.TransferAmount = ((ExistingLedgers == null) ? 0 : ExistingLedgers.Sum(m => m.AmtDr) - ExistingLedgers.Sum(m => m.AmtCr)) + ((item.Sum(m => m.AmtDr) - item.Sum(m => m.AmtCr)));
-        //                            break;
-        //                        }
-        //                    case TransactionDoctypeConstants.SchemeIncentive:
-        //                        {
-        //                            CostCenterStatus.SchemeIncentiveAmount = ((ExistingLedgers == null) ? 0 : ExistingLedgers.Sum(m => m.AmtCr)) + item.Sum(m => m.AmtCr);
-        //                            break;
-        //                        }
-        //                    case TransactionDoctypeConstants.WeavingDebitNote:
-        //                        {
-        //                            CostCenterStatus.DebitAmount = ((ExistingLedgers == null) ? 0 : ExistingLedgers.Sum(m => m.AmtDr)) + item.Sum(m => m.AmtDr);
-        //                            break;
-        //                        }
-        //                    case TransactionDoctypeConstants.WeavingPayment:
-        //                        {
-        //                            CostCenterStatus.PaymentAmount = ((ExistingLedgers == null) ? 0 : ExistingLedgers.Sum(m => m.AmtDr)) + item.Sum(m => m.AmtDr);
-        //                            break;
-        //                        }
-        //                    case TransactionDoctypeConstants.WeavingTDS:
-        //                        {
-        //                            CostCenterStatus.TDSAmount = ((ExistingLedgers == null) ? 0 : ExistingLedgers.Sum(m => m.AmtDr)) + item.Sum(m => m.AmtDr);
-        //                            break;
-        //                        }
-        //                    case TransactionDoctypeConstants.WeavingTimeIncentive:
-        //                        {
-        //                            CostCenterStatus.TimeIncentiveAmount = ((ExistingLedgers == null) ? 0 : ExistingLedgers.Sum(m => m.AmtCr)) + item.Sum(m => m.AmtCr);
-        //                            break;
-        //                        }
-        //                    case TransactionDoctypeConstants.WeavingTimePenalty:
-        //                        {
-        //                            CostCenterStatus.TimePenaltyAmount = ((ExistingLedgers == null) ? 0 : ExistingLedgers.Sum(m => m.AmtDr)) + item.Sum(m => m.AmtDr);
-        //                            break;
-        //                        }
-        //                    case TransactionDoctypeConstants.WeavingCreditNote:
-        //                        {
-        //                            CostCenterStatus.CreditAmount = ((ExistingLedgers == null) ? 0 : ExistingLedgers.Sum(m => m.AmtCr)) + item.Sum(m => m.AmtCr);
-        //                            break;
-        //                        }
-        //                    case TransactionDoctypeConstants.SmallChunksBazarPenalty:
-        //                        {
-        //                            CostCenterStatus.FragmentationPenaltyAmount = ((ExistingLedgers == null) ? 0 : ExistingLedgers.Sum(m => m.AmtDr)) + item.Sum(m => m.AmtDr);
-        //                            break;
-        //                        }
-
-        //                }
-
-        //                CostCenterStatus.ObjectState = Model.ObjectState.Modified;
-        //                db.CostCenterStatusExtended.Add(CostCenterStatus);
-
-        //            }
-
-        //        }
-
-        //    }
-        //} 
-        #endregion
 
         void LedgerEvents__onHeaderDelete(object sender, LedgerEventArgs EventArgs, ref ApplicationDbContext db)
         {

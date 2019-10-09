@@ -133,12 +133,13 @@ namespace Jobs.Controllers
                                                   join pcat in db.ProductCategory on fp.ProductCategoryId equals pcat.ProductCategoryId
                                                   join pd in db.ProductDesigns on fp.ProductDesignId equals pd.ProductDesignId
                                                   join rll in db.RateListLine on new { x = p.ProductId, y = rh.RateListHeaderId }
-                                                 equals new { x = rll.ProductId ?? 0, y = rll.RateListHeaderId } into rlltable
+                                                  equals new { x = rll.ProductId ?? 0, y = rll.RateListHeaderId } into rlltable
                                                   from rlltab in rlltable.DefaultIfEmpty()
                                                   where rh.RateListHeaderId == Fvm.RateListHeaderId && (Pending ? rlltab == null : 1 == 1) && (All ? 1 == 1 : fp.IsSample == Sample)
                                                   && (string.IsNullOrEmpty(Fvm.ProductCollection) ? 1 == 1 : Collections.Contains(fp.ProductCollectionId.ToString()))
                                                   && (string.IsNullOrEmpty(Fvm.ProductCategory) ? 1 == 1 : Category.Contains(fp.ProductCategoryId.ToString()))
                                                   && rh.DivisionId == fp.DivisionId && fp.IsActive == true
+                                                  && fp.IsConsumptionPcsWise ==true
                                                   && (Fvm.DisContinued == "All" ? 1 == 1 : fp.DiscontinuedDate == null)
                                                   group new { fp, rlltab, pcol, pcat, pd } by fp.ProductId into g
                                                   select new ProductViewModel
