@@ -109,8 +109,8 @@ namespace Jobs.Areas.Rug.Controllers
 
                     WeavingRetension ExRec = Mapper.Map<WeavingRetension>(temp);
 
-                    //temp.WeavingRetensionName = pt.WeavingRetensionName;
-                    //temp.IsActive = pt.IsActive;
+                    temp.RetensionPer = pt.RetensionPer;
+                    temp.MinimumAmount = pt.MinimumAmount;
                     temp.ModifiedDate = DateTime.Now;
                     temp.ModifiedBy = User.Identity.Name;
                     temp.ObjectState = Model.ObjectState.Modified;

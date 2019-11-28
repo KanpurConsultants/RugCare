@@ -114,7 +114,7 @@ namespace Jobs.Controllers
                                         join H in db.JobOrderHeader on L.JobOrderHeaderId equals H.JobOrderHeaderId into JobOrderHeaderTable
                                         from JobOrderHeaderTab in JobOrderHeaderTable.DefaultIfEmpty()
                                         where LineIds.Contains(L.JobOrderLineId)
-                                        select new { CostCenterId = JobOrderHeaderTab.CostCenterId, Rate = L.Rate, JobOrderLineId = L.JobOrderLineId }).ToList();
+                                        select new { CostCenterId = JobOrderHeaderTab.CostCenterId, DocNo=JobOrderHeaderTab.DocNo, Rate = L.Rate, JobOrderLineId = L.JobOrderLineId }).ToList();
 
             var BalanceQtyRecords = (from p in db.ViewJobOrderBalance
                                      where LineIds.Contains(p.JobOrderLineId)
@@ -135,7 +135,60 @@ namespace Jobs.Controllers
                                       where ProductUids.Contains(p.ProductUIDId)
                                       select p).ToList();
 
-            if (ModelState.IsValid && BeforeSave && !EventException)
+
+            var CostCenterWiseCancel = (from L in vm.JobOrderCancelViewModels
+                                        join H in BalCostCenterRecords on L.JobOrderLineId equals H.JobOrderLineId into JobOrderHeaderTable
+                                        from JobOrderHeaderTab in JobOrderHeaderTable.DefaultIfEmpty()
+                                        where JobOrderHeaderTab.CostCenterId !=null
+                                        group new { L, JobOrderHeaderTab } by new { JobOrderHeaderTab.CostCenterId } into Result
+                                        select new
+                                        {
+                                            CostCenterId = Result.Key.CostCenterId,
+                                            OrderNo = Result.Max(m => m.JobOrderHeaderTab.DocNo),
+                                            CancelQty = Result.Sum(m => m.L.Qty)
+                                        }).ToList();
+
+            var CostCenterWiseBalance = (from L in db.JobOrderLine
+                                        join VJOL in db.ViewJobOrderLine on L.JobOrderLineId equals VJOL.JobOrderLineId into VJOLTable
+                                        from VJOLTab in VJOLTable.DefaultIfEmpty()
+                                        join H in db.JobOrderHeader on L.JobOrderHeaderId equals H.JobOrderHeaderId into JobOrderHeaderTable
+                                        from JobOrderHeaderTab in JobOrderHeaderTable.DefaultIfEmpty()
+                                        where HeaderIds.Contains(JobOrderHeaderTab.JobOrderHeaderId) && JobOrderHeaderTab.CostCenterId != null
+                                        group new { JobOrderHeaderTab, VJOLTab } by new { JobOrderHeaderTab.CostCenterId } into Result
+                                        select new
+                                        {
+                                            CostCenterId= Result.Key.CostCenterId,
+                                            BalanceQty = Result.Sum(m => m.VJOLTab.OrderQty- m.VJOLTab.CancelQty)
+                                        }).ToList();
+
+
+            foreach (var Costcenter in CostCenterWiseCancel)
+            {
+               var Bal = (from L in CostCenterWiseBalance
+                             where L.CostCenterId == Costcenter.CostCenterId
+                             select new { CostCenterId = L.CostCenterId, BalanceQty = L.BalanceQty }).FirstOrDefault();
+
+                if (Bal.BalanceQty == Costcenter.CancelQty)
+                {
+                    var LedgerBalance = (from L in db.Ledger
+                                         where L.CostCenterId == Costcenter.CostCenterId
+                                         group new { L } by new { L.CostCenterId } into Result
+                                                 select new
+                                                 {
+                                                     CostCenterId = Result.Key.CostCenterId,
+                                                     BalanceAmount = Result.Sum(m => m.L.AmtDr)- Result.Sum(m => m.L.AmtCr)
+                                                 }).FirstOrDefault();
+                    if (LedgerBalance != null)
+                    {
+                        if (LedgerBalance.BalanceAmount != 0)
+                        {
+                            ModelState.AddModelError("", LedgerBalance.BalanceAmount + " Amount is Balance For Order No : " + Costcenter.OrderNo);
+                        }
+                    }
+                }
+            }
+
+                if (ModelState.IsValid && BeforeSave && !EventException)
             {
                 JobOrderCancelHeader Header = new JobOrderCancelHeaderService(_unitOfWork).Find(vm.JobOrderCancelViewModels.FirstOrDefault().JobOrderCancelHeaderId);
                 JobOrderSettings Settings = new JobOrderSettingsService(_unitOfWork).GetJobOrderSettingsForDocument(Header.DocTypeId, Header.DivisionId, Header.SiteId);
@@ -1064,6 +1117,50 @@ namespace Jobs.Controllers
                 {
                     ModelState.AddModelError("Qty", "Please Check Qty");
                 }
+
+                JobOrderLine JOL = db.JobOrderLine.Where(m => m.JobOrderLineId == svm.JobOrderLineId).FirstOrDefault();
+
+                var CostCenterWiseBalance = (from L in db.JobOrderLine
+                                             join VJOL in db.ViewJobOrderBalance on L.JobOrderLineId equals VJOL.JobOrderLineId into VJOLTable
+                                             from VJOLTab in VJOLTable.DefaultIfEmpty()
+                                             join H in db.JobOrderHeader on L.JobOrderHeaderId equals H.JobOrderHeaderId into JobOrderHeaderTable
+                                             from JobOrderHeaderTab in JobOrderHeaderTable.DefaultIfEmpty()
+                                             where L.JobOrderHeaderId == JOL.JobOrderHeaderId && JobOrderHeaderTab.CostCenterId != null
+                                             group new { JobOrderHeaderTab, VJOLTab } by new { JobOrderHeaderTab.CostCenterId } into Result
+                                             select new
+                                             {
+                                                 CostCenterId = Result.Key.CostCenterId,
+                                                 OrderNo = Result.Max(m => m.JobOrderHeaderTab.DocNo),
+                                                 BalanceQty = Result.Sum(m => m.VJOLTab.BalanceQty)
+                                             }).ToList();
+
+
+                foreach (var Costcenter in CostCenterWiseBalance)
+                {
+                    var Bal = (from L in CostCenterWiseBalance
+                               where L.CostCenterId == Costcenter.CostCenterId
+                               select new { CostCenterId = L.CostCenterId, BalanceQty = L.BalanceQty }).FirstOrDefault();
+
+                    if (Bal.BalanceQty == svm.Qty)
+                    {
+                        var LedgerBalance = (from L in db.Ledger
+                                             where L.CostCenterId == Costcenter.CostCenterId
+                                             group new { L } by new { L.CostCenterId } into Result
+                                             select new
+                                             {
+                                                 CostCenterId = Result.Key.CostCenterId,
+                                                 BalanceAmount = Result.Sum(m => m.L.AmtDr) - Result.Sum(m => m.L.AmtCr)
+                                             }).FirstOrDefault();
+                        if (LedgerBalance != null)
+                        {
+                            if (LedgerBalance.BalanceAmount != 0)
+                            {
+                                ModelState.AddModelError("Qty", LedgerBalance.BalanceAmount + " Amount is Balance For Order No : " + Costcenter.OrderNo);
+                            }
+                        }
+                    }
+                }
+
                 if (ModelState.IsValid)
                 {
                     int pk = 0;
@@ -1192,7 +1289,7 @@ namespace Jobs.Controllers
                     }
 
 
-                    new JobOrderLineStatusService(_unitOfWork).UpdateJobQtyOnCancel(svm.JobOrderLineId, svm.JobOrderCancelLineId, temp.DocDate, svm.Qty, ref db, true);
+                    //new JobOrderLineStatusService(_unitOfWork).UpdateJobQtyOnCancel(svm.JobOrderLineId, svm.JobOrderCancelLineId, temp.DocDate, svm.Qty, ref db, true);
 
 
 

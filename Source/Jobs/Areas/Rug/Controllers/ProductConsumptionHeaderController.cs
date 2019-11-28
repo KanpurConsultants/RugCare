@@ -23,6 +23,7 @@ using System.IO;
 using ImageResizer;
 using Model.ViewModel;
 using Jobs.Helpers;
+using System.Xml.Linq;
 
 namespace Jobs.Areas.Rug.Controllers
 {
@@ -36,6 +37,7 @@ namespace Jobs.Areas.Rug.Controllers
         IUnitOfWork _unitOfWork;
         IExceptionHandlingService _exception;
         List<string> UserRoles = new List<string>();
+        ActiivtyLogViewModel LogVm = new ActiivtyLogViewModel();
 
         public ProductConsumptionHeaderController(IBomDetailService BomDetailService, IProductService ProductService, IActivityLogService ActivityLogService, IUnitOfWork unitOfWork, IExceptionHandlingService exec)
         {
@@ -166,6 +168,7 @@ namespace Jobs.Areas.Rug.Controllers
             }
 
             ProductConsumptionHeaderViewModel p = new ProductConsumptionHeaderViewModel();
+            p.DocTypeId = DocTypeId;
             PrepareViewBag();
             return View("Create", p);
         }
@@ -251,11 +254,22 @@ namespace Jobs.Areas.Rug.Controllers
 
                     }
 
+                    
+                    LogActivity.LogActivityDetail(LogVm.Map(new ActiivtyLogViewModel
+                    {
+                        DocTypeId = new DocumentTypeService(_unitOfWork).Find(MasterDocTypeConstants.ProductConsumption).DocumentTypeId,
+                        DocId = product.ProductId,
+                        ActivityType = (int)ActivityTypeContants.Added,
+                        DocNo = product.ProductName,
+                        DocDate = DateTime.Now,
+                    }));
+
                     //return RedirectToAction("Create").Success("Data saved successfully");
                     return RedirectToAction("Edit", new { id = product.ProductId }).Success("Data saved Successfully");
                 }
                 else
                 {
+                    List<LogTypeViewModel> LogList = new List<LogTypeViewModel>();
                     Product product = _ProductService.Find(svm.BaseProductId);
 
                     if (SProd.ProductName.Length > 16)
@@ -266,7 +280,7 @@ namespace Jobs.Areas.Rug.Controllers
                     {
                         product.ProductCode = SProd.ProductName.ToString().Substring(0, SProd.ProductName.Length) + "-Bom";
                     }
-
+                                       
 
                     product.ProductName = SProd.ProductName + "-Bom";
                     product.ReferenceDocTypeId = new DocumentTypeService(_unitOfWork).FindByName(MasterDocTypeConstants.Product).DocumentTypeId;
@@ -279,23 +293,26 @@ namespace Jobs.Areas.Rug.Controllers
 
                     _ProductService.Update(product);
 
-
+                    Product ExRec = Mapper.Map<Product>(product);
+                    LogList.Add(new LogTypeViewModel
+                    {
+                        ExObj = ExRec,
+                        Obj = product,
+                    });
+                    XElement Modifications = new ModificationsCheckService().CheckChanges(LogList);
 
 
 
                     ////Saving Activity Log::
-                    ActivityLog al = new ActivityLog()
+                    LogActivity.LogActivityDetail(LogVm.Map(new ActiivtyLogViewModel
                     {
+                        DocTypeId = new DocumentTypeService(_unitOfWork).FindByName(MasterDocTypeConstants.ProductConsumption).DocumentTypeId,
+                        DocId = product.ProductId,
+                        DocNo = product.ProductName,
+                        DocDate = DateTime.Now,
                         ActivityType = (int)ActivityTypeContants.Modified,
-                        DocId = svm.BaseProductId,
-                        Narration = logstring.ToString(),
-                        CreatedDate = DateTime.Now,
-                        CreatedBy = User.Identity.Name,
-                        //DocTypeId = new DocumentTypeService(_unitOfWork).FindByName(TransactionDocCategoryConstants.ProcessSequence).DocumentTypeId,
-
-                    };
-                    new ActivityLogService(_unitOfWork).Create(al);
-                    //End of Saving ActivityLog
+                        xEModifications = Modifications,
+                    }));
 
                     try
                     {
@@ -337,6 +354,7 @@ namespace Jobs.Areas.Rug.Controllers
             {
                 return HttpNotFound();
             }
+            bvm.DocTypeId = DocTypeId;
             return View("Create", bvm);
         }
 
@@ -570,6 +588,15 @@ namespace Jobs.Areas.Rug.Controllers
                     return PartialView("CopyFromExisting", vm);
 
                 }
+
+                LogActivity.LogActivityDetail(LogVm.Map(new ActiivtyLogViewModel
+                {
+                    DocTypeId = new DocumentTypeService(_unitOfWork).Find(MasterDocTypeConstants.ProductConsumption).DocumentTypeId,
+                    DocId = NewProduct.ProductId,
+                    ActivityType = (int)ActivityTypeContants.Added,
+                    DocNo = NewProduct.ProductName,
+                    DocDate = DateTime.Now,
+                }));
 
                 return Json(new { success = true, Url = "/Rug/ProductConsumptionHeader/Edit/" + NewProduct.ProductId });
 

@@ -143,11 +143,16 @@ namespace Jobs.Areas.Rug.Controllers
                     }
 
 
+                    Product P = new ProductService(_unitOfWork).Find(svm.BaseProductId);
+
                     LogActivity.LogActivityDetail(LogVm.Map(new ActiivtyLogViewModel
                     {
                         DocTypeId = new DocumentTypeService(_unitOfWork).FindByName(MasterDocTypeConstants.ProductConsumption).DocumentTypeId,
-                        DocId = bomdetail.BomDetailId,
-                        ActivityType = (int)ActivityTypeContants.Added,
+                        DocId = svm.BaseProductId,
+                        DocLineId = bomdetail.BomDetailId,
+                        DocNo = P.ProductName,
+                        DocDate = DateTime.Now,
+                        ActivityType = (int)ActivityTypeContants.Added
                     }));
 
                     return RedirectToAction("_Create", new { id = svm.BaseProductId });
@@ -192,10 +197,15 @@ namespace Jobs.Areas.Rug.Controllers
                         return PartialView("_Create", svm);
                     }
 
+                    Product P = new ProductService(_unitOfWork).Find(svm.BaseProductId);
+
                     LogActivity.LogActivityDetail(LogVm.Map(new ActiivtyLogViewModel
                     {
                         DocTypeId = new DocumentTypeService(_unitOfWork).FindByName(MasterDocTypeConstants.ProductConsumption).DocumentTypeId,
-                        DocId = bomdetail.BomDetailId,
+                        DocId = svm.BaseProductId,
+                        DocLineId = bomdetail.BomDetailId,
+                        DocNo = P.ProductName,
+                        DocDate = DateTime.Now,
                         ActivityType = (int)ActivityTypeContants.Modified,
                         xEModifications = Modifications,
                     }));
@@ -304,13 +314,20 @@ namespace Jobs.Areas.Rug.Controllers
                 return PartialView("EditSize", vm);
             }
 
+
+            Product P = new ProductService(_unitOfWork).Find(vm.BaseProductId);
+
             LogActivity.LogActivityDetail(LogVm.Map(new ActiivtyLogViewModel
             {
                 DocTypeId = new DocumentTypeService(_unitOfWork).FindByName(MasterDocTypeConstants.ProductConsumption).DocumentTypeId,
-                DocId = vm.BomDetailId,
-                ActivityType = (int)ActivityTypeContants.Deleted,                
+                DocId = vm.BaseProductId,
+                DocLineId = vm.BomDetailId,
+                DocNo = P.ProductName,
+                DocDate = DateTime.Now,
+                ActivityType = (int)ActivityTypeContants.Deleted,
                 xEModifications = Modifications,
             }));
+
 
             return Json(new { success = true });
         }

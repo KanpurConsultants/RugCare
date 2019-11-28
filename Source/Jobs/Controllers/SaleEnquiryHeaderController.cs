@@ -286,9 +286,20 @@ namespace Jobs.Controllers
                 ModelState.AddModelError("DueDate", "DueDate cannot be greater than DocDate");
             }
 
-            #region DocTypeTimeLineValidation
+             
+           SaleEnquiryHeader SH = (from H in context.SaleEnquiryHeader 
+                                                   where H.BuyerEnquiryNo  == svm.BuyerEnquiryNo && H.SaleToBuyerId == svm.SaleToBuyerId
+                                                   && H.SaleEnquiryHeaderId != svm.SaleEnquiryHeaderId
+                                                   select H).FirstOrDefault();
 
-            try
+            if (SH != null)
+            {
+                ModelState.AddModelError("BuyerEnquiryNo", "BuyerEnquiryNo Already Find");
+            }
+
+                #region DocTypeTimeLineValidation
+
+                try
             {
 
                 if (svm.SaleEnquiryHeaderId <= 0)

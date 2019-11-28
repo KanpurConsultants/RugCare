@@ -29,6 +29,8 @@ namespace Model.ViewModel
         public bool isVisibleDimension4 { get; set; }
 
         public bool isVisibleLoss { get; set; }
+        public bool isVisibleLossPer { get; set; }
+        public decimal? LossPerTolerance { get; set; }
         public bool isVisibleSpecification { get; set; }
         public bool isVisibleDealUnit { get; set; }
         public bool isVisibleUncountableQty { get; set; }

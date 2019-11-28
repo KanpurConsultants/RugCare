@@ -99,6 +99,7 @@ namespace Model.Models
         public decimal Rate { get; set; }
 
         public decimal Amount { get; set; }
+        public decimal ? LossPer { get; set; }
 
         [ForeignKey("CostCenter"), Display(Name = "Cost Center")]
         public int? CostCenterId { get; set; }

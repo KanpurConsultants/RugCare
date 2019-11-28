@@ -242,21 +242,35 @@ namespace Jobs.Controllers
 
                                     string ChargeName = db.Charge.Find(EmployeeCharge.ChargeId).ChargeName;
 
-                                    if (ChargeName == "Basic Salary")
-                                    {
-                                        if (WagesPayType == "Daily")
-                                            LineCharge.Amount = EmployeeCharge.Amount * Line.Days;
-                                        else
-                                            LineCharge.Amount = (EmployeeCharge.Amount * Line.Days / SalaryData.MonthDays);
-                                    }
-                                    else if (ChargeName == "Net Salary")
-                                    {
-                                        LineCharge.Amount = TotalAmount;
+                                    if (EmployeeCharge.Rate !=null && EmployeeCharge.Rate !=0)
+                                    {                                        
+                                            if (WagesPayType == "Daily")
+                                                LineCharge.Amount = EmployeeCharge.Rate/100 * Line.BasicSalary * Line.Days;
+                                            else
+                                                LineCharge.Amount = (EmployeeCharge.Rate / 100 * Line.BasicSalary * Line.Days / SalaryData.MonthDays);
+
                                     }
                                     else
                                     {
-                                        LineCharge.Amount = EmployeeCharge.Amount;
+                                        if (ChargeName == "Basic Salary")
+                                        {
+                                            if (WagesPayType == "Daily")
+                                                LineCharge.Amount = EmployeeCharge.Amount * Line.Days;
+                                            else
+                                                LineCharge.Amount = (EmployeeCharge.Amount * Line.Days / SalaryData.MonthDays);
+                                        }
+                                        else if (ChargeName == "Net Salary")
+                                        {
+                                            LineCharge.Amount = TotalAmount;
+                                        }
+                                        else
+                                        {
+                                            LineCharge.Amount = EmployeeCharge.Amount;
+                                        }
                                     }
+                                    
+
+
                                     if (LineCharge.AddDeduct == 0)
                                         TotalAmount = TotalAmount - LineCharge.Amount ?? 0;
                                     else if (LineCharge.AddDeduct == 1)

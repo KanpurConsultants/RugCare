@@ -47,6 +47,7 @@ namespace Model.DatabaseViews
         public int JobOrderLineId { get; set; }
         public int JobOrderHeaderId { get; set; }
         public decimal OrderQty { get; set; }
+        public decimal CancelQty { get; set; }
         public decimal Rate { get; set; }
         public decimal OrderAmount { get; set; }
         public int ProductId { get; set; }

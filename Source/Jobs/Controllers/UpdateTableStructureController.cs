@@ -62,6 +62,48 @@ namespace Module
 
             try
             {
+                if ((int)ExecuteScaler("SELECT Count(*) AS Cnt FROM INFORMATION_SCHEMA.Tables WHERE TABLE_NAME = 'Settings'") == 0)
+                {
+                    mQry = @"CREATE TABLE Web.Settings
+	                        (
+	                        SettingsId                INT IDENTITY NOT NULL,
+	                        FieldName                 NVARCHAR (100),	
+	                        SiteId                    INT,
+	                        DivisionId                INT,
+	                        DocTypeId                 INT,
+	                        DocCategoryId             INT,
+	                        Value              		  NVARCHAR (Max),
+	                        CreatedBy                 NVARCHAR (max),
+	                        ModifiedBy                NVARCHAR (max),
+	                        CreatedDate               DATETIME NOT NULL,
+	                        ModifiedDate              DATETIME NOT NULL,
+	                        CONSTRAINT [PK_Web.Settings] PRIMARY KEY (SettingsId),
+	                        CONSTRAINT [FK_Web.Settings_Web.Sites_SiteId] FOREIGN KEY (SiteId) REFERENCES Web.Sites (SiteId),
+	                        CONSTRAINT [FK_Web.Settings_Web.Divisions_DivisionId] FOREIGN KEY (DivisionId) REFERENCES Web.Divisions (DivisionId),
+	                        CONSTRAINT [FK_Web.Settings_Web.DocumentCategorys_DocCategoryId] FOREIGN KEY (DocCategoryId) REFERENCES Web.DocumentCategories (DocumentCategoryId),
+	                        CONSTRAINT [FK_Web.Settings_Web.DocumentTypes_DocTypeId] FOREIGN KEY (DocTypeId) REFERENCES Web.DocumentTypes (DocumentTypeId)
+	                        )
+                            
+                        CREATE INDEX [IX_DocCategoryId]	ON Web.Settings (DocCategoryId)
+
+                        CREATE INDEX [IX_DocTypeId]	ON Web.Settings (DocTypeId)
+
+                        CREATE INDEX [IX_SiteId] ON Web.Settings (SiteId)
+
+                        CREATE INDEX [IX_DivisionId] ON Web.Settings (DivisionId)
+                            ";
+                    ExecuteQuery(mQry);
+                }
+            }
+            catch (Exception ex)
+            {
+                RecordError(ex);
+            }
+
+
+
+            try
+            {
                 if ((int)ExecuteScaler("SELECT Count(*) AS Cnt FROM INFORMATION_SCHEMA.Tables WHERE TABLE_NAME = 'DocumentTypeTimeExtensionRequests'") == 0)
                 {
                     mQry = @"CREATE TABLE Web.DocumentTypeTimeExtensionRequests
@@ -522,6 +564,13 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
             AddFields("Products", "ProductCategoryId", "INT", "ProductCategories");
             AddFields("Products", "SaleRate", " Decimal(18,4)");
 
+            AddFields("ProductCategories", "DyeingDaysPer", " Decimal(18,4)");
+            AddFields("ProductCategories", "MinimumDyeingDays", " Decimal(18,4)");
+            AddFields("ProductCategories", "WeavingDaysPer", " Decimal(18,4)");
+            AddFields("ProductCategories", "MinimumWeavingDays", " Decimal(18,4)");
+            AddFields("ProductCategories", "FinishingDaysPer", " Decimal(18,4)");
+            AddFields("ProductCategories", "MinimumFinishingDays", " Decimal(18,4)");
+
             AddFields("Processes", "DepartmentId", "INT", "Departments");
             AddFields("Processes", "GSTPrintDesc", "NVARCHAR (20)");
             AddFields("SalaryLines", "BasicSalary", " Decimal(18,4)");
@@ -603,6 +652,7 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
             AddFields("JobOrderSettings", "isVisibleSalesExecutive", "BIT");
             AddFields("JobOrderSettings", "isVisibleReason", "BIT");
             AddFields("JobOrderSettings", "isAllowedDuplicatePrint", "BIT NOT NULL DEFAULT(1)");
+            AddFields("JobOrderSettings", "isAllowedToMaterialIssue", "BIT");
             AddFields("JobOrderHeaders", "FinancierId", "Int", "People");
             AddFields("JobOrderHeaders", "SalesExecutiveId", "Int", "People");
             AddFields("JobOrderHeaders", "ReasonId", "Int", "Reasons");
@@ -1653,6 +1703,7 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
 
             AddFields("SaleDispatchSettings", "isVisibleFreeQty", "BIT");
 
+            AddFields("StockLines", "LossPer", "Decimal(18,4)");
             AddFields("StockLines", "StockInId", "Int","Stocks");
             AddFields("StockLines", "ProdOrderLineId", "Int", "ProdOrderLines");
             AddFields("Stocks", "ProdOrderLineId", "Int", "ProdOrderLines");
@@ -1792,6 +1843,9 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
             AddFields("StockHeaderSettings", "isVisibleProcessHeader", "BIT");
             AddFields("StockHeaderSettings", "isMandatoryProductUID", "BIT");
 
+            AddFields("StockHeaderSettings", "isVisibleLossPer", "BIT");
+            AddFields("StockHeaderSettings", "MaxLossPer", "DECIMAL (18, 4)");
+
             AddFields("StockHeaderSettings", "isAllowedNegativeStock", "BIT");
 
             AddFields("DocumentTypeSettings", "ReferenceDocTypeCaption", "nvarchar(50)");
@@ -1800,7 +1854,7 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
             AddFields("LedgerSettings", "isVisibleReferenceDocId", "BIT");
             AddFields("LedgerSettings", "isVisibleReferenceDocTypeId", "BIT");
             AddFields("LedgerSettings", "filterReferenceDocTypes", "nvarchar(Max)");
-
+            AddFields("LedgerSettings", "DefaultAdjustmentType", "nvarchar(50)");
 
             AddFields("CompanySettings", "isVisibleCompanyName", "BIT");
 
@@ -2376,6 +2430,8 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
             AddFields("JobOrderBoms", "ProcessId", "Int", "Processes");
 
             AddFields("BomDetails", "MainWeight", "Decimal(18,4)");
+
+            AddFields("ProductGroupProcessSettings", "LossPer", "Decimal(18,4)");
             AddFields("BomDetails", "LastProductId", "Int");
             AddFields("CarpetSkuSettings", "isVisibleMainWeightinBOM", "Bit");
 
@@ -2888,6 +2944,8 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
             AddFields("JobReceiveSettings", "isMandatoryLotNoOrDimension1", "BIT");
             AddFields("JobReceiveSettings", "isAllowtoeditDealQty", "BIT");
             AddFields("JobReceiveSettings", "isAllowtoGenerateMultipleBarcode", "BIT");
+            AddFields("JobReceiveSettings", "isVisibleLossPer", "BIT");
+            AddFields("JobReceiveSettings", "LossPerTolerance", "Decimal(18,4)");
 
             try
             {

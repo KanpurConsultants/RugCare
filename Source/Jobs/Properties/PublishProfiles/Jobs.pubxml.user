@@ -5500,7 +5500,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>11/01/2018 17:51:37</publishTime>
     </File>
     <File Include="Areas/Rug/Views/DesignColourConsumptionHeader/Create.cshtml">
-      <publishTime>01/21/2019 15:21:03</publishTime>
+      <publishTime>11/04/2019 15:54:44</publishTime>
     </File>
     <File Include="Areas/Rug/Views/DesignColourConsumptionHeader/Delete.cshtml">
       <publishTime>11/01/2018 17:51:37</publishTime>
@@ -6130,7 +6130,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/24/2019 17:43:14</publishTime>
     </File>
     <File Include="Areas/Rug/Views/ProductConsumptionHeader/Create.cshtml">
-      <publishTime>04/28/2019 19:12:10</publishTime>
+      <publishTime>11/05/2019 16:24:33</publishTime>
     </File>
     <File Include="Areas/Rug/Views/ProductConsumptionHeader/Delete.cshtml">
       <publishTime>11/01/2018 17:51:38</publishTime>
@@ -6139,13 +6139,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>11/01/2018 17:51:38</publishTime>
     </File>
     <File Include="Areas/Rug/Views/ProductConsumptionHeader/Index.cshtml">
-      <publishTime>07/16/2019 17:29:30</publishTime>
+      <publishTime>11/05/2019 17:36:52</publishTime>
     </File>
     <File Include="Areas/Rug/Views/ProductConsumptionHeader/_Reason.cshtml">
       <publishTime>11/01/2018 17:51:38</publishTime>
     </File>
     <File Include="Areas/Rug/Views/ProductConsumptionLine/_Create.cshtml">
-      <publishTime>04/28/2019 18:44:15</publishTime>
+      <publishTime>11/05/2019 17:30:10</publishTime>
     </File>
     <File Include="Areas/Rug/Views/ProductConsumptionLine/_Edit.cshtml">
       <publishTime>11/01/2018 17:51:38</publishTime>
@@ -6334,7 +6334,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>11/01/2018 17:51:38</publishTime>
     </File>
     <File Include="Areas/Rug/Views/ProductQualityConsumptionLine/_Create.cshtml">
-      <publishTime>09/26/2019 15:32:01</publishTime>
+      <publishTime>11/20/2019 14:54:38</publishTime>
     </File>
     <File Include="Areas/Rug/Views/ProductQualityConsumptionLine/_Edit.cshtml">
       <publishTime>09/12/2019 13:05:27</publishTime>
@@ -7087,7 +7087,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>11/01/2018 17:51:39</publishTime>
     </File>
     <File Include="Areas/Rug/Views/WeavingReceiveQACombined/Create.cshtml">
-      <publishTime>07/30/2019 16:36:06</publishTime>
+      <publishTime>10/14/2019 13:27:37</publishTime>
     </File>
     <File Include="Areas/Rug/Views/WeavingReceiveQACombined/Delete.cshtml">
       <publishTime>11/01/2018 17:51:39</publishTime>
@@ -7102,7 +7102,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>11/01/2018 17:51:39</publishTime>
     </File>
     <File Include="Areas/Rug/Views/WeavingReceiveQACombined/Index.cshtml">
-      <publishTime>08/22/2019 12:07:39</publishTime>
+      <publishTime>10/23/2019 15:50:46</publishTime>
     </File>
     <File Include="Areas/Rug/Views/WeavingReceiveQACombined/InvalidBarcode.cshtml">
       <publishTime>11/01/2018 17:51:39</publishTime>
@@ -7124,6 +7124,15 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     </File>
     <File Include="Areas/Rug/Views/WeavingReceiveQACombined/_Reason.cshtml">
       <publishTime>11/01/2018 17:51:39</publishTime>
+    </File>
+    <File Include="Areas/Rug/Views/WeavingReceiveTextImport/Error.cshtml">
+      <publishTime>10/10/2019 13:04:26</publishTime>
+    </File>
+    <File Include="Areas/Rug/Views/WeavingReceiveTextImport/Index.cshtml">
+      <publishTime>10/10/2019 13:03:46</publishTime>
+    </File>
+    <File Include="Areas/Rug/Views/WeavingReceiveTextImport/Sucess.cshtml">
+      <publishTime>10/10/2019 13:04:12</publishTime>
     </File>
     <File Include="Areas/Rug/Views/WeavingReceiveWizard/Create.cshtml">
       <publishTime>11/01/2018 17:51:39</publishTime>
@@ -7150,7 +7159,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/07/2019 12:10:29</publishTime>
     </File>
     <File Include="Areas/Rug/Views/WeavingRetension/_Reason.cshtml">
-      <publishTime>06/04/2019 17:42:58</publishTime>
+      <publishTime>11/12/2019 11:45:24</publishTime>
     </File>
     <File Include="Areas/Rug/Views/web.config">
       <publishTime>11/01/2018 17:51:39</publishTime>
@@ -7200,6 +7209,18 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="bin/BarcodeLib.dll">
       <publishTime>11/01/2018 17:51:46</publishTime>
     </File>
+    <File Include="bin/Common.Logging.Core.dll">
+      <publishTime>11/08/2019 11:47:02</publishTime>
+    </File>
+    <File Include="bin/Common.Logging.Core.pdb">
+      <publishTime>11/08/2019 11:47:02</publishTime>
+    </File>
+    <File Include="bin/Common.Logging.dll">
+      <publishTime>11/08/2019 11:47:27</publishTime>
+    </File>
+    <File Include="bin/Common.Logging.pdb">
+      <publishTime>11/08/2019 11:47:27</publishTime>
+    </File>
     <File Include="bin/Components.dll">
       <publishTime>09/12/2019 17:02:56</publishTime>
     </File>
@@ -7207,67 +7228,67 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/12/2019 17:02:56</publishTime>
     </File>
     <File Include="bin/Core.dll">
-      <publishTime>10/03/2019 13:03:48</publishTime>
+      <publishTime>11/22/2019 14:44:30</publishTime>
     </File>
     <File Include="bin/Core.pdb">
-      <publishTime>10/03/2019 13:03:48</publishTime>
+      <publishTime>11/22/2019 14:44:30</publishTime>
     </File>
     <File Include="bin/CustomEventHandlers.dll">
-      <publishTime>10/03/2019 13:04:33</publishTime>
+      <publishTime>11/22/2019 14:45:08</publishTime>
     </File>
     <File Include="bin/CustomEventHandlers.pdb">
-      <publishTime>10/03/2019 13:04:33</publishTime>
+      <publishTime>11/22/2019 14:45:08</publishTime>
     </File>
     <File Include="bin/Data.dll">
-      <publishTime>10/03/2019 13:04:00</publishTime>
+      <publishTime>11/22/2019 14:44:39</publishTime>
     </File>
     <File Include="bin/Data.pdb">
-      <publishTime>10/03/2019 13:04:00</publishTime>
+      <publishTime>11/22/2019 14:44:39</publishTime>
     </File>
     <File Include="bin/DocumentEvents.dll">
-      <publishTime>10/03/2019 13:04:28</publishTime>
+      <publishTime>11/22/2019 14:45:03</publishTime>
     </File>
     <File Include="bin/DocumentEvents.pdb">
-      <publishTime>10/03/2019 13:04:28</publishTime>
+      <publishTime>11/22/2019 14:45:03</publishTime>
     </File>
     <File Include="bin/Components.pdb">
       <publishTime>09/12/2019 17:02:56</publishTime>
     </File>
     <File Include="bin/Core.dll">
-      <publishTime>10/03/2019 13:03:48</publishTime>
+      <publishTime>11/22/2019 14:44:30</publishTime>
     </File>
     <File Include="bin/Core.pdb">
-      <publishTime>10/03/2019 13:03:48</publishTime>
+      <publishTime>11/22/2019 14:44:30</publishTime>
     </File>
     <File Include="bin/CustomEventHandlers.dll">
-      <publishTime>10/03/2019 13:04:33</publishTime>
+      <publishTime>11/22/2019 14:45:08</publishTime>
     </File>
     <File Include="bin/CustomEventHandlers.pdb">
-      <publishTime>10/03/2019 13:04:33</publishTime>
+      <publishTime>11/22/2019 14:45:08</publishTime>
     </File>
     <File Include="bin/Data.dll">
-      <publishTime>10/03/2019 13:04:00</publishTime>
+      <publishTime>11/22/2019 14:44:39</publishTime>
     </File>
     <File Include="bin/Data.pdb">
-      <publishTime>10/03/2019 13:04:00</publishTime>
+      <publishTime>11/22/2019 14:44:39</publishTime>
     </File>
     <File Include="bin/DocumentEvents.dll">
-      <publishTime>10/03/2019 13:04:28</publishTime>
+      <publishTime>11/22/2019 14:45:03</publishTime>
     </File>
     <File Include="bin/DocumentEvents.pdb">
-      <publishTime>10/03/2019 13:04:28</publishTime>
+      <publishTime>11/22/2019 14:45:03</publishTime>
     </File>
     <File Include="bin/Elmah.dll">
       <publishTime>11/01/2018 17:52:48</publishTime>
     </File>
     <File Include="bin/EMailContents.dll">
-      <publishTime>10/03/2019 18:19:22</publishTime>
+      <publishTime>11/22/2019 14:45:03</publishTime>
     </File>
     <File Include="bin/EMailContents.pdb">
-      <publishTime>10/03/2019 18:19:22</publishTime>
+      <publishTime>11/22/2019 14:45:03</publishTime>
     </File>
     <File Include="bin/EMailContents.pdb">
-      <publishTime>10/03/2019 18:19:22</publishTime>
+      <publishTime>11/22/2019 14:45:03</publishTime>
     </File>
     <File Include="bin/EntityFramework.dll">
       <publishTime>11/01/2018 17:52:43</publishTime>
@@ -7288,25 +7309,25 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>11/01/2018 17:52:48</publishTime>
     </File>
     <File Include="bin/Jobs.dll">
-      <publishTime>10/04/2019 10:29:19</publishTime>
+      <publishTime>11/22/2019 14:45:40</publishTime>
     </File>
     <File Include="bin/Jobs.pdb">
-      <publishTime>10/04/2019 10:29:19</publishTime>
+      <publishTime>11/22/2019 14:45:40</publishTime>
     </File>
     <File Include="bin/Jobs.pdb">
-      <publishTime>10/04/2019 10:29:19</publishTime>
+      <publishTime>11/22/2019 14:45:40</publishTime>
     </File>
     <File Include="bin/log4net.dll">
       <publishTime>11/01/2018 17:52:49</publishTime>
     </File>
     <File Include="bin/Mailer.dll">
-      <publishTime>10/03/2019 13:04:03</publishTime>
+      <publishTime>11/22/2019 14:44:41</publishTime>
     </File>
     <File Include="bin/Mailer.pdb">
-      <publishTime>10/03/2019 13:04:03</publishTime>
+      <publishTime>11/22/2019 14:44:41</publishTime>
     </File>
     <File Include="bin/Mailer.pdb">
-      <publishTime>10/03/2019 13:04:03</publishTime>
+      <publishTime>11/22/2019 14:44:41</publishTime>
     </File>
     <File Include="bin/Microsoft.AspNet.Identity.Core.dll">
       <publishTime>11/01/2018 17:52:44</publishTime>
@@ -7387,13 +7408,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>11/01/2018 17:52:45</publishTime>
     </File>
     <File Include="bin/Model.dll">
-      <publishTime>10/03/2019 13:03:54</publishTime>
+      <publishTime>11/22/2019 14:44:36</publishTime>
     </File>
     <File Include="bin/Model.pdb">
-      <publishTime>10/03/2019 13:03:54</publishTime>
+      <publishTime>11/22/2019 14:44:36</publishTime>
     </File>
     <File Include="bin/Model.pdb">
-      <publishTime>10/03/2019 13:03:54</publishTime>
+      <publishTime>11/22/2019 14:44:36</publishTime>
     </File>
     <File Include="bin/Models.Login.dll">
       <publishTime>09/01/2017 09:54:56</publishTime>
@@ -7417,19 +7438,19 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/12/2019 17:02:50</publishTime>
     </File>
     <File Include="bin/Notifier.dll">
-      <publishTime>10/03/2019 13:04:31</publishTime>
+      <publishTime>11/22/2019 14:45:05</publishTime>
     </File>
     <File Include="bin/Notifier.pdb">
-      <publishTime>10/03/2019 13:04:31</publishTime>
+      <publishTime>11/22/2019 14:45:05</publishTime>
     </File>
     <File Include="bin/NotificationContents.pdb">
       <publishTime>09/12/2019 17:02:50</publishTime>
     </File>
     <File Include="bin/Notifier.dll">
-      <publishTime>10/03/2019 13:04:31</publishTime>
+      <publishTime>11/22/2019 14:45:05</publishTime>
     </File>
     <File Include="bin/Notifier.pdb">
-      <publishTime>10/03/2019 13:04:31</publishTime>
+      <publishTime>11/22/2019 14:45:05</publishTime>
     </File>
     <File Include="bin/Owin.dll">
       <publishTime>11/01/2018 17:52:47</publishTime>
@@ -7440,17 +7461,23 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="bin/ProjLib.pdb">
       <publishTime>09/01/2017 09:54:54</publishTime>
     </File>
+    <File Include="bin/Quartz.dll">
+      <publishTime>11/01/2018 17:52:47</publishTime>
+    </File>
+    <File Include="bin/Quartz.pdb">
+      <publishTime>11/01/2018 17:52:47</publishTime>
+    </File>
     <File Include="bin/Remotion.Data.Linq.dll">
       <publishTime>11/01/2018 17:52:26</publishTime>
     </File>
     <File Include="bin/Reports.dll">
-      <publishTime>10/03/2019 18:19:29</publishTime>
+      <publishTime>11/22/2019 14:45:16</publishTime>
     </File>
     <File Include="bin/Reports.pdb">
-      <publishTime>10/03/2019 18:19:29</publishTime>
+      <publishTime>11/22/2019 14:45:16</publishTime>
     </File>
     <File Include="bin/Reports.pdb">
-      <publishTime>10/03/2019 18:19:29</publishTime>
+      <publishTime>11/22/2019 14:45:16</publishTime>
     </File>
     <File Include="bin/Reports/CompanyDetail.rdlc">
       <publishTime>11/01/2018 17:52:24</publishTime>
@@ -7621,13 +7648,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>11/01/2018 17:52:47</publishTime>
     </File>
     <File Include="bin/Service.dll">
-      <publishTime>10/03/2019 18:19:20</publishTime>
+      <publishTime>11/22/2019 14:44:59</publishTime>
     </File>
     <File Include="bin/Service.pdb">
-      <publishTime>10/03/2019 18:19:20</publishTime>
+      <publishTime>11/22/2019 14:44:59</publishTime>
     </File>
     <File Include="bin/Service.pdb">
-      <publishTime>10/03/2019 18:19:20</publishTime>
+      <publishTime>11/22/2019 14:44:59</publishTime>
     </File>
     <File Include="bin/System.Web.Helpers.dll">
       <publishTime>11/01/2018 17:52:44</publishTime>
@@ -8330,7 +8357,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     </File>
     <File Include="packages.config">
       <publishTime>02/20/2018 15:24:31</publishTime>
-      <publishTime>11/01/2018 17:51:48</publishTime>
+      <publishTime>11/08/2019 11:48:38</publishTime>
     </File>
     <File Include="Scripts/alertify.js">
       <publishTime>11/01/2018 17:51:40</publishTime>
@@ -10206,7 +10233,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>11/01/2018 17:51:42</publishTime>
     </File>
     <File Include="Views/JobOrderHeader/Create.cshtml">
-      <publishTime>06/09/2019 13:52:39</publishTime>
+      <publishTime>10/22/2019 10:58:39</publishTime>
     </File>
     <File Include="Views/JobOrderHeader/Detail.cshtml">
       <publishTime>11/01/2018 17:51:42</publishTime>
@@ -10350,7 +10377,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>11/01/2018 17:51:42</publishTime>
     </File>
     <File Include="Views/JobOrderLine/_Create.cshtml">
-      <publishTime>08/26/2019 11:21:27</publishTime>
+      <publishTime>11/14/2019 16:23:15</publishTime>
     </File>
     <File Include="Views/JobOrderLine/_CreateForProdOrder.cshtml">
       <publishTime>11/01/2018 17:51:42</publishTime>
@@ -10465,6 +10492,9 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     </File>
     <File Include="Views/JobReceiveLine/_Results.cshtml">
       <publishTime>02/01/2019 15:25:15</publishTime>
+    </File>
+    <File Include="Views/JobReceiveLine/_ResultsWithLossPerLotNo.cshtml">
+      <publishTime>10/22/2019 14:02:14</publishTime>
     </File>
     <File Include="Views/JobReceiveLine/_ResultsWithLossQty.cshtml">
       <publishTime>11/01/2018 17:51:42</publishTime>
@@ -10819,6 +10849,33 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     </File>
     <File Include="Views/MapTrace/_Reason.cshtml">
       <publishTime>05/08/2019 16:20:25</publishTime>
+    </File>
+    <File Include="Views/MaterialIssueForJobOrder/Delete.cshtml">
+      <publishTime>10/13/2019 12:46:49</publishTime>
+    </File>
+    <File Include="Views/MaterialIssueForJobOrder/Details.cshtml">
+      <publishTime>10/13/2019 12:46:49</publishTime>
+    </File>
+    <File Include="Views/MaterialIssueForJobOrder/Edit.cshtml">
+      <publishTime>10/13/2019 12:46:49</publishTime>
+    </File>
+    <File Include="Views/MaterialIssueForJobOrder/Index.cshtml">
+      <publishTime>10/13/2019 12:46:49</publishTime>
+    </File>
+    <File Include="Views/MaterialIssueForJobOrder/_Create.cshtml">
+      <publishTime>10/22/2019 10:42:26</publishTime>
+    </File>
+    <File Include="Views/MaterialIssueForJobOrder/_Filters.cshtml">
+      <publishTime>10/13/2019 12:46:49</publishTime>
+    </File>
+    <File Include="Views/MaterialIssueForJobOrder/_FiltersStockIn.cshtml">
+      <publishTime>10/13/2019 12:46:49</publishTime>
+    </File>
+    <File Include="Views/MaterialIssueForJobOrder/_Results.cshtml">
+      <publishTime>10/13/2019 12:46:49</publishTime>
+    </File>
+    <File Include="Views/MaterialIssueForJobOrder/_ResultsStockIn.cshtml">
+      <publishTime>10/13/2019 12:46:49</publishTime>
     </File>
     <File Include="Views/MaterialPlanCancelHeader/Create.cshtml">
       <publishTime>11/01/2018 17:51:42</publishTime>
@@ -11841,7 +11898,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>11/01/2018 17:51:43</publishTime>
     </File>
     <File Include="Views/ProductUIDExchange/Create.cshtml">
-      <publishTime>09/22/2019 12:21:52</publishTime>
+      <publishTime>10/07/2019 15:23:16</publishTime>
     </File>
     <File Include="Views/ProductUIDExchange/Delete.cshtml">
       <publishTime>09/22/2019 11:58:25</publishTime>
@@ -11862,7 +11919,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/22/2019 11:58:25</publishTime>
     </File>
     <File Include="Views/ProductUIDExchange/_Create.cshtml">
-      <publishTime>09/22/2019 13:14:59</publishTime>
+      <publishTime>10/07/2019 15:15:02</publishTime>
     </File>
     <File Include="Views/ProductUIDExchange/_Filters.cshtml">
       <publishTime>09/22/2019 11:58:25</publishTime>
@@ -13611,7 +13668,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>11/01/2018 17:51:46</publishTime>
     </File>
     <File Include="Views/StockIssueHeader/Create.cshtml">
-      <publishTime>06/10/2019 11:18:37</publishTime>
+      <publishTime>10/13/2019 17:19:48</publishTime>
     </File>
     <File Include="Views/StockIssueHeader/Delete.cshtml">
       <publishTime>11/01/2018 17:51:46</publishTime>
@@ -14121,7 +14178,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>11/01/2018 17:51:46</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>09/13/2019 12:44:55</publishTime>
+      <publishTime>11/18/2019 17:25:39</publishTime>
     </File>
   </ItemGroup>
 </Project>

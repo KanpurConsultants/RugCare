@@ -29,6 +29,8 @@ namespace Model.ViewModels
 
         public string EntryMode { get; set; }
 
+        public int DocTypeId { get; set; }
+
         public Decimal? Weight { get; set; }
     }
 

@@ -418,23 +418,19 @@ namespace Jobs.Areas.Rug.Controllers
                         return PartialView("_Create", svm);
                     }
 
+                    Product P = new ProductService(_unitOfWork).Find(bomdetail.BaseProductId);
+
                     LogActivity.LogActivityDetail(LogVm.Map(new ActiivtyLogViewModel
                     {
                         DocTypeId = new DocumentTypeService(_unitOfWork).Find(MasterDocTypeConstants.DesignColourConsumption).DocumentTypeId,
-                        DocId = svm.BaseProductId,
-                        ActivityType = (int)ActivityTypeContants.Added,
-                        DocNo = svm.BaseProductName,
-                    }));
-
-                    LogActivity.LogActivityDetail(LogVm.Map(new ActiivtyLogViewModel
-                    {
-                        DocTypeId = new DocumentTypeService(_unitOfWork).FindByName(MasterDocTypeConstants.DesignConsumption).DocumentTypeId,
-                        DocId = svm.BaseProductId,
+                        DocId = bomdetail.BaseProductId,
                         DocLineId = bomdetail.BomDetailId,
                         ActivityType = (int)ActivityTypeContants.Added,
+                        DocNo = P.ProductName,
+                        DocDate = DateTime.Now,
                     }));
 
-                    
+
 
                     if (svm.ContentType == "Main Contents")
                     {
@@ -477,6 +473,7 @@ namespace Jobs.Areas.Rug.Controllers
                         Obj = bomdetail,
                     });
                     XElement Modifications = new ModificationsCheckService().CheckChanges(LogList);
+
                     try
                     {
                         _unitOfWork.Save();
@@ -489,11 +486,15 @@ namespace Jobs.Areas.Rug.Controllers
                         return PartialView("_Create", svm);
                     }
 
+                    Product P = new ProductService(_unitOfWork).Find(bomdetail.BaseProductId);
+                    
                     LogActivity.LogActivityDetail(LogVm.Map(new ActiivtyLogViewModel
                     {
-                        DocTypeId = new DocumentTypeService(_unitOfWork).FindByName(MasterDocTypeConstants.DesignConsumption).DocumentTypeId,
-                        DocId = svm.BaseProductId,
+                        DocTypeId = new DocumentTypeService(_unitOfWork).FindByName(MasterDocTypeConstants.DesignColourConsumption).DocumentTypeId,
+                        DocId = bomdetail.BaseProductId,
                         DocLineId = bomdetail.BomDetailId,
+                        DocNo = P.ProductName,
+                        DocDate = DateTime.Now,
                         ActivityType = (int)ActivityTypeContants.Modified,
                         xEModifications = Modifications,
                     }));
@@ -691,11 +692,15 @@ namespace Jobs.Areas.Rug.Controllers
                 ModelState.AddModelError("", message);
                 return PartialView("EditSize", vm);
             }
+            Product P = new ProductService(_unitOfWork).Find(BomDetail.BaseProductId);
 
             LogActivity.LogActivityDetail(LogVm.Map(new ActiivtyLogViewModel
             {
-                DocTypeId = new DocumentTypeService(_unitOfWork).FindByName(MasterDocTypeConstants.DesignConsumption).DocumentTypeId,
-                DocId = BomDetail.BomDetailId,
+                DocTypeId = new DocumentTypeService(_unitOfWork).FindByName(MasterDocTypeConstants.DesignColourConsumption).DocumentTypeId,
+                DocId = BomDetail.BaseProductId,
+                DocLineId = BomDetail.BomDetailId,
+                DocNo = P.ProductName,
+                DocDate = DateTime.Now,
                 ActivityType = (int)ActivityTypeContants.Deleted,
                 xEModifications = Modifications,
             }));

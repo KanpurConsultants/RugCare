@@ -208,7 +208,7 @@ namespace Service
                     LEFT JOIN Web._ViewRugSize VRS WITH (Nolock) ON VRS.ProductId=H.ProductId
                     LEFT JOIN Web.ProdOrderLines POL WITH (Nolock) ON POL.ProdOrderLineId=H.ProdOrderLineId
                     GROUP BY POL.ProdOrderHeaderId,H.ProductId
- */
+ 
 
                     SELECT V.* 
                     INTO #FWR
@@ -246,8 +246,10 @@ namespace Service
                     GROUP BY POL.ProdOrderHeaderId,H.ProductId
                     ) V
 
+*/
                     ----------------- Stock Balance -------------
 
+ /* 
                     SELECT VS.SaleOrderLineId, sum(VS.Qty) AS StockQty  
                     INTO #FStock
                     FROM 
@@ -351,6 +353,58 @@ namespace Service
                     AND H.DocTypeId NOT IN (4024,448,5026)
                     AND S.ProductUIDId IS NULL AND PU.SaleOrderLineId IS NOT NULL  AND PC.ProductCategoryName = 'OVER TUFT'
                     GROUP BY PU.SaleOrderLineId
+                    UNION ALL 
+                    SELECT A.SaleOrderLineId , A.StockPlanQty - isnull(B.PackQty,0) AS Qty
+                    FROM
+                    (
+                    SELECT S.SaleOrderLineId, Sum(L.StockPlanQty) as  StockPlanQty
+                    FROM Web.MaterialPlanHeaders H WITH (Nolock)
+                    LEFT JOIN Web.MaterialPlanLines  L WITH (Nolock) ON H.MaterialPlanHeaderId = L.MaterialPlanHeaderId
+                    LEFT JOIN web.MaterialPlanForSaleOrders S WITH (Nolock) ON S.MaterialPlanLineId = L.MaterialPlanLineId
+                    WHERE H.DocTypeId = 313 AND S.SaleOrderLineId IS NOT NULL AND L.StockPlanQty > 0
+                    Group By S.SaleOrderLineId
+					) A
+					LEFT JOIN 
+					(
+					SELECT P1.SaleOrderLineId,  sum(P1.Qty) AS PackQty
+					FROM 
+					(
+                    SELECT L.SaleOrderLineId, sum(L.Qty) AS  Qty
+                    FROM web.PackingHeaders H WITH (Nolock) 
+                    LEFT JOIN web.PackingLines L WITH (Nolock) ON L.PackingHeaderId = H.PackingHeaderId 
+                    LEFT JOIN web.ProductUids PU WITH (Nolock) ON PU.ProductUIDId =  L.ProductUidId 
+                    WHERE PU.SaleOrderLineId IS  NULL AND L.SaleOrderLineId IS NOT NULL AND L.ProductUIDId IS NOT NULL 
+                    GROUP BY L.SaleOrderLineId 
+                    UNION ALL 
+                    SELECT L.SaleOrderLineId, sum(L.Qty) AS  Qty
+                    FROM web.PackingHeaders H WITH (Nolock) 
+                    LEFT JOIN web.PackingLines L WITH (Nolock) ON L.PackingHeaderId = H.PackingHeaderId 
+                    LEFT JOIN web.ProductUids PU WITH (Nolock) ON PU.ProductUidName = L.LotNo 
+                    WHERE PU.SaleOrderLineId IS  NULL AND L.SaleOrderLineId IS NOT NULL  AND L.ProductUIDId IS NULL 
+                    GROUP BY L.SaleOrderLineId 
+                    ) P1
+                    GROUP BY P1.SaleOrderLineId
+                    ) B ON A.SaleOrderLineId = B.SaleOrderLineId
+                    WHERE A.StockPlanQty - isnull(B.PackQty,0) > 0
+                    ) VS
+                    GROUP BY VS.SaleOrderLineId
+
+*/
+
+
+                    SELECT VS.SaleOrderLineId, sum(VS.Qty) AS StockQty  
+                    INTO #FStock
+                    FROM 
+                    (                   
+                    
+                    SELECT SOL.SaleOrderLineId, sum(H.Qty) AS Qty 
+                    FROM Web.ViewCarpetStock H WITH (Nolock)
+					LEFT JOIN web.ProductUids PU WITH (Nolock) ON PU.ProductUIDId = H.ProductUIDId
+					LEFT JOIN web.SaleOrderLines SOL WITH (Nolock) ON SOL.SaleOrderLineId = PU.SaleOrderLineId
+					LEFT JOIN web.SaleOrderHeaders SOH WITH (Nolock) ON SOH.SaleOrderHeaderId = SOL.SaleOrderHeaderId
+					WHERE 1=1 " +
+                    (Buyer != null ? " And SOH.SaleToBuyerId IN (SELECT Items FROM[dbo].[Split](@Buyer, ','))" : "") + 
+                    @" GROUP BY SOL.SaleOrderLineId
                     UNION ALL 
                     SELECT A.SaleOrderLineId , A.StockPlanQty - isnull(B.PackQty,0) AS Qty
                     FROM
@@ -866,7 +920,9 @@ namespace Service
 
 
             mQry = @"
-                    SELECT PU.ProductUidName AS CarpetNo, Replace(Convert(NVARCHAR, PU.gendocDate, 106), ' ', '/') AS Date, PC.ProductCategoryName AS Type, PQ.ProductQualityName AS Quality, PG.ProductGroupName AS Design, C.ColourName AS Colour, VRS.ManufaturingSizeName AS Size,  VM.StockQty AS Qty, A.OTO AS OTI, A.OTR AS OTR,
+                    SELECT PU.ProductUidName AS CarpetNo, 
+                    CASE WHEN PC.ProductCategoryName ='Over Tuft' THEN  Replace(Convert(NVARCHAR, A.RecDate, 106), ' ', '/') ELSE Replace(Convert(NVARCHAR, PU.gendocDate, 106), ' ', '/') END AS Date, 
+                    PC.ProductCategoryName AS Type, PQ.ProductQualityName AS Quality, PG.ProductGroupName AS Design, C.ColourName AS Colour, VRS.ManufaturingSizeName AS Size,  VM.StockQty AS Qty, A.OTO AS OTI, A.OTR AS OTR,
                     CASE WHEN isnull(PU.CurrenctProcessId, 0) = 46 THEN 'Rejected' WHEN isnull(PU.CurrenctGodownId, 0) = 1 AND charindex(',', PU.ProcessesDone) > 0 THEN 'Finished' ELSE 'Un-Finished' END Status
                     FROM
                     (
@@ -941,12 +997,15 @@ namespace Service
                     LEFT JOIN web.SaleOrderHeaders SOH WITH(Nolock) ON SOH.SaleOrderHeaderId = SOL.SaleOrderHeaderId
                     LEFT JOIN
                     (
-                    SELECT JOL.ProductUIDId, Max(JOL.Qty) AS OTO, Max(RL.RecQty) AS OTR
+                    SELECT JOL.ProductUIDId, Max(JOL.Qty) AS OTO, Max(RL.RecQty) AS OTR, Max(RL.RecDate) AS RecDate
                     FROM WEb.JobOrderHeaders  JOH WITH(Nolock)
                     LEFT JOIN web.JobOrderLines JOL WITH(Nolock) ON JOL.JobOrderHeaderId = JOH.JobOrderHeaderId
                     LEFT JOIN
                     (
-                    SELECT RL.JobOrderLineId, sum(RL.Qty) AS RecQty  FROM web.JobReceiveLines RL GROUP BY RL.JobOrderLineId
+                    SELECT RL.JobOrderLineId, Max(RH.DocDate) AS RecDate, sum(RL.Qty) AS RecQty  
+                    FROM web.JobReceiveLines RL WITH(Nolock)
+                    LEFT JOIN web.JobReceiveHeaders RH WITH(Nolock) ON RH.JobReceiveHeaderId = RL.JobReceiveHeaderId
+                    GROUP BY RL.JobOrderLineId
                     ) RL ON RL.JobOrderLineId = JOL.JobOrderLineId
                     WHERE JOH.DocTypeId = 4024 AND JOL.ProductUIDId IS NOT NULL
                     GROUP BY JOL.ProductUIDId

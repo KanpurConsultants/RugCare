@@ -942,9 +942,11 @@ else
 
 
             function Calculation() {
-            if ($('#UnitConversionMultiplier').val() != 0) {
+                //alert($('#UnitConversionMultiplier').val())
+                if ($('#UnitConversionMultiplier').val() != 0) 
+                {
                 $('#DealQty').val(($('#Qty').val() * $('#UnitConversionMultiplier').val()).toFixed(decimalplaces))
-            }
+                }
 
 
             //if(AmountRoundOff)

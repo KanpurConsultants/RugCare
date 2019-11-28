@@ -43,6 +43,15 @@ namespace Model.Models
         [MaxLength(100)]
         public string ImageFileName { get; set; }
 
+
+        public Decimal? DyeingDaysPer { get; set; }
+        public Decimal? MinimumDyeingDays { get; set; }
+        public Decimal? WeavingDaysPer { get; set; }
+        public Decimal? MinimumWeavingDays { get; set; }
+        public Decimal? FinishingDaysPer { get; set; }
+        public Decimal? MinimumFinishingDays { get; set; }
+
+
         [Display(Name = "Created By")]
         public string CreatedBy { get; set; }
 

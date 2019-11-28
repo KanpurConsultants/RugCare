@@ -60,6 +60,7 @@ namespace Model.Models
 
         public bool isVisibleLineUnitConversionFor { get; set; }
         public bool? isAllowedDuplicatePrint { get; set; }
+        public bool? isAllowedToMaterialIssue { get; set; }
         public bool? isVisibleStockIn { get; set; }
         public bool? IsMandatoryStockIn { get; set; }
 

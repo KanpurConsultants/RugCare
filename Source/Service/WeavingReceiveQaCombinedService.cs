@@ -30,7 +30,7 @@ namespace Service
         IQueryable<ComboBoxResult> TempGetCustomProduct(int filter, string term, int? PersonId);        
         IQueryable<ComboBoxResult> GetCustomPerson(int Id, string term);
         JobReceiveHeaderViewModel GetJobReceiveHeader_ByReferenceId(int ReferenceDocId, int ReferenceDocTypeId);
-        JobReceiveHeaderViewModel GetJobReceiveHeader_ByProductUId(int ProductUId);
+        JobReceiveHeaderViewModel GetJobReceiveHeader_ByProductUId(int ProductUId, int DocumentTypeId, int SiteId, int DivisionId);
     }
 
     public class WeavingReceiveQACombinedService : IWeavingReceiveQACombinedService
@@ -66,20 +66,18 @@ namespace Service
             return pt;
         }
 
-        public JobReceiveHeaderViewModel GetJobReceiveHeader_ByProductUId(int ProductUId)
+        public JobReceiveHeaderViewModel GetJobReceiveHeader_ByProductUId(int ProductUId, int DocumentTypeId, int SiteId, int DivisionId)
         {
-            var pt = (from H in db.ProductUid
-                      join JRH in db.JobReceiveHeader on H.GenDocId equals JRH.JobReceiveHeaderId into JRHTable
-                      from JRHTab in JRHTable.DefaultIfEmpty()
-                      where H.ProductUIDId == ProductUId && JRHTab.DocTypeId ==448
-                      select new JobReceiveHeaderViewModel
-                      {
-                          JobReceiveHeaderId = JRHTab.JobReceiveHeaderId,
-                          SiteId= JRHTab.SiteId,
-                          DivisionId = JRHTab.DivisionId,
-                      }).FirstOrDefault();
+            string mQry = @"SELECT H.JobReceiveHeaderId, H.DocTypeId, H.DocDate, H.DocNo, H.DivisionId, H.SiteId 
+                            FROM web.JobReceiveHeaders H WITH(Nolock)
+                            LEFT JOIN web.JobReceiveLines L WITH(Nolock) ON L.JobReceiveHeaderId = H.JobReceiveHeaderId
+                            LEFT JOIN web.ProductUids PU WITH(Nolock) ON PU.ProductUIDId = L.ProductUidId
+                            LEFT JOIN web.ProductUids PU1 WITH(Nolock) ON PU1.LotNo = L.LotNo
+                            WHERE H.DocTypeId =" + DocumentTypeId + @" AND isnull(PU.ProductUIDId, PU1.ProductUIDId) = " + ProductUId + " "+
+                            @" AND  H.SiteId = " + SiteId + " AND  H.DivisionId = " + DivisionId + " ";
 
-            return pt;
+            IEnumerable<JobReceiveHeaderViewModel> pt = db.Database.SqlQuery<JobReceiveHeaderViewModel>(mQry).ToList();
+            return pt.FirstOrDefault();
         }
 
 

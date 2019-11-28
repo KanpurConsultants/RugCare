@@ -32,6 +32,8 @@ namespace Model.Models
         public int? QAGroupId { get; set; }
         public virtual QAGroup QAGroup { get; set; }
 
+        public Decimal ? LossPer { get; set; }
+
         [Display(Name = "Created By")]
         public string CreatedBy { get; set; }
 

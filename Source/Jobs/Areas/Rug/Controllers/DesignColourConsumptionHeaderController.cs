@@ -150,6 +150,7 @@ namespace Jobs.Areas.Rug.Controllers
 
             DesignColourConsumptionHeaderViewModel p = new DesignColourConsumptionHeaderViewModel();
             p.EntryMode = "Add";
+            p.DocTypeId = DocTypeId;
             if (id != null)
             {
                 p.ProductGroupId = (int)id;
@@ -322,13 +323,14 @@ namespace Jobs.Areas.Rug.Controllers
             }
 
             DesignColourConsumptionHeaderViewModel bvm = new DesignColourConsumptionHeaderViewModel();
+
             bvm.EntryMode = "Edit";
             if (id != null && id != 0)
             {
                 bvm = _BomDetailService.GetDesignColourConsumptionHeaderViewModel((int)id);
             }
+            bvm.DocTypeId = DocTypeId;
 
-            
             PrepareViewBag();
             if (bvm == null)
             {

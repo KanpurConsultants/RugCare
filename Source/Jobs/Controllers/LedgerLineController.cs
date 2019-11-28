@@ -843,6 +843,12 @@ namespace Jobs.Controllers
                 ViewBag.LedgerAccountName = null;
             }
 
+            //var Temp = db.LedgerAdj.Where(m => m.CrLedgerId == temp.LedgerId);
+            //var Temp1 = db.LedgerAdj.Where(m => m.DrLedgerId == temp.LedgerId);
+
+            //if (Temp != null || Temp1 != null)
+            //    temp.LockReason = "Amount is Adjusted!";
+
             PrepareViewBag(temp.LedgerHeaderId);
             //ViewBag.AccountType = new LedgerHeaderService(_unitOfWork).GetLedgerAccountType(temp.ContraLedgerAccountId ?? 0);
             //Getting Settings

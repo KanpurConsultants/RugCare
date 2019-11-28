@@ -58,6 +58,8 @@ namespace Model.Models
         public string filterContraSites { get; set; }
         public string filterContraDivisions { get; set; }
 
+        public string DefaultAdjustmentType { get; set; }
+
         public bool IsAutoDocNo { get; set; }
         public string SqlProcReferenceNo { get; set; }
 

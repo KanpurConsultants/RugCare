@@ -942,21 +942,24 @@
                 <TablixCell />
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="Textbox228">
+                    <Textbox Name="BillToBuyerAddress4">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value />
-                              <Style />
+                              <Value>=Fields!BuyerOtherthanConsignee.Value</Value>
+                              <Style>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontSize>8pt</FontSize>
+                              </Style>
                             </TextRun>
                           </TextRuns>
                           <Style />
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>Textbox228</rd:DefaultName>
+                      <rd:DefaultName>BillToBuyerAddress</rd:DefaultName>
                       <Style>
                         <Border>
                           <Style>None</Style>
@@ -964,7 +967,7 @@
                         <RightBorder>
                           <Style>Solid</Style>
                         </RightBorder>
-                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingLeft>4pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
                         <PaddingBottom>2pt</PaddingBottom>
@@ -2617,23 +2620,7 @@
                               </Style>
                             </TextRun>
                             <TextRun>
-                              <Value> (</Value>
-                              <Style>
-                                <FontFamily>tahoma</FontFamily>
-                                <FontSize>8pt</FontSize>
-                                <FontWeight>Bold</FontWeight>
-                              </Style>
-                            </TextRun>
-                            <TextRun>
-                              <Value>=Fields!DeliveryTermsName.Value</Value>
-                              <Style>
-                                <FontFamily>tahoma</FontFamily>
-                                <FontSize>8pt</FontSize>
-                                <FontWeight>Bold</FontWeight>
-                              </Style>
-                            </TextRun>
-                            <TextRun>
-                              <Value>) </Value>
+                              <Value> (F.O.B.) </Value>
                               <Style>
                                 <FontFamily>tahoma</FontFamily>
                                 <FontSize>8pt</FontSize>
@@ -3263,7 +3250,7 @@
               </TablixCells>
             </TablixRow>
             <TablixRow>
-              <Height>0.93052in</Height>
+              <Height>1.1076in</Height>
               <TablixCells>
                 <TablixCell>
                   <CellContents>
@@ -3330,7 +3317,7 @@
                         </TablixColumns>
                         <TablixRows>
                           <TablixRow>
-                            <Height>0.31017in</Height>
+                            <Height>0.2769in</Height>
                             <TablixCells>
                               <TablixCell>
                                 <CellContents>
@@ -3412,7 +3399,7 @@
                             </TablixCells>
                           </TablixRow>
                           <TablixRow>
-                            <Height>0.31017in</Height>
+                            <Height>0.2769in</Height>
                             <TablixCells>
                               <TablixCell>
                                 <CellContents>
@@ -3541,7 +3528,7 @@
                             </TablixCells>
                           </TablixRow>
                           <TablixRow>
-                            <Height>0.31017in</Height>
+                            <Height>0.2769in</Height>
                             <TablixCells>
                               <TablixCell>
                                 <CellContents>
@@ -3669,6 +3656,116 @@
                               </TablixCell>
                             </TablixCells>
                           </TablixRow>
+                          <TablixRow>
+                            <Height>0.2769in</Height>
+                            <TablixCells>
+                              <TablixCell>
+                                <CellContents>
+                                  <Textbox Name="Textbox47">
+                                    <CanGrow>true</CanGrow>
+                                    <KeepTogether>true</KeepTogether>
+                                    <Paragraphs>
+                                      <Paragraph>
+                                        <TextRuns>
+                                          <TextRun>
+                                            <Value>LESS DISCOUNT (</Value>
+                                            <Style>
+                                              <FontFamily>tahoma</FontFamily>
+                                              <FontSize>7pt</FontSize>
+                                              <FontWeight>Bold</FontWeight>
+                                            </Style>
+                                          </TextRun>
+                                          <TextRun>
+                                            <Value>=Fields!CurrencyName.Value</Value>
+                                            <Style>
+                                              <FontFamily>tahoma</FontFamily>
+                                              <FontSize>7pt</FontSize>
+                                              <FontWeight>Bold</FontWeight>
+                                            </Style>
+                                          </TextRun>
+                                          <TextRun>
+                                            <Value>)-</Value>
+                                            <Style>
+                                              <FontFamily>tahoma</FontFamily>
+                                              <FontSize>7pt</FontSize>
+                                              <FontWeight>Bold</FontWeight>
+                                            </Style>
+                                          </TextRun>
+                                        </TextRuns>
+                                        <Style>
+                                          <TextAlign>Right</TextAlign>
+                                        </Style>
+                                      </Paragraph>
+                                    </Paragraphs>
+                                    <rd:DefaultName>Textbox24</rd:DefaultName>
+                                    <Style>
+                                      <Border>
+                                        <Style>None</Style>
+                                      </Border>
+                                      <TopBorder>
+                                        <Style>Solid</Style>
+                                      </TopBorder>
+                                      <BottomBorder>
+                                        <Style>Solid</Style>
+                                      </BottomBorder>
+                                      <LeftBorder>
+                                        <Style>Solid</Style>
+                                      </LeftBorder>
+                                      <PaddingLeft>2pt</PaddingLeft>
+                                      <PaddingRight>2pt</PaddingRight>
+                                      <PaddingTop>2pt</PaddingTop>
+                                      <PaddingBottom>2pt</PaddingBottom>
+                                    </Style>
+                                  </Textbox>
+                                </CellContents>
+                              </TablixCell>
+                              <TablixCell>
+                                <CellContents>
+                                  <Textbox Name="Freight5">
+                                    <CanGrow>true</CanGrow>
+                                    <KeepTogether>true</KeepTogether>
+                                    <Paragraphs>
+                                      <Paragraph>
+                                        <TextRuns>
+                                          <TextRun>
+                                            <Value>=Fields!Deduction.Value</Value>
+                                            <Style>
+                                              <FontFamily>tahoma</FontFamily>
+                                              <FontSize>7pt</FontSize>
+                                              <FontWeight>Bold</FontWeight>
+                                              <Format>0.00;(0.00)</Format>
+                                            </Style>
+                                          </TextRun>
+                                        </TextRuns>
+                                        <Style>
+                                          <TextAlign>Right</TextAlign>
+                                        </Style>
+                                      </Paragraph>
+                                    </Paragraphs>
+                                    <rd:DefaultName>Freight</rd:DefaultName>
+                                    <Style>
+                                      <Border>
+                                        <Style>None</Style>
+                                      </Border>
+                                      <TopBorder>
+                                        <Style>Solid</Style>
+                                      </TopBorder>
+                                      <BottomBorder>
+                                        <Style>Solid</Style>
+                                      </BottomBorder>
+                                      <LeftBorder>
+                                        <Style>Solid</Style>
+                                      </LeftBorder>
+                                      <PaddingLeft>2pt</PaddingLeft>
+                                      <PaddingRight>4pt</PaddingRight>
+                                      <PaddingTop>2pt</PaddingTop>
+                                      <PaddingBottom>2pt</PaddingBottom>
+                                    </Style>
+                                  </Textbox>
+                                </CellContents>
+                              </TablixCell>
+                            </TablixCells>
+                          </TablixRow>
                         </TablixRows>
                       </TablixBody>
                       <TablixColumnHierarchy>
@@ -3688,6 +3785,11 @@
                           <TablixMember>
                             <Visibility>
                               <Hidden>=iif(Fields!Insurance.Value=0,true,false)</Hidden>
+                            </Visibility>
+                          </TablixMember>
+                          <TablixMember>
+                            <Visibility>
+                              <Hidden>=iif(Fields!Deduction.Value=0,true,false)</Hidden>
                             </Visibility>
                           </TablixMember>
                         </TablixMembers>
@@ -3765,7 +3867,7 @@
                             <TextRun>
                               <Value>=Code.RupeesToWord(iif(Fields!InvoiceAmount.Value &gt; 0,
                                 Fields!InvoiceAmount.Value,Sum(Fields!Amount.Value, "DsMain")) +
-                                Fields!Freight.Value+Fields!Insurance.Value)</Value>
+                                Fields!Freight.Value+Fields!Insurance.Value-Fields!Deduction.Value)</Value>
                               <Style>
                                 <FontFamily>tahoma</FontFamily>
                                 <FontSize>7pt</FontSize>
@@ -3864,7 +3966,7 @@
                             <TextRun>
                               <Value>=iif(Fields!InvoiceAmount.Value &gt; 0,
                                 Fields!InvoiceAmount.Value,Sum(Fields!Amount.Value, "DsMain")) +
-                                Fields!Freight.Value+Fields!Insurance.Value</Value>
+                                Fields!Freight.Value+Fields!Insurance.Value-Fields!Deduction.Value</Value>
                               <Style>
                                 <FontFamily>tahoma</FontFamily>
                                 <FontSize>7pt</FontSize>
@@ -3951,7 +4053,7 @@
         </TablixRowHierarchy>
         <DataSetName>DsMain</DataSetName>
         <Top>4.48236in</Top>
-        <Height>1.9201in</Height>
+        <Height>2.09718in</Height>
         <Width>7.59334in</Width>
         <ZIndex>1</ZIndex>
         <Style>
@@ -4276,7 +4378,7 @@
             <TablixMember />
           </TablixMembers>
         </TablixRowHierarchy>
-        <Top>6.41666in</Top>
+        <Top>6.66666in</Top>
         <Height>1.08939in</Height>
         <Width>7.59331in</Width>
         <ZIndex>2</ZIndex>
@@ -4287,7 +4389,7 @@
         </Style>
       </Tablix>
     </ReportItems>
-    <Height>7.50605in</Height>
+    <Height>7.75605in</Height>
     <Style>
       <Border>
         <Style>Solid</Style>
@@ -4390,7 +4492,6 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox1</rd:DefaultName>
-          <Top>0in</Top>
           <Left>0.00522in</Left>
           <Height>0.72543in</Height>
           <Width>4.91889in</Width>
@@ -4423,7 +4524,6 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox1</rd:DefaultName>
-          <Top>0in</Top>
           <Left>4.92411in</Left>
           <Height>0.72543in</Height>
           <Width>2.66402in</Width>
@@ -4456,10 +4556,7 @@
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
     <DataSource Name="SalesReports">
-      <ConnectionProperties>
-        <DataProvider>SQL</DataProvider>
-        <ConnectString>=Parameters!DatabaseConnectionString.Value</ConnectString>
-      </ConnectionProperties>
+      <DataSourceReference>DSBC</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
       <rd:DataSourceID>ecc7d78d-35f4-4535-b69a-8676e99d21e4</rd:DataSourceID>
     </DataSource>
@@ -4474,6 +4571,9 @@
           </QueryParameter>
           <QueryParameter Name="@ReportType">
             <Value>=Parameters!ReportType.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@DivisionId">
+            <Value>=Parameters!DivisionId.Value</Value>
           </QueryParameter>
         </QueryParameters>
         <CommandType>StoredProcedure</CommandType>
@@ -4596,6 +4696,10 @@
           <DataField>TermsOfSale</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="BuyerOtherthanConsignee">
+          <DataField>BuyerOtherthanConsignee</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
         <Field Name="NotifyParty">
           <DataField>NotifyParty</DataField>
           <rd:TypeName>System.String</rd:TypeName>
@@ -4678,6 +4782,10 @@
         </Field>
         <Field Name="Freight">
           <DataField>Freight</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="Deduction">
+          <DataField>Deduction</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
         <Field Name="Insurance">
@@ -4872,16 +4980,16 @@
           <DataField>DivisionId</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
-        <Field Name="ReportName">
-          <DataField>ReportName</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
         <Field Name="ReportHeaderTextRight1">
           <DataField>ReportHeaderTextRight1</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="ReportTitle">
           <DataField>ReportTitle</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ReportName">
+          <DataField>ReportName</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
@@ -4929,6 +5037,11 @@
       <Nullable>true</Nullable>
       <AllowBlank>true</AllowBlank>
       <Prompt>FilterStr3</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="DivisionId">
+      <DataType>Integer</DataType>
+      <Nullable>true</Nullable>
+      <Prompt>Division Id</Prompt>
     </ReportParameter>
   </ReportParameters>
   <Code>

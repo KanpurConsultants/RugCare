@@ -33,7 +33,9 @@ namespace Model.ViewModel
         public bool isVisibleDimension3 { get; set; }
         public bool isVisibleDimension4 { get; set; }
         public bool isVisibleProdOrder { get; set; }
-        
+        public bool isVisibleLossPer { get; set; }
+        public decimal? MaxLossPer { get; set; }
+
         public bool isVisibleRate { get; set; }
         public bool isVisibleWeight { get; set; }
         public bool isVisibleSpecification { get; set; }

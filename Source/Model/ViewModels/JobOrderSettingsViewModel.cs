@@ -80,6 +80,7 @@ namespace Model.ViewModel
         public bool isUniqueCostCenter { get; set; }
         public bool PersonWiseCostCenter { get; set; }
         public bool CalculateDiscountOnRate { get; set; }
+        public bool isAllowedToMaterialIssue { get; set; }
 
         public string filterLedgerAccountGroups { get; set; }
         public string filterLedgerAccounts { get; set; }        

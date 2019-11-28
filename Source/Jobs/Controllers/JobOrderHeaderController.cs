@@ -472,6 +472,33 @@ namespace Jobs.Controllers
 
                     }
 
+                    if (settings.isAllowedToMaterialIssue == true)
+                    {
+                        StockHeader SH = new StockHeader();
+
+                        SH.DivisionId = svm.DivisionId;
+                        SH.SiteId = svm.SiteId;
+                        SH.DocTypeId = svm.DocTypeId;
+                        SH.ProcessId = svm.ProcessId;
+                        SH.ReferenceDocId = svm.JobOrderHeaderId;
+                        SH.ReferenceDocTypeId = svm.DocTypeId;
+                        SH.DocDate = svm.DocDate;
+                        SH.DocNo = svm.DocNo;
+                        SH.PersonId = svm.JobWorkerId;
+                        SH.GodownId = svm.GodownId;
+                        SH.Remark = svm.Remark;
+                        SH.Status = svm.Status;
+                        SH.CreatedBy = User.Identity.Name;
+                        SH.ModifiedBy = User.Identity.Name;
+                        SH.CreatedDate = DateTime.Now;
+                        SH.ModifiedDate = DateTime.Now;
+                        SH.ObjectState = Model.ObjectState.Added;
+                        context.StockHeader.Add(SH);
+
+                        s.StockHeaderId = SH.StockHeaderId;
+
+                    }
+
 
                     s.CreatedDate = DateTime.Now;
                     s.ModifiedDate = DateTime.Now;
@@ -483,6 +510,9 @@ namespace Jobs.Controllers
                     s.ObjectState = Model.ObjectState.Added;
                     //_JobOrderHeaderService.Create(s);
                     context.JobOrderHeader.Add(s);
+
+
+
 
                     new JobOrderHeaderStatusService(_unitOfWork).CreateHeaderStatus(s.JobOrderHeaderId, ref context, true);
 
@@ -596,6 +626,18 @@ namespace Jobs.Controllers
                         CC.ReferenceDocId = s.JobOrderHeaderId;
                         CC.ObjectState = Model.ObjectState.Modified;
                         context.CostCenter.Add(CC);
+
+                        context.SaveChanges();
+                        //new CostCenterService(_unitOfWork).Update(CC);
+                        //_unitOfWork.Save();
+                    }
+
+                    if (s.StockHeaderId.HasValue && settings.isAllowedToMaterialIssue == true)
+                    {
+                        var CC = context.StockHeader.Find(s.StockHeaderId);
+                        CC.ReferenceDocId = s.JobOrderHeaderId;
+                        CC.ObjectState = Model.ObjectState.Modified;
+                        context.StockHeader.Add(CC);
 
                         context.SaveChanges();
                         //new CostCenterService(_unitOfWork).Update(CC);
@@ -1606,6 +1648,46 @@ namespace Jobs.Controllers
 
                 if (StockHeaderId != null)
                 {
+                    
+                    var StockLine = (from p in context.StockLine
+                                     where p.StockHeaderId == StockHeaderId
+                                       select p).ToList();
+                    if(StockLine != null)
+                    { 
+                        foreach (var SItem in StockLine)
+                        {
+                            SItem.ObjectState = Model.ObjectState.Deleted;
+                            context.StockLine.Remove(SItem);
+                        }
+                    }
+
+                    var Stocks = (from p in context.Stock
+                                     where p.StockHeaderId == StockHeaderId
+                                     select p).ToList();
+
+                    if (Stocks != null)
+                    {
+                        foreach (var SItem1 in Stocks)
+                        {
+                            SItem1.ObjectState = Model.ObjectState.Deleted;
+                            context.Stock.Remove(SItem1);
+                        }
+                    }
+
+                    var StockPs = (from p in context.StockProcess
+                                  where p.StockHeaderId == StockHeaderId
+                                  select p).ToList();
+
+                    if (StockPs != null)
+                    {
+                        foreach (var SItem2 in StockPs)
+                        {
+                            SItem2.ObjectState = Model.ObjectState.Deleted;
+                            context.StockProcess.Remove(SItem2);
+                        }
+                    }
+
+
                     var StockHeader = (from p in context.StockHeader
                                        where p.StockHeaderId == StockHeaderId
                                        select p).FirstOrDefault();

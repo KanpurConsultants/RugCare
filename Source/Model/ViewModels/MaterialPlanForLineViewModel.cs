@@ -109,6 +109,7 @@ namespace Model.ViewModel
         public int? Dimension4Id { get; set; }
         public int? ProcessId { get; set; }
         public decimal Qty { get; set; }
+        public int Sr { get; set; }
     }
 
     public class MaterialPlanSummaryViewModel

@@ -603,7 +603,12 @@ namespace Jobs.Controllers
             {
                 return PartialView("_ResultsWithQty", svm);
             }
-            if (svm.JobReceiveSettings.isVisibleLoss == false && svm.JobReceiveSettings.IsVisiblePassQty == false && svm.JobReceiveSettings.isVisibleLotNo == true)
+
+            if (svm.JobReceiveSettings.isVisibleLossPer == true && svm.JobReceiveSettings.IsVisiblePassQty == true && svm.JobReceiveSettings.isVisibleLotNo == true)
+            {
+                return PartialView("_ResultsWithLossPerLotNo", svm);
+            }
+            else if (svm.JobReceiveSettings.isVisibleLoss == false && svm.JobReceiveSettings.IsVisiblePassQty == false && svm.JobReceiveSettings.isVisibleLotNo == true)
             {
                 return PartialView("_ResultsWithQtyLotNo", svm);
             }
@@ -746,6 +751,50 @@ namespace Jobs.Controllers
                             }
                         }
 
+                        if (Settings.LossPerTolerance !=null && Settings.LossPerTolerance != 0)
+                        {
+                            JobOrderHeader JOH = (from p in db.JobOrderLine
+                                               join H in db.JobOrderHeader on p.JobOrderHeaderId equals H.JobOrderHeaderId into HTable
+                                               from HTab in HTable.DefaultIfEmpty()
+                                               where p.JobOrderLineId == item.JobOrderLineId
+                                               select HTab).FirstOrDefault();
+
+                            StockLine SL = (from p in db.StockLine
+                                            where p.StockHeaderId == JOH.StockHeaderId
+                                            select p).FirstOrDefault();
+
+                            if (SL != null && Settings.LossPerTolerance != null)
+                            {
+                                
+                                if ( Math.Abs((decimal) SL.LossPer - item.LossPer) > Settings.LossPerTolerance)
+                                {
+                                    string message = "Loss % Should be Aprox " + SL.LossPer.ToString() +" .";
+                                    ModelState.AddModelError("", message);
+                                    if (vm.JobReceiveSettings.isVisibleLoss == true && vm.JobReceiveSettings.IsVisiblePassQty == false && vm.JobReceiveSettings.isVisibleLotNo == false)
+                                    {
+                                        return PartialView("_ResultsWithLossQty", vm);
+                                    }
+                                    if (vm.JobReceiveSettings.isVisibleLoss == false && vm.JobReceiveSettings.IsVisiblePassQty == false && vm.JobReceiveSettings.isVisibleLotNo == false)
+                                    {
+                                        return PartialView("_ResultsWithQty", vm);
+                                    }
+
+                                    if (Settings.isVisibleLossPer == true && Settings.IsVisiblePassQty == true && Settings.isVisibleLotNo == true)
+                                    {
+                                        return PartialView("_ResultsWithLossPerLotNo", vm);
+                                    }
+                                    else if (vm.JobReceiveSettings.isVisibleLoss == false && vm.JobReceiveSettings.IsVisiblePassQty == false && vm.JobReceiveSettings.isVisibleLotNo == true)
+                                    {
+                                        return PartialView("_ResultsWithQtyLotNo", vm);
+                                    }
+                                    else
+                                    {
+                                        return PartialView("_Results", vm);
+                                    }
+                                }
+                            }
+                        }
+
                     }
 
                     var temp = JobOrderLineCostCenterRecords.Where(m => m.JoborderLineId == item.JobOrderLineId).FirstOrDefault();
@@ -783,6 +832,7 @@ namespace Jobs.Controllers
                         line.Dimension3Id = JobOrderLine.Dimension3Id;
                         line.Dimension4Id = JobOrderLine.Dimension4Id;
                         line.Qty = item.ReceiveQty;
+                        line.LossPer = item.LossPer;
                         line.LossQty = item.LossQty;
                         line.PassQty = item.PassQty;
                         line.LotNo = item.LotNo;

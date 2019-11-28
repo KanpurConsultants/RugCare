@@ -945,7 +945,8 @@ namespace Jobs.Controllers
 
                     var summary = (from t2 in prodorderlinefromprocedure
                                    where t2.Qty > 0
-                                   group t2 by new { t2.ProductId, t2.Dimension1Id, t2.Dimension2Id, t2.Dimension3Id, t2.Dimension4Id, t2.ProcessId } into g
+                                   group t2 by new { t2.ProductId, t2.Dimension1Id, t2.Dimension2Id, t2.Dimension3Id, t2.Dimension4Id, t2.ProcessId,t2.Sr
+                                   } into g
                                    join p1 in Products on g.Key.ProductId equals p1.ProductId
                                    join u1 in Units on p1.UnitId equals u1.UnitId
                                    join d1 in Dimension1s on g.Key.Dimension1Id equals d1.Dimension1Id into Dim1Table
@@ -980,7 +981,7 @@ namespace Jobs.Controllers
                                        UnitName = u1.UnitName,
                                        DecimalPlaces = u1.DecimalPlaces,
                                        GroupedItems = g,
-                                   }).ToList();
+                                   }).ToList().OrderBy(i => i.GroupedItems.Key.Sr);
 
 
 

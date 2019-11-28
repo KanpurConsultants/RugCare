@@ -266,7 +266,7 @@ namespace Service
                 if (DC.DocumentCategoryName== "Finishing Invoice")
                     mQry = @"SELECT JRH.JobReceiveHeaderId,  PG.ProductGroupId, H.SiteId, H.DivisionId, JRH.DocTypeId, JRH.DocDate, PG.ProductTypeId, P.ProductCategoryId, 
                             D1.Dimension1Name,D2.Dimension2Name,D3.Dimension3Name,D4.Dimension4Name, JRL.Specification, H.BalanceQty AS ReceiptBalQty,H.BalanceQty AS Qty,
-                            JRH.DocNo AS JobReceiveDocNo, P.ProductName, PU.ProductUidName, JRL.ProductId,  JRL.JobReceiveLineId, P.UnitId, U.UnitName, JRL.DealUnitId, DU.UnitName AS  DealUnitName,
+                            JRH.DocNo AS JobReceiveDocNo, P.ProductName, Isnull(PU.ProductUidName,PU1.ProductUidName) AS ProductUidName, JRL.ProductId,  JRL.JobReceiveLineId, P.UnitId, U.UnitName, JRL.DealUnitId, DU.UnitName AS  DealUnitName,
                             JRH.JobWorkerId, JW.Name AS JobWorkerName, isnull(JRQ.DealQty,JRL.DealQty) AS DealQty, JOL.Rate, H.RetensionRate,  
                             JRL.UnitConversionMultiplier, U.DecimalPlaces AS UnitDecimalPlaces, DU.DecimalPlaces  DealUnitDecimalPlaces , JOH.CostCenterId   
                             FROM 
@@ -288,19 +288,21 @@ namespace Service
                             LEFT JOIN web.Dimension3 D3 WITH (Nolock) ON D3.Dimension3Id = JRL.Dimension3Id 
                             LEFT JOIN web.Dimension4 D4 WITH (Nolock) ON D4.Dimension4Id = JRL.Dimension4Id 
                             LEFT JOIN web.ProductGroups PG WITH (Nolock) ON PG.ProductGroupId = P.ProductGroupId
-                            LEFT JOIN web.ProductUids PU WITH (Nolock) ON PU.ProductUIDId = JRL.ProductUidId OR PU.LotNo = JRL.LotNo 
+                            LEFT JOIN web.ProductUids PU WITH (Nolock) ON PU.ProductUIDId = JRL.ProductUidId 
+                            LEFT JOIN web.ProductUids PU1 WITH (Nolock) ON PU1.LotNo = JRL.LotNo 
                             LEFT JOIN web.Units U WITH (Nolock) ON U.UnitId = P.UnitId 
                             LEFT JOIN web.Units DU WITH (Nolock) ON DU.UnitId = JRL.DealUnitId  
                             LEFT JOIN 
                             (
-                            SELECT PU.ProductUIDId 
+                            SELECT isnull(PU.ProductUIDId, PU1.ProductUIDId) AS ProductUIDId
                             FROM web.StockHeaders H WITH (Nolock)
                             LEFT JOIN web.StockLines L WITH (Nolock) ON L.StockHeaderId = H.StockHeaderId 
-                            LEFT JOIN web.ProductUids PU WITH (Nolock) ON PU.ProductUIDId = L.ProductUidId OR PU.LotNo = L.LotNo 
+                            LEFT JOIN web.ProductUids PU WITH (Nolock) ON PU.ProductUIDId = L.ProductUidId
+                            LEFT JOIN web.ProductUids PU1 WITH (Nolock) ON PU1.LotNo = L.LotNo 
                             WHERE H.DocTypeId =40 AND H.GodownId = 1
-                            AND PU.ProductUIDId IS NOT NULL 
-                            GROUP BY PU.ProductUIDId 
-                            ) VTRN ON VTRN.ProductUIDId = PU.ProductUIDId  
+                            AND isnull(PU.ProductUIDId, PU1.ProductUIDId) IS NOT NULL 
+                            GROUP BY isnull(PU.ProductUIDId, PU1.ProductUIDId)
+                            ) VTRN ON VTRN.ProductUIDId = isnull(PU.ProductUIDId, PU1.ProductUIDId)  
                             where  H.BalanceQty > 0 AND JRH.Status =1 AND isnull(JW.IsSisterConcern,0) =0
                             AND isnull(JRL.isHoldForInvoice,0) =0 AND VTRN.ProductUIDId IS NOT NULL
                             AND JRH.ProcessId = " + JobInvoice.ProcessId.ToString() + @" ";
@@ -541,17 +543,7 @@ namespace Service
                          from JobReceiveQALineTab in JobReceiveQALineTable.DefaultIfEmpty()
                          join t3 in db.JobOrderLine on tab1.JobOrderLineId equals t3.JobOrderLineId into table3
                          from tab3 in table3.DefaultIfEmpty()
-
                          where
-                             //(string.IsNullOrEmpty(vm.ProductId) ? 1 == 1 : ProductIdArr.Contains(p.ProductId.ToString()))
-                             //&& (string.IsNullOrEmpty(vm.JobOrderHeaderId) ? 1 == 1 : SaleOrderIdArr.Contains(p.JobOrderHeaderId.ToString()))
-                             //&& (string.IsNullOrEmpty(vm.ProductGroupId) ? 1 == 1 : ProductGroupIdArr.Contains(tab2.ProductGroupId.ToString()))
-                             // && (string.IsNullOrEmpty(settings.filterContraSites) ? p.SiteId == JobInvoice.SiteId : ContraSites.Contains(p.SiteId.ToString()))
-                             //&& (string.IsNullOrEmpty(settings.filterContraDivisions) ? p.DivisionId == JobInvoice.DivisionId : ContraDivisions.Contains(p.DivisionId.ToString()))
-                             //&& (string.IsNullOrEmpty(settings.filterContraDocTypes) ? 1 == 1 : ContraDocTypes.Contains(p.DocTypeId.ToString()))
-                             //&& (vm.AsOnDate.HasValue ? tab.DocDate <= vm.AsOnDate.Value : 1 == 1)
-                             //&& (JobInvoice.JobWorkerId.HasValue ? p.JobWorkerId == JobInvoice.JobWorkerId : 1 == 1)
-                             //&&
                          p.BalanceQty > 0 && tab.ProcessId == settings.ProcessId && tab.Status == (int)StatusConstants.Submitted
                          orderby tabl2.DocDate, tabl2.DocNo, tab.DocDate, tab.DocNo, tab3.Sr
                          select new

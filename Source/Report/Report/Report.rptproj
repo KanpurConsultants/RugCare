@@ -644,6 +644,10 @@
       <FullPath>DebtorsOutstandingOverDue.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>DelaySaleOrder.rdl</Name>
+      <FullPath>DelaySaleOrder.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>DeliveryTerm.rdl</Name>
       <FullPath>DeliveryTerm.rdl</FullPath>
     </ProjectItem>
@@ -1012,6 +1016,10 @@
       <FullPath>FinishingPayment_PrintFreightOutward.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>FinishingPaymentAdviseSummary.rdl</Name>
+      <FullPath>FinishingPaymentAdviseSummary.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>FinishingReceiveFromSilaiPrint.rdl</Name>
       <FullPath>FinishingReceiveFromSilaiPrint.rdl</FullPath>
     </ProjectItem>
@@ -1071,6 +1079,14 @@
     <ProjectItem>
       <Name>HalfWashingGatePassPrint.rdl</Name>
       <FullPath>HalfWashingGatePassPrint.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>HandSpunInvoicePrint_BC.rdl</Name>
+      <FullPath>HandSpunInvoicePrint_BC.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>HandSpunInvoicePrint_BC1.rdl</Name>
+      <FullPath>HandSpunInvoicePrint_BC1.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>HisabOfPurja.rdl</Name>
@@ -1367,6 +1383,14 @@
     <ProjectItem>
       <Name>JobOrderLineStatusCheck.rdl</Name>
       <FullPath>JobOrderLineStatusCheck.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>JobOrderPrint_WithMaterialIssue.rdl</Name>
+      <FullPath>JobOrderPrint_WithMaterialIssue.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>JobOrderPrint_WithMaterialIssue1.rdl</Name>
+      <FullPath>JobOrderPrint_WithMaterialIssue1.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>JobOrderProductWiseDetaiFinishing.rdl</Name>
@@ -3277,6 +3301,10 @@
       <FullPath>Rug_CarpetStockTransferPrint_Bhadohi.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Rug_CarpetStockTransferPrint_Bhadohi1.rdl</Name>
+      <FullPath>Rug_CarpetStockTransferPrint_Bhadohi1.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>Rug_CarpetStockTransferPrint1.rdl</Name>
       <FullPath>Rug_CarpetStockTransferPrint1.rdl</FullPath>
     </ProjectItem>
@@ -3295,6 +3323,10 @@
     <ProjectItem>
       <Name>Rug_DyeingOrderPrint_BC.rdl</Name>
       <FullPath>Rug_DyeingOrderPrint_BC.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Rug_DyeingOrderPrint_MC.rdl</Name>
+      <FullPath>Rug_DyeingOrderPrint_MC.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Rug_DyeingOrderPrint_OC.rdl</Name>
@@ -3447,6 +3479,10 @@
     <ProjectItem>
       <Name>Rug_SaleOrder_Print.rdl</Name>
       <FullPath>Rug_SaleOrder_Print.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Rug_SaleOrderCosting_MC.rdl</Name>
+      <FullPath>Rug_SaleOrderCosting_MC.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Rug_SaleOrderInventoryStatus.rdl</Name>
@@ -3635,6 +3671,10 @@
     <ProjectItem>
       <Name>SalaryPrint_Jobwork.rdl</Name>
       <FullPath>SalaryPrint_Jobwork.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>SalarySummary_DocNoWise.rdl</Name>
+      <FullPath>SalarySummary_DocNoWise.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>SaleDispatchHeaderReport_DH.rdl</Name>
@@ -4111,6 +4151,10 @@
     <ProjectItem>
       <Name>Std_JobInvoice_Print.rdl</Name>
       <FullPath>Std_JobInvoice_Print.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Std_JobOrder_Print.rdl</Name>
+      <FullPath>Std_JobOrder_Print.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>StdDoc_SaleDispatch.rdl</Name>
@@ -4785,6 +4829,10 @@
       <FullPath>WeavindReturnPrint2.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>WeavingAdvancePrint.rdl</Name>
+      <FullPath>WeavingAdvancePrint.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>WeavingBranchReport.rdl</Name>
       <FullPath>WeavingBranchReport.rdl</FullPath>
     </ProjectItem>
@@ -5396,8 +5444,12 @@
       <FullPath>YearlyListOfPurja.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>WeavingAdvancePrint.rdl</Name>
-      <FullPath>WeavingAdvancePrint.rdl</FullPath>
+      <Name>WeavingOrder_Print1_Column_MC.rdl</Name>
+      <FullPath>WeavingOrder_Print1_Column_MC.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>FinishingAdvancePrint.rdl</Name>
+      <FullPath>FinishingAdvancePrint.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>

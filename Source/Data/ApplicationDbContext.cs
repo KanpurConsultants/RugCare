@@ -430,6 +430,7 @@ namespace Data.Models
         public DbSet<SaleDeliveryOrderCancelLine> SaleDeliveryOrderCancelLine { get; set; }
         public DbSet<SaleDeliveryHeader> SaleDeliveryHeader { get; set; }
         public DbSet<SaleDeliveryLine> SaleDeliveryLine { get; set; }
+        public DbSet<Settings> Settings { get; set; }
         public DbSet<SaleOrderSettings> SaleOrderSettings { get; set; }
         public DbSet<SaleEnquirySettings> SaleEnquirySettings { get; set; }
         public DbSet<SaleDeliveryOrderSettings> SaleDeliveryOrderSettings { get; set; }

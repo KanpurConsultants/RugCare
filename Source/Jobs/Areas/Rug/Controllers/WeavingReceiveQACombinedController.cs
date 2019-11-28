@@ -105,10 +105,14 @@ namespace Jobs.Areas.Rug.Controllers
                 return RedirectToAction("Index_PendingToReview", new { id });
             }
             var JobReceiveHeader = new WeavingReceiveQACombinedService(db).GetJobReceiveHeaderList(id, User.Identity.Name);
-                        
+
+            var DivisionId = (int)System.Web.HttpContext.Current.Session["DivisionId"];
+            var SiteId = (int)System.Web.HttpContext.Current.Session["SiteId"];
+            var settings = new JobReceiveSettingsService(_unitOfWork).GetJobReceiveSettingsForDocument(id, DivisionId, SiteId);
 
             ViewBag.Name = new DocumentTypeService(_unitOfWork).Find(id).DocumentTypeName;
             ViewBag.id = id;
+            ViewBag.ImportMenuId = settings.ImportMenuId;
             ViewBag.CompanyName = CompanyName;
             ViewBag.PendingToSubmit = PendingToSubmitCount(id);
             ViewBag.PendingToReview = PendingToReviewCount(id);
@@ -896,7 +900,7 @@ namespace Jobs.Areas.Rug.Controllers
             return Json(unitconversionjson);
         }
 
-        public JsonResult getWeavingReceiveHeaderIdjson(string CarpetNo)
+        public JsonResult getWeavingReceiveHeaderIdjson(string CarpetNo, int DocumentTypeId)
         {
             ProductUid PU = new ProductUidService(_unitOfWork).FGetProductUidByName(CarpetNo);
             var DivisionId = (int)System.Web.HttpContext.Current.Session["DivisionId"];
@@ -906,7 +910,7 @@ namespace Jobs.Areas.Rug.Controllers
 
             if (PU != null)
             {
-                JobReceiveHeaderViewModel uc = new WeavingReceiveQACombinedService(db).GetJobReceiveHeader_ByProductUId(PU.ProductUIDId);
+                JobReceiveHeaderViewModel uc = new WeavingReceiveQACombinedService(db).GetJobReceiveHeader_ByProductUId(PU.ProductUIDId, DocumentTypeId, SiteId, DivisionId);
 
 
                 if (uc != null && uc.SiteId == SiteId && uc.DivisionId == DivisionId)
@@ -2170,8 +2174,7 @@ namespace Jobs.Areas.Rug.Controllers
                             LEFT JOIN web.Units U  WITH(Nolock) ON JOL.UnitId = U.UnitId
                             LEFT JOIN web.Units DU  WITH(Nolock) ON JOL.DealUnitId = DU.UnitId ";
             IEnumerable<JobOrderDetail> JobOrderBalanceList = db.Database.SqlQuery<JobOrderDetail>(mQry).ToList();
-
-
+            
 
             var temp = JobOrderBalanceList.FirstOrDefault();
 
@@ -2570,6 +2573,46 @@ namespace Jobs.Areas.Rug.Controllers
             ViewBag.IndexStatus = "All";
 
             return View(PendingRateIndex);
+        }
+
+        public ActionResult Import(int id)//Document Type Id
+        {
+            //ControllerAction ca = new ControllerActionService(_unitOfWork).Find(id);
+            JobReceiveHeaderViewModel vm = new JobReceiveHeaderViewModel();
+
+            vm.DivisionId = (int)System.Web.HttpContext.Current.Session["DivisionId"];
+            vm.SiteId = (int)System.Web.HttpContext.Current.Session["SiteId"];
+
+            var settings = new JobReceiveSettingsService(_unitOfWork).GetJobReceiveSettingsForDocument(id, vm.DivisionId, vm.SiteId);
+
+            if (settings != null)
+            {
+                if (settings.ImportMenuId != null)
+                {
+                    MenuViewModel menuviewmodel = new MenuService(_unitOfWork).GetMenu((int)settings.ImportMenuId);
+
+                    if (menuviewmodel == null)
+                    {
+                        return View("~/Views/Shared/UnderImplementation.cshtml");
+                    }
+                    else if (!string.IsNullOrEmpty(menuviewmodel.URL))
+                    {
+                        if (menuviewmodel.AreaName != null && menuviewmodel.AreaName != "")
+                        {
+                            return Redirect(System.Configuration.ConfigurationManager.AppSettings[menuviewmodel.URL] + "/" + menuviewmodel.AreaName + "/" + menuviewmodel.ControllerName + "/" + menuviewmodel.ActionName + "/" + id + "?MenuId=" + menuviewmodel.MenuId);
+                        }
+                        else
+                        {
+                            return Redirect(System.Configuration.ConfigurationManager.AppSettings[menuviewmodel.URL] + "/" + menuviewmodel.ControllerName + "/" + menuviewmodel.ActionName + "/" + id + "?MenuId=" + menuviewmodel.MenuId);
+                        }
+                    }
+                    else
+                    {
+                        return RedirectToAction(menuviewmodel.ActionName, menuviewmodel.ControllerName, new { MenuId = menuviewmodel.MenuId, id = id });
+                    }
+                }
+            }
+            return RedirectToAction("Index", new { id = id });
         }
 
         public void ImportRecords(string Ids, int DocTypeId)

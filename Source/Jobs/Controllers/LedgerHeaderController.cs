@@ -236,6 +236,10 @@ namespace Jobs.Controllers
                 vm.DrCr = DocType.Nature;
             }
 
+            if (settings.DefaultAdjustmentType != null)
+            {
+                vm.AdjustmentType = settings.DefaultAdjustmentType;
+            }
 
 
             vm.DocTypeId = id;

@@ -133,7 +133,8 @@ namespace Model.ViewModel
         public Decimal? StockInBalanceQty { get; set; }
 
         public Decimal? IssueForQty { get; set; }
-
+        public Decimal? LossPer { get; set; }
+        
         public bool CreateNegativeStock { get; set; }
 
         [Display(Name = "Remark")]

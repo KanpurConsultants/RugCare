@@ -112,6 +112,7 @@
     <Compile Include="DatabaseViews\StockVirtual.cs" />
     <Compile Include="Models\ActivityLog.cs" />
     <Compile Include="Models\BinLocation.cs" />
+    <Compile Include="Models\Settings.cs" />
     <Compile Include="Models\ProductQualityBomDetail.cs" />
     <Compile Include="Models\Caste.cs" />
     <Compile Include="Models\ChargeGroupPersonCalculation.cs" />

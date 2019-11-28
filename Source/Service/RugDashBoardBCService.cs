@@ -459,156 +459,21 @@ namespace Service
         //5 Block
         public string GetStock()
         {
-            mQry = @"SELECT Max(B.Code) AS Buyer, Max(P.ProductName) AS ProductName, Max(PC.ProductCategoryName) ProductCategoryName, Max(PQ.ProductQualityName) AS ProductQualityName,
+            mQry = @"  SELECT Max(B.Code) AS Buyer, Max(P.ProductName) AS ProductName, Max(PC.ProductCategoryName) ProductCategoryName, Max(PQ.ProductQualityName) AS ProductQualityName,
                         Sum(H.Qty) AS Qty,
                         Sum((H.Qty)*(web.FConvertSqFeetToSqYard(VRS.ManufaturingSizeArea))) AS Area
-                        FROM 
-                        (
-                        SELECT SOH.SaleToBuyerId, P.ProductId, isnull(Sum(S.Qty_Rec),0)-isnull(Sum(S.Qty_Iss),0) AS Qty
-                        FROM Web.StockHeaders H WITH (Nolock)
-                        LEFT JOIN web.Stocks S WITH (Nolock) ON S.StockHeaderId = H.StockHeaderId 
-                        LEFT JOIN web.Products P WITH (Nolock) ON P.ProductId = S.ProductId 
-                        LEFT JOIN web.ProductGroups PG WITH (Nolock) ON PG.ProductGroupId = P.ProductGroupId
-                        LEFT JOIN web.ProductCategories PC WITH (Nolock) ON PC.ProductCategoryId = P.ProductCategoryId 
-                        LEFT JOIN web.ProductUids PU WITH (Nolock) ON PU.ProductUIDId = S.ProductUIDId 
-                        LEFT JOIN web.SaleOrderLines SOL WITH (Nolock) ON SOL.SaleOrderLineId =PU.SaleOrderLineId 
-                        LEFT JOIN web.SaleOrderHeaders SOH WITH (Nolock) ON SOH.SaleOrderHeaderId =SOL.SaleOrderHeaderId 
-                        LEFT JOIN web.PersonBlockedDocumentTypes PB WITH (Nolock) ON PB.PersonID = SOH.SaleToBuyerId AND PB.BlockedDocumentTypeId =448
-                        WHERE PG.ProductTypeId =1 AND H.SiteId =1 AND H.DivisionId =1
-                        AND PB.PersonBlockedDocumentTypeId IS NULL 
-                        AND S.ProductUIDId IS NOT NULL AND PC.ProductCategoryName <> 'OVER TUFT'
-                        GROUP BY  SOH.SaleToBuyerId , P.ProductId
-
-                        UNION ALL
-
-                        SELECT SOH.SaleToBuyerId, P.ProductId, isnull(Sum(S.Qty_Rec),0)-isnull(Sum(S.Qty_Iss),0) AS Qty
-                        FROM Web.StockHeaders H WITH (Nolock)
-                        LEFT JOIN web.Stocks S WITH (Nolock) ON S.StockHeaderId = H.StockHeaderId 
-                        LEFT JOIN web.Products P WITH (Nolock) ON P.ProductId = S.ProductId 
-                        LEFT JOIN web.ProductGroups PG WITH (Nolock) ON PG.ProductGroupId = P.ProductGroupId
-                        LEFT JOIN web.ProductCategories PC WITH (Nolock) ON PC.ProductCategoryId = P.ProductCategoryId 
-                        LEFT JOIN web.ProductUids PU WITH (Nolock) ON PU.ProductUidName  = S.LotNo  
-                        LEFT JOIN web.SaleOrderLines SOL WITH (Nolock) ON SOL.SaleOrderLineId =PU.SaleOrderLineId 
-                        LEFT JOIN web.SaleOrderHeaders SOH WITH (Nolock) ON SOH.SaleOrderHeaderId =SOL.SaleOrderHeaderId 
-                        LEFT JOIN web.PersonBlockedDocumentTypes PB WITH (Nolock) ON PB.PersonID = SOH.SaleToBuyerId AND PB.BlockedDocumentTypeId =448
-                        WHERE PG.ProductTypeId =1 AND H.SiteId =1 AND H.DivisionId =1
-                        AND PB.PersonBlockedDocumentTypeId IS NULL 
-                        AND S.ProductUIDId IS NULL AND PC.ProductCategoryName <> 'OVER TUFT'
-                        GROUP BY  SOH.SaleToBuyerId , P.ProductId
-  
-                        UNION ALL 
-
-                        SELECT SOH.SaleToBuyerId, P.ProductId, isnull(Sum(S.Qty_Rec),0)-isnull(Sum(S.Qty_Iss),0) AS Qty
-                        FROM Web.StockHeaders H WITH (Nolock)
-                        LEFT JOIN web.StockProcesses S WITH (Nolock) ON S.StockHeaderId = H.StockHeaderId 
-                        LEFT JOIN web.Products P WITH (Nolock) ON P.ProductId = S.ProductId 
-                        LEFT JOIN web.ProductGroups PG WITH (Nolock) ON PG.ProductGroupId = P.ProductGroupId
-                        LEFT JOIN web.ProductCategories PC WITH (Nolock) ON PC.ProductCategoryId = P.ProductCategoryId 
-                        LEFT JOIN web.ProductUids PU WITH (Nolock) ON PU.ProductUIDId = S.ProductUIDId 
-                        LEFT JOIN web.SaleOrderLines SOL WITH (Nolock) ON SOL.SaleOrderLineId =PU.SaleOrderLineId 
-                        LEFT JOIN web.SaleOrderHeaders SOH WITH (Nolock) ON SOH.SaleOrderHeaderId =SOL.SaleOrderHeaderId 
-                        LEFT JOIN web.PersonBlockedDocumentTypes PB WITH (Nolock) ON PB.PersonID = SOH.SaleToBuyerId AND PB.BlockedDocumentTypeId =448
-                        WHERE PG.ProductTypeId =1 AND H.SiteId =1 AND H.DivisionId =1
-                        AND PB.PersonBlockedDocumentTypeId IS NULL 
-                        AND S.ProductUIDId IS NOT NULL AND PC.ProductCategoryName <> 'OVER TUFT'
-                        GROUP BY  SOH.SaleToBuyerId , P.ProductId
-
-                        UNION ALL
-
-                        SELECT SOH.SaleToBuyerId, P.ProductId, isnull(Sum(S.Qty_Rec),0)-isnull(Sum(S.Qty_Iss),0) AS Qty
-                        FROM Web.StockHeaders H WITH (Nolock)
-                        LEFT JOIN web.StockProcesses S WITH (Nolock) ON S.StockHeaderId = H.StockHeaderId 
-                        LEFT JOIN web.Products P WITH (Nolock) ON P.ProductId = S.ProductId 
-                        LEFT JOIN web.ProductGroups PG WITH (Nolock) ON PG.ProductGroupId = P.ProductGroupId
-                        LEFT JOIN web.ProductCategories PC WITH (Nolock) ON PC.ProductCategoryId = P.ProductCategoryId 
-                        LEFT JOIN web.ProductUids PU WITH (Nolock) ON PU.ProductUidName  = S.LotNo  
-                        LEFT JOIN web.SaleOrderLines SOL WITH (Nolock) ON SOL.SaleOrderLineId =PU.SaleOrderLineId 
-                        LEFT JOIN web.SaleOrderHeaders SOH WITH (Nolock) ON SOH.SaleOrderHeaderId =SOL.SaleOrderHeaderId 
-                        LEFT JOIN web.PersonBlockedDocumentTypes PB WITH (Nolock) ON PB.PersonID = SOH.SaleToBuyerId AND PB.BlockedDocumentTypeId =448
-                        WHERE PG.ProductTypeId =1 AND H.SiteId =1 AND H.DivisionId =1
-                        AND PB.PersonBlockedDocumentTypeId IS NULL 
-                        AND S.ProductUIDId IS NULL AND PC.ProductCategoryName <> 'OVER TUFT'
-                        GROUP BY  SOH.SaleToBuyerId , P.ProductId
-
-                        UNION ALL 
-
-                        SELECT SOH.SaleToBuyerId, P.ProductId, isnull(Sum(S.Qty_Rec),0)-isnull(Sum(S.Qty_Iss),0) AS Qty
-                        FROM Web.StockHeaders H WITH (Nolock)
-                        LEFT JOIN web.Stocks S WITH (Nolock) ON S.StockHeaderId = H.StockHeaderId 
-                        LEFT JOIN web.Products P WITH (Nolock) ON P.ProductId = S.ProductId 
-                        LEFT JOIN web.ProductGroups PG WITH (Nolock) ON PG.ProductGroupId = P.ProductGroupId
-                        LEFT JOIN web.ProductCategories PC WITH (Nolock) ON PC.ProductCategoryId = P.ProductCategoryId 
-                        LEFT JOIN web.ProductUids PU WITH (Nolock) ON PU.ProductUIDId = S.ProductUIDId 
-                        LEFT JOIN web.SaleOrderLines SOL WITH (Nolock) ON SOL.SaleOrderLineId =PU.SaleOrderLineId 
-                        LEFT JOIN web.SaleOrderHeaders SOH WITH (Nolock) ON SOH.SaleOrderHeaderId =SOL.SaleOrderHeaderId 
-                        LEFT JOIN web.PersonBlockedDocumentTypes PB WITH (Nolock) ON PB.PersonID = SOH.SaleToBuyerId AND PB.BlockedDocumentTypeId =448
-                        WHERE PG.ProductTypeId =1 AND H.SiteId =1 AND H.DivisionId =1
-                        AND PB.PersonBlockedDocumentTypeId IS NULL 
-                        AND S.ProductUIDId IS NOT NULL AND PC.ProductCategoryName = 'OVER TUFT' AND H.DocTypeId NOT IN (4024,448)
-                        GROUP BY  SOH.SaleToBuyerId , P.ProductId
-
-                        UNION ALL
-
-                        SELECT SOH.SaleToBuyerId, P.ProductId, isnull(Sum(S.Qty_Rec),0)-isnull(Sum(S.Qty_Iss),0) AS Qty
-                        FROM Web.StockHeaders H WITH (Nolock)
-                        LEFT JOIN web.Stocks S WITH (Nolock) ON S.StockHeaderId = H.StockHeaderId 
-                        LEFT JOIN web.Products P WITH (Nolock) ON P.ProductId = S.ProductId 
-                        LEFT JOIN web.ProductGroups PG WITH (Nolock) ON PG.ProductGroupId = P.ProductGroupId
-                        LEFT JOIN web.ProductCategories PC WITH (Nolock) ON PC.ProductCategoryId = P.ProductCategoryId 
-                        LEFT JOIN web.ProductUids PU WITH (Nolock) ON PU.ProductUidName  = S.LotNo  
-                        LEFT JOIN web.SaleOrderLines SOL WITH (Nolock) ON SOL.SaleOrderLineId =PU.SaleOrderLineId 
-                        LEFT JOIN web.SaleOrderHeaders SOH WITH (Nolock) ON SOH.SaleOrderHeaderId =SOL.SaleOrderHeaderId 
-                        LEFT JOIN web.PersonBlockedDocumentTypes PB WITH (Nolock) ON PB.PersonID = SOH.SaleToBuyerId AND PB.BlockedDocumentTypeId =448
-                        WHERE PG.ProductTypeId =1 AND H.SiteId =1 AND H.DivisionId =1
-                        AND PB.PersonBlockedDocumentTypeId IS NULL 
-                        AND S.ProductUIDId IS NULL AND PC.ProductCategoryName = 'OVER TUFT' AND H.DocTypeId NOT IN (4024,448)
-                        GROUP BY  SOH.SaleToBuyerId , P.ProductId
-
-
-                        UNION ALL 
-
-                        SELECT SOH.SaleToBuyerId, P.ProductId, isnull(Sum(S.Qty_Rec),0)-isnull(Sum(S.Qty_Iss),0) AS Qty
-                        FROM Web.StockHeaders H WITH (Nolock)
-                        LEFT JOIN web.StockProcesses S WITH (Nolock) ON S.StockHeaderId = H.StockHeaderId 
-                        LEFT JOIN web.Products P WITH (Nolock) ON P.ProductId = S.ProductId 
-                        LEFT JOIN web.ProductGroups PG WITH (Nolock) ON PG.ProductGroupId = P.ProductGroupId
-                        LEFT JOIN web.ProductCategories PC WITH (Nolock) ON PC.ProductCategoryId = P.ProductCategoryId 
-                        LEFT JOIN web.ProductUids PU WITH (Nolock) ON PU.ProductUIDId = S.ProductUIDId 
-                        LEFT JOIN web.SaleOrderLines SOL WITH (Nolock) ON SOL.SaleOrderLineId =PU.SaleOrderLineId 
-                        LEFT JOIN web.SaleOrderHeaders SOH WITH (Nolock) ON SOH.SaleOrderHeaderId =SOL.SaleOrderHeaderId 
-                        LEFT JOIN web.PersonBlockedDocumentTypes PB WITH (Nolock) ON PB.PersonID = SOH.SaleToBuyerId AND PB.BlockedDocumentTypeId =448
-                        WHERE PG.ProductTypeId =1 AND H.SiteId =1 AND H.DivisionId =1
-                        AND PB.PersonBlockedDocumentTypeId IS NULL 
-                        AND S.ProductUIDId IS NOT NULL AND PC.ProductCategoryName = 'OVER TUFT' AND H.DocTypeId NOT IN (4024,448,5026)
-                        GROUP BY  SOH.SaleToBuyerId , P.ProductId
-
-                        UNION ALL
-
-                        SELECT SOH.SaleToBuyerId, P.ProductId, isnull(Sum(S.Qty_Rec),0)-isnull(Sum(S.Qty_Iss),0) AS Qty
-                        FROM Web.StockHeaders H WITH (Nolock)
-                        LEFT JOIN web.StockProcesses S WITH (Nolock) ON S.StockHeaderId = H.StockHeaderId 
-                        LEFT JOIN web.Products P WITH (Nolock) ON P.ProductId = S.ProductId 
-                        LEFT JOIN web.ProductGroups PG WITH (Nolock) ON PG.ProductGroupId = P.ProductGroupId
-                        LEFT JOIN web.ProductCategories PC WITH (Nolock) ON PC.ProductCategoryId = P.ProductCategoryId 
-                        LEFT JOIN web.ProductUids PU WITH (Nolock) ON PU.ProductUidName  = S.LotNo  
-                        LEFT JOIN web.SaleOrderLines SOL WITH (Nolock) ON SOL.SaleOrderLineId =PU.SaleOrderLineId 
-                        LEFT JOIN web.SaleOrderHeaders SOH WITH (Nolock) ON SOH.SaleOrderHeaderId =SOL.SaleOrderHeaderId 
-                        LEFT JOIN web.PersonBlockedDocumentTypes PB WITH (Nolock) ON PB.PersonID = SOH.SaleToBuyerId AND PB.BlockedDocumentTypeId =448
-                        WHERE PG.ProductTypeId =1 AND H.SiteId =1 AND H.DivisionId =1
-                        AND PB.PersonBlockedDocumentTypeId IS NULL 
-                        AND S.ProductUIDId IS NULL AND PC.ProductCategoryName = 'OVER TUFT' AND H.DocTypeId NOT IN (4024,448,5026)
-                        GROUP BY  SOH.SaleToBuyerId , P.ProductId
-   
-                        ) H
-
-                        LEFT JOIN web.People B WITH (Nolock) ON B.PersonID = H.SaleToBuyerId 
-                        LEFT JOIN Web.ViewRugSize  VRS WITH (Nolock) ON VRS.ProductId = H.ProductId
+                        FROM Web.ViewCarpetStock H WITH (Nolock)
+                        LEFT JOIN web.ProductUids PU WITH (Nolock) ON PU.ProductUIDId = H.ProductUIDId
                         LEFT JOIN web.Products P WITH (Nolock) ON P.ProductId = H.ProductId 
                         LEFT JOIN web.FinishedProduct FP WITH (Nolock) ON FP.ProductId = P.ProductId 
-                        LEFT JOIN web.ProductCategories PC WITH (Nolock) ON PC.ProductCategoryId = P.ProductCategoryId
-                        LEFT JOIN web.ProductQualities PQ WITH (Nolock) ON PQ.ProductQualityId = FP.ProductQualityId
-                        Where H.SaleToBuyerId is Not Null
-                        GROUP BY H.SaleToBuyerId,H.ProductId
+                        LEFT JOIN web.ViewRugSize VRS WITH (Nolock) ON VRS.ProductId = P.ProductId
+                        LEFT JOIN web.ProductQualities PQ WITH (Nolock) ON PQ.ProductQualityId = FP.ProductQualityId  
+						LEFT JOIN web.ProductCategories PC WITH (Nolock) ON PC.ProductCategoryId = P.ProductCategoryId
+                        LEFT JOIN web.SaleOrderLines SOL WITH (Nolock) ON SOL.SaleOrderLineId = PU.SaleOrderLineId
+						LEFT JOIN web.SaleOrderHeaders SOH WITH (Nolock) ON SOH.SaleOrderHeaderId = SOL.SaleOrderHeaderId
+                        LEFT JOIN web.StockHeaders SH WITH (Nolock) ON SH.StockHeaderId = PU.GenDocId AND PU.GenDocTYpeId = SH.DocTYpeId AND PU.GenDocTYpeId =354
+						LEFT JOIN web.People B WITH (Nolock) ON B.PersonID = isnull(SOH.SaleToBuyerId,SH.PersonId)
+                        GROUP BY B.PersonID,H.ProductId
                         HAVING Sum(isnull(H.Qty,0)) <>0 ";
             return mQry;
         }

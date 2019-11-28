@@ -11,6 +11,7 @@
     <IISExpressSSLPort>44303</IISExpressSSLPort>
     <WebStackScaffolding_ControllerDialogWidth>600</WebStackScaffolding_ControllerDialogWidth>
     <WebStackScaffolding_IsAsyncSelected>False</WebStackScaffolding_IsAsyncSelected>
+    <WebStackScaffolding_ViewDialogWidth>600</WebStackScaffolding_ViewDialogWidth>
   </PropertyGroup>
   <PropertyGroup>
     <ReferencePath>E:\Gopal Active Project\Projects\3rdPartyLib\;D:\Active Project\Projects\3rdPartyLib\</ReferencePath>

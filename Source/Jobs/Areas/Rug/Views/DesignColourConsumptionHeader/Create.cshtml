@@ -20,6 +20,7 @@
 {
     @Html.AntiForgeryToken()
     @Html.HiddenFor(m => m.BaseProductId)
+    @Html.HiddenFor(m => m.DocTypeId)
     @Html.HiddenFor(m => m.ProductGroupName)
     @Html.HiddenFor(m => m.ColourName)
     @Html.HiddenFor(m => m.EntryMode)
@@ -53,7 +54,10 @@
                     <a class="cbtn btn-circle glyphicon glyphicon-option-horizontal dropdown-toggle" aria-expanded="false" style="padding-top: 6px;padding-bottom: 6px;" href="#" data-toggle="dropdown" id="dropdownMenu1">
                     </a>
                     <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1">
-                        <li><a href="@Url.Action("History", "DesignColourConsumptionHeader")"><span class="glyphicon glyphicon-user"> </span> History</a></li>
+                        @if (Model.BaseProductId > 0)
+                        {
+                            <li><a id="DocHistory" data-modal="" href="@Url.Action("GetHistory", "LogHistory", new { Ids = Model.BaseProductId, DocTypeId = Model.DocTypeId })"><span class="glyphicon glyphicon-user"> </span> History</a></li>
+                        }
                         <li><a href="@Url.Action("Email", "DesignColourConsumptionHeader")"><span class="glyphicon glyphicon-envelope"> </span> Email</a></li>
                         <li role="separator" class="divider"></li>
                         <li><a target="_blank" href="@Url.Action("Report", "DesignColourConsumptionHeader")"><span class="glyphicon glyphicon-stats"> </span> Report</a></li>

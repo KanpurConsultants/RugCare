@@ -150,12 +150,13 @@ namespace Jobs.Areas.Rug.Controllers
         [HttpGet]
         public ActionResult Create(int id)//DocumentTypeId
         {
-            StockHeaderViewModel p = new StockHeaderViewModel();
-
-            p.DocDate = DateTime.Now;
+            StockHeaderViewModel p = new StockHeaderViewModel();           
+            
             p.DivisionId = (int)System.Web.HttpContext.Current.Session["DivisionId"];
             p.SiteId = (int)System.Web.HttpContext.Current.Session["SiteId"];
             p.CreatedDate = DateTime.Now;
+            //p.DocDate = DateTime.Now;
+            p.DocDate = new SettingsService(_unitOfWork).GetDefaultDocDate("StockHeader", p.DivisionId, p.SiteId, id,null);
 
             //Getting Settings
             var settings = new StockHeaderSettingsService(_unitOfWork).GetStockHeaderSettingsForDocument(id, p.DivisionId, p.SiteId);

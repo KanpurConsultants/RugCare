@@ -462,6 +462,10 @@ namespace Jobs.App_Start
 
             //////////////////////////////////////////Sales Services///////////////////////////////////////////////////
 
+            container.RegisterType<IRepository<Settings>, Repository<Settings>>();
+            container.RegisterType<ISettingsService, SettingsService>(new PerRequestLifetimeManager());
+
+
 
             container.RegisterType<IRepository<SaleOrderQtyAmendmentLine>, Repository<SaleOrderQtyAmendmentLine>>();
             container.RegisterType<ISaleOrderQtyAmendmentLineService, SaleOrderQtyAmendmentLineService>(new PerRequestLifetimeManager());

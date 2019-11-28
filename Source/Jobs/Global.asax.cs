@@ -13,11 +13,17 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using System.Web.SessionState;
+using Schedules.SchedulerClasses;
+using System.Diagnostics;
+using System.IO;
+using System.Net;
+using System.Web.Caching;
 
 namespace Jobs
 {
     public class MvcApplication : System.Web.HttpApplication
     {
+		private const string DummyCacheItemKey = "GagaGuguGigi";
         protected void Application_Start()
         {
              //ApplicationDbContext context = new Data.Models.ApplicationDbContext();
@@ -27,6 +33,10 @@ namespace Jobs
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            Scheduler.Start();
+
+            RegisterCacheEntry();
             //SqlDependency.Start(ConfigurationManager.ConnectionStrings["LoginDB"].ToString());
         }
 
@@ -86,5 +96,83 @@ namespace Jobs
                 throw new Exception(ex.Message);
             }
         }
+
+
+
+        ///////////////////////////////////////
+
+        private bool RegisterCacheEntry()
+        {
+
+            if (null != HttpContext.Current.Cache[DummyCacheItemKey]) return false;
+
+
+            HttpContext.Current.Cache.Add(DummyCacheItemKey, "Test", null,
+                DateTime.MaxValue, TimeSpan.FromMinutes(2),
+                CacheItemPriority.Normal,
+                new CacheItemRemovedCallback(CacheItemRemovedCallback));
+
+            return true;
+        }
+        public void CacheItemRemovedCallback(string key,
+            object value, CacheItemRemovedReason reason)
+        {
+            // Debug.WriteLine("Cache item callback: " + DateTime.Now.ToString());
+
+            // Do the service works
+
+
+            HitPage();
+        }
+
+
+        //private const string DummyPageUrl = "http://192.168.2.110:81/";
+        private const string DummyPageUrl = "https://localhost:44305/";
+
+        private void HitPage()
+        {
+
+            WebClient client = new WebClient();
+            client.DownloadData(DummyPageUrl);
+        }
+        protected void Application_BeginRequest(Object sender, EventArgs e)
+        {
+            // If the dummy page is hit, then it means we want to add another item
+
+            // in cache
+
+            if (HttpContext.Current.Request.Url.ToString() == DummyPageUrl)
+            {
+                // Add the item in cache and when succesful, do the work.
+                DoSomeFileWritingStuff();
+                RegisterCacheEntry();
+
+            }
+        }
+
+        private void DoSomeFileWritingStuff()
+        {
+            Debug.WriteLine("Writing to file...");
+
+            try
+            {
+                using (StreamWriter writer =
+                 new StreamWriter(@"c:\temp\Cachecallback.txt", true))
+                {
+                    writer.WriteLine("Cache Callback: {0}", DateTime.Now);
+                    writer.Close();
+                }
+            }
+            catch (Exception x)
+            {
+                Debug.WriteLine(x);
+            }
+
+            Debug.WriteLine("File write successful");
+        }
+
+
+
+
     }
 }

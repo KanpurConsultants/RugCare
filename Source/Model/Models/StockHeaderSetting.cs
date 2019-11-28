@@ -49,6 +49,9 @@ namespace Model.Models
         public bool? isVisibleProcessHeader { get; set; }
         public bool? isVisibleProdOrder { get; set; }
 
+        public bool? isVisibleLossPer { get; set; }
+        public decimal? MaxLossPer { get; set; }
+
         public bool isPostedInStock { get; set; }
         public bool? isAllowedNegativeStock { get; set; }
         public bool? isPostedInStockProcess { get; set; }

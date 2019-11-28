@@ -183,10 +183,13 @@ namespace Model.ViewModel
         [Display(Name = "Pass Qty")]
         public decimal PassQty { get; set; }
 
+        [Display(Name = "Loss Per")]
+        public decimal LossPer { get; set; }
+
         [Display(Name = "Loss Qty")]
         public decimal LossQty { get; set; }
 
-        [Display(Name = "Loss Qty")]
+        [Display(Name = "Receive Qty")]
         public decimal ReceiveQty { get; set; }
 
         [Display(Name = "Penalty Amount")]

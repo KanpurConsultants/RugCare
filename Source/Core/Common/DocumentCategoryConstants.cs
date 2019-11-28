@@ -15,7 +15,10 @@ namespace Core.Common
         public const string Journal = "Journal";
     }
 
-
+    public class SettingFieldNameConstants
+    {
+        public const string DefaultDocDate = "DefaultDocDate";
+    }
 
 
 

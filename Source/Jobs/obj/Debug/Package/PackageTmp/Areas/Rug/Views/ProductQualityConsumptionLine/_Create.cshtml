@@ -131,11 +131,11 @@
 
         var ProductQualityId = @Model.ProductQualityId;
 
-        alert(ProductQualityId);
-        //if (ProductQualityId != 0 && ProductQualityId != null)
-        //{
-            $("#ProductId").prop('readonly', true);
-        //}
+        //alert(ProductQualityId);
+        if (ProductQualityId != 0 && ProductQualityId != null)
+        {
+            $("#ProductId").prop('readonly', false);
+        }
 
 
         //Calling the function to load the table data/ Line information

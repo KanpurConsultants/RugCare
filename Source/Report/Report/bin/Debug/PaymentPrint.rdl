@@ -1215,7 +1215,7 @@
                               </Style>
                             </TextRun>
                             <TextRun>
-                              <Value>=Code.RupeesToWord(Sum(Fields!Amount.Value, "DsMain"))</Value>
+                              <Value>=Code.RupeesToWord(Sum(Fields!Amount.Value, "DsMain"))+ " Only"</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
                                 <FontSize>9pt</FontSize>
