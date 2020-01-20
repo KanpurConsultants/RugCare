@@ -37,10 +37,11 @@ namespace Model.Models
         public bool? isMandatoryRate { get; set; }
         public bool? isVisibleGodown { get; set; }
         public bool? isMandatoryGodown { get; set; }
-        public bool? isEditableRate { get; set; }  
+        public bool? isEditableRate { get; set; }
         public bool? isVisibleLotNo { get; set; }
         public bool? isVisibleLoss { get; set; }
         public bool? isVisibleDealUnit { get; set; }
+        public bool? isEditableDealUnit { get; set; }
         public bool? isVisibleLineDueDate { get; set; }
         public bool? isVisibleBillToParty { get; set; }
         public bool? isVisibleUncountableQty { get; set; }
@@ -61,6 +62,7 @@ namespace Model.Models
         public bool isVisibleLineUnitConversionFor { get; set; }
         public bool? isAllowedDuplicatePrint { get; set; }
         public bool? isAllowedToMaterialIssue { get; set; }
+        public bool? isAllowtoIssueMultipleBarcode { get; set; }
         public bool? isVisibleStockIn { get; set; }
         public bool? IsMandatoryStockIn { get; set; }
 

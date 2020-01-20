@@ -41,7 +41,7 @@
                                             <div class="block" style="width:92%">
                                                 <div class="row">
                                                     @*ProductInfo*@
-                                                    <div class="block" style="width:48%">
+                                                    <div class="block" style="width:30%">
                                                         Product
 
                                                     </div>
@@ -53,7 +53,10 @@
                                                     <div class="block" style="width:15%">
                                                         Lot No
                                                     </div>
-                                                    <div class="block text-right" style="width:17%">
+                                                    <div class="block" style="width:15%">
+                                                        Rate
+                                                    </div>
+                                                    <div class="block text-right" style="width:15%">
                                                         <a href="#" id="ToIssue" style="color:white">Issue Qty</a>
                                                     </div>
 
@@ -105,7 +108,7 @@
 
                                                 <div class='block pull-middle' style='width:94%'>
                                                     <div class='row'>
-                                                        <div class='block' style='width:48%'>
+                                                        <div class='block' style='width:30%'>
                                                             <div class="row">
                                                                 <div class="block  ReplacableProduct" style="width: 100%; padding-left: 15px">
                                                                     @*@Html.TextBoxFor(m => Model.StockLineViewModel[i].ProductId, new { @class = "form-control multiple-modal ProdHelpList", @style = "display:inline;margin-bottom:3px", @tabindex = "-1" })*@
@@ -148,7 +151,12 @@
                                                                 @Html.ValidationMessageFor(m => Model.StockLineViewModel[i].LotNo, "", new { @class = "text-danger" })
                                                             </div>
 
-                                                            <div class='block text-right' style='width:17%'>
+                                                            <div class='block' style='width:15%'>
+                                                                @Html.TextBoxFor(m => Model.StockLineViewModel[i].Rate, new { @class = "form-control multiple-modal Rate" })
+                                                                @Html.ValidationMessageFor(m => Model.StockLineViewModel[i].Rate, "", new { @class = "text-danger" })
+                                                            </div>
+
+                                                            <div class='block text-right' style='width:15%'>
                                                                 @Html.TextBoxFor(m => Model.StockLineViewModel[i].Qty, "{" + "0:0.".PadRight((Model.StockLineViewModel[i].UnitDecimalPlaces + 4 ?? 0), '0') + "}", new { @class = "form-control number multiple-modal text-right IssueQty", @style = "display:inline" })
                                                                 @Html.ValidationMessageFor(m => Model.StockLineViewModel[i].Qty, "", new { @class = "text-danger" })
                                                                 <br />
@@ -175,7 +183,7 @@
                                             @foreach (var group in Model.StockLineViewModel.GroupBy(item => item.ProductGroupName))
                                         {
                                                 <div class="row">
-                                                    <div class='block PGN1' style='width:48%'>
+                                                    <div class='block PGN1' style='width:30%'>
                                                         @group.Key 
                                                         <span style="font-size:xx-small;cursor:pointer;padding-left:5px" class="text-info glyphicon"></span>
                                                     </div>
@@ -196,11 +204,10 @@
 
                                                     </div>
 
-                                                    <div class='block' style='width:15%'>
-                                                       
-                                                    </div>
+                                                    <div class='block' style='width:15%'> </div>
+                                                    <div class='block' style='width:15%'> </div>                                                       
 
-                                                    <div class='block text-right' style='width:17%'>
+                                                    <div class='block text-right' style='width:15%'>
                                                         @*@string.Format("{" + "0:0.".PadRight(MaxUnitDecPlaces + 4, '0') + "}", Issue1Qty)*@
                                                         <span id=@group.Key>@string.Format("{" + "0:0.".PadRight(MaxUnitDecPlaces + 4, '0') + "}", Issue1Qty)</span>
                                                     </div>
@@ -211,7 +218,7 @@
                                         </div>
                                             <div class="row">
                                                 @*ProductInfo*@
-                                                <div class='block' style='width:48%'>
+                                                <div class='block' style='width:30%'>
                                                     <strong>Total</strong>
 
                                                 </div>
@@ -219,11 +226,10 @@
                                                     @string.Format("{" + "0:0.".PadRight(MaxUnitDecPlaces + 4, '0') + "}", RequisitionQty)
                                                 </div>
                                                 @*Qty*@
-                                                <div class='block' style='width:15%'>
+                                                <div class='block' style='width:15%'></div>
+                                                <div class='block' style='width:15%'></div>
 
-                                                </div>
-
-                                                <div class='block text-right' style='width:17%'>
+                                                <div class='block text-right' style='width:15%'>
                                                     <strong><span id="IssueQty">@string.Format("{" + "0:0.".PadRight(MaxUnitDecPlaces + 4, '0') + "}", IssueQty)</span></strong>
                                                 </div>
 

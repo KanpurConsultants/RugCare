@@ -32,7 +32,12 @@ namespace Model.ViewModel
         public string Reason { get; set; }
         public int NoOfRecords { get; set; }
         [Required]
-        public DateTime DocDate { get; set; }        
+        public DateTime DocDate { get; set; }
+        public string ModifiedBy { get; set; }
+        public int Status { get; set; }
+        public int? ReviewCount { get; set; }
+        public string ReviewBy { get; set; }
+        public bool? Reviewed { get; set; }
 
     }
 

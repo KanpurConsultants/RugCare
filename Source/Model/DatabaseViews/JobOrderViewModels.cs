@@ -389,6 +389,8 @@ namespace Model.DatabaseViews
     {
         [Key]
         public int JobOrderLineId { get; set; }
+        public decimal? InspectedLength { get; set; }
+        public decimal? InspectedWidth { get; set; }
         public decimal BalanceQty { get; set; }
         public int JobOrderHeaderId { get; set; }
         public string JobOrderNo { get; set; }

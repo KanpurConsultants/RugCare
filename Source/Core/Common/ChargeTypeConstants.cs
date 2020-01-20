@@ -36,6 +36,10 @@ namespace Core.Common
     {
         public const string Incentive = "Incentive";
         public const string Penalty = "Penalty";
+        public const string PF = "P.F.";
+        public const string ESI = "E.S.I";
+        public const string BasicSalary = "Basic Salary";
+        public const string NetSalary = "Net Salary";
     }
 
     public class ChargeTypeConstants

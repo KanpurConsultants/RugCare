@@ -49,6 +49,7 @@ namespace Model.ViewModel
         public bool isVisibleGodown { get; set; }
         public bool isMandatoryGodown { get; set; }
         public bool isEditableRate { get; set; }
+        public bool isEditableDealUnit { get; set; }
         public bool isVisibleLotNo { get; set; }
         public bool isMandatoryProcessLine { get; set; }
         public bool isVisibleJobWorkerLine { get; set; }
@@ -81,6 +82,7 @@ namespace Model.ViewModel
         public bool PersonWiseCostCenter { get; set; }
         public bool CalculateDiscountOnRate { get; set; }
         public bool isAllowedToMaterialIssue { get; set; }
+        public bool isAllowtoIssueMultipleBarcode { get; set; }
 
         public string filterLedgerAccountGroups { get; set; }
         public string filterLedgerAccounts { get; set; }        

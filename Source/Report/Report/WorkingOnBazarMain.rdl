@@ -1018,11 +1018,14 @@
                 <Value>=Parameters!DatabaseConnectionString.Value</Value>
               </Parameter>
             </Parameters>
-            <Top>3.83416in</Top>
+            <Top>5.22619in</Top>
             <Left>0.04667in</Left>
-            <Height>0.21875in</Height>
+            <Height>0.07951in</Height>
             <Width>7.35407in</Width>
             <ZIndex>3</ZIndex>
+            <Visibility>
+              <Hidden>true</Hidden>
+            </Visibility>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -2079,7 +2082,7 @@
                 <TablixMember />
               </TablixMembers>
             </TablixRowHierarchy>
-            <Top>5.23625in</Top>
+            <Top>5.36125in</Top>
             <Left>0.05292in</Left>
             <Height>0.20833in</Height>
             <Width>3.75in</Width>
@@ -2090,8 +2093,41 @@
               </Border>
             </Style>
           </Tablix>
+          <Subreport Name="Subreport6">
+            <ReportName>WorkingOnSaleOrderBalance</ReportName>
+            <Parameters>
+              <Parameter Name="UnitOn">
+                <Value>=Parameters!UnitOn.Value</Value>
+              </Parameter>
+              <Parameter Name="SiteId">
+                <Value>=Parameters!SiteId.Value</Value>
+              </Parameter>
+              <Parameter Name="Division">
+                <Value>=Parameters!Division.Value</Value>
+              </Parameter>
+              <Parameter Name="FromDate">
+                <Value>=Parameters!FromDate.Value</Value>
+              </Parameter>
+              <Parameter Name="ToDate">
+                <Value>=Parameters!ToDate.Value</Value>
+              </Parameter>
+              <Parameter Name="DatabaseConnectionString">
+                <Value>=Parameters!DatabaseConnectionString.Value</Value>
+              </Parameter>
+            </Parameters>
+            <Top>3.82583in</Top>
+            <Left>0.05423in</Left>
+            <Height>0.21875in</Height>
+            <Width>7.35407in</Width>
+            <ZIndex>12</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+            </Style>
+          </Subreport>
         </ReportItems>
-        <Height>5.4675in</Height>
+        <Height>5.655in</Height>
         <Style />
       </Body>
       <Width>7.44242in</Width>

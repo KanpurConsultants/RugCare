@@ -66,6 +66,14 @@ namespace Model.ViewModel
 
         //[Range(0, 100)]
         public decimal Marks { get; set; }
+
+        public decimal? InspectedLength { get; set; }
+        public decimal? InspectedWidth { get; set; }
+        public decimal? InspectedHeight { get; set; }
+
+        public string InspectedUnitId { get; set; }
+        public string InspectedUnitName { get; set; }
+
         public string Remark { get; set; }
         public string ImageFolderName { get; set; }
         public string ImageFileName { get; set; }
@@ -149,6 +157,7 @@ namespace Model.ViewModel
         public decimal BalanceQty { get; set; }
         public decimal Qty { get; set; }
         public decimal InspectionQty { get; set; }
+        public string ProductUidId { get; set; }
         public string ProductUidName { get; set; }
         public int? ProductGroupId { get; set; }
         public string ProductGroupName { get; set; }
@@ -156,10 +165,18 @@ namespace Model.ViewModel
         public string ProductCategoryName { get; set; }
         public int JobOrderHeaderId { get; set; }
         public int JobRequestHeaderId { get; set; }
+
+        public int? SizeId { get; set; }
+        public string SizeName { get; set; }
+        public decimal InspectedLength { get; set; }
+        public decimal InspectedWidth { get; set; }
+        public string InspectedUnit { get; set; }
         public int ProdId { get; set; }
         public decimal UnitConversionMultiplier { get; set; }
         public int DocTypeId { get; set; }
         public string Remark { get; set; }
+        public int SiteId { get; set; }
+        public int DivisionId { get; set; }
     }
 
 

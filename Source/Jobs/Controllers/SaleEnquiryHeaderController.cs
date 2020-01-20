@@ -1120,6 +1120,8 @@ namespace Jobs.Controllers
                 OrderHeader.DocDate = EnquiryHeader.DocDate;
                 OrderHeader.DocNo = EnquiryHeader.DocNo;
                 OrderHeader.BuyerOrderNo = EnquiryHeader.BuyerEnquiryNo;
+                OrderHeader.SaleToBuyerId = EnquiryHeader.SaleToBuyerId;
+                OrderHeader.BillToBuyerId = EnquiryHeader.BillToBuyerId;
                 OrderHeader.CurrencyId = EnquiryHeader.CurrencyId;
                 OrderHeader.Priority = EnquiryHeader.Priority;
                 OrderHeader.UnitConversionForId = EnquiryHeader.UnitConversionForId;

@@ -97,6 +97,7 @@
             </div>
 
             <div class="btn-group right">
+                @Html.ActionLink(" ", "Index_PendingToReceive", "JobOrderHeader", new { @id = @ViewBag.id }, new { @class = "cbtn btn-circle glyphicon glyphicon-random toolbar", @title = "Pending To Receive", @data_toggle = "tooltip" })
                 @CustomHelpers.RenderIconStatusFilters(ViewBag.PendingToSubmit, ViewBag.PendingToReview, ControllerName, ViewBag.id, ViewBag.IndexStatus)
             </div>
         </div>

@@ -34,6 +34,7 @@ namespace Service
         //IQueryable<PackingLineViewModel> GetPackingLineViewModelForHeaderId(int PackingHeaderId);
         IEnumerable<PackingLineViewModel> GetPackingLineViewModelForHeaderId(int PackingHeaderId);
         //PendingOrderListForPacking FGetFifoSaleOrder(int ProductId, int BuyerId);
+        ProductPackingUnits GetProductPackingUnits (int ProductId);
         ProductAreaDetail FGetProductArea(int ProductId);
         PackingBaleNo FGetNewPackingBaleNo(int PackingHeaderId, int? ProductInvoiceGroupId, int? SaleOrderLineId, int BaleNoPatternId, decimal DealQty);
         PackingBaleNo FGetNewPackingBaleNo_WithProductId(int PackingHeaderId, int? ProductInvoiceGroupId, int? SaleOrderLineId, int BaleNoPatternId, decimal DealQty, int? ProductId);
@@ -516,6 +517,11 @@ namespace Service
                         Length =PLTab.Length,
                         Width  = PLTab.Width,
                         Height = PLTab.Height,
+                        PackingLength = PLTab.PackingLength,
+                        PackingWidth = PLTab.PackingWidth,
+                        PackingHeight = PLTab.PackingHeight,
+                        PackingUnitId = PLTab.PackingUnitId,
+                        PackingUnitName = PLTab.PackingUnitId,
                         GrossWeight = L.GrossWeight,
                         NetWeight = L.NetWeight,
                         Remark = L.Remark,
@@ -1557,8 +1563,15 @@ namespace Service
 
         }
 
+        public ProductPackingUnits GetProductPackingUnits(int ProductId)
+        {
+            SqlParameter SqlParameterProductId = new SqlParameter("@ProductId", ProductId);
 
-        
+            ProductPackingUnits ProductDimensions = db.Database.SqlQuery<ProductPackingUnits>("" + ConfigurationManager.AppSettings["DataBaseSchema"] + ".sp_GetProductPackingUnits @ProductId", SqlParameterProductId).FirstOrDefault();
+
+            return ProductDimensions;
+        }
+
         public IEnumerable<ComboBoxResult> GetPendingStockForPacking(int PackingHeaderId, int? ProductId, int? Dimension1Id, int? Dimension2Id, int? Dimension3Id, int? Dimension4Id, string term)
         {
             var PackingHeader = new PackingHeaderService(_unitOfWork).Find(PackingHeaderId);
@@ -1695,6 +1708,15 @@ namespace Service
         public int DivisionId { get; set; }
     }
 
+    public class ProductPackingUnits
+    {
+        public Decimal? PackingLength { get; set; }
+        public Decimal? PackingWidth { get; set; }
+        public Decimal? PackingHeight { get; set; }
+        public string PackingUnit { get; set; }
+        public Decimal? PackingGrossWeight { get; set; }
+        public Decimal? PackingNetWeight { get; set; }
+    }
 
 }
 

@@ -1618,9 +1618,16 @@ namespace Jobs.Controllers
                 if ((LedgerLine_Temp.Advance ?? 0) > 0)
                 {
                     int AdvanceAdjustementAccountId = 0;
+                    int AdvanceAccountId = 0;
+
                     LedgerAccount AdvanceAdjustementAccount = new LedgerAccountService(_unitOfWork).Find("Advance Adjustement A/C");
+                    LedgerAccount AdvanceAccount = new LedgerAccountService(_unitOfWork).Find("Advance A/C");
+
                     if (AdvanceAdjustementAccount != null)
                         AdvanceAdjustementAccountId = AdvanceAdjustementAccount.LedgerAccountId;
+
+                    if (AdvanceAccount != null)
+                        AdvanceAccountId = AdvanceAccount.LedgerAccountId;
 
 
                     Ledger Ledger = new Ledger();
@@ -1632,7 +1639,8 @@ namespace Jobs.Controllers
                     Ledger.ContraLedgerAccountId = AdvanceAdjustementAccountId;
                     Ledger.CostCenterId = null;
                     Ledger.DueDate = null;
-                    Ledger.LedgerAccountId = LedgerLine_Temp.LedgerAccountId;
+                    //Ledger.LedgerAccountId = LedgerLine_Temp.LedgerAccountId;
+                    Ledger.LedgerAccountId = AdvanceAccountId;
                     Ledger.LedgerHeaderId = (int)Header.LedgerHeaderId;
                     Ledger.LedgerLineId = null;
                     Ledger.ProductUidId = null;
@@ -1772,9 +1780,15 @@ namespace Jobs.Controllers
                 if ((LedgerLine_Temp.OtherAddition ?? 0) > 0)
                 {
                     int AdditionAccountId = 0;
-                    LedgerAccount AdditionAdjustementAccount = new LedgerAccountService(_unitOfWork).Find("Addition A/C");
-                    if (AdditionAdjustementAccount != null)
-                        AdditionAccountId = AdditionAdjustementAccount.LedgerAccountId;
+                    int CreditNoteAdjustmentAccountId = 0;
+
+                    LedgerAccount AdditionAccount = new LedgerAccountService(_unitOfWork).Find("Addition A/C");
+                    LedgerAccount CreditNoteAdjustmentAccount = new LedgerAccountService(_unitOfWork).Find("Credit Note Adjustment A/C");
+                    if (AdditionAccount != null)
+                        AdditionAccountId = AdditionAccount.LedgerAccountId;
+
+                    if (CreditNoteAdjustmentAccount != null)
+                        CreditNoteAdjustmentAccountId = CreditNoteAdjustmentAccount.LedgerAccountId;
 
                     Ledger Ledger = new Ledger();
                     Ledger.LedgerId = LedgerId_Running--;
@@ -1785,7 +1799,8 @@ namespace Jobs.Controllers
                     Ledger.ContraLedgerAccountId = AdditionAccountId;
                     Ledger.CostCenterId = null;
                     Ledger.DueDate = null;
-                    Ledger.LedgerAccountId = LedgerLine_Temp.LedgerAccountId;
+                    //Ledger.LedgerAccountId = LedgerLine_Temp.LedgerAccountId;
+                    Ledger.LedgerAccountId = CreditNoteAdjustmentAccountId;
                     Ledger.LedgerHeaderId = (int)Header.LedgerHeaderId;
                     Ledger.LedgerLineId = null;
                     Ledger.ProductUidId = null;
@@ -1830,7 +1845,8 @@ namespace Jobs.Controllers
                     ContraLedger.CostCenterId = null;
                     ContraLedger.LedgerLineId = null;
                     ContraLedger.LedgerAccountId = AdditionAccountId;
-                    ContraLedger.ContraLedgerAccountId = LedgerLine_Temp.LedgerAccountId;
+                    //ContraLedger.ContraLedgerAccountId = LedgerLine_Temp.LedgerAccountId;
+                    ContraLedger.ContraLedgerAccountId = CreditNoteAdjustmentAccountId;
                     ContraLedger.ChqNo = null;
                     ContraLedger.ChqDate = null;
                     ContraLedger.ObjectState = Model.ObjectState.Added;
@@ -1844,9 +1860,16 @@ namespace Jobs.Controllers
                 if ((LedgerLine_Temp.OtherDeduction ?? 0) > 0)
                 {
                     int DeductionAccountId = 0;
-                    LedgerAccount DeductionAdjustementAccount = new LedgerAccountService(_unitOfWork).Find("Deduction A/C");
-                    if (DeductionAdjustementAccount != null)
-                        DeductionAccountId = DeductionAdjustementAccount.LedgerAccountId;
+                    int DebitNoteAdjustmentAccountId = 0;
+
+                    LedgerAccount DeductionAccount = new LedgerAccountService(_unitOfWork).Find("Deduction A/C");
+                    LedgerAccount DebitNoteAdjustmentAccount = new LedgerAccountService(_unitOfWork).Find("Debit Note Adjustment A/C");
+
+                    if (DeductionAccount != null)
+                        DeductionAccountId = DeductionAccount.LedgerAccountId;
+
+                    if (DebitNoteAdjustmentAccount != null)
+                        DebitNoteAdjustmentAccountId = DebitNoteAdjustmentAccount.LedgerAccountId;
 
                     Ledger Ledger = new Ledger();
                     Ledger.LedgerId = LedgerId_Running--;
@@ -1857,7 +1880,8 @@ namespace Jobs.Controllers
                     Ledger.ContraLedgerAccountId = DeductionAccountId;
                     Ledger.CostCenterId = null;
                     Ledger.DueDate = null;
-                    Ledger.LedgerAccountId = LedgerLine_Temp.LedgerAccountId;
+                    //Ledger.LedgerAccountId = LedgerLine_Temp.LedgerAccountId;
+                    Ledger.LedgerAccountId = DebitNoteAdjustmentAccountId;
                     Ledger.LedgerHeaderId = (int)Header.LedgerHeaderId;
                     Ledger.LedgerLineId = null;
                     Ledger.ProductUidId = null;
@@ -1901,7 +1925,8 @@ namespace Jobs.Controllers
                     ContraLedger.CostCenterId = null;
                     ContraLedger.LedgerLineId = null;
                     ContraLedger.LedgerAccountId = DeductionAccountId;
-                    ContraLedger.ContraLedgerAccountId = LedgerLine_Temp.LedgerAccountId;
+                    //ContraLedger.ContraLedgerAccountId = LedgerLine_Temp.LedgerAccountId;
+                    ContraLedger.ContraLedgerAccountId = DebitNoteAdjustmentAccountId;
                     ContraLedger.ChqNo = null;
                     ContraLedger.ChqDate = null;
                     ContraLedger.ObjectState = Model.ObjectState.Added;

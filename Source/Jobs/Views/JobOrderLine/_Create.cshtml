@@ -78,6 +78,17 @@
                         </div>
                     </div>
 
+                    <div class="col-md-6" style="display:@(Model.JobOrderSettings.isAllowtoIssueMultipleBarcode?"":"none")">
+                        @Html.HiddenFor(m => m.JobOrderSettings.isAllowtoIssueMultipleBarcode)
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ToProductUidId, ("To Product Uid"), new { @class = "control-label col-md-4 col-sm-2" })
+                            <div class="col-md-7 col-sm-10">
+                                @Html.TextBoxFor(model => model.ToProductUidName, new { @class = "form-control col-xs-7" })
+                                @Html.ValidationMessageFor(model => model.ToProductUidId, "", new { @class = "text-danger" })
+                                <span id="ToProductUidValidation"></span>
+                            </div>
+                        </div>
+                    </div>
 
 
                     @if (Model.LineNature == LineNatureConstants.ForOrder)
@@ -289,16 +300,34 @@
 
                     <div class="col-md-6" style="display:@(Model.JobOrderSettings.isVisibleDealUnit?"":"none")">
                         @Html.HiddenFor(m => m.JobOrderSettings.isVisibleDealUnit)
+                        @Html.HiddenFor(m => m.JobOrderSettings.isEditableDealUnit)
                         <div class="form-group">
                             @Html.LabelFor(model => model.DealUnitId, "Deal Unit", new { @class = "control-label col-md-4 col-sm-2" })
                             <div class="col-md-7 col-sm-10">
                                 <div class="col-xs-7" style="padding:0px">
+                                @if (!Model.JobOrderSettings.isEditableDealUnit)
+                                {
+                                    @Html.DropDownListFor(model => model.DealUnitId, new SelectList(ViewBag.DeliveryUnitList as System.Collections.IEnumerable, "UnitId", "UnitName"), new { @class = "form-control height cusrightnormal required", @readonly = true })
+                                    @Html.ValidationMessageFor(model => model.DealUnitId, "", new { @class = "text-danger" })
+                                }
+                                else
+                                {
                                     @Html.DropDownListFor(model => model.DealUnitId, new SelectList(ViewBag.DeliveryUnitList as System.Collections.IEnumerable, "UnitId", "UnitName"), new { @class = "form-control height cusrightnormal required" })
                                     @Html.ValidationMessageFor(model => model.DealUnitId, "", new { @class = "text-danger" })
+                                }
                                 </div>
                                 <div class="col-xs-5" style="padding:0px">
+                                @if (!Model.JobOrderSettings.isEditableDealUnit)
+                                {
+                                    @Html.TextBoxFor(model => model.UnitConversionMultiplier, new { @class = "form-control required", @readonly = true })
+                                    @Html.ValidationMessageFor(model => model.UnitConversionMultiplier, "", new { @class = "text-danger" })
+                                }
+                                else
+                                {
                                     @Html.TextBoxFor(model => model.UnitConversionMultiplier, new { @class = "form-control required" })
                                     @Html.ValidationMessageFor(model => model.UnitConversionMultiplier, "", new { @class = "text-danger" })
+
+                                }
                                 </div>
                             </div>
                         </div>
@@ -309,8 +338,16 @@
                         <div class="form-group">
                             @Html.LabelFor(model => model.DealQty, "Deal Qty", new { @class = "control-label col-md-4 col-sm-2" })
                             <div class="col-md-7 col-sm-10">
+                            @if (!Model.JobOrderSettings.isEditableDealUnit)
+                            {
+                                @Html.TextBoxFor(model => model.DealQty, new { @class = "form-control col-xs-7 required", @readonly = true })
+                                @Html.ValidationMessageFor(model => model.DealQty, "", new { @class = "text-danger" })
+                            }
+                            else
+                            {
                                 @Html.TextBoxFor(model => model.DealQty, new { @class = "form-control col-xs-7 required" })
                                 @Html.ValidationMessageFor(model => model.DealQty, "", new { @class = "text-danger" })
+                            }
                             </div>
                         </div>
                     </div>
@@ -398,7 +435,7 @@
                         <button class="btn custom left" name="Command:Edit" type="submit" id="submit"><h2 style="margin:0px"><span class="glyphicon glyphicon-floppy-disk black"></span> </h2></button>}
 
                     @if (ViewBag.LineMode == "Delete")
-                    {
+{
                         <button class="btn custom" name="Command:Delete" id="delete" type="submit"><h2 style="margin:0px"><span class="glyphicon glyphicon-trash black"></span> </h2></button>}
 
                 </div>
@@ -513,6 +550,18 @@ else
         }
 
 
+        $('#ToProductUidName').keyup(function()
+        {
+            if ('@Model.JobOrderSettings.isAllowtoIssueMultipleBarcode' == "True")
+            {
+                if($('#ToProductUidName').val()!="")
+                {
+                    $('#Qty').val(($('#ToProductUidName').val() - $('#ProductUidName').val())+1);
+                }
+                Calculation();
+            }
+        });
+
 
 
         $('#Qty').keyup(function () {
@@ -566,7 +615,7 @@ else
                     $("#UnitName").val(data.UnitName);
                     //$('#UnitConversionMultiplier').val(1);
                     //$("#ProductId").select2('data', { id: data.ProductId, text: data.ProductName});
-                    $("#ProductId").val(data.ProductId);
+                    $("#ProductId").val(data.ProductId).trigger('change');
                     $("#DealUnitId").val(data.DealUnitId).trigger('change');
                     $("#ProdOrderDocNo").val(data.ProdOrderDocNo);
                     //(data.Dimension1Name==null)?(1==1):($("#Dimension1Name").val(data.Dimension1Name))
@@ -590,6 +639,7 @@ else
                     {
                         $("#Dimension4Id").select2('data', { id: data.Dimension4Id, text: data.Dimension4Name});
                     }
+
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
                     alert('Failed to retrieve Order details.' + thrownError);
@@ -764,7 +814,7 @@ else
             $('#Dimension2Id').attr('readonly','true');
             $('#Dimension3Id').attr('readonly','true');
             $('#Dimension4Id').attr('readonly','true');
-            $('#Specification').attr('readonly','true');
+            //$('#Specification').attr('readonly','true');
 
             $('#StockInId').attr('readonly','true');
 
@@ -1074,6 +1124,7 @@ else
                                 $("#ProductUidName").val(data.ProductUidName);
                             }
 
+                            $("#ToProductUidName").val("");
                             $("#ProductUidName").attr('readonly', 'true');
                             $("#ProductId").attr('readonly', 'true');
                             $("#Dimension1Id").attr('readonly', 'true');
@@ -1082,6 +1133,12 @@ else
                             $("#Dimension4Id").attr('readonly', 'true');
                             $("#FromProcessId").attr('readonly', 'true');
                             GetProductDetail()
+
+                            if ('@Model.JobOrderSettings.isAllowtoIssueMultipleBarcode' == "True")
+                            {
+                                $("#ToProductUidName").focus();
+                                $("#Qty").attr('readonly', 'true');
+                            }
                         }
                         else{
                             $("#StockInBalanceQty").val(0);

@@ -314,7 +314,6 @@
                       <PaddingBottom>2pt</PaddingBottom>
                     </Style>
                   </Textbox>
-                  <rd:Selected>true</rd:Selected>
                 </CellContents>
               </TablixHeader>
             </TablixMember>
@@ -546,10 +545,7 @@
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
     <DataSource Name="TrialBalance">
-      <ConnectionProperties>
-        <DataProvider>SQL</DataProvider>
-        <ConnectString>=Parameters!DatabaseConnectionString.Value</ConnectString>
-      </ConnectionProperties>
+      <DataSourceReference>DSOC</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
       <rd:DataSourceID>dd7af43a-86ea-4bb9-8747-c50ac43bbbc6</rd:DataSourceID>
     </DataSource>
@@ -584,10 +580,6 @@
           <DataField>SiteId</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
-        <Field Name="secondGroupOnValue">
-          <DataField>secondGroupOnValue</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
         <Field Name="GroupOnText">
           <DataField>GroupOnText</DataField>
           <rd:TypeName>System.String</rd:TypeName>
@@ -596,12 +588,8 @@
           <DataField>DivisionId</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
-        <Field Name="SecondGroupOnText">
-          <DataField>SecondGroupOnText</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="ThirdGroupOnValue">
-          <DataField>ThirdGroupOnValue</DataField>
+        <Field Name="Date">
+          <DataField>Date</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="GroupTitle">
@@ -612,17 +600,9 @@
           <DataField>UnitName</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="ThirdGroupOnText">
-          <DataField>ThirdGroupOnText</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
         <Field Name="StockQty">
           <DataField>StockQty</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="secondGroupTitle">
-          <DataField>secondGroupTitle</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
+          <rd:TypeName>System.Double</rd:TypeName>
         </Field>
         <Field Name="ProductGroupName">
           <DataField>ProductGroupName</DataField>
@@ -630,19 +610,15 @@
         </Field>
         <Field Name="DecimalPlaces">
           <DataField>DecimalPlaces</DataField>
-          <rd:TypeName>System.Byte</rd:TypeName>
-        </Field>
-        <Field Name="ThirdGroupTitle">
-          <DataField>ThirdGroupTitle</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
+          <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
         <Field Name="ReportName">
           <DataField>ReportName</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="DATE">
-          <DataField>DATE</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
+          <DataField>Date</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="ReportTitle">
           <DataField>ReportTitle</DataField>
@@ -1049,4 +1025,3 @@ PtQeVUENmewh02zjEWZuZuLElNvBS6gDSXQMHP8A5UE5f6lWFPkR2q6ZG8HZI8xgvruK93SMJUsHJ61z
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
   <rd:ReportID>f1b70379-da78-4ea9-bab5-cbb93d10df58</rd:ReportID>
 </Report>
-

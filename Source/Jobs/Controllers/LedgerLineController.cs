@@ -273,12 +273,14 @@ namespace Jobs.Controllers
                 }
                 if (svm.CostCenterId !=null  && svm.LedgerAccountId != null)
                 {
-                    CostCenter CC = new CostCenterService(_unitOfWork).Find((int)svm.CostCenterId);
-                    if (CC.LedgerAccountId != svm.LedgerAccountId)
+                    if (svm.LedgerSetting.isAllowedToChangeLedgerAccount != true)
                     {
-                        ModelState.AddModelError("CostCenterId", "The CostCenterId is Invalid");
+                        CostCenter CC = new CostCenterService(_unitOfWork).Find((int)svm.CostCenterId);
+                        if (CC.LedgerAccountId != svm.LedgerAccountId)
+                        {
+                            ModelState.AddModelError("CostCenterId", "The CostCenterId is Invalid");
+                        }
                     }
-                    
                 }
             }
 

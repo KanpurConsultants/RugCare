@@ -50,6 +50,15 @@ namespace Model.Models
         [Display(Name = "Marks")]
         public decimal Marks { get; set; }
 
+        public Decimal? InspectedLength { get; set; }
+        public Decimal? InspectedWidth { get; set; }
+        public Decimal? InspectedHeight { get; set; }
+
+        [Display(Name = "Inspected Unit")]
+        [ForeignKey("InspectedUnit")]
+        public string InspectedUnitId { get; set; }
+        public virtual Unit InspectedUnit { get; set; }
+
 
         [Display(Name = "Remark")]
         public string Remark { get; set; }

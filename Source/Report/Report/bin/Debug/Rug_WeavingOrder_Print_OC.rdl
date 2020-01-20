@@ -5314,7 +5314,7 @@ Fields!DealUnit.Value</Value>
                                                 <Value>=Fields!JobInstruction.Value</Value>
                                                 <Style>
                                                   <FontFamily>Tahoma</FontFamily>
-                                                  <FontSize>9pt</FontSize>
+                                                  <FontWeight>Bold</FontWeight>
                                                 </Style>
                                               </TextRun>
                                             </TextRuns>
@@ -11195,7 +11195,7 @@ Fields!DealUnit.Value</Value>
         </TablixRowHierarchy>
         <DataSetName>DsMain</DataSetName>
         <Top>9.25429in</Top>
-        <Height>1.87501in</Height>
+        <Height>1.875in</Height>
         <Width>7.38145in</Width>
         <ZIndex>7</ZIndex>
         <Style>
@@ -11642,7 +11642,7 @@ Fields!DealUnit.Value</Value>
                                                 <Value>=Fields!JobInstruction.Value</Value>
                                                 <Style>
                                                   <FontFamily>Tahoma</FontFamily>
-                                                  <FontSize>9pt</FontSize>
+                                                  <FontWeight>Bold</FontWeight>
                                                 </Style>
                                               </TextRun>
                                             </TextRuns>
@@ -11665,6 +11665,7 @@ Fields!DealUnit.Value</Value>
                                           <PaddingBottom>2pt</PaddingBottom>
                                         </Style>
                                       </Textbox>
+                                      <rd:Selected>true</rd:Selected>
                                     </CellContents>
                                   </TablixCell>
                                 </TablixCells>
@@ -12260,7 +12261,7 @@ Fields!DealUnit.Value</Value>
           <BreakLocation>End</BreakLocation>
         </PageBreak>
         <Top>11.19874in</Top>
-        <Height>3.14058in</Height>
+        <Height>3.14056in</Height>
         <Width>7.36137in</Width>
         <ZIndex>10</ZIndex>
         <Style>

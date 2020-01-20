@@ -34,6 +34,7 @@ namespace Service
         int NextId(int id);
         int PrevId(int id);
         IEnumerable<JobInvoiceLineViewModel> GetJobReceiptForFilters(JobInvoiceLineFilterViewModel vm);
+        IEnumerable<JobInvoiceLineViewModel> GetJobInspectionForFilters(JobInvoiceLineFilterViewModel vm);
         IEnumerable<JobInvoiceLineViewModel> GetJobOrderForFilters(JobInvoiceLineFilterViewModel vm);
         IEnumerable<JobInvoiceLineViewModel> GetJobOrderForFiltersForInvoiceReceive(JobInvoiceLineFilterViewModel vm);
         JobInvoiceLine FindByJobInvoiceHeader(int id);
@@ -304,7 +305,8 @@ namespace Service
                             GROUP BY isnull(PU.ProductUIDId, PU1.ProductUIDId)
                             ) VTRN ON VTRN.ProductUIDId = isnull(PU.ProductUIDId, PU1.ProductUIDId)  
                             where  H.BalanceQty > 0 AND JRH.Status =1 AND isnull(JW.IsSisterConcern,0) =0
-                            AND isnull(JRL.isHoldForInvoice,0) =0 AND VTRN.ProductUIDId IS NOT NULL
+                            AND isnull(JRL.isHoldForInvoice,0) =0 
+                            AND ( (JOH.GodownId IN (21,1025) AND VTRN.ProductUIDId IS NOT NULL) OR JOH.GodownId NOT IN (21,1025) ) 
                             AND JRH.ProcessId = " + JobInvoice.ProcessId.ToString() + @" ";
                 else
                     mQry = @"SELECT JRH.JobReceiveHeaderId,  PG.ProductGroupId, H.SiteId, H.DivisionId, JRH.DocTypeId, JRH.DocDate, PG.ProductTypeId, P.ProductCategoryId, 
@@ -489,6 +491,152 @@ namespace Service
                             CostCenterId = p.CostCenterId,
                         }).ToList();
             }
+        }
+        public IEnumerable<JobInvoiceLineViewModel> GetJobInspectionForFilters(JobInvoiceLineFilterViewModel vm)
+        {
+
+            var JobInvoice = new JobInvoiceHeaderService(_unitOfWork).Find(vm.JobInvoiceHeaderId);
+
+
+            string CompanyName = ConfigurationManager.AppSettings["CompanyName"];
+
+            var settings = new JobInvoiceSettingsService(_unitOfWork).GetJobInvoiceSettingsForDocument(JobInvoice.DocTypeId, JobInvoice.DivisionId, JobInvoice.SiteId);
+
+            DocumentType DT = new DocumentTypeService(_unitOfWork).Find(JobInvoice.DocTypeId);
+            DocumentCategory DC = new DocumentCategoryService(_unitOfWork).Find(DT.DocumentCategoryId);
+
+
+            string mQry;
+
+                mQry = @"	SELECT JRH.JobReceiveHeaderId,  PG.ProductGroupId, H.SiteId, H.DivisionId, JRH.DocTypeId, JRH.DocDate, PG.ProductTypeId, P.ProductCategoryId, 
+                            D1.Dimension1Name,D2.Dimension2Name,D3.Dimension3Name,D4.Dimension4Name, JRL.Specification,                             
+                            JRH.DocNo AS JobReceiveDocNo, P.ProductName, PU.ProductUidName, JRL.ProductId,  JRL.JobReceiveLineId, P.UnitId, U.UnitName, JRL.DealUnitId, DU.UnitName AS  DealUnitName,
+                            VJIW.JobWorkerId , JW.Name AS JobWorkerName, 
+                            --isnull(JRQ.DealQty,JRL.DealQty) AS DealQty, JOL.Rate,H.BalanceQty AS ReceiptBalQty,H.BalanceQty AS Qty,
+                            round(H.BalanceQty*VJIW.InspectedWidth/VJI.InspectedWidth,2) AS ReceiptBalQty,
+                            round(H.BalanceQty*VJIW.InspectedWidth/VJI.InspectedWidth,2) AS Qty,
+                            Round(isnull(JRQ.DealQty,JRL.DealQty)*VJIW.InspectedWidth/VJI.InspectedWidth,4) AS DealQty,
+                            Round((round(JOL.Rate*isnull(JRQ.DealQty,JRL.DealQty),2)-isnull(VP.Penalty,0)) /isnull(JRQ.DealQty,JRL.DealQty),2) AS Rate,   
+                            Round(isnull(JRQ.DealQty,JRL.DealQty)*VJIW.InspectedWidth/VJI.InspectedWidth,4)*JOL.Rate AS Amount,                          
+                            H.RetensionRate,  JRL.UnitConversionMultiplier, U.DecimalPlaces AS UnitDecimalPlaces, DU.DecimalPlaces  DealUnitDecimalPlaces , JOH.CostCenterId  
+                            FROM 
+                            (
+                            SELECT * FROM web.ViewJobReceiveBalanceForInvoice H WITH (Nolock) 
+                            where  H.BalanceQty > 0
+                            AND H.SiteId = " + JobInvoice.SiteId.ToString() + @" 
+                            AND H.DivisionId =" + JobInvoice.DivisionId.ToString() + @"
+                            ) H
+                            LEFT JOIN web.JobReceiveHeaders JRH WITH (Nolock) ON JRH.JobReceiveHeaderId = H.JobReceiveHeaderId 
+                            LEFT JOIN web.JobReceiveLines JRL WITH (Nolock) ON JRL.JobReceiveLineId = H.JobReceiveLineId 
+                            LEFT JOIN web.JobReceiveQALines JRQ WITH (Nolock) ON JRQ.JobReceiveLineId = JRL.JobReceiveLineId
+                            LEFT JOIN web.JobOrderLines JOL WITH (Nolock) ON JOL.JobOrderLineId = JRL.JobOrderLineId
+                            LEFT JOIN web.JobOrderHeaders JOH WITH (Nolock) ON JOH.JobOrderHeaderId = JOL.JobOrderHeaderId
+                            LEFT JOIN web.Products P WITH (Nolock) ON P.ProductId = JRL.ProductId
+                            LEFT JOIN web.Dimension1 D1 WITH (Nolock) ON D1.Dimension1Id = JRL.Dimension1Id 
+                            LEFT JOIN web.Dimension2 D2 WITH (Nolock) ON D2.Dimension2Id = JRL.Dimension2Id 
+                            LEFT JOIN web.Dimension3 D3 WITH (Nolock) ON D3.Dimension3Id = JRL.Dimension3Id 
+                            LEFT JOIN web.Dimension4 D4 WITH (Nolock) ON D4.Dimension4Id = JRL.Dimension4Id 
+                            LEFT JOIN web.ProductGroups PG WITH (Nolock) ON PG.ProductGroupId = P.ProductGroupId
+                            LEFT JOIN web.ProductUids PU WITH (Nolock) ON PU.ProductUIDId = JRL.ProductUidId 
+                            LEFT JOIN web.Units U WITH (Nolock) ON U.UnitId = P.UnitId 
+                            LEFT JOIN web.Units DU WITH (Nolock) ON DU.UnitId = JRL.DealUnitId  
+                            LEFT JOIN 
+                            (
+                            SELECT RP.JobReceiveQALineId, sum(RP.Amount) AS Penalty  
+							FROM web.JobReceiveQAPenalties RP WITH (Nolock)
+							GROUP BY RP.JobReceiveQALineId 
+                            ) VP ON VP.JobReceiveQALineId =JRQ.JobReceiveQALineId
+                            LEFT JOIN 
+                            (
+                            SELECT JOIL.JobOrderLineId, sum(JOIL.InspectedWidth)  AS InspectedWidth 
+							FROM web.JobOrderInspectionHeaders JOIH WITH (Nolock)
+							LEFT JOIN web.JobOrderInspectionLines JOIL WITH (Nolock) ON JOIL.JobOrderInspectionHeaderId = JOIH.JobOrderInspectionHeaderId
+							Where JOIH.SiteId = " + JobInvoice.SiteId.ToString() + @" 
+                            AND JOIH.DivisionId =" + JobInvoice.DivisionId.ToString() + @"
+							AND JOIL.JobOrderLineId IS NOT NULL 
+                            AND JOIH.DocTypeId =8102
+							GROUP BY JOIL.JobOrderLineId  
+                            ) VJI ON VJI.JobOrderLineId = JRL.JobOrderLineId
+                            LEFT JOIN 
+                            (
+                            SELECT JOIH.JobWorkerId, JOIL.JobOrderLineId, sum(JOIL.InspectedWidth)  AS InspectedWidth 
+							FROM web.JobOrderInspectionHeaders JOIH WITH (Nolock)
+							LEFT JOIN web.JobOrderInspectionLines JOIL WITH (Nolock) ON JOIL.JobOrderInspectionHeaderId = JOIH.JobOrderInspectionHeaderId
+							Where JOIH.SiteId = " + JobInvoice.SiteId.ToString() + @" 
+                            AND JOIH.DivisionId =" + JobInvoice.DivisionId.ToString() + @"
+							AND JOIL.JobOrderLineId IS NOT NULL 
+                            AND JOIH.DocTypeId =8102
+							GROUP BY JOIH.JobWorkerId, JOIL.JobOrderLineId  
+                            ) VJIW ON VJIW.JobOrderLineId = JRL.JobOrderLineId
+                            LEFT JOIN web.People JW WITH (Nolock) ON JW.PersonID = VJIW.JobWorkerId 
+                            where  H.BalanceQty > 0 AND JRH.Status =1 AND isnull(JW.IsSisterConcern,0) =0
+                            AND isnull(JRL.isHoldForInvoice,0) =0 AND VJIW.JobWorkerId is Not Null
+                            AND JRH.ProcessId = " + JobInvoice.ProcessId.ToString() + @" ";
+
+
+            if (!string.IsNullOrEmpty(settings.filterContraDocTypes))
+                mQry = mQry + " AND  JRH.DocTypeId In ( " + settings.filterContraDocTypes + " )";
+
+            if (!string.IsNullOrEmpty(settings.filterProductTypes))
+                mQry = mQry + " AND  PG.ProductTypeId In ( " + settings.filterProductTypes + " )";
+
+            if (!string.IsNullOrEmpty(vm.ProductCategoryId))
+                mQry = mQry + " AND  P.ProductCategoryId In ( " + vm.ProductCategoryId.ToString() + " )";
+
+            if (!string.IsNullOrEmpty(vm.ProductGroupId))
+                mQry = mQry + " AND  P.ProductGroupId In ( " + vm.ProductGroupId.ToString() + " )";
+
+            if (!string.IsNullOrEmpty(vm.ProductId))
+                mQry = mQry + " AND JRL.ProductId In ( " + vm.ProductId.ToString() + " )";
+
+            if (JobInvoice.JobWorkerId.HasValue && settings.isVisibleHeaderJobWorker == true)
+                mQry = mQry + " AND VJIW.JobWorkerId = " + JobInvoice.JobWorkerId.ToString() + " ";
+            else if (!string.IsNullOrEmpty(vm.JobWorkerIds))
+                mQry = mQry + " AND VJIW.JobWorkerId In ( " + vm.JobWorkerIds.ToString() + " )";
+
+            if (!string.IsNullOrEmpty(vm.JobReceiveHeaderId))
+                mQry = mQry + " AND H.JobReceiveHeaderId In ( " + vm.JobReceiveHeaderId.ToString() + " )";
+
+
+            if (vm.ReceiveFromDate.HasValue)
+                mQry = mQry + " AND  JRH.DocDate >= '" + vm.ReceiveFromDate.Value + "'";
+
+            if (vm.ReceiveToDate.HasValue)
+                mQry = mQry + " AND  JRH.DocDate <= '" + vm.ReceiveToDate.Value + "'";
+            
+
+            IEnumerable<JobInvoiceLineViewModel> JobReceiveBalanceList = db.Database.SqlQuery<JobInvoiceLineViewModel>(mQry).ToList();
+                       
+                return (from p in JobReceiveBalanceList
+                        select new JobInvoiceLineViewModel
+                        {
+                            Dimension1Name = p.Dimension1Name,
+                            Dimension2Name = p.Dimension2Name,
+                            Dimension3Name = p.Dimension3Name,
+                            Dimension4Name = p.Dimension4Name,
+                            Specification = p.Specification,
+                            ReceiptBalQty = p.ReceiptBalQty,
+                            Qty = p.Qty,
+                            JobReceiveDocNo = p.JobReceiveDocNo,
+                            ProductName = p.ProductName,
+                            ProductId = p.ProductId,
+                            ProductUidName = p.ProductUidName,
+                            JobInvoiceHeaderId = vm.JobInvoiceHeaderId,
+                            JobReceiveLineId = p.JobReceiveLineId,
+                            UnitId = p.UnitId,
+                            UnitName = p.UnitName,
+                            DealUnitId = p.DealUnitId,
+                            DealUnitName = p.DealUnitName,
+                            JobWorkerId = p.JobWorkerId,
+                            JobWorkerName = p.JobWorkerName,
+                            DealQty = p.DealQty,
+                            Rate = p.Rate,
+                            UnitConversionMultiplier = p.UnitConversionMultiplier,
+                            UnitDecimalPlaces = p.UnitDecimalPlaces,
+                            DealUnitDecimalPlaces = p.DealUnitDecimalPlaces,
+                            CostCenterId = p.CostCenterId,
+                        }).ToList();
+            
         }
         public IEnumerable<JobInvoiceLineViewModel> GetJobOrderForFilters(JobInvoiceLineFilterViewModel vm)
         {

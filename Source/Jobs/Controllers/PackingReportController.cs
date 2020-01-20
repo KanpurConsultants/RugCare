@@ -71,7 +71,8 @@ namespace Jobs.Controllers
             ViewBag.AreaUnit = new SelectList(AreaUnit, "Value", "Text");
 
 
-            vm.FromDate = "01/Apr/" + DateTime.Now.Date.Year.ToString();
+            //vm.FromDate = "01/Apr/" + DateTime.Now.Date.Year.ToString();
+            vm.FromDate = "01/Apr/2018";
             vm.ToDate = DateTime.Now.Date.ToString("dd/MMM/yyyy");
 
 

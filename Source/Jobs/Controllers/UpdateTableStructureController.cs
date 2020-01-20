@@ -62,6 +62,99 @@ namespace Module
 
             try
             {
+                if ((int)ExecuteScaler("SELECT Count(*) AS Cnt FROM INFORMATION_SCHEMA.Tables WHERE TABLE_NAME = 'StockHeaderTransport'") == 0)
+                {
+                    mQry = @"CREATE TABLE Web.StockHeaderTransport
+	                        (
+	                        StockHeaderId        INT NOT NULL,
+	                        TransportId          INT,
+	                        LrNo                 NVARCHAR (50) DEFAULT (NULL),
+	                        LrDate               SMALLDATETIME DEFAULT (NULL),
+	                        PrivateMark          NVARCHAR (50) DEFAULT (NULL),
+	                        Weight               FLOAT ,
+	                        Freight              FLOAT ,
+	                        PaymentType          NVARCHAR (20) DEFAULT (NULL),
+	                        RoadPermitNo         NVARCHAR (50) DEFAULT (NULL),
+	                        RoadPermitDate       SMALLDATETIME DEFAULT (NULL),
+	                        UploadDate           SMALLDATETIME DEFAULT (NULL),
+	                        VehicleNo            NVARCHAR (50) DEFAULT (NULL),
+	                        ShipMethod           NVARCHAR (50) DEFAULT (NULL),
+	                        PreCarriageBy        NVARCHAR (50) DEFAULT (NULL),
+	                        PreCarriagePlace     NVARCHAR (50) DEFAULT (NULL),
+	                        BookedFrom           NVARCHAR (50) DEFAULT (NULL),
+	                        BookedTo             NVARCHAR (50) DEFAULT (NULL),
+	                        Destination          NVARCHAR (100) DEFAULT (NULL),
+	                        DescriptionOfGoods   NVARCHAR (255) DEFAULT (NULL),
+	                        DescriptionOfPacking NVARCHAR (255) DEFAULT (NULL),
+	                        ChargedWeight        FLOAT ,
+	                        CONSTRAINT [PK_Web.StockHeaderTransport] PRIMARY KEY (StockHeaderId),
+	                        CONSTRAINT [FK_Web.StockHeaderTransport_Web.Transporters_TransportId] FOREIGN KEY (TransportId) REFERENCES Web.People (PersonID),
+	                        CONSTRAINT [FK_Web.StockHeaderTransport_Web.StockHeaders_StockHeaderId] FOREIGN KEY (StockHeaderId) REFERENCES Web.StockHeaders (StockHeaderId)
+	                        )
+                            
+
+                        CREATE INDEX [IX_StockHeaderId]
+	                        ON Web.StockHeaderTransport (StockHeaderId)
+                            ";
+                    ExecuteQuery(mQry);
+                }
+            }
+            catch (Exception ex)
+            {
+                RecordError(ex);
+            }
+
+
+
+            try
+            {
+                if ((int)ExecuteScaler("SELECT Count(*) AS Cnt FROM INFORMATION_SCHEMA.Tables WHERE TABLE_NAME = 'PackingUnitSettings'") == 0)
+                {
+                    mQry = @"CREATE TABLE Web.PackingUnitSettings
+	                        (
+	                        PackingUnitSettingId INT IDENTITY NOT NULL,
+	                        DivisionId         INT NOT NULL,
+	                        SiteId             INT NOT NULL,
+	                        ProductCategoryId  INT,
+	                        ProductQualityId   INT,
+	                        ProductGroupId  INT,
+	                        SizeId   INT,	
+	                        PackingLength      DECIMAL (18, 4) NOT NULL,
+	                        PackingWidth       DECIMAL (18, 4) NOT NULL,
+	                        PackingHeight      DECIMAL (18, 4) NOT NULL,
+	                        PackingGrossWeight DECIMAL (18, 4) ,
+	                        PackingNetWeight   DECIMAL (18, 4) ,
+	                        PackingUnitId      NVARCHAR (3),
+	                        CreatedBy          NVARCHAR (max),
+	                        ModifiedBy         NVARCHAR (max),
+	                        CreatedDate        DATETIME NOT NULL,
+	                        ModifiedDate       DATETIME NOT NULL,
+	                        OMSId              NVARCHAR (50),
+	                        CONSTRAINT [PK_Web.PackingUnitSettings] PRIMARY KEY (PackingUnitSettingId),
+	                        CONSTRAINT [FK_Web.PackingUnitSettings_Web.Divisions_DivisionId] FOREIGN KEY (DivisionId) REFERENCES Web.Divisions (DivisionId),
+	                        CONSTRAINT [FK_Web.PackingUnitSettings_Web.Sites_SiteId] FOREIGN KEY (SiteId) REFERENCES Web.Sites (SiteId),
+	                        CONSTRAINT [FK_Web.PackingUnitSettings_Web.ProductCategories_ProductCategoryId] FOREIGN KEY (ProductCategoryId) REFERENCES Web.ProductCategories (ProductCategoryId),
+	                        CONSTRAINT [FK_Web.PackingUnitSettings_Web.ProductQuality_ProductQualityId] FOREIGN KEY (ProductQualityId) REFERENCES Web.ProductQualities (ProductQualityId),
+	                        CONSTRAINT [FK_Web.PackingUnitSettings_Web.ProductGroup_ProductGroupId] FOREIGN KEY (ProductGroupId) REFERENCES Web.ProductGroups (ProductGroupId),
+	                        CONSTRAINT [FK_Web.PackingUnitSettings_Web.Size_SizeId] FOREIGN KEY (SizeId) REFERENCES Web.Sizes  (SizeId)
+	                        )
+                            
+
+                            CREATE UNIQUE INDEX [IX_PackingUnitSetting_DocID]
+	                        ON Web.PackingUnitSettings (DivisionId, SiteId, ProductCategoryId, ProductQualityId, ProductGroupId, SizeId)
+                            ";
+                    ExecuteQuery(mQry);
+                }
+            }
+            catch (Exception ex)
+            {
+                RecordError(ex);
+            }
+
+
+
+            try
+            {
                 if ((int)ExecuteScaler("SELECT Count(*) AS Cnt FROM INFORMATION_SCHEMA.Tables WHERE TABLE_NAME = 'Settings'") == 0)
                 {
                     mQry = @"CREATE TABLE Web.Settings
@@ -653,10 +746,12 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
             AddFields("JobOrderSettings", "isVisibleReason", "BIT");
             AddFields("JobOrderSettings", "isAllowedDuplicatePrint", "BIT NOT NULL DEFAULT(1)");
             AddFields("JobOrderSettings", "isAllowedToMaterialIssue", "BIT");
+            AddFields("JobOrderSettings", "isEditableDealUnit", "BIT NOT NULL DEFAULT(0)");
             AddFields("JobOrderHeaders", "FinancierId", "Int", "People");
             AddFields("JobOrderHeaders", "SalesExecutiveId", "Int", "People");
             AddFields("JobOrderHeaders", "ReasonId", "Int", "Reasons");
             AddFields("JobOrderHeaders", "IsDocumentPrinted", "Bit");
+            AddFields("JobOrderSettings", "isAllowtoIssueMultipleBarcode", "BIT NOT NULL DEFAULT(0)");
 
             AddFields("JobReceiveSettings", "ExcessQtyAllowedPer", "Int NOT NULL DEFAULT(0)");
 
@@ -701,6 +796,7 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
 
             AddFields("LedgerHeaders", "IsDocumentPrinted", "Bit");
             AddFields("LedgerSettings", "isAllowedDuplicatePrint", "BIT NOT NULL DEFAULT(1)");
+            AddFields("LedgerSettings", "isAllowedToChangeLedgerAccount", "BIT NOT NULL DEFAULT(0)");
             AddFields("LedgerSettings", "isPrintinLetterhead", "BIT");
             AddFields("LedgerSettings", "isVisibleDueDate", "BIT");
             AddFields("LedgerSettings", "isVisibleQty", "BIT NOT NULL DEFAULT(0)");
@@ -1699,6 +1795,16 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
             
             AddFields("PackingLines", "FreeQty", "Decimal(18,4)");
 
+            AddFields("JobOrderInspectionLines", "InspectedLength", "Decimal(18,4)");
+            AddFields("JobOrderInspectionLines", "InspectedWidth", "Decimal(18,4)");
+            AddFields("JobOrderInspectionLines", "InspectedHeight", "Decimal(18,4)");
+            AddFields("JobOrderInspectionLines", "InspectedUnitId", "nvarchar(3)");
+
+            AddFields("PackingLineExtendeds", "PackingLength", "Decimal(18,4)");
+            AddFields("PackingLineExtendeds", "PackingWidth", "Decimal(18,4)");
+            AddFields("PackingLineExtendeds", "PackingHeight", "Decimal(18,4)");
+            AddFields("PackingLineExtendeds", "PackingUnitId", "nvarchar(3)");
+
             AddFields("SaleOrderLines", "FreeQty", "Decimal(18,4)");
 
             AddFields("SaleDispatchSettings", "isVisibleFreeQty", "BIT");
@@ -1834,7 +1940,7 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
 
             AddFields("StockHeaderSettings", "IsVisibleReferenceDocId", "BIT");
             AddFields("StockHeaderSettings", "SqlProcHelpListReferenceDocId", "nvarchar(100)");
-
+            AddFields("StockHeaderSettings", "isVisibleTransportDetail", "BIT");
             AddFields("StockLines", "ReferenceDocTypeId", "Int","DocumentTypes");
             AddFields("StockLines", "ReferenceDocId", "Int");
             AddFields("StockLines", "ReferenceDocLineId", "Int");
@@ -2305,6 +2411,7 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
             }
 
 
+            AddFields("JobInvoiceSettings", "InvoiceFor", "nvarchar(100)");
             AddFields("JobOrderSettings", "SqlProcProductUidHelpList", "nvarchar(100)");
             AddFields("JobReceiveSettings", "SqlProcProductUidHelpList", "nvarchar(100)");
             AddFields("JobInvoiceSettings", "SqlProcProductUidHelpList", "nvarchar(100)");
@@ -2389,6 +2496,8 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
             AddFields("PackingSettings", "filterLedgerAccounts", "nvarchar(Max)");
             AddFields("PackingSettings", "isPostedInSaleInvoice", "BIT");
             AddFields("PackingSettings", "SaleInvoiceTypeId", "Int", "DocumentTypes");
+            AddFields("PackingSettings", "isAllowtoPackMultipleBarcode", "BIT");
+            AddFields("PackingSettings", "isVisiblePackingUnit", "BIT");
 
             AddFields("SaleInvoiceSettings", "DoNotUpdateProductUidStatus", "BIT");
 
@@ -2759,6 +2868,7 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
 
             AddFields("JobReceiveSettings", "DocumentPrintReportHeaderId", "Int", "ReportHeaders");
             AddFields("JobOrderInspectionSettings", "DocumentPrintReportHeaderId", "Int", "ReportHeaders");
+            AddFields("JobOrderInspectionSettings", "WizardMenuId", "INT", "Menus");
             AddFields("JobOrderSettings", "DocumentPrintReportHeaderId", "Int", "ReportHeaders");
             AddFields("JobOrderInspectionRequestSettings", "DocumentPrintReportHeaderId", "Int", "ReportHeaders");
             AddFields("JobConsumptionSettings", "DocumentPrintReportHeaderId", "Int", "ReportHeaders");
@@ -3450,6 +3560,9 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
             AddFields("UserRoles", "ModifiedBy", "nvarchar(Max)");
             AddFields("UserRoles", "ModifiedDate", "DATETIME");
 
+            AddFields("StockHeaderTransport", "EWayBillNo", "nvarchar(50)");
+            AddFields("StockHeaderTransport", "EWayBillDate", "DATETIME");
+
 
             try
             {
@@ -4090,7 +4203,7 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
 
             AddFields("Employee", "EmployeeId", "INT IDENTITY NOT NULL");
             AddFields("Employees", "BasicSalary", "Decimal(18,4)");
-
+            AddFields("Employees", "GrossSalary", "Decimal(18,4)");
 
             try
             {

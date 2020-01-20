@@ -1111,7 +1111,7 @@
         <TablixBody>
           <TablixColumns>
             <TablixColumn>
-              <Width>0.95452in</Width>
+              <Width>0.80867in</Width>
             </TablixColumn>
             <TablixColumn>
               <Width>0.65512in</Width>
@@ -1126,22 +1126,22 @@
               <Width>0.72771in</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>0.69773in</Width>
+              <Width>0.87041in</Width>
             </TablixColumn>
             <TablixColumn>
               <Width>0.27709in</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>0.44792in</Width>
+              <Width>0.37428in</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>0.60417in</Width>
+              <Width>0.58261in</Width>
             </TablixColumn>
             <TablixColumn>
               <Width>0.66971in</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>0.95998in</Width>
+              <Width>1.05999in</Width>
             </TablixColumn>
             <TablixColumn>
               <Width>0.54606in</Width>
@@ -1899,7 +1899,7 @@
                               <Value>=Fields!ReceiveNo.Value</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>8pt</FontSize>
+                                <FontSize>7pt</FontSize>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -1933,7 +1933,7 @@
                               <Value>=Fields!ReceiveDate.Value</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>8pt</FontSize>
+                                <FontSize>7pt</FontSize>
                                 <Format>dd/MMM/yy</Format>
                               </Style>
                             </TextRun>
@@ -1970,7 +1970,7 @@
                               <Value>=IIF(Fields!ProductQualityName.Value Is nothing,"-",Fields!ProductQualityName.Value)</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>8pt</FontSize>
+                                <FontSize>7pt</FontSize>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -2004,7 +2004,7 @@
                               <Value>=IIF(Fields!Design.Value Is nothing,"-",Fields!Design.Value)</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>8pt</FontSize>
+                                <FontSize>7pt</FontSize>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -2038,7 +2038,7 @@
                               <Value>=Fields!size.Value</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>8pt</FontSize>
+                                <FontSize>7pt</FontSize>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -2073,7 +2073,7 @@
                               <Value>=Fields!ColourName.Value</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>8pt</FontSize>
+                                <FontSize>7pt</FontSize>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -2109,7 +2109,7 @@
                               <Value>=iif(Fields!Qty.Value &lt;&gt; 0, formatnumber(Fields!Qty.Value, Fields!DecimalPlaces.Value), "-")</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>8pt</FontSize>
+                                <FontSize>7pt</FontSize>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -2145,7 +2145,7 @@
                               <Value>=iif(Fields!Rate.Value &lt;&gt; 0, formatnumber(Fields!Rate.Value, 2), "-")</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>8pt</FontSize>
+                                <FontSize>7pt</FontSize>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -2181,7 +2181,7 @@
                               <Value>=iif(Fields!DealQty.Value &lt;&gt; 0, formatnumber(Fields!DealQty.Value, 4), "-")</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>8pt</FontSize>
+                                <FontSize>7pt</FontSize>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -2217,7 +2217,7 @@
                               <Value>=iif(Fields!Amount.Value &lt;&gt; 0, formatnumber(Fields!Amount.Value, 2), "-")</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>8pt</FontSize>
+                                <FontSize>7pt</FontSize>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -2253,7 +2253,7 @@
                               <Value>=Fields!BarCode.Value</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>8pt</FontSize>
+                                <FontSize>7pt</FontSize>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -2287,7 +2287,7 @@
                               <Value>=Fields!LineRemark.Value</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>8pt</FontSize>
+                                <FontSize>7pt</FontSize>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -2936,7 +2936,7 @@
         <DataSetName>DsMain</DataSetName>
         <Top>1.23891in</Top>
         <Height>1.25in</Height>
-        <Width>7.87213in</Width>
+        <Width>7.90377in</Width>
         <ZIndex>4</ZIndex>
         <Style>
           <Border>
@@ -3391,7 +3391,6 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
-                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
               </TablixCells>

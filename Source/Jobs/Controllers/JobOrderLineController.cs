@@ -965,372 +965,452 @@ namespace Jobs.Controllers
 
                 if (svm.JobOrderLineId <= 0)
                 {
-                    StockViewModel StockViewModel = new StockViewModel();
-                    StockProcessViewModel StockProcessViewModel = new StockProcessViewModel();
-                    //Posting in Stock
-                    if (settings.isPostedInStock.HasValue && settings.isPostedInStock == true)
+                    string Message = "";
+                    int PackedPcs = 0;
+                    if (settings.isAllowtoIssueMultipleBarcode == true && svm.ToProductUidName != null && svm.ToProductUidName != "")
                     {
-                        StockViewModel.StockHeaderId = temp.StockHeaderId ?? 0;
-                        StockViewModel.DocHeaderId = temp.JobOrderHeaderId;
-                        StockViewModel.DocLineId = s.JobOrderLineId;
-                        StockViewModel.DocTypeId = temp.DocTypeId;
-                        StockViewModel.StockHeaderDocDate = temp.DocDate;
-                        StockViewModel.StockDocDate = temp.DocDate;
-                        StockViewModel.DocNo = temp.DocNo;
-                        StockViewModel.DivisionId = temp.DivisionId;
-                        StockViewModel.SiteId = temp.SiteId;
-                        StockViewModel.CurrencyId = null;
-                        StockViewModel.HeaderProcessId = null;
-                        StockViewModel.PersonId = temp.JobWorkerId;
-                        StockViewModel.ProductId = s.ProductId;
-                        StockViewModel.HeaderFromGodownId = null;
-                        StockViewModel.HeaderGodownId = null;
-                        StockViewModel.GodownId = temp.GodownId ?? 0;
-                        StockViewModel.ProcessId = s.FromProcessId;
-                        StockViewModel.LotNo = s.LotNo;
-                        StockViewModel.CostCenterId = temp.CostCenterId;
-                        StockViewModel.Qty_Iss = s.Qty;
-                        StockViewModel.Qty_Rec = 0;
-                        StockViewModel.Rate = s.Rate;
-                        StockViewModel.ExpiryDate = null;
-                        StockViewModel.Specification = s.Specification;
-                        StockViewModel.Dimension1Id = s.Dimension1Id;
-                        StockViewModel.Dimension2Id = s.Dimension2Id;
-                        StockViewModel.Dimension3Id = s.Dimension3Id;
-                        StockViewModel.Dimension4Id = s.Dimension4Id;
-                        StockViewModel.Remark = s.Remark;
-                        StockViewModel.ProductUidId = s.ProductUidId;
-                        StockViewModel.Status = temp.Status;
-                        StockViewModel.CreatedBy = temp.CreatedBy;
-                        StockViewModel.CreatedDate = DateTime.Now;
-                        StockViewModel.ModifiedBy = temp.ModifiedBy;
-                        StockViewModel.ModifiedDate = DateTime.Now;
+                        PackedPcs = Convert.ToInt32(svm.ToProductUidName) - Convert.ToInt32(svm.ProductUidName);
+                    }
+                    else
+                        PackedPcs = 0;
 
-                        string StockPostingError = "";
-                        StockPostingError = new StockService(_unitOfWork).StockPostDB(ref StockViewModel, ref db);
+                    PackedPcs = PackedPcs + 1;
 
-                        if (StockPostingError != "")
-                        {
-                            ModelState.AddModelError("", StockPostingError);
-                            return PartialView("_Create", svm);
-                        }
-
-                        s.StockId = StockViewModel.StockId;
-
-                        if (temp.StockHeaderId == null)
-                        {
-                            temp.StockHeaderId = StockViewModel.StockHeaderId;
-                        }
+                    decimal PackingQty = svm.Qty / PackedPcs;
+                    decimal PackingDealQty = svm.DealQty / PackedPcs;
+                    Int64 PackingProductUidName = 0;
+                    Int64 result;
+                    if (Int64.TryParse(svm.ProductUidName, out result))
+                    {
+                        PackingProductUidName = Convert.ToInt64(svm.ProductUidName);
                     }
 
-
-
-                    if (settings.isPostedInStockProcess.HasValue && settings.isPostedInStockProcess == true)
+                    for (int Pcs = 0; Pcs < PackedPcs; Pcs++)
                     {
-                        if (temp.StockHeaderId != null && temp.StockHeaderId != 0)//If Transaction Header Table Has Stock Header Id Then It will Save Here.
-                        {
-                            StockProcessViewModel.StockHeaderId = (int)temp.StockHeaderId;
-                        }
-                        else if (settings.isPostedInStock.HasValue && settings.isPostedInStock == true)//If Stok Header is already posted during stock posting then this statement will Execute.So theat Stock Header will not generate again.
-                        {
-                            StockProcessViewModel.StockHeaderId = -1;
-                        }
-                        else//If function will only post in stock process then this statement will execute.For Example Job consumption.
-                        {
-                            StockProcessViewModel.StockHeaderId = 0;
-                        }
+                        string ProductUidName = "";
+                        JobOrderLineViewModel svmp = new JobOrderLineViewModel();
+                        svmp = Mapper.Map<JobOrderLineViewModel>(svm);
 
-
-                        StockProcessViewModel.DocHeaderId = temp.JobOrderHeaderId;
-                        StockProcessViewModel.DocLineId = s.JobOrderLineId;
-                        StockProcessViewModel.DocTypeId = temp.DocTypeId;
-                        StockProcessViewModel.StockHeaderDocDate = temp.DocDate;
-                        StockProcessViewModel.StockProcessDocDate = temp.DocDate;
-                        StockProcessViewModel.DocNo = temp.DocNo;
-                        StockProcessViewModel.DivisionId = temp.DivisionId;
-                        StockProcessViewModel.SiteId = temp.SiteId;
-                        StockProcessViewModel.CurrencyId = null;
-                        StockProcessViewModel.HeaderProcessId = null;
-                        StockProcessViewModel.PersonId = temp.JobWorkerId;
-                        StockProcessViewModel.ProductId = s.ProductId;
-                        StockProcessViewModel.HeaderFromGodownId = null;
-                        StockProcessViewModel.HeaderGodownId = null;
-                        StockProcessViewModel.GodownId = temp.GodownId ?? 0;
-                        StockProcessViewModel.ProcessId = temp.ProcessId;
-                        StockProcessViewModel.LotNo = s.LotNo;
-                        StockProcessViewModel.CostCenterId = temp.CostCenterId;
-                        StockProcessViewModel.Qty_Iss = 0;
-                        StockProcessViewModel.Qty_Rec = s.Qty;
-                        StockProcessViewModel.Rate = s.Rate;
-                        StockProcessViewModel.ExpiryDate = null;
-                        StockProcessViewModel.Specification = s.Specification;
-                        StockProcessViewModel.Dimension1Id = s.Dimension1Id;
-                        StockProcessViewModel.Dimension2Id = s.Dimension2Id;
-                        StockProcessViewModel.Dimension3Id = s.Dimension3Id;
-                        StockProcessViewModel.Dimension4Id = s.Dimension4Id;
-                        StockProcessViewModel.Remark = s.Remark;
-                        StockProcessViewModel.Status = temp.Status;
-                        StockProcessViewModel.ProductUidId = s.ProductUidId;
-                        StockProcessViewModel.CreatedBy = temp.CreatedBy;
-                        StockProcessViewModel.CreatedDate = DateTime.Now;
-                        StockProcessViewModel.ModifiedBy = temp.ModifiedBy;
-                        StockProcessViewModel.ModifiedDate = DateTime.Now;
-
-                        string StockProcessPostingError = "";
-                        StockProcessPostingError = new StockProcessService(_unitOfWork).StockProcessPostDB(ref StockProcessViewModel, ref db);
-
-                        if (StockProcessPostingError != "")
+                        if (PackedPcs != 1)
                         {
-                            ModelState.AddModelError("", StockProcessPostingError);
-                            if (svm.ProdOrderLineId != null)
+                            svmp.Qty = PackingQty;
+                            svmp.DealQty = PackingDealQty;
+                            ProductUidName = (PackingProductUidName + Pcs).ToString();
+
+                            ProductUid PU = db.ProductUid.Where(m => m.ProductUidName == ProductUidName).FirstOrDefault();
+                            svmp.ProductUidName = PU.ProductUidName;
+                            svmp.ProductUidId = PU.ProductUIDId;
+                            if (PU.ProductId == svm.ProductId)
                             {
-                                return PartialView("_CreateForProdOrder", svm);
+                                var temp1 = (from p in db.ViewStockInBalance
+                                             join S in db.Stock on p.StockInId equals S.StockId into StockTable
+                                             from StockTab in StockTable.DefaultIfEmpty()
+                                             join Pu in db.ProductUid on StockTab.ProductUidId equals Pu.ProductUIDId into PUTable
+                                             from PUTab in PUTable.DefaultIfEmpty()
+                                             where PUTab.ProductUIDId == PU.ProductUIDId
+                                             select new
+                                             {
+                                                 StockInId = p.StockInId,
+                                                 ProductUidId = StockTab.ProductUidId,
+                                                 ProductUidName = StockTab.ProductUid.ProductUidName,
+                                                 ProductId = p.ProductId,
+                                                 BalanceQty = p.BalanceQty,
+                                                 LotNo = p.LotNo,
+                                                 FromProcessId = StockTab.ProcessId,
+                                                 FromProcessName = StockTab.Process.ProcessName,
+                                                 CurrenctGodownId = StockTab.ProductUidId == null ? StockTab.GodownId : PUTab.CurrenctGodownId,
+                                                 Status = PUTab.Status
+                                             }).FirstOrDefault();
+                                svmp.StockInId = temp1.StockInId;
                             }
                             else
                             {
-                                return PartialView("_Create", svm);
-                            }
-                        }
-
-                        s.StockProcessId = StockProcessViewModel.StockProcessId;
-
-
-                        if (settings.isPostedInStock == false)
-                        {
-                            if (temp.StockHeaderId == null)
-                            {
-                                temp.StockHeaderId = StockProcessViewModel.StockHeaderId;
-                            }
-                        }
-                    }
-
-                    if (svm.StockInId != null)
-                    {
-                        StockAdj Adj_IssQty = new StockAdj();
-                        Adj_IssQty.StockInId = (int)svm.StockInId;
-                        Adj_IssQty.StockOutId = (int)s.StockId;
-                        Adj_IssQty.DivisionId = temp.DivisionId;
-                        Adj_IssQty.SiteId = temp.SiteId;
-                        Adj_IssQty.AdjustedQty = s.Qty;
-                        Adj_IssQty.ObjectState = Model.ObjectState.Added;
-                        db.StockAdj.Add(Adj_IssQty);
-                        //new StockAdjService(_unitOfWork).Create(Adj_IssQty);
-                    }
-
-                    s.CreatedDate = DateTime.Now;
-                    s.ModifiedDate = DateTime.Now;
-                    s.CreatedBy = User.Identity.Name;
-                    s.Sr = _JobOrderLineService.GetMaxSr(s.JobOrderHeaderId);
-                    s.ModifiedBy = User.Identity.Name;
-                    s.ObjectState = Model.ObjectState.Added;
-
-                    if (s.ProductUidId.HasValue && s.ProductUidId > 0)
-                    {
-                        ProductUid Uid = (from p in db.ProductUid
-                                          where p.ProductUIDId == s.ProductUidId
-                                          select p).FirstOrDefault();
-
-
-                        s.ProductUidLastTransactionDocId = Uid.LastTransactionDocId;
-                        s.ProductUidLastTransactionDocDate = Uid.LastTransactionDocDate;
-                        s.ProductUidLastTransactionDocNo = Uid.LastTransactionDocNo;
-                        s.ProductUidLastTransactionDocTypeId = Uid.LastTransactionDocTypeId;
-                        s.ProductUidLastTransactionPersonId = Uid.LastTransactionPersonId;
-                        s.ProductUidStatus = Uid.Status;
-                        s.ProductUidCurrentProcessId = Uid.CurrenctProcessId;
-                        s.ProductUidCurrentGodownId = Uid.CurrenctGodownId;
-
-
-                        Uid.LastTransactionDocId = s.JobOrderHeaderId;
-                        Uid.LastTransactionDocDate = temp.DocDate;
-                        Uid.LastTransactionDocNo = temp.DocNo;
-                        Uid.LastTransactionDocTypeId = temp.DocTypeId;
-                        Uid.LastTransactionLineId = s.JobOrderLineId;
-                        Uid.LastTransactionPersonId = temp.JobWorkerId;
-                        Uid.Status = (!string.IsNullOrEmpty(settings.BarcodeStatusUpdate) ? settings.BarcodeStatusUpdate : ProductUidStatusConstants.Issue);
-                        Uid.CurrenctProcessId = temp.ProcessId;
-                        Uid.CurrenctGodownId = null;
-                        Uid.ModifiedBy = User.Identity.Name;
-                        Uid.ModifiedDate = DateTime.Now;
-                        Uid.ObjectState = Model.ObjectState.Modified;
-                        db.ProductUid.Add(Uid);
-                    }
-
-
-                    db.JobOrderLine.Add(s);
-
-                    new JobOrderLineStatusService(_unitOfWork).CreateLineStatus(s.JobOrderLineId, ref db, true);
-
-                    if (s.ProdOrderLineId.HasValue)
-                        new ProdOrderLineStatusService(_unitOfWork).UpdateProdQtyOnJobOrder(s.ProdOrderLineId.Value, s.JobOrderLineId, temp.DocDate, s.Qty, ref db, true);
-
-
-                    if (svm.linecharges != null)
-                        foreach (var item in svm.linecharges)
-                        {
-                            item.LineTableId = s.JobOrderLineId;
-                            item.PersonID = temp.JobWorkerId;
-                            item.DealQty = s.DealQty;
-                            item.HeaderTableId = temp.JobOrderHeaderId;
-                            item.ObjectState = Model.ObjectState.Added;
-                            db.JobOrderLineCharge.Add(item);
-                        }
-
-                    if (svm.footercharges != null)
-                        foreach (var item in svm.footercharges)
-                        {
-
-                            if (item.Id > 0)
-                            {
-
-                                var footercharge = new JobOrderHeaderChargeService(_unitOfWork).Find(item.Id);
-                                footercharge.Rate = item.Rate;
-                                footercharge.Amount = item.Amount;
-                                footercharge.ObjectState = Model.ObjectState.Modified;
-                                db.JobOrderHeaderCharges.Add(footercharge);
-
+                                svmp.StockInId = null;
+                                ModelState.AddModelError("ToProductUidId", "Invalid To ProductUid");
+                                PrepareViewBag(svm);                                
                             }
 
-                            else
-                            {
-                                item.HeaderTableId = s.JobOrderHeaderId;
-                                item.PersonID = temp.JobWorkerId;
-                                item.ObjectState = Model.ObjectState.Added;
-                                db.JobOrderHeaderCharges.Add(item);
-                            }
                         }
 
 
-                    //JobOrderHeader header = new JobOrderHeaderService(_unitOfWork).Find(s.JobOrderHeaderId);
-                    if (temp.Status != (int)StatusConstants.Drafted && temp.Status != (int)StatusConstants.Import)
-                    {
-                        temp.Status = (int)StatusConstants.Modified;
-                        temp.ModifiedDate = DateTime.Now;
-                        temp.ModifiedBy = User.Identity.Name;
+                        Message = CreateJobOrderLine(svmp);
 
-                    }
-
-                    temp.ObjectState = Model.ObjectState.Modified;
-                    db.JobOrderHeader.Add(temp);
-
-
-                    #region BOMPost
-
-                    //Saving BOMPOST Data
-                    //Saving BOMPOST Data
-                    //Saving BOMPOST Data
-                    //Saving BOMPOST Data
-                    if (!string.IsNullOrEmpty(svm.JobOrderSettings.SqlProcConsumption))
-                    {
-                        var BomPostList = _JobOrderLineService.GetBomPostingDataForWeaving(s.ProductId, s.Dimension1Id, s.Dimension2Id, s.Dimension3Id, s.Dimension4Id, temp.ProcessId, s.Qty, temp.DocTypeId, svm.JobOrderSettings.SqlProcConsumption).ToList();
-
-                        foreach (var item in BomPostList)
+                        if (Message != "")
                         {
-                            JobOrderBom BomPost = new JobOrderBom();
-                            BomPost.CreatedBy = User.Identity.Name;
-                            BomPost.CreatedDate = DateTime.Now;
-                            BomPost.Dimension1Id = item.Dimension1Id;
-                            BomPost.Dimension2Id = item.Dimension2Id;
-                            BomPost.Dimension3Id = item.Dimension3Id;
-                            BomPost.Dimension4Id = item.Dimension4Id;
-                            BomPost.JobOrderHeaderId = s.JobOrderHeaderId;
-                            BomPost.JobOrderLineId = s.JobOrderLineId;
-                            BomPost.ProcessId = temp.ProcessId;
-                            BomPost.ModifiedBy = User.Identity.Name;
-                            BomPost.ModifiedDate = DateTime.Now;
-                            BomPost.ProductId = item.ProductId;
-                            BomPost.Qty = Convert.ToDecimal(item.Qty);
-                            BomPost.ObjectState = Model.ObjectState.Added;
-                            db.JobOrderBom.Add(BomPost);
-                            //new JobOrderBomService(_unitOfWork).Create(BomPost);
-                        }
-                    }
-
-                    //try
-                    //{
-                    //    _unitOfWork.Save();
-                    //}
-
-                    //catch (Exception ex)
-                    //{
-                    //    string message = _exception.HandleException(ex);
-                    //    ModelState.AddModelError("", message);
-                    //    PrepareViewBag(svm);
-                    //    return PartialView("_Create", svm);
-
-                    //}
-
-                    #endregion
-
-                    try
-                    {
-                        JobOrderDocEvents.onLineSaveEvent(this, new JobEventArgs(s.JobOrderHeaderId, s.JobOrderLineId, EventModeConstants.Add), ref db);
-                    }
-                    catch (Exception ex)
-                    {
-                        string message = _exception.HandleException(ex);
-                        TempData["CSEXCL"] += message;
-                        EventException = true;
-                    }
-
-                    if (settings != null)
-                    {
-                        new CommonService().ExecuteCustomiseEvents(settings.Event_OnLineSave, new object[] { _unitOfWork, svm.JobOrderHeaderId, s.JobOrderLineId, "A" });
-                    }
-
-                    try
-                    {
-                        if (EventException)
-                        { throw new Exception(); }
-
-                        db.SaveChanges();
-                    }
-
-                    catch (Exception ex)
-                    {
-                        string message = _exception.HandleException(ex);
-                        TempData["CSEXCL"] += message;
-                        PrepareViewBag(svm);
-
-                        if (svm.ProdOrderLineId != null)
-                        {
-                            return PartialView("_CreateForProdOrder", svm);
-                        }
-                        else
-                        {
+                            ModelState.AddModelError("", Message);
+                            PrepareViewBag(svm);
                             return PartialView("_Create", svm);
                         }
 
-                    }
 
-                    if (settings != null)
-                    {
-                        new CommonService().ExecuteCustomiseEvents(settings.Event_AfterLineSave, new object[] { _unitOfWork, svm.JobOrderHeaderId, s.JobOrderLineId, "A" });
-                    }
+                        //Change On 09012020
+                        //StockViewModel StockViewModel = new StockViewModel();
+                        //StockProcessViewModel StockProcessViewModel = new StockProcessViewModel();
+                        ////Posting in Stock
+                        //if (settings.isPostedInStock.HasValue && settings.isPostedInStock == true)
+                        //{
+                        //    StockViewModel.StockHeaderId = temp.StockHeaderId ?? 0;
+                        //    StockViewModel.DocHeaderId = temp.JobOrderHeaderId;
+                        //    StockViewModel.DocLineId = s.JobOrderLineId;
+                        //    StockViewModel.DocTypeId = temp.DocTypeId;
+                        //    StockViewModel.StockHeaderDocDate = temp.DocDate;
+                        //    StockViewModel.StockDocDate = temp.DocDate;
+                        //    StockViewModel.DocNo = temp.DocNo;
+                        //    StockViewModel.DivisionId = temp.DivisionId;
+                        //    StockViewModel.SiteId = temp.SiteId;
+                        //    StockViewModel.CurrencyId = null;
+                        //    StockViewModel.HeaderProcessId = null;
+                        //    StockViewModel.PersonId = temp.JobWorkerId;
+                        //    StockViewModel.ProductId = s.ProductId;
+                        //    StockViewModel.HeaderFromGodownId = null;
+                        //    StockViewModel.HeaderGodownId = null;
+                        //    StockViewModel.GodownId = temp.GodownId ?? 0;
+                        //    StockViewModel.ProcessId = s.FromProcessId;
+                        //    StockViewModel.LotNo = s.LotNo;
+                        //    StockViewModel.CostCenterId = temp.CostCenterId;
+                        //    StockViewModel.Qty_Iss = s.Qty;
+                        //    StockViewModel.Qty_Rec = 0;
+                        //    StockViewModel.Rate = s.Rate;
+                        //    StockViewModel.ExpiryDate = null;
+                        //    StockViewModel.Specification = s.Specification;
+                        //    StockViewModel.Dimension1Id = s.Dimension1Id;
+                        //    StockViewModel.Dimension2Id = s.Dimension2Id;
+                        //    StockViewModel.Dimension3Id = s.Dimension3Id;
+                        //    StockViewModel.Dimension4Id = s.Dimension4Id;
+                        //    StockViewModel.Remark = s.Remark;
+                        //    StockViewModel.ProductUidId = s.ProductUidId;
+                        //    StockViewModel.Status = temp.Status;
+                        //    StockViewModel.CreatedBy = temp.CreatedBy;
+                        //    StockViewModel.CreatedDate = DateTime.Now;
+                        //    StockViewModel.ModifiedBy = temp.ModifiedBy;
+                        //    StockViewModel.ModifiedDate = DateTime.Now;
 
-                    try
-                    {
-                        JobOrderDocEvents.afterLineSaveEvent(this, new JobEventArgs(s.JobOrderHeaderId, s.JobOrderLineId, EventModeConstants.Add), ref db);
-                    }
-                    catch (Exception ex)
-                    {
-                        string message = _exception.HandleException(ex);
-                        TempData["CSEXCL"] += message;
-                    }
+                        //    string StockPostingError = "";
+                        //    StockPostingError = new StockService(_unitOfWork).StockPostDB(ref StockViewModel, ref db);
 
-                    LogActivity.LogActivityDetail(LogVm.Map(new ActiivtyLogViewModel
-                    {
-                        DocTypeId = temp.DocTypeId,
-                        DocId = temp.JobOrderHeaderId,
-                        DocLineId = s.JobOrderLineId,
-                        ActivityType = (int)ActivityTypeContants.Added,                       
-                        DocNo = temp.DocNo,
-                        DocDate = temp.DocDate,
-                        DocStatus=temp.Status,
-                    }));
+                        //    if (StockPostingError != "")
+                        //    {
+                        //        ModelState.AddModelError("", StockPostingError);
+                        //        return PartialView("_Create", svm);
+                        //    }
+
+                        //    s.StockId = StockViewModel.StockId;
+
+                        //    if (temp.StockHeaderId == null)
+                        //    {
+                        //        temp.StockHeaderId = StockViewModel.StockHeaderId;
+                        //    }
+                        //}
+
+
+
+                        //if (settings.isPostedInStockProcess.HasValue && settings.isPostedInStockProcess == true)
+                        //{
+                        //    if (temp.StockHeaderId != null && temp.StockHeaderId != 0)//If Transaction Header Table Has Stock Header Id Then It will Save Here.
+                        //    {
+                        //        StockProcessViewModel.StockHeaderId = (int)temp.StockHeaderId;
+                        //    }
+                        //    else if (settings.isPostedInStock.HasValue && settings.isPostedInStock == true)//If Stok Header is already posted during stock posting then this statement will Execute.So theat Stock Header will not generate again.
+                        //    {
+                        //        StockProcessViewModel.StockHeaderId = -1;
+                        //    }
+                        //    else//If function will only post in stock process then this statement will execute.For Example Job consumption.
+                        //    {
+                        //        StockProcessViewModel.StockHeaderId = 0;
+                        //    }
+
+
+                        //    StockProcessViewModel.DocHeaderId = temp.JobOrderHeaderId;
+                        //    StockProcessViewModel.DocLineId = s.JobOrderLineId;
+                        //    StockProcessViewModel.DocTypeId = temp.DocTypeId;
+                        //    StockProcessViewModel.StockHeaderDocDate = temp.DocDate;
+                        //    StockProcessViewModel.StockProcessDocDate = temp.DocDate;
+                        //    StockProcessViewModel.DocNo = temp.DocNo;
+                        //    StockProcessViewModel.DivisionId = temp.DivisionId;
+                        //    StockProcessViewModel.SiteId = temp.SiteId;
+                        //    StockProcessViewModel.CurrencyId = null;
+                        //    StockProcessViewModel.HeaderProcessId = null;
+                        //    StockProcessViewModel.PersonId = temp.JobWorkerId;
+                        //    StockProcessViewModel.ProductId = s.ProductId;
+                        //    StockProcessViewModel.HeaderFromGodownId = null;
+                        //    StockProcessViewModel.HeaderGodownId = null;
+                        //    StockProcessViewModel.GodownId = temp.GodownId ?? 0;
+                        //    StockProcessViewModel.ProcessId = temp.ProcessId;
+                        //    StockProcessViewModel.LotNo = s.LotNo;
+                        //    StockProcessViewModel.CostCenterId = temp.CostCenterId;
+                        //    StockProcessViewModel.Qty_Iss = 0;
+                        //    StockProcessViewModel.Qty_Rec = s.Qty;
+                        //    StockProcessViewModel.Rate = s.Rate;
+                        //    StockProcessViewModel.ExpiryDate = null;
+                        //    StockProcessViewModel.Specification = s.Specification;
+                        //    StockProcessViewModel.Dimension1Id = s.Dimension1Id;
+                        //    StockProcessViewModel.Dimension2Id = s.Dimension2Id;
+                        //    StockProcessViewModel.Dimension3Id = s.Dimension3Id;
+                        //    StockProcessViewModel.Dimension4Id = s.Dimension4Id;
+                        //    StockProcessViewModel.Remark = s.Remark;
+                        //    StockProcessViewModel.Status = temp.Status;
+                        //    StockProcessViewModel.ProductUidId = s.ProductUidId;
+                        //    StockProcessViewModel.CreatedBy = temp.CreatedBy;
+                        //    StockProcessViewModel.CreatedDate = DateTime.Now;
+                        //    StockProcessViewModel.ModifiedBy = temp.ModifiedBy;
+                        //    StockProcessViewModel.ModifiedDate = DateTime.Now;
+
+                        //    string StockProcessPostingError = "";
+                        //    StockProcessPostingError = new StockProcessService(_unitOfWork).StockProcessPostDB(ref StockProcessViewModel, ref db);
+
+                        //    if (StockProcessPostingError != "")
+                        //    {
+                        //        ModelState.AddModelError("", StockProcessPostingError);
+                        //        if (svm.ProdOrderLineId != null)
+                        //        {
+                        //            return PartialView("_CreateForProdOrder", svm);
+                        //        }
+                        //        else
+                        //        {
+                        //            return PartialView("_Create", svm);
+                        //        }
+                        //    }
+
+                        //    s.StockProcessId = StockProcessViewModel.StockProcessId;
+
+
+                        //    if (settings.isPostedInStock == false)
+                        //    {
+                        //        if (temp.StockHeaderId == null)
+                        //        {
+                        //            temp.StockHeaderId = StockProcessViewModel.StockHeaderId;
+                        //        }
+                        //    }
+                        //}
+
+                        //if (svm.StockInId != null)
+                        //{
+                        //    StockAdj Adj_IssQty = new StockAdj();
+                        //    Adj_IssQty.StockInId = (int)svm.StockInId;
+                        //    Adj_IssQty.StockOutId = (int)s.StockId;
+                        //    Adj_IssQty.DivisionId = temp.DivisionId;
+                        //    Adj_IssQty.SiteId = temp.SiteId;
+                        //    Adj_IssQty.AdjustedQty = s.Qty;
+                        //    Adj_IssQty.ObjectState = Model.ObjectState.Added;
+                        //    db.StockAdj.Add(Adj_IssQty);
+                        //    //new StockAdjService(_unitOfWork).Create(Adj_IssQty);
+                        //}
+
+                        //s.CreatedDate = DateTime.Now;
+                        //s.ModifiedDate = DateTime.Now;
+                        //s.CreatedBy = User.Identity.Name;
+                        //s.Sr = _JobOrderLineService.GetMaxSr(s.JobOrderHeaderId);
+                        //s.ModifiedBy = User.Identity.Name;
+                        //s.ObjectState = Model.ObjectState.Added;
+
+                        //if (s.ProductUidId.HasValue && s.ProductUidId > 0)
+                        //{
+                        //    ProductUid Uid = (from p in db.ProductUid
+                        //                      where p.ProductUIDId == s.ProductUidId
+                        //                      select p).FirstOrDefault();
+
+
+                        //    s.ProductUidLastTransactionDocId = Uid.LastTransactionDocId;
+                        //    s.ProductUidLastTransactionDocDate = Uid.LastTransactionDocDate;
+                        //    s.ProductUidLastTransactionDocNo = Uid.LastTransactionDocNo;
+                        //    s.ProductUidLastTransactionDocTypeId = Uid.LastTransactionDocTypeId;
+                        //    s.ProductUidLastTransactionPersonId = Uid.LastTransactionPersonId;
+                        //    s.ProductUidStatus = Uid.Status;
+                        //    s.ProductUidCurrentProcessId = Uid.CurrenctProcessId;
+                        //    s.ProductUidCurrentGodownId = Uid.CurrenctGodownId;
+
+
+                        //    Uid.LastTransactionDocId = s.JobOrderHeaderId;
+                        //    Uid.LastTransactionDocDate = temp.DocDate;
+                        //    Uid.LastTransactionDocNo = temp.DocNo;
+                        //    Uid.LastTransactionDocTypeId = temp.DocTypeId;
+                        //    Uid.LastTransactionLineId = s.JobOrderLineId;
+                        //    Uid.LastTransactionPersonId = temp.JobWorkerId;
+                        //    Uid.Status = (!string.IsNullOrEmpty(settings.BarcodeStatusUpdate) ? settings.BarcodeStatusUpdate : ProductUidStatusConstants.Issue);
+                        //    Uid.CurrenctProcessId = temp.ProcessId;
+                        //    Uid.CurrenctGodownId = null;
+                        //    Uid.ModifiedBy = User.Identity.Name;
+                        //    Uid.ModifiedDate = DateTime.Now;
+                        //    Uid.ObjectState = Model.ObjectState.Modified;
+                        //    db.ProductUid.Add(Uid);
+                        //}
+
+
+                        //db.JobOrderLine.Add(s);
+
+                        //new JobOrderLineStatusService(_unitOfWork).CreateLineStatus(s.JobOrderLineId, ref db, true);
+
+                        //if (s.ProdOrderLineId.HasValue)
+                        //    new ProdOrderLineStatusService(_unitOfWork).UpdateProdQtyOnJobOrder(s.ProdOrderLineId.Value, s.JobOrderLineId, temp.DocDate, s.Qty, ref db, true);
+
+
+                        //if (svm.linecharges != null)
+                        //    foreach (var item in svm.linecharges)
+                        //    {
+                        //        item.LineTableId = s.JobOrderLineId;
+                        //        item.PersonID = temp.JobWorkerId;
+                        //        item.DealQty = s.DealQty;
+                        //        item.HeaderTableId = temp.JobOrderHeaderId;
+                        //        item.ObjectState = Model.ObjectState.Added;
+                        //        db.JobOrderLineCharge.Add(item);
+                        //    }
+
+                        //if (svm.footercharges != null)
+                        //    foreach (var item in svm.footercharges)
+                        //    {
+
+                        //        if (item.Id > 0)
+                        //        {
+
+                        //            var footercharge = new JobOrderHeaderChargeService(_unitOfWork).Find(item.Id);
+                        //            footercharge.Rate = item.Rate;
+                        //            footercharge.Amount = item.Amount;
+                        //            footercharge.ObjectState = Model.ObjectState.Modified;
+                        //            db.JobOrderHeaderCharges.Add(footercharge);
+
+                        //        }
+
+                        //        else
+                        //        {
+                        //            item.HeaderTableId = s.JobOrderHeaderId;
+                        //            item.PersonID = temp.JobWorkerId;
+                        //            item.ObjectState = Model.ObjectState.Added;
+                        //            db.JobOrderHeaderCharges.Add(item);
+                        //        }
+                        //    }
+
+
+                        ////JobOrderHeader header = new JobOrderHeaderService(_unitOfWork).Find(s.JobOrderHeaderId);
+                        //if (temp.Status != (int)StatusConstants.Drafted && temp.Status != (int)StatusConstants.Import)
+                        //{
+                        //    temp.Status = (int)StatusConstants.Modified;
+                        //    temp.ModifiedDate = DateTime.Now;
+                        //    temp.ModifiedBy = User.Identity.Name;
+
+                        //}
+
+                        //temp.ObjectState = Model.ObjectState.Modified;
+                        //db.JobOrderHeader.Add(temp);
+
+
+                        //#region BOMPost
+
+                        ////Saving BOMPOST Data
+                        ////Saving BOMPOST Data
+                        ////Saving BOMPOST Data
+                        ////Saving BOMPOST Data
+                        //if (!string.IsNullOrEmpty(svm.JobOrderSettings.SqlProcConsumption))
+                        //{
+                        //    var BomPostList = _JobOrderLineService.GetBomPostingDataForWeaving(s.ProductId, s.Dimension1Id, s.Dimension2Id, s.Dimension3Id, s.Dimension4Id, temp.ProcessId, s.Qty, temp.DocTypeId, svm.JobOrderSettings.SqlProcConsumption).ToList();
+
+                        //    foreach (var item in BomPostList)
+                        //    {
+                        //        JobOrderBom BomPost = new JobOrderBom();
+                        //        BomPost.CreatedBy = User.Identity.Name;
+                        //        BomPost.CreatedDate = DateTime.Now;
+                        //        BomPost.Dimension1Id = item.Dimension1Id;
+                        //        BomPost.Dimension2Id = item.Dimension2Id;
+                        //        BomPost.Dimension3Id = item.Dimension3Id;
+                        //        BomPost.Dimension4Id = item.Dimension4Id;
+                        //        BomPost.JobOrderHeaderId = s.JobOrderHeaderId;
+                        //        BomPost.JobOrderLineId = s.JobOrderLineId;
+                        //        BomPost.ProcessId = temp.ProcessId;
+                        //        BomPost.ModifiedBy = User.Identity.Name;
+                        //        BomPost.ModifiedDate = DateTime.Now;
+                        //        BomPost.ProductId = item.ProductId;
+                        //        BomPost.Qty = Convert.ToDecimal(item.Qty);
+                        //        BomPost.ObjectState = Model.ObjectState.Added;
+                        //        db.JobOrderBom.Add(BomPost);
+                        //        //new JobOrderBomService(_unitOfWork).Create(BomPost);
+                        //    }
+                        //}
+
+                        ////try
+                        ////{
+                        ////    _unitOfWork.Save();
+                        ////}
+
+                        ////catch (Exception ex)
+                        ////{
+                        ////    string message = _exception.HandleException(ex);
+                        ////    ModelState.AddModelError("", message);
+                        ////    PrepareViewBag(svm);
+                        ////    return PartialView("_Create", svm);
+
+                        ////}
+
+                        //#endregion
+
+                        //try
+                        //{
+                        //    JobOrderDocEvents.onLineSaveEvent(this, new JobEventArgs(s.JobOrderHeaderId, s.JobOrderLineId, EventModeConstants.Add), ref db);
+                        //}
+                        //catch (Exception ex)
+                        //{
+                        //    string message = _exception.HandleException(ex);
+                        //    TempData["CSEXCL"] += message;
+                        //    EventException = true;
+                        //}
+
+                        //if (settings != null)
+                        //{
+                        //    new CommonService().ExecuteCustomiseEvents(settings.Event_OnLineSave, new object[] { _unitOfWork, svm.JobOrderHeaderId, s.JobOrderLineId, "A" });
+                        //}
+
+                        //try
+                        //{
+                        //    if (EventException)
+                        //    { throw new Exception(); }
+
+                        //    db.SaveChanges();
+                        //}
+
+                        //catch (Exception ex)
+                        //{
+                        //    string message = _exception.HandleException(ex);
+                        //    TempData["CSEXCL"] += message;
+                        //    PrepareViewBag(svm);
+
+                        //    if (svm.ProdOrderLineId != null)
+                        //    {
+                        //        return PartialView("_CreateForProdOrder", svm);
+                        //    }
+                        //    else
+                        //    {
+                        //        return PartialView("_Create", svm);
+                        //    }
+
+                        //}
+
+                        //if (settings != null)
+                        //{
+                        //    new CommonService().ExecuteCustomiseEvents(settings.Event_AfterLineSave, new object[] { _unitOfWork, svm.JobOrderHeaderId, s.JobOrderLineId, "A" });
+                        //}
+
+                        //try
+                        //{
+                        //    JobOrderDocEvents.afterLineSaveEvent(this, new JobEventArgs(s.JobOrderHeaderId, s.JobOrderLineId, EventModeConstants.Add), ref db);
+                        //}
+                        //catch (Exception ex)
+                        //{
+                        //    string message = _exception.HandleException(ex);
+                        //    TempData["CSEXCL"] += message;
+                        //}
+
+                        //LogActivity.LogActivityDetail(LogVm.Map(new ActiivtyLogViewModel
+                        //{
+                        //    DocTypeId = temp.DocTypeId,
+                        //    DocId = temp.JobOrderHeaderId,
+                        //    DocLineId = s.JobOrderLineId,
+                        //    ActivityType = (int)ActivityTypeContants.Added,                       
+                        //    DocNo = temp.DocNo,
+                        //    DocDate = temp.DocDate,
+                        //    DocStatus=temp.Status,
+                        //}));                        
+
+                    }
 
                     return RedirectToAction("_Create", new { id = svm.JobOrderHeaderId, LineNature = svm.LineNature });
-
                 }
 
 
@@ -1771,11 +1851,11 @@ namespace Jobs.Controllers
                         DocTypeId = temp.DocTypeId,
                         DocId = templine.JobOrderHeaderId,
                         DocLineId = templine.JobOrderLineId,
-                        ActivityType = (int)ActivityTypeContants.Modified,                       
+                        ActivityType = (int)ActivityTypeContants.Modified,
                         DocNo = temp.DocNo,
                         xEModifications = Modifications,
                         DocDate = temp.DocDate,
-                        DocStatus=temp.Status,
+                        DocStatus = temp.Status,
                     }));
 
                     //End of Saving the Activity Log
@@ -1813,6 +1893,455 @@ namespace Jobs.Controllers
         }
 
 
+
+        public String CreateJobOrderLine(JobOrderLineViewModel svm)
+        {
+            string Message = "";
+            bool BeforeSave = true;
+            string DataValidationMsg="";
+            JobOrderHeader temp = new JobOrderHeaderService(_unitOfWork).Find(svm.JobOrderHeaderId);
+
+            var settings = new JobOrderSettingsService(_unitOfWork).GetJobOrderSettingsForDocument(temp.DocTypeId, temp.DivisionId, temp.SiteId);
+
+            if (settings != null)
+            {
+                if (settings.isVisibleProcessLine == true && settings.isMandatoryProcessLine == true && (svm.FromProcessId <= 0 || svm.FromProcessId == null))
+                {
+                    ModelState.AddModelError("FromProcessId", "The Process field is required");
+                    Message = Message + "The Process field is required";
+                }
+                if (settings.isVisibleRate == true && settings.isMandatoryRate == true && svm.Rate <= 0)
+                {
+                    ModelState.AddModelError("Rate", "The Rate field is required");
+                    Message = Message + "The Rate field is required";
+                }
+                if (settings.isVisibleProductUID == true && settings.isMandatoryProductUID == true && !svm.ProductUidId.HasValue)
+                {
+                    ModelState.AddModelError("ProductUidIdName", "The ProductUid field is required");
+                    Message = Message + "The ProductUid field is required";
+                }
+
+                if (settings.IsMandatoryStockIn == true)
+                {
+                    if (svm.StockInId == null)
+                    {
+                        ModelState.AddModelError("StockInId", "Stock No field is required");
+                        Message = Message + "Stock No field is required";
+                    }
+                }
+            }
+
+            #region BeforeSave
+            try
+            {
+
+                if (svm.JobOrderLineId <= 0)
+                    BeforeSave = JobOrderDocEvents.beforeLineSaveEvent(this, new JobEventArgs(svm.JobOrderHeaderId, EventModeConstants.Add), ref db);
+                else
+                    BeforeSave = JobOrderDocEvents.beforeLineSaveEvent(this, new JobEventArgs(svm.JobOrderHeaderId, EventModeConstants.Edit), ref db);
+
+            }
+            catch (Exception ex)
+            {
+                string message = _exception.HandleException(ex);
+                TempData["CSEXCL"] += message;
+                EventException = true;
+            }
+
+            if (!BeforeSave)
+                ModelState.AddModelError("", "Validation failed before save.");
+            #endregion
+
+
+            if (svm.Qty <= 0)
+                ModelState.AddModelError("Qty", "The Qty is required");
+
+            if (svm.DealQty <= 0)
+            {
+                ModelState.AddModelError("DealQty", "DealQty field is required");
+            }
+
+            if (DataValidationMsg != "")
+            {
+                PrepareViewBag(svm);
+                ViewBag.LineMode = "Create";
+                ModelState.AddModelError("", DataValidationMsg);
+                ViewBag.DocNo = temp.DocNo;
+                Message = DataValidationMsg;
+            }
+
+            StockViewModel StockViewModel = new StockViewModel();
+            StockProcessViewModel StockProcessViewModel = new StockProcessViewModel();
+            JobOrderLine s = Mapper.Map<JobOrderLineViewModel, JobOrderLine>(svm);
+
+            if (ModelState.IsValid && BeforeSave && !EventException)
+            {
+                //Posting in Stock
+                if (settings.isPostedInStock.HasValue && settings.isPostedInStock == true)
+                {
+                    StockViewModel.StockHeaderId = temp.StockHeaderId ?? 0;
+                    StockViewModel.DocHeaderId = temp.JobOrderHeaderId;
+                    StockViewModel.DocLineId = s.JobOrderLineId;
+                    StockViewModel.DocTypeId = temp.DocTypeId;
+                    StockViewModel.StockHeaderDocDate = temp.DocDate;
+                    StockViewModel.StockDocDate = temp.DocDate;
+                    StockViewModel.DocNo = temp.DocNo;
+                    StockViewModel.DivisionId = temp.DivisionId;
+                    StockViewModel.SiteId = temp.SiteId;
+                    StockViewModel.CurrencyId = null;
+                    StockViewModel.HeaderProcessId = null;
+                    StockViewModel.PersonId = temp.JobWorkerId;
+                    StockViewModel.ProductId = s.ProductId;
+                    StockViewModel.HeaderFromGodownId = null;
+                    StockViewModel.HeaderGodownId = null;
+                    StockViewModel.GodownId = temp.GodownId ?? 0;
+                    StockViewModel.ProcessId = s.FromProcessId;
+                    StockViewModel.LotNo = s.LotNo;
+                    StockViewModel.CostCenterId = temp.CostCenterId;
+                    StockViewModel.Qty_Iss = s.Qty;
+                    StockViewModel.Qty_Rec = 0;
+                    StockViewModel.Rate = s.Rate;
+                    StockViewModel.ExpiryDate = null;
+                    StockViewModel.Specification = s.Specification;
+                    StockViewModel.Dimension1Id = s.Dimension1Id;
+                    StockViewModel.Dimension2Id = s.Dimension2Id;
+                    StockViewModel.Dimension3Id = s.Dimension3Id;
+                    StockViewModel.Dimension4Id = s.Dimension4Id;
+                    StockViewModel.Remark = s.Remark;
+                    StockViewModel.ProductUidId = s.ProductUidId;
+                    StockViewModel.Status = temp.Status;
+                    StockViewModel.CreatedBy = temp.CreatedBy;
+                    StockViewModel.CreatedDate = DateTime.Now;
+                    StockViewModel.ModifiedBy = temp.ModifiedBy;
+                    StockViewModel.ModifiedDate = DateTime.Now;
+
+                    string StockPostingError = "";
+                    StockPostingError = new StockService(_unitOfWork).StockPostDB(ref StockViewModel, ref db);
+
+                    if (StockPostingError != "")
+                    {
+                        ModelState.AddModelError("", StockPostingError);
+                        Message = StockPostingError;
+                    }
+
+                    s.StockId = StockViewModel.StockId;
+
+                    if (temp.StockHeaderId == null)
+                    {
+                        temp.StockHeaderId = StockViewModel.StockHeaderId;
+                    }
+                }
+
+
+
+                if (settings.isPostedInStockProcess.HasValue && settings.isPostedInStockProcess == true)
+                {
+                    if (temp.StockHeaderId != null && temp.StockHeaderId != 0)//If Transaction Header Table Has Stock Header Id Then It will Save Here.
+                    {
+                        StockProcessViewModel.StockHeaderId = (int)temp.StockHeaderId;
+                    }
+                    else if (settings.isPostedInStock.HasValue && settings.isPostedInStock == true)//If Stok Header is already posted during stock posting then this statement will Execute.So theat Stock Header will not generate again.
+                    {
+                        StockProcessViewModel.StockHeaderId = -1;
+                    }
+                    else//If function will only post in stock process then this statement will execute.For Example Job consumption.
+                    {
+                        StockProcessViewModel.StockHeaderId = 0;
+                    }
+
+
+                    StockProcessViewModel.DocHeaderId = temp.JobOrderHeaderId;
+                    StockProcessViewModel.DocLineId = s.JobOrderLineId;
+                    StockProcessViewModel.DocTypeId = temp.DocTypeId;
+                    StockProcessViewModel.StockHeaderDocDate = temp.DocDate;
+                    StockProcessViewModel.StockProcessDocDate = temp.DocDate;
+                    StockProcessViewModel.DocNo = temp.DocNo;
+                    StockProcessViewModel.DivisionId = temp.DivisionId;
+                    StockProcessViewModel.SiteId = temp.SiteId;
+                    StockProcessViewModel.CurrencyId = null;
+                    StockProcessViewModel.HeaderProcessId = null;
+                    StockProcessViewModel.PersonId = temp.JobWorkerId;
+                    StockProcessViewModel.ProductId = s.ProductId;
+                    StockProcessViewModel.HeaderFromGodownId = null;
+                    StockProcessViewModel.HeaderGodownId = null;
+                    StockProcessViewModel.GodownId = temp.GodownId ?? 0;
+                    StockProcessViewModel.ProcessId = temp.ProcessId;
+                    StockProcessViewModel.LotNo = s.LotNo;
+                    StockProcessViewModel.CostCenterId = temp.CostCenterId;
+                    StockProcessViewModel.Qty_Iss = 0;
+                    StockProcessViewModel.Qty_Rec = s.Qty;
+                    StockProcessViewModel.Rate = s.Rate;
+                    StockProcessViewModel.ExpiryDate = null;
+                    StockProcessViewModel.Specification = s.Specification;
+                    StockProcessViewModel.Dimension1Id = s.Dimension1Id;
+                    StockProcessViewModel.Dimension2Id = s.Dimension2Id;
+                    StockProcessViewModel.Dimension3Id = s.Dimension3Id;
+                    StockProcessViewModel.Dimension4Id = s.Dimension4Id;
+                    StockProcessViewModel.Remark = s.Remark;
+                    StockProcessViewModel.Status = temp.Status;
+                    StockProcessViewModel.ProductUidId = s.ProductUidId;
+                    StockProcessViewModel.CreatedBy = temp.CreatedBy;
+                    StockProcessViewModel.CreatedDate = DateTime.Now;
+                    StockProcessViewModel.ModifiedBy = temp.ModifiedBy;
+                    StockProcessViewModel.ModifiedDate = DateTime.Now;
+
+                    string StockProcessPostingError = "";
+                    StockProcessPostingError = new StockProcessService(_unitOfWork).StockProcessPostDB(ref StockProcessViewModel, ref db);
+
+                    if (StockProcessPostingError != "")
+                    {
+                        ModelState.AddModelError("", StockProcessPostingError);
+                        Message = StockProcessPostingError;
+
+                        //if (svm.ProdOrderLineId != null)
+                        //{
+                        //    return PartialView("_CreateForProdOrder", svm);
+                        //}
+                        //else
+                        //{
+                        //    return PartialView("_Create", svm);
+                        //}
+                    }
+
+                    s.StockProcessId = StockProcessViewModel.StockProcessId;
+
+
+                    if (settings.isPostedInStock == false)
+                    {
+                        if (temp.StockHeaderId == null)
+                        {
+                            temp.StockHeaderId = StockProcessViewModel.StockHeaderId;
+                        }
+                    }
+                }
+
+                if (svm.StockInId != null)
+                {
+                    StockAdj Adj_IssQty = new StockAdj();
+                    Adj_IssQty.StockInId = (int)svm.StockInId;
+                    Adj_IssQty.StockOutId = (int)s.StockId;
+                    Adj_IssQty.DivisionId = temp.DivisionId;
+                    Adj_IssQty.SiteId = temp.SiteId;
+                    Adj_IssQty.AdjustedQty = s.Qty;
+                    Adj_IssQty.ObjectState = Model.ObjectState.Added;
+                    db.StockAdj.Add(Adj_IssQty);
+                    //new StockAdjService(_unitOfWork).Create(Adj_IssQty);
+                }
+
+                s.CreatedDate = DateTime.Now;
+                s.ModifiedDate = DateTime.Now;
+                s.CreatedBy = User.Identity.Name;
+                s.Sr = _JobOrderLineService.GetMaxSr(s.JobOrderHeaderId);
+                s.ModifiedBy = User.Identity.Name;
+                s.ObjectState = Model.ObjectState.Added;
+
+                if (s.ProductUidId.HasValue && s.ProductUidId > 0)
+                {
+                    ProductUid Uid = (from p in db.ProductUid
+                                      where p.ProductUIDId == s.ProductUidId
+                                      select p).FirstOrDefault();
+
+
+                    s.ProductUidLastTransactionDocId = Uid.LastTransactionDocId;
+                    s.ProductUidLastTransactionDocDate = Uid.LastTransactionDocDate;
+                    s.ProductUidLastTransactionDocNo = Uid.LastTransactionDocNo;
+                    s.ProductUidLastTransactionDocTypeId = Uid.LastTransactionDocTypeId;
+                    s.ProductUidLastTransactionPersonId = Uid.LastTransactionPersonId;
+                    s.ProductUidStatus = Uid.Status;
+                    s.ProductUidCurrentProcessId = Uid.CurrenctProcessId;
+                    s.ProductUidCurrentGodownId = Uid.CurrenctGodownId;
+
+
+                    Uid.LastTransactionDocId = s.JobOrderHeaderId;
+                    Uid.LastTransactionDocDate = temp.DocDate;
+                    Uid.LastTransactionDocNo = temp.DocNo;
+                    Uid.LastTransactionDocTypeId = temp.DocTypeId;
+                    Uid.LastTransactionLineId = s.JobOrderLineId;
+                    Uid.LastTransactionPersonId = temp.JobWorkerId;
+                    Uid.Status = (!string.IsNullOrEmpty(settings.BarcodeStatusUpdate) ? settings.BarcodeStatusUpdate : ProductUidStatusConstants.Issue);
+                    Uid.CurrenctProcessId = temp.ProcessId;
+                    Uid.CurrenctGodownId = null;
+                    Uid.ModifiedBy = User.Identity.Name;
+                    Uid.ModifiedDate = DateTime.Now;
+                    Uid.ObjectState = Model.ObjectState.Modified;
+                    db.ProductUid.Add(Uid);
+                }
+
+
+                db.JobOrderLine.Add(s);
+
+                new JobOrderLineStatusService(_unitOfWork).CreateLineStatus(s.JobOrderLineId, ref db, true);
+
+                if (s.ProdOrderLineId.HasValue)
+                    new ProdOrderLineStatusService(_unitOfWork).UpdateProdQtyOnJobOrder(s.ProdOrderLineId.Value, s.JobOrderLineId, temp.DocDate, s.Qty, ref db, true);
+
+
+                if (svm.linecharges != null)
+                    foreach (var item in svm.linecharges)
+                    {
+                        item.LineTableId = s.JobOrderLineId;
+                        item.PersonID = temp.JobWorkerId;
+                        item.DealQty = s.DealQty;
+                        item.HeaderTableId = temp.JobOrderHeaderId;
+                        item.ObjectState = Model.ObjectState.Added;
+                        db.JobOrderLineCharge.Add(item);
+                    }
+
+                if (svm.footercharges != null)
+                    foreach (var item in svm.footercharges)
+                    {
+
+                        if (item.Id > 0)
+                        {
+
+                            var footercharge = new JobOrderHeaderChargeService(_unitOfWork).Find(item.Id);
+                            footercharge.Rate = item.Rate;
+                            footercharge.Amount = item.Amount;
+                            footercharge.ObjectState = Model.ObjectState.Modified;
+                            db.JobOrderHeaderCharges.Add(footercharge);
+
+                        }
+
+                        else
+                        {
+                            item.HeaderTableId = s.JobOrderHeaderId;
+                            item.PersonID = temp.JobWorkerId;
+                            item.ObjectState = Model.ObjectState.Added;
+                            db.JobOrderHeaderCharges.Add(item);
+                        }
+                    }
+
+
+                //JobOrderHeader header = new JobOrderHeaderService(_unitOfWork).Find(s.JobOrderHeaderId);
+                if (temp.Status != (int)StatusConstants.Drafted && temp.Status != (int)StatusConstants.Import)
+                {
+                    temp.Status = (int)StatusConstants.Modified;
+                    temp.ModifiedDate = DateTime.Now;
+                    temp.ModifiedBy = User.Identity.Name;
+
+                }
+
+                temp.ObjectState = Model.ObjectState.Modified;
+                db.JobOrderHeader.Add(temp);
+
+
+                #region BOMPost
+
+                //Saving BOMPOST Data
+                //Saving BOMPOST Data
+                //Saving BOMPOST Data
+                //Saving BOMPOST Data
+                if (!string.IsNullOrEmpty(svm.JobOrderSettings.SqlProcConsumption))
+                {
+                    var BomPostList = _JobOrderLineService.GetBomPostingDataForWeaving(s.ProductId, s.Dimension1Id, s.Dimension2Id, s.Dimension3Id, s.Dimension4Id, temp.ProcessId, s.Qty, temp.DocTypeId, svm.JobOrderSettings.SqlProcConsumption).ToList();
+
+                    foreach (var item in BomPostList)
+                    {
+                        JobOrderBom BomPost = new JobOrderBom();
+                        BomPost.CreatedBy = User.Identity.Name;
+                        BomPost.CreatedDate = DateTime.Now;
+                        BomPost.Dimension1Id = item.Dimension1Id;
+                        BomPost.Dimension2Id = item.Dimension2Id;
+                        BomPost.Dimension3Id = item.Dimension3Id;
+                        BomPost.Dimension4Id = item.Dimension4Id;
+                        BomPost.JobOrderHeaderId = s.JobOrderHeaderId;
+                        BomPost.JobOrderLineId = s.JobOrderLineId;
+                        BomPost.ProcessId = temp.ProcessId;
+                        BomPost.ModifiedBy = User.Identity.Name;
+                        BomPost.ModifiedDate = DateTime.Now;
+                        BomPost.ProductId = item.ProductId;
+                        BomPost.Qty = Convert.ToDecimal(item.Qty);
+                        BomPost.ObjectState = Model.ObjectState.Added;
+                        db.JobOrderBom.Add(BomPost);
+                        //new JobOrderBomService(_unitOfWork).Create(BomPost);
+                    }
+                }
+
+                //try
+                //{
+                //    _unitOfWork.Save();
+                //}
+
+                //catch (Exception ex)
+                //{
+                //    string message = _exception.HandleException(ex);
+                //    ModelState.AddModelError("", message);
+                //    PrepareViewBag(svm);
+                //    return PartialView("_Create", svm);
+
+                //}
+
+                #endregion
+
+                try
+                {
+                    JobOrderDocEvents.onLineSaveEvent(this, new JobEventArgs(s.JobOrderHeaderId, s.JobOrderLineId, EventModeConstants.Add), ref db);
+                }
+                catch (Exception ex)
+                {
+                    string message = _exception.HandleException(ex);
+                    TempData["CSEXCL"] += message;
+                    EventException = true;
+                }
+
+                if (settings != null)
+                {
+                    new CommonService().ExecuteCustomiseEvents(settings.Event_OnLineSave, new object[] { _unitOfWork, svm.JobOrderHeaderId, s.JobOrderLineId, "A" });
+                }
+
+                try
+                {
+                    if (EventException)
+                    { throw new Exception(); }
+
+                    db.SaveChanges();
+                }
+
+                catch (Exception ex)
+                {
+                    string message = _exception.HandleException(ex);
+                    TempData["CSEXCL"] += message;
+                    PrepareViewBag(svm);
+                    Message = message;
+                    //if (svm.ProdOrderLineId != null)
+                    //{
+                    //    return PartialView("_CreateForProdOrder", svm);
+                    //}
+                    //else
+                    //{
+                    //    return PartialView("_Create", svm);
+                    //}
+
+                }
+
+                if (settings != null)
+                {
+                    new CommonService().ExecuteCustomiseEvents(settings.Event_AfterLineSave, new object[] { _unitOfWork, svm.JobOrderHeaderId, s.JobOrderLineId, "A" });
+                }
+
+                try
+                {
+                    JobOrderDocEvents.afterLineSaveEvent(this, new JobEventArgs(s.JobOrderHeaderId, s.JobOrderLineId, EventModeConstants.Add), ref db);
+                }
+                catch (Exception ex)
+                {
+                    string message = _exception.HandleException(ex);
+                    TempData["CSEXCL"] += message;
+                }
+
+                LogActivity.LogActivityDetail(LogVm.Map(new ActiivtyLogViewModel
+                {
+                    DocTypeId = temp.DocTypeId,
+                    DocId = temp.JobOrderHeaderId,
+                    DocLineId = s.JobOrderLineId,
+                    ActivityType = (int)ActivityTypeContants.Added,
+                    DocNo = temp.DocNo,
+                    DocDate = temp.DocDate,
+                    DocStatus = temp.Status,
+                }));
+            }
+            return Message;
+        }
 
 
 
@@ -2352,12 +2881,17 @@ namespace Jobs.Controllers
             int UnitConversionForIdValue = UnitConversionForId ==null   ? (int)Header.UnitConversionForId : (int)UnitConversionForId ;
             
 			UnitConversion uc = new UnitConversionService(_unitOfWork).GetUnitConversion(prodid, UnitId, UnitConversionForIdValue, DealUnitId);
-            int[] array = new int[3];
+            int[] array = new int[8];
             decimal UnitConversionMultiplier=0;
 
-            array[0] = 10;
-            array[1] = 11;
-            array[2] = 12;
+            array[0] = 7;
+            array[1] = 8;
+            array[2] = 9;
+            array[3] = 10;
+            array[4] = 11;
+            array[5] = 12;
+            array[6] = 13;
+            array[7] = 14;
 
             if (uc == null && UnitId== "PCS" && DealUnitId == "FT" && array.Contains(UnitConversionForIdValue))
             {

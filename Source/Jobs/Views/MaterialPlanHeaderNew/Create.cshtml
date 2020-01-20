@@ -110,6 +110,7 @@
                     <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1">
                         <li><a id="DocHistory" data-modal="" href="@Url.Action("GetHistory", "LogHistory", new { Ids = Model.MaterialPlanHeaderId, DocTypeId = Model.DocTypeId })"><span class="glyphicon glyphicon-user"> </span> History</a></li>
                         <li><a href="@Url.Action("Email", "MaterialPlanHeaderNew")"><span class="glyphicon glyphicon-envelope"> </span> Email</a></li>
+                        <li><a target="_blank" id="TimeExtensionRequest" href="@Url.Action("DirectCreate", "DocumentTypeTimeExtensionRequest", new { SiteId = @Model.SiteId, DivisionId = @Model.DivisionId, DocTypeId = Model.DocTypeId, DocDate= Model.DocDate })"><span class="glyphicon glyphicon-pencil"> </span> Time Extension Request</a></li>
                         </ul>
              </div>
             </div>

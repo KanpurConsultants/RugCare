@@ -1223,6 +1223,10 @@ namespace Jobs.Controllers
                 foreach (var item in line)
                 {
 
+                    JobReceiveLine Rec = (from p in db.JobReceiveLine
+                                          where p.JobReceiveLineId == item.JobReceiveLineId
+                                          select p).FirstOrDefault();
+
                     LogList.Add(new LogTypeViewModel
                     {
                         ExObj = Mapper.Map<JobInvoiceLine>(item),
@@ -1240,6 +1244,11 @@ namespace Jobs.Controllers
                     //new JobInvoiceLineService(_unitOfWork).Delete(item.JobInvoiceLineId);
                     item.ObjectState = Model.ObjectState.Deleted;
                     db.JobInvoiceLine.Remove(item);
+
+                    Rec.LockReason = null;
+                    Rec.ObjectState = Model.ObjectState.Modified;
+                    db.JobReceiveLine.Add(Rec);
+
                 }
 
                 //var headercharges = new JobInvoiceHeaderChargeService(_unitOfWork).GetCalculationFooterList(vm.id);
@@ -2129,7 +2138,8 @@ EXEC(@Qry);	";
 
 
                 var TempCostCenter = (from C in Context.CostCenter
-                                      where C.CostCenterId == item.CostCenterId && C.LedgerAccountId == item.LedgerAccountId
+                                      where C.CostCenterId == item.CostCenterId 
+                                      //&& C.LedgerAccountId == item.LedgerAccountId
                                       select new { CostCenterId = C.CostCenterId }).FirstOrDefault();
 
                 if (TempCostCenter != null)

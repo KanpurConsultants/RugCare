@@ -112,6 +112,7 @@
     <Compile Include="DatabaseViews\StockVirtual.cs" />
     <Compile Include="Models\ActivityLog.cs" />
     <Compile Include="Models\BinLocation.cs" />
+    <Compile Include="Models\StockHeaderTransport.cs" />
     <Compile Include="Models\Settings.cs" />
     <Compile Include="Models\ProductQualityBomDetail.cs" />
     <Compile Include="Models\Caste.cs" />
@@ -281,6 +282,7 @@
     <Compile Include="Models\Task.cs" />
     <Compile Include="Models\UserTeam.cs" />
     <Compile Include="Models\PersonGodown.cs" />
+    <Compile Include="Models\PackingUnitSetting.cs" />
     <Compile Include="ViewModels\BankReconciliationViewModel.cs" />
     <Compile Include="ViewModels\ChargeGroupPersonCalculationViewModel.cs" />
     <Compile Include="ViewModels\CollectionSettingsViewModel.cs" />
@@ -291,6 +293,7 @@
     <Compile Include="ViewModels\CostingLineViewModel.cs" />
     <Compile Include="ViewModels\DocumentTypeTimeExtensionRequestViewModel.cs" />
     <Compile Include="ViewModels\PersonGodownViewModel.cs" />
+    <Compile Include="ViewModels\PackingUnitSettingViewModel.cs" />
     <Compile Include="ViewModels\WeavingRetensionViewModel.cs" />
     <Compile Include="ViewModels\CustomHeaderViewModel.cs" />
     <Compile Include="ViewModels\DARViewModel.cs" />

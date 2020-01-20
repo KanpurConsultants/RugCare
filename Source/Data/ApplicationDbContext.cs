@@ -297,6 +297,7 @@ namespace Data.Models
         //Cusomize Models
         public DbSet<UrgentList> UrgentList { get; set; }
         public DbSet<WeavingRetension> WeavingRetension { get; set; }
+        public DbSet<PackingUnitSetting> PackingUnitSetting { get; set; }
         public DbSet<PersonGodown> PersonGodown { get; set; }
         public DbSet<FeetConversionToCms> FeetConversionToCms { get; set; }
 
@@ -581,6 +582,7 @@ namespace Data.Models
 
         //Stock Models
         public DbSet<StockHeader> StockHeader { get; set; }
+        public DbSet<StockHeaderTransport> StockHeaderTransport { get; set; }
         public DbSet<StockHeaderAttributes> StockHeaderAttributes { get; set; }
         public DbSet<StockLine> StockLine { get; set; }
         public DbSet<Stock> Stock { get; set; }
@@ -741,6 +743,8 @@ namespace Data.Models
             //modelBuilder.Entity<CostCenterStatus>().Map<CostCenterStatusExtended>(m => m.Requires("Discriminator").HasValue("CostCenterStatusExtended"));
 
             //modelBuilder.Entity<CostCenterStatus>().Map<CostCenterStatus>(m => m.Requires("Discriminator").HasValue("CostCenterStatus"));
+
+            modelBuilder.Entity<StockHeaderTransport>().ToTable("StockHeaderTransport");
 
             modelBuilder.Entity<SaleInvoiceHeaderDetail>().ToTable("SaleInvoiceHeaderDetail");
 

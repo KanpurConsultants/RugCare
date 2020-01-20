@@ -140,6 +140,9 @@ namespace Model.ViewModel
         public int? ProductUidId { get; set; }
         public string ProductUidName { get; set; }
 
+        public int? ToProductUidId { get; set; }
+        public string ToProductUidName { get; set; }
+
         [Range(1, int.MaxValue, ErrorMessage = "The Product field is required")]
         public int ProductId { get; set; }
         public string ProductName { get; set; }

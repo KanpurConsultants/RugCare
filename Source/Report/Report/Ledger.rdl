@@ -674,11 +674,7 @@
                           <TextRuns>
                             <TextRun>
                               <Value>= Fields!Narration1.Value +iif(Fields!Narration2.Value &lt;&gt; "",System.Environment.NewLine,"")
-   +iif(Fields!Narration2.Value &lt;&gt; "",Fields!Narration2.Value,"")
-   +iif(Fields!ChqNo.Value &lt;&gt; "",System.Environment.NewLine,"")
-   +iif(Fields!ChqNo.Value &lt;&gt; "",Fields!ChqNo.Value,"")
-   +iif(Fields!LineNarration.Value &lt;&gt; "",System.Environment.NewLine,"")
-   +iif(Fields!LineNarration.Value &lt;&gt; "",Fields!LineNarration.Value,"")</Value>
+   +iif(Fields!Narration2.Value &lt;&gt; "",Fields!Narration2.Value,"")</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
                                 <FontSize>8pt</FontSize>
@@ -702,6 +698,7 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
+                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>

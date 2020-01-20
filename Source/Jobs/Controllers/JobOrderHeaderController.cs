@@ -130,6 +130,16 @@ namespace Jobs.Controllers
             return View("Index", p);
         }
 
+        public ActionResult Index_PendingToReceive(int id)
+        {
+            IQueryable<JobOrderHeaderViewModel> p = _JobOrderHeaderService.GetJobOrderHeaderListPendingToReceive(id, User.Identity.Name);
+            PrepareViewBag(id);
+            ViewBag.PendingToSubmit = PendingToSubmitCount(id);
+            ViewBag.PendingToReview = PendingToReviewCount(id);
+            ViewBag.IndexStatus = "PTREC";
+            return View("Index", p);
+        }
+
         private void PrepareViewBag(int id)
         {
             DocumentType DocType = new DocumentTypeService(_unitOfWork).Find(id);

@@ -128,6 +128,7 @@ namespace Model.ViewModels
         public int PersonRegistrationPanNoID { get; set; }
 
         public Decimal? BasicSalary { get; set; }
+        public Decimal? GrossSalary { get; set; }
 
         public string Tags { get; set; }
 

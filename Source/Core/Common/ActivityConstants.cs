@@ -156,6 +156,9 @@ namespace Core.Common
     {
         public const string Payment = "Payment";
         public const string Advance = "Advance";
+        public const string Loan = "Loan";
+        public const string DebitNote = "Debit Note";
+        public const string CreditNote = "Credit Note";        
     }
 
     public class StockInHandShowBalanceConstants

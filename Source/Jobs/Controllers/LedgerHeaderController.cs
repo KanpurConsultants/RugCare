@@ -102,6 +102,9 @@ namespace Jobs.Controllers
             List<SelectListItem> shwBal = new List<SelectListItem>();
             shwBal.Add(new SelectListItem { Text = LedgerHeaderAdjustmentTypeConstants.Payment, Value = LedgerHeaderAdjustmentTypeConstants.Payment });
             shwBal.Add(new SelectListItem { Text = LedgerHeaderAdjustmentTypeConstants.Advance, Value = LedgerHeaderAdjustmentTypeConstants.Advance });
+            shwBal.Add(new SelectListItem { Text = LedgerHeaderAdjustmentTypeConstants.Loan, Value = LedgerHeaderAdjustmentTypeConstants.Loan });
+            shwBal.Add(new SelectListItem { Text = LedgerHeaderAdjustmentTypeConstants.DebitNote, Value = LedgerHeaderAdjustmentTypeConstants.DebitNote });
+            shwBal.Add(new SelectListItem { Text = LedgerHeaderAdjustmentTypeConstants.CreditNote, Value = LedgerHeaderAdjustmentTypeConstants.CreditNote });
 
             ViewBag.AdjustmentTypeList = new SelectList(shwBal, "Value", "Text");
 

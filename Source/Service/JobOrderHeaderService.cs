@@ -30,6 +30,7 @@ namespace Service
         IQueryable<JobOrderHeaderViewModel> GetJobOrderHeaderList(int DocumentTypeId, string Uname);
         IQueryable<JobOrderHeaderViewModel> GetJobOrderHeaderListPendingToSubmit(int DocumentTypeId, string Uname);
         IQueryable<JobOrderHeaderViewModel> GetJobOrderHeaderListPendingToReview(int DocumentTypeId, string Uname);
+        IQueryable<JobOrderHeaderViewModel> GetJobOrderHeaderListPendingToReceive(int DocumentTypeId, string Uname);
         void Update(JobOrderHeader s);
         string GetMaxDocNo();
         IEnumerable<ComboBoxList> GetJobWorkerHelpList(int Processid, string term);//PurchaseOrderHeaderId
@@ -398,6 +399,30 @@ namespace Service
                                   where p.Status == (int)StatusConstants.Submitted && (SqlFunctions.CharIndex(Uname, (p.ReviewBy ?? "")) == 0)
                                   select p;
             return PendingToReview;
+
+        }
+
+        public IQueryable<JobOrderHeaderViewModel> GetJobOrderHeaderListPendingToReceive(int id, string Uname)
+        {
+
+            List<string> UserRoles = (List<string>)System.Web.HttpContext.Current.Session["Roles"];
+            var JobOrderHeader = GetJobOrderHeaderList(id, Uname).AsQueryable();
+
+            var Temp = from H in JobOrderHeader
+                       join L in db.JobOrderLine on H.JobOrderHeaderId equals L.JobOrderHeaderId into Ltable
+                       from Ltab in Ltable.DefaultIfEmpty()
+                       join VL in db.ViewJobOrderBalance on Ltab.JobOrderLineId equals VL.JobOrderLineId into VLtable
+                       from VLtab in VLtable.DefaultIfEmpty()
+                       where VLtab.BalanceQty > 0
+                       select new
+                       {
+                           JobOrderHeaderId = H.JobOrderHeaderId,
+                       }.JobOrderHeaderId;
+
+            var PendingToReceive = from p in JobOrderHeader
+                                  where Temp.Contains(p.JobOrderHeaderId)
+                                  select p;
+            return PendingToReceive;
 
         }
 

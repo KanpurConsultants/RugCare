@@ -184,6 +184,8 @@ namespace Service
         {
 
             return (from p in db.StockHeader
+                    join SHT in db.StockHeaderTransport on p.StockHeaderId equals SHT.StockHeaderId into SHTTable
+                    from SHTTab in SHTTable.DefaultIfEmpty()
                     where p.StockHeaderId == id
                     select new StockHeaderViewModel
                     {
@@ -211,6 +213,15 @@ namespace Service
                         ModifiedBy = p.ModifiedBy,
                         CreatedDate = p.CreatedDate,
                         LockReason = p.LockReason,
+                        TransportId = SHTTab.TransportId,
+                        TransportName = SHTTab.Transport.Name,
+                        VehicleNo = SHTTab.VehicleNo,
+                        LrNo = SHTTab.LrNo,
+                        LrDate = SHTTab.LrDate,
+                        EWayBillNo = SHTTab.EWayBillNo,
+                        EWayBillDate = SHTTab.EWayBillDate,
+                        PaymentType = SHTTab.PaymentType,
+                        Destination = SHTTab.Destination,
                     }
                         ).FirstOrDefault();
 

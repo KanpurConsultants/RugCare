@@ -24,15 +24,18 @@ namespace Model.Models
         public int JobInvoiceHeaderId { get; set; }
         public virtual JobInvoiceHeader JobInvoiceHeader { get; set; }
 
-        [ForeignKey("JobWorker"), Display(Name = "Job Worker")]
-        public int JobWorkerId { get; set; }
-        public virtual JobWorker JobWorker { get; set; }
-
         [Display(Name = "Job Receive"), Required]
         [ForeignKey("JobReceiveLine")]
         [Index("IX_JobInvoiceLine_Unique", IsUnique = true, Order = 2)]
         public int JobReceiveLineId { get; set; }
         public virtual JobReceiveLine JobReceiveLine { get; set; }
+
+
+        [ForeignKey("JobWorker"), Display(Name = "Job Worker")]
+        [Index("IX_JobInvoiceLine_Unique", IsUnique = true, Order = 3)]
+        public int JobWorkerId { get; set; }
+        public virtual JobWorker JobWorker { get; set; }
+
 
         [Display(Name = "Unit Conversion Multiplier"), Required]
         public Decimal UnitConversionMultiplier { get; set; }

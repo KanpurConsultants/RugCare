@@ -227,6 +227,7 @@ namespace Service
                                        SiteIds = BusinessEntityTab.SiteIds,
                                        Tags = PersonTab.Tags,
                                        BasicSalary = b.BasicSalary,
+                                       GrossSalary = b.GrossSalary,
                                        DateOfJoining = b.DateOfJoining,
                                        DateOfRelieving = b.DateOfRelieving,
                                        WagesPayType = b.WagesPayType,

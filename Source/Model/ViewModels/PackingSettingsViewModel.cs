@@ -40,8 +40,10 @@ namespace Model.ViewModel
         public bool isVisibleNetWeight { get; set; }
         public bool isVisibleProductInvoiceGroup { get; set; }
         public bool isVisibleSaleDeliveryOrder { get; set; }
+        public bool isVisiblePackingUnit { get; set; }
 
         public bool isAllowtoUpdateBuyerSpecification { get; set; }
+        public bool isAllowtoPackMultipleBarcode { get; set; }       
 
         public string filterProductTypes { get; set; }
         public string filterProductGroups { get; set; }

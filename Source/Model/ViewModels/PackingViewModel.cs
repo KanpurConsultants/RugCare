@@ -101,6 +101,8 @@ namespace Model.ViewModels
         [Display(Name = "Product UID")]
         public int? ProductUidId { get; set; }
         public string ProductUidName { get; set; }
+        public int? ToProductUidId { get; set; }
+        public string ToProductUidName { get; set; }
 
         [Display(Name = "Product"), Required]
         public int ProductId { get; set; }
@@ -233,6 +235,17 @@ namespace Model.ViewModels
         public Decimal? Length { get; set; }
         public Decimal? Width { get; set; }
         public Decimal? Height { get; set; }
+
+        public Decimal? PackingLength { get; set; }
+        public Decimal? PackingWidth { get; set; }
+        public Decimal? PackingHeight { get; set; }
+        public Decimal? PackingHeightX { get; set; }
+        public Decimal? GrossWeightX { get; set; }
+        public Decimal? NetWeightX { get; set; }
+
+        [Display(Name = "Packing Unit")]
+        public string PackingUnitId { get; set; }
+        public string PackingUnitName { get; set; }
 
         public int? DimensionUnitDecimalPlaces { get; set; }
         public PackingSettingsViewModel PackingSettings { get; set; }

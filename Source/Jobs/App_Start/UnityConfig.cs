@@ -189,6 +189,9 @@ namespace Jobs.App_Start
             container.RegisterType<IRepository<WeavingRetension>, Repository<WeavingRetension>>();
             container.RegisterType<IWeavingRetensionService, WeavingRetensionService>(new PerRequestLifetimeManager());
 
+            container.RegisterType<IRepository<PackingUnitSetting>, Repository<PackingUnitSetting>>();
+            container.RegisterType<IPackingUnitSettingService, PackingUnitSettingService>(new PerRequestLifetimeManager());
+
             container.RegisterType<IRepository<PersonGodown>, Repository<PersonGodown>>();
             container.RegisterType<IPersonGodownService, PersonGodownService>(new PerRequestLifetimeManager());
 
@@ -2183,6 +2186,9 @@ namespace Jobs.App_Start
 
             Mapper.CreateMap<StockHeader, StockHeaderViewModel>();
             Mapper.CreateMap<StockHeaderViewModel, StockHeader>();
+
+            Mapper.CreateMap<StockHeaderTransport, StockHeaderViewModel>();
+            Mapper.CreateMap<StockHeaderViewModel, StockHeaderTransport>();
 
             Mapper.CreateMap<StockLine, StockLineViewModel>();
             Mapper.CreateMap<StockLineViewModel, StockLine>();

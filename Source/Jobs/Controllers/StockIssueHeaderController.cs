@@ -194,7 +194,7 @@ namespace Jobs.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Post(StockHeaderViewModel svm)
         {
-            StockHeader s = Mapper.Map<StockHeaderViewModel, StockHeader>(svm);
+            StockHeaderTransport s = Mapper.Map<StockHeaderViewModel, StockHeaderTransport>(svm);
 
             #region BeforeSave
             bool BeforeSave = true;
@@ -256,7 +256,7 @@ namespace Jobs.Controllers
                 #region CreateRecord
                 if (svm.StockHeaderId <= 0)
                 {
-
+                    s.TransportId= svm.TransportId;
                     s.CreatedDate = DateTime.Now;
                     s.ModifiedDate = DateTime.Now;
                     s.CreatedBy = User.Identity.Name;
@@ -327,7 +327,7 @@ namespace Jobs.Controllers
                     bool DocDateChanged = false;
                     List<LogTypeViewModel> LogList = new List<LogTypeViewModel>();
 
-                    StockHeader temp = _StockHeaderService.Find(s.StockHeaderId);
+                    StockHeaderTransport temp = context.StockHeaderTransport.Where(m => m.StockHeaderId == s.StockHeaderId).FirstOrDefault();
 
                     GodownChanged = (temp.GodownId == s.GodownId) ? false : true;
                     DocDateChanged = (temp.DocDate == s.DocDate) ? false : true;
@@ -349,12 +349,21 @@ namespace Jobs.Controllers
                     temp.ProcessId = s.ProcessId;
                     temp.GodownId = s.GodownId;
                     temp.Remark = s.Remark;
+                    temp.TransportId = svm.TransportId;
+                    temp.VehicleNo = svm.VehicleNo;
+                    temp.LrNo = svm.LrNo;
+                    temp.EWayBillNo = svm.EWayBillNo;
+                    temp.EWayBillDate = svm.EWayBillDate;
+                    temp.LrDate = svm.LrDate;
+                    temp.PaymentType = svm.PaymentType;
+                    temp.Destination = svm.Destination;
 
                     temp.ModifiedDate = DateTime.Now;
                     temp.ModifiedBy = User.Identity.Name;
                     //_StockHeaderService.Update(temp);
                     temp.ObjectState = Model.ObjectState.Modified;
                     context.StockHeader.Add(temp);
+
 
                     //if (GodownChanged)
                     //    new StockService(_unitOfWork).UpdateStockGodownId(temp.StockHeaderId, temp.GodownId, context);
@@ -1778,6 +1787,7 @@ namespace Jobs.Controllers
                             }
                             else
                             {
+
                                 if (pd.Status == (int)StatusConstants.Drafted || pd.Status == (int)StatusConstants.Modified || pd.Status == (int)StatusConstants.Import)
                                 {
                                     if (Settings.SqlProcDocumentPrint == null || Settings.SqlProcDocumentPrint == "")
@@ -1888,8 +1898,7 @@ namespace Jobs.Controllers
 	--Header Table Fields	
 	H.StockHeaderId,H.DocTypeId,H.DocNo,DocIdCaption+' No' AS DocIdCaption ,
 	H.SiteId,H.DivisionId,H.DocDate,DTS.DocIdCaption +' Date' AS DocIdCaptionDate,
-	PS.ProcessName AS ProcessName,
-	H.Remark,DT.DocumentTypeShortName,(CASE WHEN H.IsGatePassPrinted=1 THEN NULL ELSE  H.GatePassHeaderId END) as GatePassHeaderId,H.ModifiedBy +' ' + Replace(replace(convert(NVARCHAR, H.ModifiedDate, 106), ' ', '/'),'/20','/') + substring (convert(NVARCHAR,H.ModifiedDate),13,7) AS ModifiedBy,
+	PS.ProcessName AS ProcessName, 	H.Remark,DT.DocumentTypeShortName,(CASE WHEN H.IsGatePassPrinted=1 THEN NULL ELSE  H.GatePassHeaderId END) as GatePassHeaderId,H.ModifiedBy +' ' + Replace(replace(convert(NVARCHAR, H.ModifiedDate, 106), ' ', '/'),'/20','/') + substring (convert(NVARCHAR,H.ModifiedDate),13,7) AS ModifiedBy,
 	H.ModifiedDate,(CASE WHEN Isnull(H.Status,0)=0 OR Isnull(H.Status,0)=8 THEN 0 ELSE 1 END)  AS Status,
    	(CASE WHEN SPR.[Party GST NO] IS NULL THEN 'Yes' ELSE 'No' END ) AS ReverseCharge,
 	VDC.CompanyName,
@@ -1899,10 +1908,8 @@ namespace Jobs.Controllers
 	--Person Detail
 	P.Name AS PartyName, DTS.PartyCaption AS  PartyCaption, P.Suffix AS PartySuffix,	
 	isnull(PA.Address,'')+' '+isnull(C.CityName,'')+','+isnull(PA.ZipCode,'')+(CASE WHEN isnull(CS.StateName,'') <> isnull(S.StateName,'') AND SPR.[Party GST NO] IS NOT NULL THEN ',State : '+isnull(S.StateName,'')+(CASE WHEN S.StateCode IS NULL THEN '' ELSE ', Code : '+S.StateCode END)    ELSE '' END ) AS PartyAddress,
-	isnull(S.StateName,'') AS PartyStateName,isnull(S.StateCode,'') AS PartyStateCode,	
-	
-	P.Mobile AS PartyMobileNo,	SPR.*,
-	
+	isnull(S.StateName,'') AS PartyStateName,isnull(S.StateCode,'') AS PartyStateCode,		
+	P.Mobile AS PartyMobileNo,	SPR.*,	
 	--Caption Fields	
 	DTS.SignatoryMiddleCaption,DTS.SignatoryRightCaption,
 	--Line Table
@@ -1911,27 +1918,26 @@ namespace Jobs.Controllers
 	D1.Dimension1Name,DTS.Dimension1Caption,D2.Dimension2Name,DTS.Dimension2Caption,D3.Dimension3Name,DTS.Dimension3Caption,D4.Dimension4Name,DTS.Dimension4Caption,
 	L.LotNo AS LotNo,(CASE WHEN DTS.PrintSpecification >0 THEN   L.Specification ELSE '' END)  AS Specification,DTS.SpecificationCaption,DTS.SignatoryleftCaption,L.Remark AS LineRemark,
    	--STC.Code AS SalesTaxProductCodes,
-   	(CASE WHEN H.ProcessId IN (26,28) THEN  STC.Code ELSE PSSTC.Code END) AS SalesTaxProductCodes ,
+   	--(CASE WHEN H.ProcessId IN (26,28) THEN  STC.Code ELSE PSSTC.Code END) AS SalesTaxProductCodes ,
    	--SDS.SalesTaxProductCodeCaption,
+    STC.Code AS SalesTaxProductCodes ,
    	(SELECT TOP 1 SalesTaxProductCodeCaption FROM web.SiteDivisionSettings WHERE H.DocDate BETWEEN StartDate AND IsNull(EndDate,getdate()) AND SiteId=H.SiteId AND DivisionId=H.DivisionId)  AS SalesTaxProductCodeCaption,
 	(CASE WHEN DTS.PrintProductGroup >0 THEN isnull(PG.ProductGroupName,'') ELSE '' END)+(CASE WHEN DTS.PrintProductdescription >0 THEN isnull(','+PD.Productdescription,'') ELSE '' END) AS ProductGroupName,
-	DTS.ProductGroupCaption,  
-	PU.ProductUidName,
-	DTS.ProductUidCaption,
-	Cost.CostCenterName,
-	DTS.CostCenterCaption,
-	
-	--isnull(CGPD.PrintingDescription,CGPD.ChargeGroupProductName) AS ChargeGroupProductName,
-	
+	DTS.ProductGroupCaption,  PU.ProductUidName,	DTS.ProductUidCaption,	Cost.CostCenterName,
+	DTS.CostCenterCaption,	isnull(CGPD.PrintingDescription,CGPD.ChargeGroupProductName) AS ChargeGroupProductName,
+	T.Name TransportName, SHT.VehicleNo, SHT.LrNo, SHT.LrDate, SHT.EWayBillNo, SHT.EWayBillDate, SHT.PrivateMark, SHT.Weight, SHT.Freight, SHT.PaymentType, SHT.Destination, SHT.DescriptionOfGoods, SHT.DescriptionOfPacking, SHT.ChargedWeight,
 	--SalesTaxGroupPersonId
 	--CGP.ChargeGroupPersonName,
 	--Other Fields
    		@CostCenterCnt AS CostCenterCnt,
 	Null SubReportProcList,
 	(CASE WHEN Isnull(H.Status,0)=0 OR Isnull(H.Status,0)=8 THEN 'Provisional ' +isnull(DT.PrintTitle,DT.DocumentTypeName) ELSE isnull(PrintTitle,DT.DocumentTypeName) END) AS ReportTitle, 
-	'Std_StockIssue_Print.rdl' AS ReportName,			
+	CASE WHEN HS.isVisibleRate =1 THEN  'StdDocPrint_StockIssueWithRate.rdl' ELSE 'Std_StockIssue_Print.rdl' END AS ReportName,									
 	SalesTaxGroupProductCaption	
 	FROM Web.StockHeaders H WITH (Nolock)
+	LEFT JOIN web.StockHeaderTransport SHT WITH (Nolock) ON SHT.StockHeaderId = H.StockHeaderId
+	LEFT JOIN web.People T WITH (Nolock) ON T.PersonID = SHT.TransportId
+    LEFT JOIN web.StockHeaderSettings HS WITH (Nolock) ON HS.DocTypeId=H.DocTypeId AND HS.SiteId = H.SiteId AND HS.DivisionId = H.DivisionId
 	LEFT JOIN web.DocumentTypes DT WITH (Nolock) ON DT.DocumentTypeId=H.DocTypeId
 	LEFT JOIN Web._DocumentTypeSettings DTS WITH (Nolock) ON DTS.DocumentTypeId=DT.DocumentTypeId	
 	LEFT JOIN web.ViewDivisionCompany VDC WITH (Nolock) ON VDC.DivisionId=H.DivisionId
@@ -1961,7 +1967,7 @@ namespace Jobs.Controllers
 	LEFT JOIN web.Dimension3 D3 WITH (Nolock) ON D3.Dimension3Id=L.Dimension3Id
 	LEFT JOIN Web.Dimension4 D4 WITH (nolock) ON D4.Dimension4Id=L.Dimension4Id
 	LEFT JOIN web.Units U WITH (Nolock) ON U.UnitId=PD.UnitId	
-	--LEFT JOIN web.ChargeGroupProducts CGPD WITH (Nolock) ON L.SalesTaxGroupProductId = CGPD.ChargeGroupProductId	
+	LEFT JOIN web.ChargeGroupProducts CGPD WITH (Nolock) ON PD.SalesTaxGroupProductId = CGPD.ChargeGroupProductId	
    	WHERE H.StockHeaderId=" + item + @"
    	ORDER BY L.Sr";
 
@@ -1974,12 +1980,13 @@ namespace Jobs.Controllers
             String QueryGatePass;
             QueryGatePass = @"SELECT JOH.StockHeaderId, H.GatePassHeaderId,  DT.DocumentTypeShortName +'-'+ H.DocNo AS DocNo, H.DocDate,  H.Remark, P.Name AS PersonName, G.GodownName,  
                 L.GatePassLineId, L.Product, L.Specification, L.Qty, U.UnitName, U.DecimalPlaces,
-                ' " + SH.DocNo + @"' AS ReferenceDocNo,'GatePassPrint.rdl'  AS ReportName, 'Gate Pass' AS ReportTitle,
+                DT1.DocumentTypeShortName +'-'+ JOH.DocNo AS ReferenceDocNo,'GatePassPrint.rdl'  AS ReportName, 'Gate Pass' AS ReportTitle,
                 NULL AS SubReportProcList,
                 DTS.SignatoryleftCaption,
                 DTS.SignatoryMiddleCaption,
                 DTS.SignatoryRightCaption    
                 FROM Web.StockHeaders JOH
+                LEFT JOIN [Web].DocumentTypes DT1 WITH (nolock) ON DT1.DocumentTypeId = JOH.DocTypeId 
                 LEFT JOIN  Web.GatePassHeaders H ON JOH.GatePassHeaderId = H.GatePassHeaderId 
                 LEFT JOIN web.Godowns G ON G.GodownId = H.GodownId 
                 LEFT JOIN web.People P ON P.PersonID  = H.PersonID 
@@ -1995,6 +2002,53 @@ namespace Jobs.Controllers
             QryGatePass.QueryName = nameof(QueryGatePass);
             DocumentPrintData.Add(QryGatePass);
 
+
+
+            String QueryCalculation;
+            QueryCalculation = @"SELECT 1 id, Max(H.StockHeaderId) AS HeaderTableId, 1 Sr,'Gross Amount' ChargeName, 0 AS Amount, NULL ChargeTypeId, NULL ChargeTypeName,0 Rate,'StdDocPrintSub_CalculationHeader.rdl' ReportName 
+                            FROM web.StockHeaders H
+                            LEFT JOIN web.StockLines L ON L.StockHeaderId = H.StockHeaderId
+                            WHERE H.StockHeaderId = " + item + @" 
+                            UNION ALL 
+                            SELECT 2 id, Max(H.StockHeaderId) AS HeaderTableId, 2 Sr,'CGST' ChargeName, 0 AS Amount, NULL ChargeTypeId, NULL ChargeTypeName,0 Rate,'StdDocPrintSub_CalculationHeader.rdl' ReportName 
+                            FROM web.StockHeaders H
+                            LEFT JOIN web.StockLines L ON L.StockHeaderId = H.StockHeaderId
+                            WHERE H.StockHeaderId = " + item + @" 
+                            UNION ALL 
+                            SELECT 3 id, Max(H.StockHeaderId) AS HeaderTableId, 3 Sr,'SGST' ChargeName, 0 AS Amount, NULL ChargeTypeId, NULL ChargeTypeName,0 Rate,'StdDocPrintSub_CalculationHeader.rdl' ReportName 
+                            FROM web.StockHeaders H
+                            LEFT JOIN web.StockLines L ON L.StockHeaderId = H.StockHeaderId
+                            WHERE H.StockHeaderId = " + item + @" 
+                            UNION ALL 
+                            SELECT 4 id, Max(H.StockHeaderId) AS HeaderTableId, 4 Sr,'Net Amount' ChargeName, 0 AS Amount, NULL ChargeTypeId, NULL ChargeTypeName,0 Rate,'StdDocPrintSub_CalculationHeader.rdl' ReportName 
+                            FROM web.StockHeaders H
+                            LEFT JOIN web.StockLines L ON L.StockHeaderId = H.StockHeaderId
+                            WHERE H.StockHeaderId = " + item + @" 	";
+
+
+            ListofQuery QryCalculation = new ListofQuery();
+            QryCalculation.Query = QueryCalculation;
+            QryCalculation.QueryName = nameof(QueryCalculation);
+            DocumentPrintData.Add(QryCalculation);
+
+
+            String QueryGSTSummary;
+            QueryGSTSummary = @"   SELECT  
+        isnull(STGP.PrintingDescription,STGP.ChargeGroupProductName) as ChargeGroupProductName, 
+        Sum(L.Amount) AS TaxableAmount,0 AS IGST,0 AS CGST,0 AS SGST,0 AS GSTCess,
+        'StdDocPrintSub_GSTSummary.rdl' AS ReportName
+        FROM web.StockHeaders H
+        LEFT JOIN web.StockLines L ON L.StockHeaderId = H.StockHeaderId
+        LEFT JOIN web.Products P ON P.ProductId = L.ProductId
+        LEFT JOIN web.ChargeGroupProducts STGP ON P.SalesTaxGroupProductId = STGP.ChargeGroupProductId
+        WHERE H.StockHeaderId = " + item + @"
+        GROUP BY isnull(STGP.PrintingDescription,STGP.ChargeGroupProductName)	";
+
+
+            ListofQuery QryGSTSummary = new ListofQuery();
+            QryGSTSummary.Query = QueryGSTSummary;
+            QryGSTSummary.QueryName = nameof(QueryGSTSummary);
+            DocumentPrintData.Add(QryGSTSummary);
 
             return DocumentPrintData;
 

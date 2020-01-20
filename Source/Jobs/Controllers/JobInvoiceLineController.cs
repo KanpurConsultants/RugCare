@@ -78,6 +78,22 @@ namespace Jobs.Controllers
             return PartialView("_Filters", vm);
         }
 
+        public ActionResult _ForInspection(int id, int? JobworkrId)
+        {
+            JobInvoiceLineFilterViewModel vm = new JobInvoiceLineFilterViewModel();
+
+            JobInvoiceHeader Header = new JobInvoiceHeaderService(_unitOfWork).Find(id);
+
+            JobInvoiceSettings Settings = new JobInvoiceSettingsService(_unitOfWork).GetJobInvoiceSettingsForDocument(Header.DocTypeId, Header.DivisionId, Header.SiteId);
+            vm.DocumentTypeSettings = new DocumentTypeSettingsService(_unitOfWork).GetDocumentTypeSettingsForDocument(Header.DocTypeId);
+
+            if (JobworkrId.HasValue)
+                vm.JobWorkerId = JobworkrId.Value;
+            vm.JobInvoiceHeaderId = id;
+            vm.JobInvoiceSettings = Mapper.Map<JobInvoiceSettingsViewModel>(Settings);
+            return PartialView("_InspectionFilters", vm);
+        }
+
         public ActionResult _ForOrder(int id, int? JobworkrId)
         {
             JobInvoiceLineFilterViewModel vm = new JobInvoiceLineFilterViewModel();
@@ -99,6 +115,23 @@ namespace Jobs.Controllers
         public ActionResult _FilterPost(JobInvoiceLineFilterViewModel vm)
         {
             List<JobInvoiceLineViewModel> temp = _JobInvoiceLineService.GetJobReceiptForFilters(vm).ToList();
+
+            JobInvoiceHeader Header = new JobInvoiceHeaderService(_unitOfWork).Find(vm.JobInvoiceHeaderId);
+
+            JobInvoiceSettings Settings = new JobInvoiceSettingsService(_unitOfWork).GetJobInvoiceSettingsForDocument(Header.DocTypeId, Header.DivisionId, Header.SiteId);
+
+            JobInvoiceMasterDetailModel svm = new JobInvoiceMasterDetailModel();
+            svm.JobInvoiceLineViewModel = temp;
+            svm.JobInvoiceSettings = Mapper.Map<JobInvoiceSettingsViewModel>(Settings);
+            return PartialView("_Results", svm);
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult _FilterPostInspections(JobInvoiceLineFilterViewModel vm)
+        {
+            List<JobInvoiceLineViewModel> temp = _JobInvoiceLineService.GetJobInspectionForFilters(vm).ToList();
 
             JobInvoiceHeader Header = new JobInvoiceHeaderService(_unitOfWork).Find(vm.JobInvoiceHeaderId);
 
@@ -201,8 +234,7 @@ namespace Jobs.Controllers
                             line.CreatedBy = User.Identity.Name;
                             line.ModifiedBy = User.Identity.Name;
                             line.JobInvoiceLineId = pk;
-
-                            LineStatus.Add(line.JobReceiveLineId, 0);
+                                                      
 
                             line.ObjectState = Model.ObjectState.Added;
                             //_JobInvoiceLineService.Create(line);
@@ -213,11 +245,15 @@ namespace Jobs.Controllers
                             Status.ObjectState = Model.ObjectState.Added;
                             LineStat.Add(Status);
 
-                            JobReceiveLine Jobreceive = new JobReceiveLineService(_unitOfWork).Find(item.JobReceiveLineId);
-                            Jobreceive.LockReason = "Job Invoice Completed";
-                            Jobreceive.ObjectState = Model.ObjectState.Modified;
-                            db.JobReceiveLine.Add(Jobreceive);
+                            if (LineStatus.ContainsKey(line.JobReceiveLineId) == false)
+                            {
+                                LineStatus.Add(line.JobReceiveLineId, 0);
 
+                                JobReceiveLine Jobreceive = new JobReceiveLineService(_unitOfWork).Find(item.JobReceiveLineId);
+                                Jobreceive.LockReason = "Job Invoice Completed";
+                                Jobreceive.ObjectState = Model.ObjectState.Modified;
+                                db.JobReceiveLine.Add(Jobreceive);
+                            }
 
                             LineList.Add(new LineDetailListViewModel { Amount = line.Amount, Rate = line.Rate, LineTableId = line.JobInvoiceLineId, HeaderTableId = item.JobInvoiceHeaderId, PersonID = item.JobWorkerId, DealQty = line.DealQty, CostCenterId = line.CostCenterId });
                             RefIds.Add(new LineReferenceIds { LineId = line.JobInvoiceLineId, RefLineId = line.JobReceiveLineId });
@@ -269,19 +305,19 @@ namespace Jobs.Controllers
                             }).ToList();
 
 
-                  var  temp1 = (from p in db.JobReceiveLine
-                             where RecLineIds.Contains(p.JobReceiveLineId)
-                             join rqa in db.JobReceiveQALine on p.JobReceiveLineId equals rqa.JobReceiveLineId into qatable
-                             from qatab in qatable.DefaultIfEmpty()
-                             group new { p, qatab } by new { p.JobReceiveLineId } into g
-                             select new ReferenceLineChargeViewModel
-                             {
-                                 LineId = g.Key.JobReceiveLineId,
-                                 PenaltyAmt = g.Select(m => m.p.PenaltyAmt - (m.p.IncentiveAmt ?? 0)).FirstOrDefault() + ((g.Select(m => m.qatab).FirstOrDefault() == null) ? 0 : g.Select(m => m.qatab.PenaltyAmt).FirstOrDefault()),
-                                 ChargeGroupProductId = g.Select(m => m.p.JobOrderLine.Product.SalesTaxGroupProductId ?? m.p.JobOrderLine.Product.ProductGroup.DefaultSalesTaxGroupProductId).FirstOrDefault(),
-                             });
+                    var temp1 = (from p in db.JobReceiveLine
+                                 where RecLineIds.Contains(p.JobReceiveLineId)
+                                 join rqa in db.JobReceiveQALine on p.JobReceiveLineId equals rqa.JobReceiveLineId into qatable
+                                 from qatab in qatable.DefaultIfEmpty()
+                                 group new { p, qatab } by new { p.JobReceiveLineId } into g
+                                 select new ReferenceLineChargeViewModel
+                                 {
+                                     LineId = g.Key.JobReceiveLineId,
+                                     PenaltyAmt = g.Select(m => m.p.PenaltyAmt - (m.p.IncentiveAmt ?? 0)).FirstOrDefault() + ((g.Select(m => m.qatab).FirstOrDefault() == null) ? 0 : g.Select(m => m.qatab.PenaltyAmt).FirstOrDefault()),
+                                     ChargeGroupProductId = g.Select(m => m.p.JobOrderLine.Product.SalesTaxGroupProductId ?? m.p.JobOrderLine.Product.ProductGroup.DefaultSalesTaxGroupProductId).FirstOrDefault(),
+                                 });
 
-                    
+
                     //foreach (var item in temp)
                     //{
                     //    List<CalculationProductViewModel> ChargeRates = new List<CalculationProductViewModel>();
@@ -1255,10 +1291,10 @@ namespace Jobs.Controllers
                 JobInvoiceLine JobInvoiceLine = (from p in db.JobInvoiceLine
                                                  where p.JobInvoiceLineId == vm.JobInvoiceLineId
                                                  select p).FirstOrDefault();
-                
-                //JobReceiveLine Rec = (from p in db.JobReceiveLine
-                //                      where p.JobReceiveLineId == JobInvoiceLine.JobReceiveLineId
-                //                      select p).FirstOrDefault();
+
+                JobReceiveLine Rec = (from p in db.JobReceiveLine
+                                      where p.JobReceiveLineId == JobInvoiceLine.JobReceiveLineId
+                                      select p).FirstOrDefault();
 
                 JobInvoiceHeader header = new JobInvoiceHeaderService(_unitOfWork).Find(JobInvoiceLine.JobInvoiceHeaderId);
 
@@ -1282,9 +1318,9 @@ namespace Jobs.Controllers
 
 
                 //_JobInvoiceLineService.Delete(JobInvoiceLine);
-                //Rec.LockReason =null;
-                //Rec.ObjectState = Model.ObjectState.Modified;
-                //db.JobReceiveLine.Add(Rec);
+                Rec.LockReason = null;
+                Rec.ObjectState = Model.ObjectState.Modified;
+                db.JobReceiveLine.Add(Rec);
 
 
                 JobInvoiceLine.ObjectState = Model.ObjectState.Deleted;

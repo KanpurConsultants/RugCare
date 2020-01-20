@@ -18,6 +18,11 @@ namespace Model.Models
         public int DocTypeId { get; set; }
         public virtual DocumentType DocType { get; set; }
 
+        [ForeignKey("WizardMenu")]
+        [Display(Name = "WizardMenu")]
+        public int? WizardMenuId { get; set; }
+        public virtual Menu WizardMenu { get; set; }
+
         [ForeignKey("ImportMenu")]
         [Display(Name = "ImportMenu")]
         public int? ImportMenuId { get; set; }

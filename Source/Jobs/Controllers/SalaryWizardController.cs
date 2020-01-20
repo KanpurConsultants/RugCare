@@ -243,11 +243,21 @@ namespace Jobs.Controllers
                                     string ChargeName = db.Charge.Find(EmployeeCharge.ChargeId).ChargeName;
 
                                     if (EmployeeCharge.Rate !=null && EmployeeCharge.Rate !=0)
-                                    {                                        
+                                    {
+                                        if (E.GrossSalary!=null && E.GrossSalary !=0 && ChargeName== ChargeConstants.PF)
+                                        {
                                             if (WagesPayType == "Daily")
-                                                LineCharge.Amount = EmployeeCharge.Rate/100 * Line.BasicSalary * Line.Days;
+                                                LineCharge.Amount = EmployeeCharge.Rate / 100 * E.GrossSalary * Line.Days;
+                                            else
+                                                LineCharge.Amount = (EmployeeCharge.Rate / 100 * E.GrossSalary * Line.Days / SalaryData.MonthDays);
+                                        }
+                                        else
+                                        {
+                                            if (WagesPayType == "Daily")
+                                                LineCharge.Amount = EmployeeCharge.Rate / 100 * Line.BasicSalary * Line.Days;
                                             else
                                                 LineCharge.Amount = (EmployeeCharge.Rate / 100 * Line.BasicSalary * Line.Days / SalaryData.MonthDays);
+                                        }
 
                                     }
                                     else

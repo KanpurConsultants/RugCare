@@ -1658,6 +1658,7 @@ namespace Jobs.Controllers
                             }
                             line.ProductUidId = BarCodes;
                             line.ProductId = JobOrderLine.ProductId;
+                            line.Specification = JobOrderLine.Specification;
                             line.Dimension1Id = JobOrderLine.Dimension1Id;
                             line.Dimension2Id = JobOrderLine.Dimension2Id;
                             line.Dimension3Id = JobOrderLine.Dimension3Id;

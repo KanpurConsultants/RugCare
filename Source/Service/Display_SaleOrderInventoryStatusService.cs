@@ -508,16 +508,19 @@ namespace Service
                     SELECT V1.JobOrderLineId, sum(L.Qty) AS RecQty  
 					FROM web.JobReceiveHeaders H WITH (NoLock)
 					LEFT JOIN web.JobReceiveLines L WITH (NoLock) ON L.JobReceiveHeaderId = H.JobReceiveHeaderId
+					LEFT JOIN web.ProductUids PU WITH (NoLock) ON PU.ProductUIDId = L.ProductUidId
+					LEFT JOIN web.ProductUids PU1 WITH (NoLock) ON PU1.ProductUidName = L.LotNo
 					LEFT JOIN 
 					(
-					SELECT PU.ProductUidId, JOL.JobOrderLineId, JOL.ProdOrderLineId, JOL.ProductId 
+					SELECT isnull(PU.ProductUidId,PU1.ProductUidId) AS ProductUidId, JOL.JobOrderLineId, JOL.ProdOrderLineId, JOL.ProductId 
 					FROM web.JobReceiveHeaders H WITH (NoLock)
 					LEFT JOIN web.JobReceiveLines L WITH (NoLock) ON L.JobReceiveHeaderId = H.JobReceiveHeaderId
 					LEFT JOIN web.JobOrderLines JOL WITH (NoLock) ON JOL.JobOrderLineId = L.JobOrderLineId
-					LEFT JOIN web.ProductUids PU ON PU.ProductUIDId = L.ProductUidId OR PU.LotNo = L.LotNo 
+					LEFT JOIN web.ProductUids PU WITH (NoLock) ON PU.ProductUIDId = L.ProductUidId 
+					LEFT JOIN web.ProductUids PU1 WITH (NoLock) ON PU1.ProductUidName = L.LotNo
 					WHERE H.SiteId =1 AND H.DivisionId =1 AND H.DocTypeId =448
-					AND PU.ProductUidId IS NOT NULL 
-					) V1 ON V1.ProductUidId = L.ProductUidId
+					AND isnull(PU.ProductUidId,PU1.ProductUidId) IS NOT NULL 
+					) V1 ON V1.ProductUidId = isnull(PU.ProductUidId,PU1.ProductUidId)
 					WHERE H.SiteId =1 AND H.DivisionId =1 AND H.ProcessId =2008  AND V1.JobOrderLineId IS NOT NULL 
                     GROUP BY V1.JobOrderLineId
 
@@ -997,9 +1000,11 @@ namespace Service
                     LEFT JOIN web.SaleOrderHeaders SOH WITH(Nolock) ON SOH.SaleOrderHeaderId = SOL.SaleOrderHeaderId
                     LEFT JOIN
                     (
-                    SELECT JOL.ProductUIDId, Max(JOL.Qty) AS OTO, Max(RL.RecQty) AS OTR, Max(RL.RecDate) AS RecDate
+                    SELECT isnull(PU.ProductUidId,PU1.ProductUidId) AS ProductUidId, Max(JOL.Qty) AS OTO, Max(RL.RecQty) AS OTR, Max(RL.RecDate) AS RecDate
                     FROM WEb.JobOrderHeaders  JOH WITH(Nolock)
                     LEFT JOIN web.JobOrderLines JOL WITH(Nolock) ON JOL.JobOrderHeaderId = JOH.JobOrderHeaderId
+                    LEFT JOIN web.ProductUids PU WITH (NoLock) ON PU.ProductUIDId = JOL.ProductUidId
+					LEFT JOIN web.ProductUids PU1 WITH (NoLock) ON PU1.ProductUidName = JOL.LotNo
                     LEFT JOIN
                     (
                     SELECT RL.JobOrderLineId, Max(RH.DocDate) AS RecDate, sum(RL.Qty) AS RecQty  
@@ -1007,8 +1012,8 @@ namespace Service
                     LEFT JOIN web.JobReceiveHeaders RH WITH(Nolock) ON RH.JobReceiveHeaderId = RL.JobReceiveHeaderId
                     GROUP BY RL.JobOrderLineId
                     ) RL ON RL.JobOrderLineId = JOL.JobOrderLineId
-                    WHERE JOH.DocTypeId = 4024 AND JOL.ProductUIDId IS NOT NULL
-                    GROUP BY JOL.ProductUIDId
+                    WHERE JOH.DocTypeId = 4024 AND isnull(PU.ProductUidId,PU1.ProductUidId) IS NOT NULL
+                    GROUP BY isnull(PU.ProductUidId,PU1.ProductUidId)
 					) A ON A.ProductUIDId = PU.ProductUIDId   
                     WHERE 1=1 " +
         (DocTypeId != null ? " AND SOH.DocTypeId IN (SELECT Items FROM [dbo].[Split] (@DocTypeId, ','))" : "") +
@@ -1160,15 +1165,19 @@ namespace Service
                     SELECT V1.JobOrderLineId, sum(L.Qty) AS RecQty
                     FROM web.JobReceiveHeaders H WITH(NoLock)
                     LEFT JOIN web.JobReceiveLines L WITH(NoLock) ON L.JobReceiveHeaderId = H.JobReceiveHeaderId
+                    LEFT JOIN web.ProductUids PU WITH (NoLock) ON PU.ProductUIDId = L.ProductUidId
+					LEFT JOIN web.ProductUids PU1 WITH (NoLock) ON PU1.ProductUidName = L.LotNo
                     LEFT JOIN
                     (
-                    SELECT L.ProductUidId, JOL.JobOrderLineId, JOL.ProdOrderLineId, JOL.ProductId
+                    SELECT isnull(PU.ProductUidId,PU1.ProductUidId) AS ProductUidId, JOL.JobOrderLineId, JOL.ProdOrderLineId, JOL.ProductId
                     FROM web.JobReceiveHeaders H WITH(NoLock)
                     LEFT JOIN web.JobReceiveLines L WITH(NoLock) ON L.JobReceiveHeaderId = H.JobReceiveHeaderId
                     LEFT JOIN web.JobOrderLines JOL WITH(NoLock) ON JOL.JobOrderLineId = L.JobOrderLineId
+                    LEFT JOIN web.ProductUids PU WITH (NoLock) ON PU.ProductUIDId = L.ProductUidId
+					LEFT JOIN web.ProductUids PU1 WITH (NoLock) ON PU1.ProductUidName = L.LotNo
                     WHERE H.SiteId = 1 AND H.DivisionId = 1 AND H.DocTypeId = 448
-                    AND L.ProductUidId IS NOT NULL
-                    ) V1 ON V1.ProductUidId = L.ProductUidId
+                    AND isnull(PU.ProductUidId,PU1.ProductUidId) IS NOT NULL
+                    ) V1 ON V1.ProductUidId = isnull(PU.ProductUidId,PU1.ProductUidId)
                     WHERE H.SiteId = 1 AND H.DivisionId = 1 AND H.ProcessId = 2008  AND V1.JobOrderLineId IS NOT NULL
                     GROUP BY V1.JobOrderLineId
                     ) V ON V.JobOrderLineId = L.JobOrderLineId

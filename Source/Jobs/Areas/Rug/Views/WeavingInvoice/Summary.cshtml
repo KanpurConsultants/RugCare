@@ -160,7 +160,7 @@
                                         {
                                             IsRepeatedPerson = true;
                                         }
-                                        if (Model.JobInvoiceSummaryViewModel[i].CostCenterId == Model.JobInvoiceSummaryViewModel[i - 1].CostCenterId)
+                                        if (Model.JobInvoiceSummaryViewModel[i].CostCenterId == Model.JobInvoiceSummaryViewModel[i - 1].CostCenterId && Model.JobInvoiceSummaryViewModel[i].PersonId == Model.JobInvoiceSummaryViewModel[i - 1].PersonId)
                                         {
                                             IsRepeatedCostCenter = true;
                                         }

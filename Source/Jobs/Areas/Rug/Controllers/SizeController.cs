@@ -102,7 +102,7 @@ namespace Jobs.Areas.Rug.Controllers
                 pt.UnitId = MaxSize.UnitId;
             }
 
-            var ProductShape = new ProductShapeService(_unitOfWork).Find("Rectangle");
+            var ProductShape = new ProductShapeService(_unitOfWork).Find(ShapeConstants.Rectangle);
 
             if (ProductShape != null)
             {
@@ -175,6 +175,20 @@ namespace Jobs.Areas.Rug.Controllers
                 ModelState.AddModelError("", message);
                 ViewBag.Mode = "Add";
                 return View("Create", ptt);
+            }
+
+            ProductShape PS = db.ProductShape.Where(m => m.ProductShapeId == ptt.ProductShapeId).FirstOrDefault();
+
+            if (PS.ProductShapeName == ShapeConstants.Circle || PS.ProductShapeName == ShapeConstants.Square)
+            {
+                if (ptt.Length != ptt.Width ||  ptt.LengthFraction != ptt.WidthFraction )
+                {
+                    PrepareViewBag();
+                    string message = "Invalid Size";
+                    ModelState.AddModelError("", message);
+                    ViewBag.Mode = "Add";
+                    return View("Create", ptt);
+                }
             }
 
             if (ModelState.IsValid)

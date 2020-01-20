@@ -41,7 +41,7 @@
                 @*@Html.HiddenFor(m => m.ReferenceId)*@
                 @Html.HiddenFor(m => m.ProductUidId)
                 @Html.HiddenFor(m => m.DocumentCategoryId)
-
+                @Html.HiddenFor(m => m.LedgerSetting.isAllowedToChangeLedgerAccount)
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
 
@@ -282,8 +282,10 @@
 
 
         $('#LedgerAccountId').change(function()
-        {
-            $("#CostCenterId").select2("data", { id: "", text: "" });
+        {            
+            if ('@Model.LedgerSetting.isAllowedToChangeLedgerAccount' != "True")
+                $("#CostCenterId").select2("data", { id: "", text: "" });
+
             CustomSelectFunctionForLedgerId_Adjusted($("#ReferenceId"), '/LedgerLine/GetLedgerIds_Adusted', '/ComboHelpList/SetSingleLedger', ' ', false, 0, $('#LedgerAccountId','.modal-body').val(),Nature, $('#LedgerHeaderId', '.modal-body').val());
             CustomSelectFunctionForLedgerId_Adjusted($("#SupplementaryForLedgerId"), '/LedgerLine/GetLedgerIds_Supplementary', '/ComboHelpList/SetSingleLedger', ' ', false, 0, $('#LedgerAccountId','.modal-body').val(),Nature, $('#LedgerHeaderId', '.modal-body').val());
         })
@@ -495,7 +497,11 @@
                 success: function (data) {
                     if(data.Success){
                         //$('#LedgerAccountId').select2("data",{id:data.Id,text:data.Name}).attr('readonly','true').trigger('change');
-                        $('#LedgerAccountId').select2("data",{id:data.Id,text:data.Name}).attr('readonly','true');
+                            if ('@Model.LedgerSetting.isAllowedToChangeLedgerAccount' == "True")
+                                $('#LedgerAccountId').select2("data",{id:data.Id,text:data.Name});
+                            else
+                                $('#LedgerAccountId').select2("data",{ id: data.Id,text: data.Name}).attr('readonly', 'true');
+
                         if($('#BaseValue').is(':hidden'))
                             $('#Amount').focus();
                         else if($('#BaseValue').is(':visible'))

@@ -38,7 +38,6 @@
             @Html.HiddenFor(m => m.UnitConversionMultiplier)
             @Html.HiddenFor(m => m.ProductUidId)
             @Html.HiddenFor(m => m.SaleOrderNo)
-            @*@Html.HiddenFor(m => m.SaleOrderLineId)*@
             @Html.HiddenFor(m => m.ProductName)
             @Html.HiddenFor(m => m.GodownId)
             @Html.HiddenFor(m => m.DivisionId)
@@ -57,6 +56,7 @@
             @Html.HiddenFor(m => m.DimensionUnitDecimalPlaces)
             @Html.HiddenFor(m => m.PackingSettings.isVisibleProductInvoiceGroup)
             @Html.HiddenFor(m => m.PackingSettings.isAllowtoUpdateBuyerSpecification)
+            @Html.HiddenFor(m => m.PackingSettings.isAllowtoPackMultipleBarcode)
 
             <div class="form-horizontal modal-body">
 
@@ -111,12 +111,25 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-md-6" style="display:@(Model.PackingSettings.isVisibleLotNo ? "" : "none")">
+                                    @Html.HiddenFor(m => m.PackingSettings.isVisibleLotNo)
                                     <div class="form-group">
                                         @Html.LabelFor(model => model.LotNo, new { @class = "control-label col-xs-4" })
                                         <div class="col-xs-7">
                                             @Html.TextBoxFor(model => model.LotNo, new { @class = "form-control col-xs-7" })
                                             @Html.ValidationMessageFor(model => model.LotNo)
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6" style="display:@(Model.PackingSettings.isAllowtoPackMultipleBarcode ? "" : "none")">
+                                    @Html.HiddenFor(m => m.PackingSettings.isAllowtoPackMultipleBarcode)
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.ToProductUidId, ("To Barcode"), new { @class = "control-label col-md-4 col-sm-2" })
+                                        <div class="col-md-7 col-sm-10">
+                                            @Html.TextBoxFor(m => m.ToProductUidName, new { @class = "form-control " })
+                                            @Html.ValidationMessageFor(m => m.ToProductUidName, "", new { @class = "text-danger" })
+                                            <span id="ToProductUidValidation"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -236,6 +249,7 @@
                                     </div>
                                 </div>
 
+
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -315,9 +329,6 @@
                                     </div>
                                 </div>
 
-
-
-
                                 <div class="row">
 
                                     <div class="col-md-6" style='display:@(Model.PackingSettings.isVisibleGrossWeight ? "" : "none")'>
@@ -327,6 +338,10 @@
                                             <div class="col-xs-7">
                                                 @Html.TextBoxFor(model => model.GrossWeight, new { @class = "form-control col-xs-7" })
                                                 @Html.ValidationMessageFor(model => model.GrossWeight)
+                                            </div>
+                                            <div class="col-xs-5" style='display:none'>
+                                                @Html.TextBoxFor(m => m.GrossWeightX, null, new { @class = "form-control " })
+                                                @Html.ValidationMessageFor(m => m.GrossWeightX, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
                                     </div>
@@ -339,12 +354,53 @@
                                                 @Html.TextBoxFor(model => model.NetWeight, new { @class = "form-control col-xs-7" })
                                                 @Html.ValidationMessageFor(model => model.NetWeight)
                                             </div>
+                                            <div class="col-xs-5" style='display:none'>
+                                                @Html.TextBoxFor(m => m.NetWeightX, null, new { @class = "form-control " })
+                                                @Html.ValidationMessageFor(m => m.NetWeightX, "", new { @class = "text-danger" })
+                                            </div>
                                         </div>
                                     </div>
 
 
                                 </div>
 
+                            <div class="row" style='display:@(Model.PackingSettings.isVisiblePackingUnit ? "" : "none")'>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.PackingLength, "Measurment", new { @class = "control-label col-xs-2 " })
+                                        @Html.HiddenFor(m => m.PackingSettings.isVisiblePackingUnit)
+                                        <div class="col-md-9 col-sm-10">
+                                            <div class="col-xs-1" style="padding:0px">
+                                                @Html.TextBoxFor(m => m.PackingLength, null, new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(m => m.PackingLength, "", new { @class = "text-danger" })
+                                            </div>
+                                            <div class="col-xs-1" style="padding:5px;text-align:center;font-weight:bold">
+                                                X
+                                            </div>
+                                            <div class="col-xs-1" style="padding:0px">
+                                                @Html.TextBoxFor(m => m.PackingWidth, null, new { @class = "form-control " })
+                                                @Html.ValidationMessageFor(m => m.PackingWidth, "", new { @class = "text-danger" })
+                                            </div>
+                                            <div class="col-xs-1" style="padding:5px;text-align:center;font-weight:bold">
+                                                X
+                                            </div>
+                                            <div class="col-xs-1" style="padding:0px">
+                                                @Html.TextBoxFor(m => m.PackingHeight, null, new { @class = "form-control " })
+                                                @Html.ValidationMessageFor(m => m.PackingHeight, "", new { @class = "text-danger" })
+                                            </div>
+                                            <div class="col-xs-1" style='display:none'>
+                                                @Html.TextBoxFor(m => m.PackingHeightX, null, new { @class = "form-control " })
+                                                @Html.ValidationMessageFor(m => m.PackingHeightX, "", new { @class = "text-danger" })
+                                            </div>
+                                            <div class="col-xs-2" style="padding-left:0px">
+                                                @Html.TextBoxFor(m => m.PackingUnitId, null, new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.PackingUnitId, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
 
 
                                 <div class="row">
@@ -430,6 +486,7 @@
         //CustomSelectFunction($("#ProductId"), '/PackingLineWithBuyerDetail/GetCustomProducts', '/ComboHelpList/SetSingleProducts', ' ', false, 3);
         CustomSelectFunction($("#ProductInvoiceGroupId"), '/ComboHelpList/GetProductInvoiceGroupsDivisionWise', '/ComboHelpList/SetSingleProductInvoiceGroup', ' ', false, 0);
         CustomSelectFunctionForStockIn($("#StockInId"), '/PackingLineWithBuyerDetail/GetStockInForProduct', '/ComboHelpList/SetSingleStockIn', ' ', false, 4,DocID,$("#ProductId").val(), null, null, null, null);
+        CustomSelectFunction($("#PackingUnitId"), '/ComboHelpList/GetUnits', '/ComboHelpList/SetSingleUnit', ' ', false, 0);
 
         @*var BuyerSku = "@ViewBag.BuyerSkuList";
         $("#BuyerSku").select2({ tags: BuyerSku.split(',') });
@@ -644,34 +701,35 @@
                         //}
                         //else
                         //{
-                            $("#StockInBalanceQty").val(data.BalanceQty);
-                            $("#Qty").val(data.BalanceQty);
-                            $("#LotNo").val(data.LotNo);
-                            $("#ProductId").select2('data', { id: data.ProductId, text: data.ProductName});
-                            if (data.FromProcessId != null)
-                            {
-                                $("#FromProcessId").select2('data', { id: data.FromProcessId, text: data.FromProcessName});
-                            }
-                            else{
-                                $("#FromProcessId").select2('data', { id: '', text: ''});
-                            }
+                        $("#StockInBalanceQty").val(data.BalanceQty);
+                        $("#Qty").val(data.BalanceQty);
+                        $("#LotNo").val(data.LotNo);
+                        $("#ProductId").select2('data', { id: data.ProductId, text: data.ProductName});
+                        if (data.FromProcessId != null)
+                        {
+                            $("#FromProcessId").select2('data', { id: data.FromProcessId, text: data.FromProcessName});
+                        }
+                        else{
+                            $("#FromProcessId").select2('data', { id: '', text: ''});
+                        }
 
 
-                            if (data.ProductUidId != null)
-                            {
-                                $("#ProductUidId").val(data.ProductUidId);
-                                $("#ProductUidName").val(data.ProductUidName);
-                            }
+                        if (data.ProductUidId != null)
+                        {
+                            $("#ProductUidId").val(data.ProductUidId);
+                            $("#ProductUidName").val(data.ProductUidName);
+                        }
 
-                            $("#ProductUidName").attr('readonly', 'true');
-                            $("#ProductId").attr('readonly', 'true');
-                            $("#Dimension1Id").attr('readonly', 'true');
-                            $("#Dimension2Id").attr('readonly', 'true');
-                            $("#Dimension3Id").attr('readonly', 'true');
-                            $("#Dimension4Id").attr('readonly', 'true');
-                            $("#FromProcessId").attr('readonly', 'true');
-                            //GetProductDetail()
-                            Validate_Product();
+                        $("#ToProductUidName").val("");
+                        $("#ProductUidName").attr('readonly', 'true');
+                        $("#ProductId").attr('readonly', 'true');
+                        $("#Dimension1Id").attr('readonly', 'true');
+                        $("#Dimension2Id").attr('readonly', 'true');
+                        $("#Dimension3Id").attr('readonly', 'true');
+                        $("#Dimension4Id").attr('readonly', 'true');
+                        $("#FromProcessId").attr('readonly', 'true');
+                        //GetProductDetail()
+                        Validate_Product();
                         //}
                     }
                     else{
@@ -729,6 +787,8 @@
             var isAllowtoUpdateBuyerSpecification1 = '@ViewBag.isAllowtoUpdateBuyerSpecification';
             if (isAllowtoUpdateBuyerSpecification1=="Yes")
                 $("#BuyerSku").select();
+            else if ('@Model.PackingSettings.isAllowtoPackMultipleBarcode' == "True")
+                $("#ToProductUidName").focus();
             else
                 $("#Length").focus() ;
         });
@@ -736,6 +796,22 @@
         $("#DealQty,#Qty").keyup(function(){
             QtyValidation();
             Calculation();
+        });
+
+        $('#ToProductUidName').keyup(function()
+        {
+            if ('@Model.PackingSettings.isAllowtoPackMultipleBarcode' == "True")
+            {
+                if($('#ToProductUidName').val()!="")
+                {
+                    $('#Qty').val(($('#ToProductUidName').val() - $('#ProductUidName').val())+1);
+                }
+
+                $('#GrossWeight').val(($('#GrossWeightX').val() * $('#Qty').val()));
+                $('#NetWeight').val(($('#NetWeightX').val() * $('#Qty').val()));
+                $('#PackingHeight').val(($('#PackingHeightX').val() * $('#Qty').val()));
+                Calculation();
+            }
         });
 
 
@@ -926,6 +1002,16 @@
                     GetProductCustomDetail();
                     GetProductDimensions();
 
+                    if ('@Model.PackingSettings.isVisiblePackingUnit' == "True")
+                    {
+                        GetProductPackingUnit();
+                    }
+
+                    if ('@Model.PackingSettings.isVisibleGrossWeight' == "True")
+                    {
+                        GetProductPackingWeight();
+                    }
+
                     if ($("#CreateExtraSaleOrder").val() == "true")
                     {
                         GetProductCustomDetailForExtraPacking();
@@ -1060,30 +1146,30 @@
                 type: "POST",
                 url: "@(Url.Action("GetProductCustomDetailForExtraPackingJson"))",
                 data: { ProductId: $("#ProductId").val() },
-            success: function (data) {
-                if (data.length > 0)
-                {
-                    $("#BuyerSku").val(data[0].BuyerSku);
-                    $("#BuyerSpecification").val(data[0].BuyerSpecification);
-                    $("#BuyerSpecification1").val(data[0].BuyerSpecification1);
-                    $("#BuyerSpecification2").val(data[0].BuyerSpecification2);
-                    $("#BuyerSpecification3").val(data[0].BuyerSpecification3);
-                }
-                else{
-                    $("#BuyerSku").val("");
-                    $("#BuyerSpecification").val("");
-                    $("#BuyerSpecification1").val("");
-                    $("#BuyerSpecification2").val("");
-                    $("#BuyerSpecification3").val("");
+                success: function (data) {
+                    if (data.length > 0)
+                    {
+                        $("#BuyerSku").val(data[0].BuyerSku);
+                        $("#BuyerSpecification").val(data[0].BuyerSpecification);
+                        $("#BuyerSpecification1").val(data[0].BuyerSpecification1);
+                        $("#BuyerSpecification2").val(data[0].BuyerSpecification2);
+                        $("#BuyerSpecification3").val(data[0].BuyerSpecification3);
+                    }
+                    else{
+                        $("#BuyerSku").val("");
+                        $("#BuyerSpecification").val("");
+                        $("#BuyerSpecification1").val("");
+                        $("#BuyerSpecification2").val("");
+                        $("#BuyerSpecification3").val("");
 
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert('Failed to retrieve product details.' + thrownError);
+                    ProcessProgress.hide();
                 }
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-                alert('Failed to retrieve product details.' + thrownError);
-                ProcessProgress.hide();
-            }
-        });
-    }}
+            });
+        }}
 
 
     function GetProductDimensions() {
@@ -1117,6 +1203,75 @@
             });
         }}
 
+
+    function GetProductPackingUnit() {
+        var ProcessProgress = $("#Product Packing Unit loading progress");
+        ProcessProgress.show();
+        if ($("#ProductId").val() != 0 && $("#ProductId").val() != null) {
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "@(Url.Action("GetProductPackingUnitJson"))",
+                data: { ProductId: $("#ProductId").val() },
+                success: function (data) {
+                    if (data != null)
+                    {
+                        $("#PackingLength").val(data.PackingLength);
+                        $("#PackingWidth").val(data.PackingWidth);
+                        $("#PackingHeight").val(data.PackingHeight);
+                        $("#PackingHeightX").val(data.PackingHeight);
+
+                        if (data.PackingUnit != null && data.PackingUnit != '')
+                        {
+                            $("#PackingUnitId").select2("data", { id: data.PackingUnit, text: data.PackingUnit });
+                        }
+                    }
+                    else{
+                        $("#PackingLength").val(0);
+                        $("#PackingWidth").val(0);
+                        $("#PackingHeight").val(0);
+                        $("#PackingHeightX").val(0);
+                        $("#PackingUnitId").select2("data", { id: "", text: "" });
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert('Failed to retrieve product details.' + thrownError);
+                    ProcessProgress.hide();
+                }
+            });
+        }}
+
+
+    function GetProductPackingWeight() {
+        var ProcessProgress = $("#Product Packing Unit loading progress");
+        ProcessProgress.show();
+        if ($("#ProductId").val() != 0 && $("#ProductId").val() != null) {
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "@(Url.Action("GetProductPackingUnitJson"))",
+                data: { ProductId: $("#ProductId").val() },
+            success: function (data) {
+                if (data != null)
+                {
+                    $("#GrossWeight").val(data.PackingGrossWeight);
+                    $("#NetWeight").val(data.PackingNetWeight);
+                    $("#GrossWeightX").val(data.PackingGrossWeight);
+                    $("#NetWeightX").val(data.PackingNetWeight);
+                }
+                else{
+                    $("#GrossWeight").val(0);
+                    $("#NetWeight").val(0);
+                    $("#GrossWeightX").val(0);
+                    $("#NetWeightX").val(0);
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert('Failed to retrieve product details.' + thrownError);
+                ProcessProgress.hide();
+            }
+        });
+        }}
 
 
 

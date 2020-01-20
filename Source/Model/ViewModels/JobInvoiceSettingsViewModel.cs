@@ -81,7 +81,7 @@ namespace Model.ViewModel
         public string SqlProcGenProductUID { get; set; }
         public string filterLedgerAccountGroups { get; set; }
         public string filterLedgerAccounts { get; set; }
-
+        public string InvoiceFor { get; set; }
         public string filterProductTypes { get; set; }
         public string filterProductGroups { get; set; }
         public string filterProducts { get; set; }

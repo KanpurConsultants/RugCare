@@ -10,6 +10,8 @@ using Model;
 using System.Threading.Tasks;
 using Data.Models;
 using Model.ViewModel;
+using System.Data.SqlClient;
+using System.Configuration;
 
 namespace Service
 {
@@ -98,7 +100,7 @@ namespace Service
 
 
             var Size = (from H in db.ViewRugSize
-                      join S in db.Size on H.ManufaturingSizeID equals S.SizeId into STable
+                      join S in db.Size on H.StandardSizeID equals S.SizeId into STable
                       from STab in STable.DefaultIfEmpty()
                       where H.ProductId == ProductId 
                       select new 
@@ -111,30 +113,37 @@ namespace Service
                           WidthFraction = STab.WidthFraction,
                       }).FirstOrDefault();
 
-            if (UC.UnitconversionForName== "1L1W Perimeter")
+            if (Size.UnitId == "MET")
             {
-                if(Size.UnitId == "FT")
-                UnitConversionMultiplier = Size.Length  + Size.LengthFraction/12 + Size.Width + Size.WidthFraction/12;
-
+                SqlParameter SqlParameterSizeId = new SqlParameter("@SizeId", Size.SizeId);
+                SqlParameter SqlParameterToUnitId = new SqlParameter("@ToUnitId", "FT");
+                SqlParameter SqlParameterAttribute = new SqlParameter("@Attribute", UC.UnitconversionForName);
+                UnitConversionQty UnitConversionQty = db.Database.SqlQuery<UnitConversionQty>("" + ConfigurationManager.AppSettings["DataBaseSchema"] + ".sp_GetUnitConversionForSize @SizeId, @ToUnitId, @Attribute", SqlParameterSizeId, SqlParameterToUnitId, SqlParameterAttribute).FirstOrDefault();
+                UnitConversionMultiplier = (decimal)UnitConversionQty.ToQty;
             }
-            else if (UC.UnitconversionForName == "2L1W Perimeter")
+            else if (Size.UnitId == "FT")
             {
-                if (Size.UnitId == "FT")
-                    UnitConversionMultiplier = (Size.Length + Size.LengthFraction / 12)*2 + (Size.Width + Size.WidthFraction / 12);
-
-            }
-            else if (UC.UnitconversionForName == "1L2W Perimeter")
-            {
-                if (Size.UnitId == "FT")
-                    UnitConversionMultiplier = (Size.Length + Size.LengthFraction / 12)  + (Size.Width + Size.WidthFraction / 12) * 2;
-
+                if (UC.UnitconversionForName == "1L1W Perimeter")
+                    UnitConversionMultiplier = Size.Length + Size.LengthFraction / 12 + Size.Width + Size.WidthFraction / 12;
+                else if (UC.UnitconversionForName == "2L1W Perimeter")
+                    UnitConversionMultiplier = (Size.Length + Size.LengthFraction / 12) * 2 + (Size.Width + Size.WidthFraction / 12);
+                else if (UC.UnitconversionForName == "1L2W Perimeter")
+                    UnitConversionMultiplier = (Size.Length + Size.LengthFraction / 12) + (Size.Width + Size.WidthFraction / 12) * 2;
+                else if (UC.UnitconversionForName == "1W Perimeter")
+                    UnitConversionMultiplier = (Size.Width + Size.WidthFraction / 12);
+                else if (UC.UnitconversionForName == "1L Perimeter")
+                    UnitConversionMultiplier = (Size.Length + Size.LengthFraction / 12);
             }
 
             return UnitConversionMultiplier;
         }
 
 
-         
+        public class UnitConversionQty
+        {
+            public Decimal? ToQty { get; set; }
+        }
+
         public UnitConversion Create(UnitConversion pt)
         {
             pt.ObjectState = ObjectState.Added;

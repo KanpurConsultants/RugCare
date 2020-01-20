@@ -121,10 +121,11 @@ namespace Jobs.Areas.Rug.Controllers
 
 
             var AdvanceData = (from H in vm.JobInvoiceSummaryViewModel
-                               group new { H } by new { H.CostCenterId } into Result
+                               group new { H } by new { H.CostCenterId, H.PersonId } into Result
                                select new
                                {
                                    CostCenterId = Result.Key.CostCenterId,
+                                   PersonId = Result.Key.PersonId,
                                    TotalAdvanceAmount = Result.Max(m => m.H.AdvanceAmount),
                                    TotalAdvanceAdjusted = Result.Sum(m => m.H.AdvanceAdjusted)
                                }).ToList();

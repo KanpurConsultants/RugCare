@@ -16,7 +16,7 @@ namespace Service
 {
     public interface IJobOrderInspectionLineService : IDisposable
     {
-        JobOrderInspectionLine Create(JobOrderInspectionLine pt, string UserName);
+        JobOrderInspectionLine Create(JobOrderInspectionLine pt);
         void Delete(int id);
         void Delete(JobOrderInspectionLine pt);
         JobOrderInspectionLine Find(int id);
@@ -54,12 +54,12 @@ namespace Service
             return db.JobOrderInspectionLine.Find(id);
         }
 
-        public JobOrderInspectionLine Create(JobOrderInspectionLine pt, string UserName)
+        public JobOrderInspectionLine Create(JobOrderInspectionLine pt)
         {
-            pt.ModifiedBy = UserName;
-            pt.ModifiedDate = DateTime.Now;
-            pt.CreatedBy = UserName;
-            pt.CreatedDate = DateTime.Now;
+            //pt.ModifiedBy = UserName;
+            //pt.ModifiedDate = DateTime.Now;
+            //pt.CreatedBy = UserName;
+            //pt.CreatedDate = DateTime.Now;
             pt.ObjectState = ObjectState.Added;
             db.JobOrderInspectionLine.Add(pt);
 
@@ -118,6 +118,10 @@ namespace Service
                         ProductUidId = p.ProductUidId,
                         ProductUidName = p.ProductUid.ProductUidName,
                         InspectedQty = p.InspectedQty,
+                        InspectedLength = (Decimal)p.InspectedLength,
+                        InspectedWidth = (Decimal)p.InspectedWidth,
+                        InspectedUnitId = p.InspectedUnitId,
+                        InspectedUnitName = p.InspectedUnit.UnitName,
                         Qty = p.Qty,
                         Remark = p.Remark,
                         JobWorkerId = p.JobOrderLine.JobOrderHeader.JobWorkerId,
@@ -142,6 +146,8 @@ namespace Service
                           JobOrderInspectionLineId = p.JobOrderInspectionLineId,
                           Qty = p.Qty,
                           InspectedQty = p.InspectedQty,
+                          InspectedLength = p.InspectedLength,
+                          InspectedWidth = p.InspectedWidth,
                           Remark = p.Remark,
                           UnitConversionMultiplier = p.JobOrderLine.UnitConversionMultiplier,
                           JobOrderDocNo = p.JobOrderLine.JobOrderHeader.DocNo,

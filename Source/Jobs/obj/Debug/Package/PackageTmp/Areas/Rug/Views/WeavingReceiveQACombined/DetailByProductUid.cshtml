@@ -53,7 +53,7 @@
                         @Html.LabelFor(model => model.ProductUidId, "Barcode", new { @class = "control-label col-md-4 col-sm-2" })
                         @Html.HiddenFor(m => m.DocumentTypeSettings.ProductUidCaption)
                         <div class="col-md-7 col-sm-10">
-                            @Html.TextBoxFor(m => m.ProductUidName, new { @class = "form-control " })
+                            @Html.TextBoxFor(m => m.ProductUidName, new { @class = "form-control " , autofocus = "autofocus" })
                             @Html.ValidationMessageFor(m => m.ProductUidName, "", new { @class = "text-danger" })
                             <span id="ProductUidValidation"></span>
                         </div>

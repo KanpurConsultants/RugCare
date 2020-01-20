@@ -48,6 +48,7 @@ namespace EmailContents
                 using (SqlConnection sqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString.ToString()))
                 {
                     SqlDataAdapter sqlDataAapter = new SqlDataAdapter(queryString.ToString(), sqlConnection);
+                    sqlDataAapter.SelectCommand.CommandTimeout= 1000;
                     sqlDataAapter.Fill(Dt);
 
                 }

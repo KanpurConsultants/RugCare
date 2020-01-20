@@ -211,6 +211,7 @@ namespace Model
         DbSet<SaleDispatchLine> SaleDispatchLine { get; set; }
         DbSet<SaleInvoiceHeader> SaleInvoiceHeader { get; set; }
         DbSet<SaleInvoiceHeaderDetail> SaleInvoiceHeaderDetail { get; set; }
+        DbSet<StockHeaderTransport> StockHeaderTransport { get; set; }
         DbSet<SaleInvoiceLine> SaleInvoiceLine { get; set; }
         DbSet<DispatchWaybillHeader> DispatchWaybillHeader { get; set; }
         DbSet<DispatchWaybillLine> DispatchWaybillLine { get; set; }

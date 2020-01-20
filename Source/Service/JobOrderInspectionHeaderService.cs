@@ -17,7 +17,7 @@ namespace Service
 {
     public interface IJobOrderInspectionHeaderService : IDisposable
     {
-        JobOrderInspectionHeader Create(JobOrderInspectionHeader pt,string UserName);
+        JobOrderInspectionHeader Create(JobOrderInspectionHeader pt);
         void Delete(int id);
         void Delete(JobOrderInspectionHeader pt);
         JobOrderInspectionHeader Find(int id);
@@ -46,12 +46,12 @@ namespace Service
             return db.JobOrderInspectionHeader.Find(id);
         }
 
-        public JobOrderInspectionHeader Create(JobOrderInspectionHeader pt,string UserName)
+        public JobOrderInspectionHeader Create(JobOrderInspectionHeader pt)
         {
-            pt.CreatedBy = UserName;
-            pt.CreatedDate = DateTime.Now;
-            pt.ModifiedBy = UserName;
-            pt.ModifiedDate = DateTime.Now;
+            //pt.CreatedBy = UserName;
+            //pt.CreatedDate = DateTime.Now;
+            //pt.ModifiedBy = UserName;
+            //pt.ModifiedDate = DateTime.Now;
             pt.ObjectState = ObjectState.Added;
             db.JobOrderInspectionHeader.Add(pt);
             return pt;

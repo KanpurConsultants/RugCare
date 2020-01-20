@@ -19,6 +19,15 @@ namespace Model.Models
         public Decimal? Width { get; set; }
         public Decimal? Height { get; set; }
 
+        public Decimal? PackingLength { get; set; }
+        public Decimal? PackingWidth { get; set; }
+        public Decimal? PackingHeight { get; set; }
+
+        [Display(Name = "Packing Unit")]
+        [ForeignKey("PackingUnit")]
+        public string PackingUnitId { get; set; }
+        public virtual Unit PackingUnit { get; set; }
+
     }
 }
 

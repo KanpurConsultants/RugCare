@@ -683,6 +683,26 @@ namespace Jobs.Constants.DocumentType
             public const string Nature = null;
             public const string PrintTitle = null;
         }
+        public static class FinishingCreditNote
+        {
+            public const int DocumentTypeId = 660;
+            public const string DocumentTypeShortName = "FCRDT";
+            public const string DocumentTypeName = "Finishing Credit Note";
+            public const int DocumentCategoryId = DocumentCategoryConstants.CreditNote.DocumentCategoryId;
+            public const int DocumentNatureId = DocumentNatureConstants.CreditNote.DocumentNatureId;
+            public const string Nature = null;
+            public const string PrintTitle = null;
+        }
+        public static class FinishingDebitNote
+        {
+            public const int DocumentTypeId = 660;
+            public const string DocumentTypeShortName = "FDEBT";
+            public const string DocumentTypeName = "Finishing Debit Note";
+            public const int DocumentCategoryId = DocumentCategoryConstants.CreditNote.DocumentCategoryId;
+            public const int DocumentNatureId = DocumentNatureConstants.CreditNote.DocumentNatureId;
+            public const string Nature = null;
+            public const string PrintTitle = null;
+        }
         public static class ChequeCancel
         {
             public const int DocumentTypeId = 670;

@@ -589,6 +589,7 @@ namespace Core.Common
         public const string PersonDocument = "Person Document";
         public const string RateList = "Rate List";
         public const string WeavingRetension = "Weaving Retension";
+        public const string PackingUnitSetting = "Packing Unit Setting";
         public const string PersonGodown = "Person Godown";
         public const string UserRoles = "User Roles";
         public const string DocumentTypeTimeExtension = "DocumentType Time Extension";
@@ -624,6 +625,13 @@ namespace Core.Common
         public const string Credit = "Cr";
         //public const string Journal = "Journal";
         //public const string Contra = "Contra";
+    }
+
+    public class ShapeConstants
+    {
+        public const string Rectangle = "Rectangle";
+        public const string Square = "Square";
+        public const string Circle = "Circle";
     }
 
     public class TaskStatusConstants

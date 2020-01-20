@@ -612,11 +612,14 @@ namespace Jobs.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult _BarCodesPost(BarCodeSequenceListViewModel vm)
         {
+            int MainSiteId = 0;
             int Cnt = 0;
             int Pk = 0;
             List<JobOrderCancelLineViewModel> BarCodeBased = new List<JobOrderCancelLineViewModel>();
             Dictionary<int, decimal> LineStatus = new Dictionary<int, decimal>();
             int Serial = _JobOrderCancelLineService.GetMaxSr(vm.BarCodeSequenceViewModel.FirstOrDefault().JobOrderCancelHeaderId);
+
+            MainSiteId = db.Site.Where(m => m.SiteName == "Main").FirstOrDefault().SiteId;
 
             #region BeforeSave
             bool BeforeSave = true;
@@ -748,7 +751,7 @@ namespace Jobs.Controllers
                                 line.ProductUidCurrentProcessId = Uid.CurrenctProcessId;
                                 line.ProductUidCurrentGodownId = Uid.CurrenctGodownId;
 
-                                if (Header.JobWorkerId == Uid.LastTransactionPersonId || Header.SiteId == 17)
+                                if (Header.JobWorkerId == Uid.LastTransactionPersonId || Header.SiteId == MainSiteId)
                                 {
 
                                     Uid.LastTransactionDocId = Header.JobOrderCancelHeaderId;

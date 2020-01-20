@@ -50,7 +50,7 @@
 </div>
 <script type="text/javascript">
 
-    $('table.grid-table td').dblclick(function () {
+    $('table.grid-table td').click(function () {
         var $this = $(this);
         var row = $this.closest("tr");
         var editid = row.find('[data-name="DocumentTypeTimeExtensionRequestId"]').text();

@@ -300,8 +300,10 @@
     <Compile Include="Areas\Rug\Controllers\CarpetSkuSettingsController.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Areas\Rug\Controllers\WeavingOrderInspectionWizardController.cs" />
     <Compile Include="Areas\Rug\Controllers\WeavingReceiveTextImportController.cs" />
     <Compile Include="Areas\Rug\Controllers\ProductQualityConsumptionLineController.cs" />
+    <Compile Include="Areas\Rug\Controllers\PackingUnitSetting.cs" />
     <Compile Include="Controllers\DocumentTypeTimeExtensionRequestController.cs" />
     <Compile Include="Areas\Rug\Controllers\WeavingRetension.cs" />
     <Compile Include="Areas\Rug\Controllers\CostingHeaderController.cs" />
@@ -446,6 +448,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Controllers\CustomHeaderController.cs" />
+    <Compile Include="Areas\Rug\Controllers\WeavingOrderInspectionLineController.cs" />
+    <Compile Include="Areas\Rug\Controllers\WeavingOrderInspectionHeaderController.cs" />
     <Compile Include="Controllers\RugDashBoardBCController.cs" />
     <Compile Include="Controllers\DashBoardRugController.cs" />
     <Compile Include="Controllers\MapTraceController.cs" />
@@ -3734,6 +3738,14 @@
     <Content Include="Areas\Rug\Views\WeavingReceiveTextImport\Error.cshtml" />
     <Content Include="Areas\Rug\Views\WeavingReceiveTextImport\Index.cshtml" />
     <Content Include="Areas\Rug\Views\WeavingReceiveTextImport\Sucess.cshtml" />
+    <Content Include="Areas\Rug\Views\PackingUnitSetting\_Reason.cshtml" />
+    <Content Include="Areas\Rug\Views\PackingUnitSetting\Create.cshtml" />
+    <Content Include="Areas\Rug\Views\PackingUnitSetting\Index.cshtml" />
+    <Content Include="Areas\Rug\Views\WeavingOrderInspectionWizard\_Filters.cshtml" />
+    <Content Include="Areas\Rug\Views\WeavingOrderInspectionWizard\_SelectedRecords.cshtml" />
+    <Content Include="Areas\Rug\Views\WeavingOrderInspectionWizard\Create.cshtml" />
+    <Content Include="Areas\Rug\Views\WeavingOrderInspectionWizard\DocumentTypeList.cshtml" />
+    <Content Include="Areas\Rug\Views\WeavingOrderInspectionWizard\OrderInspectionWizard.cshtml" />
     <None Include="job_scheduling_data_2_0.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -5483,6 +5495,21 @@
     <Content Include="Views\MaterialIssueForJobOrder\Edit.cshtml" />
     <Content Include="Views\MaterialIssueForJobOrder\Index.cshtml" />
     <Content Include="Views\JobReceiveLine\_ResultsWithLossPerLotNo.cshtml" />
+    <Content Include="Areas\Rug\Views\WeavingOrderInspectionHeader\_Reason.cshtml" />
+    <Content Include="Areas\Rug\Views\WeavingOrderInspectionHeader\Create.cshtml" />
+    <Content Include="Areas\Rug\Views\WeavingOrderInspectionHeader\DocumentTypeList.cshtml" />
+    <Content Include="Areas\Rug\Views\WeavingOrderInspectionHeader\Index.cshtml" />
+    <Content Include="Areas\Rug\Views\WeavingOrderInspectionLine\_BarCodes.cshtml" />
+    <Content Include="Areas\Rug\Views\WeavingOrderInspectionLine\_Create.cshtml" />
+    <Content Include="Areas\Rug\Views\WeavingOrderInspectionLine\_Filters.cshtml" />
+    <Content Include="Areas\Rug\Views\WeavingOrderInspectionLine\_RequestBarCodes.cshtml" />
+    <Content Include="Areas\Rug\Views\WeavingOrderInspectionLine\_RequestFilters.cshtml" />
+    <Content Include="Areas\Rug\Views\WeavingOrderInspectionLine\_RequestResults.cshtml" />
+    <Content Include="Areas\Rug\Views\WeavingOrderInspectionLine\_RequestSequence2.cshtml" />
+    <Content Include="Areas\Rug\Views\WeavingOrderInspectionLine\_Results.cshtml" />
+    <Content Include="Areas\Rug\Views\WeavingOrderInspectionLine\_Sequence.cshtml" />
+    <Content Include="Areas\Rug\Views\WeavingOrderInspectionLine\_Sequence2.cshtml" />
+    <Content Include="Views\JobInvoiceLine\_InspectionFilters.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

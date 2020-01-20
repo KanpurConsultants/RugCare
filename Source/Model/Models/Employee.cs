@@ -38,6 +38,7 @@ namespace Model.Models
 
 
         public Decimal? BasicSalary { get; set; }
+        public Decimal? GrossSalary { get; set; }
         [MaxLength(50)]
         public string OMSId { get; set; }
     }

@@ -30,7 +30,7 @@ namespace EmailContents
                 using (StreamWriter writer =
                  new StreamWriter(@"c:\temp\Cachecallback.txt", true))
                 {
-                    writer.WriteLine("Calling Daily Evening Event"+ DateTime.Now.ToString(), DateTime.Now);
+                    writer.WriteLine("Calling Daily Evening Event "+ DateTime.Now.ToString(), DateTime.Now);
                     writer.Close();
                 }
             }

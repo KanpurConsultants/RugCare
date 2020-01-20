@@ -21,6 +21,7 @@ namespace Model.ViewModel
         public int DivisionId { get; set; }
         public string DivisionName { get; set; }
         public bool isVisibleMachine { get; set; }
+        public bool isVisibleTransportDetail { get; set; }
         public bool isMandatoryMachine { get; set; }
         public bool isVisibleHeaderCostCenter { get; set; }
         public bool isMandatoryHeaderCostCenter { get; set; }

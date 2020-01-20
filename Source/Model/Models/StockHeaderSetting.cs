@@ -27,6 +27,7 @@ namespace Model.Models
         public int DivisionId { get; set; }
         public virtual Division Division { get; set; }
         public bool? isVisibleMachine { get; set; }
+        public bool? isVisibleTransportDetail { get; set; }
         public bool? isMandatoryMachine { get; set; }
         public bool? isVisibleHeaderCostCenter { get; set; }
         public bool? isMandatoryHeaderCostCenter { get; set; }

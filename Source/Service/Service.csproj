@@ -125,6 +125,7 @@
     <Compile Include="DocumentTypeTimeExtensionRequestService.cs" />
     <Compile Include="PersonGodown.cs" />
     <Compile Include="SettingsService.cs" />
+    <Compile Include="PackingUnitSetting.cs" />
     <Compile Include="WeavingRetension.cs" />
     <Compile Include="CompanyService.cs" />
     <Compile Include="CompanySettingsService.cs" />

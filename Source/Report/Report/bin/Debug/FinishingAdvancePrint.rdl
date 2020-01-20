@@ -489,10 +489,10 @@
               <Width>0.2896in</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>4.04884in</Width>
+              <Width>4.12654in</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>2.04697in</Width>
+              <Width>1.96924in</Width>
             </TablixColumn>
           </TablixColumns>
           <TablixRows>
@@ -524,7 +524,7 @@
                               </Style>
                             </TextRun>
                             <TextRun>
-                              <Value>=Code.RupeesToWord(Sum(Fields!Amount.Value, "DsMain"))</Value>
+                              <Value>=Code.RupeesToWord(Sum(Fields!Amount.Value, "DsMain")) + " Only"</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
                                 <FontSize>9pt</FontSize>
@@ -547,47 +547,12 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
-                    <ColSpan>3</ColSpan>
-                    <rd:Selected>true</rd:Selected>
+                    <ColSpan>4</ColSpan>
                   </CellContents>
                 </TablixCell>
                 <TablixCell />
                 <TablixCell />
-                <TablixCell>
-                  <CellContents>
-                    <Textbox Name="Textbox93">
-                      <CanGrow>true</CanGrow>
-                      <KeepTogether>true</KeepTogether>
-                      <Paragraphs>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value />
-                              <Style>
-                                <FontFamily>tahoma</FontFamily>
-                                <FontSize>9pt</FontSize>
-                                <FontWeight>Bold</FontWeight>
-                              </Style>
-                            </TextRun>
-                          </TextRuns>
-                          <Style>
-                            <TextAlign>Center</TextAlign>
-                          </Style>
-                        </Paragraph>
-                      </Paragraphs>
-                      <rd:DefaultName>Textbox93</rd:DefaultName>
-                      <Style>
-                        <Border>
-                          <Style>None</Style>
-                        </Border>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
-                      </Style>
-                    </Textbox>
-                  </CellContents>
-                </TablixCell>
+                <TablixCell />
               </TablixCells>
             </TablixRow>
             <TablixRow>
@@ -1187,7 +1152,7 @@
         <DataSetName>DsMain</DataSetName>
         <Top>1.95152in</Top>
         <Height>1.16252in</Height>
-        <Width>7.67481in</Width>
+        <Width>7.67478in</Width>
         <ZIndex>1</ZIndex>
         <Style>
           <Border>
@@ -1604,7 +1569,7 @@
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
                                 <FontSize>8pt</FontSize>
-                                <Format>0;(0);'-'</Format>
+                                <Format>0.00;0.00-;'-'</Format>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -1804,7 +1769,7 @@
                                 <FontFamily>Tahoma</FontFamily>
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
-                                <Format>0;(0);'-'</Format>
+                                <Format>0.00;0.00-;'-'</Format>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -1932,7 +1897,7 @@
     <Height>3.13487in</Height>
     <Style />
   </Body>
-  <Width>7.69885in</Width>
+  <Width>7.75251in</Width>
   <Page>
     <PageHeader>
       <Height>0.64583in</Height>

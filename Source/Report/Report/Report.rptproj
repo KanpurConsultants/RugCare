@@ -992,6 +992,10 @@
       <FullPath>FinishedStockSummary_ForKelim.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>FinishingAdvancePrint.rdl</Name>
+      <FullPath>FinishingAdvancePrint.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>FinishingInvoiceReturnPrint.rdl</Name>
       <FullPath>FinishingInvoiceReturnPrint.rdl</FullPath>
     </ProjectItem>
@@ -1014,6 +1018,10 @@
     <ProjectItem>
       <Name>FinishingPayment_PrintFreightOutward.rdl</Name>
       <FullPath>FinishingPayment_PrintFreightOutward.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>FinishingPaymentAdviseDocumentNoWiseSummary.rdl</Name>
+      <FullPath>FinishingPaymentAdviseDocumentNoWiseSummary.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>FinishingPaymentAdviseSummary.rdl</Name>
@@ -1835,6 +1843,10 @@
     <ProjectItem>
       <Name>MaterialIssueForWeaving.rdl</Name>
       <FullPath>MaterialIssueForWeaving.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>MaterialIssueForWeaving_BC.rdl</Name>
+      <FullPath>MaterialIssueForWeaving_BC.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>MaterialIssueReport_D1D2.rdl</Name>
@@ -3313,6 +3325,10 @@
       <FullPath>Rug_CarpetStockTransferPrint2.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Rug_CollectionInvoice.rdl</Name>
+      <FullPath>Rug_CollectionInvoice.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>Rug_DesignWiseConsumption.rdl</Name>
       <FullPath>Rug_DesignWiseConsumption.rdl</FullPath>
     </ProjectItem>
@@ -3429,6 +3445,14 @@
       <FullPath>Rug_OrderToBeIssueSummary_WithStockDetail_BC.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Rug_PackingList_Print_MC.rdl</Name>
+      <FullPath>Rug_PackingList_Print_MC.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Rug_PackingList_Print_OC.rdl</Name>
+      <FullPath>Rug_PackingList_Print_OC.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>Rug_SaleInvoice_Excel_Print_Bhadohi.rdl</Name>
       <FullPath>Rug_SaleInvoice_Excel_Print_Bhadohi.rdl</FullPath>
     </ProjectItem>
@@ -3451,6 +3475,18 @@
     <ProjectItem>
       <Name>Rug_SaleInvoice_Print_Bhadohi_Meter.rdl</Name>
       <FullPath>Rug_SaleInvoice_Print_Bhadohi_Meter.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Rug_SaleInvoice_Print_MC.rdl</Name>
+      <FullPath>Rug_SaleInvoice_Print_MC.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Rug_SaleInvoice_Print_OC.rdl</Name>
+      <FullPath>Rug_SaleInvoice_Print_OC.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Rug_SaleInvoice_TaxInvoice_Print_MC.rdl</Name>
+      <FullPath>Rug_SaleInvoice_TaxInvoice_Print_MC.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Rug_SaleInvoice_WithGST_Print_Bhadohi.rdl</Name>
@@ -3479,6 +3515,10 @@
     <ProjectItem>
       <Name>Rug_SaleOrder_Print.rdl</Name>
       <FullPath>Rug_SaleOrder_Print.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Rug_SaleOrder_Print_OC.rdl</Name>
+      <FullPath>Rug_SaleOrder_Print_OC.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Rug_SaleOrderCosting_MC.rdl</Name>
@@ -4215,6 +4255,10 @@
     <ProjectItem>
       <Name>StdDocPrint_Stockissue.rdl</Name>
       <FullPath>StdDocPrint_Stockissue.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>StdDocPrint_StockIssueWithRate.rdl</Name>
+      <FullPath>StdDocPrint_StockIssueWithRate.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>StdDocPrintSub_CalculationHeader.rdl</Name>
@@ -5006,6 +5050,10 @@
       <FullPath>WeavingOrder_Print1_Column.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>WeavingOrder_Print1_Column_MC.rdl</Name>
+      <FullPath>WeavingOrder_Print1_Column_MC.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>WeavingOrder_Print1_Column_OC.rdl</Name>
       <FullPath>WeavingOrder_Print1_Column_OC.rdl</FullPath>
     </ProjectItem>
@@ -5444,12 +5492,8 @@
       <FullPath>YearlyListOfPurja.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>WeavingOrder_Print1_Column_MC.rdl</Name>
-      <FullPath>WeavingOrder_Print1_Column_MC.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>FinishingAdvancePrint.rdl</Name>
-      <FullPath>FinishingAdvancePrint.rdl</FullPath>
+      <Name>WorkingOnSaleOrderBalance.rdl</Name>
+      <FullPath>WorkingOnSaleOrderBalance.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>
