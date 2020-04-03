@@ -348,6 +348,7 @@ namespace Service
                                                          SalesTaxGroupPartyName = BusinessEntityTab.SalesTaxGroupParty.ChargeGroupPersonName,
                                                          CreatedBy = b.CreatedBy,
                                                          CreatedDate = b.CreatedDate,
+                                                         ResponsibleUser =b.ResponsibleUser,
                                                          AccountId = AccountTab.LedgerAccountId,
                                                          DivisionIds = BusinessEntityTab.DivisionIds,
                                                          SiteIds = BusinessEntityTab.SiteIds,

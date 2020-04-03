@@ -59,7 +59,7 @@
                         <div class="form-group">
                             @Html.LabelFor(model => model.ProductUidIdName, "Product UID", new { @class = "control-label col-md-4 col-sm-2" })
                             <div class="col-md-7 col-sm-10">
-                                @Html.TextBoxFor(model => model.ProductUidIdName, new { @class = "form-control col-xs-7 required" })
+                                @Html.TextBoxFor(model => model.ProductUidIdName, new { @class = "form-control col-xs-7 ", @readonly = "true" })
                                 @Html.ValidationMessageFor(model => model.ProductUidIdName, "", new { @class = "text-danger" })
                             </div>
                         </div>

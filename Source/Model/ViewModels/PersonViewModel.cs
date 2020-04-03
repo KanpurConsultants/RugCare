@@ -137,7 +137,7 @@ namespace Model.ViewModels
         public PersonSettingsViewModel PersonSettings { get; set; }
 
 
-
+        public string ResponsibleUser { get; set; }
         public string CreatedBy { get; set; }
         public string ModifiedBy { get; set; }
         public DateTime CreatedDate { get; set; }

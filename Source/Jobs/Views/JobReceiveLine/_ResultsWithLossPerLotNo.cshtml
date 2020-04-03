@@ -111,7 +111,7 @@
                                                 @Html.HiddenFor(m => Model.JobReceiveLineViewModel[i].JobReceiveHeaderId)
                                                 @Html.HiddenFor(m => Model.JobReceiveLineViewModel[i].JobOrderHeaderDocNo)
                                                 @Html.HiddenFor(m => Model.JobReceiveLineViewModel[i].OrderBalanceQty)
-                                                @Html.HiddenFor(m => Model.JobReceiveLineViewModel[i].UnitId)
+                                                @Html.HiddenFor(m => Model.JobReceiveLineViewModel[i].UnitId)                                                
                                                 @Html.HiddenFor(m => Model.JobReceiveLineViewModel[i].ExcessReceiveAllowedAgainstOrderQty)
                                                 @Html.HiddenFor(m => m.JobReceiveLineViewModel[i].UnitDecimalPlaces, new { @class = "UDec" })
 
@@ -168,6 +168,9 @@
                                                         </div>
                                                         <div class='block text-right pull-middle' style='width:10%'>
                                                             @Html.TextBoxFor(m => Model.JobReceiveLineViewModel[i].LotNo, new { @class = "form-control multiple-modal LotNo" })
+                                                        </div>
+                                                        <div class='block text-right pull-middle' style='width: 0%; visibility: hidden'>
+                                                            @Html.TextBoxFor(m => Model.JobReceiveLineViewModel[i].ProductGroupLossPer, new { @class = "form-control multiple-modal text-right ProductGroupLossPer" })
                                                         </div>
 
                                                     </div>
@@ -251,13 +254,32 @@
 
         var qty = parseFloat($(this).val());
 
-        if ($Block.find('.LossQty').val() == 0) {
+        if ($Block.find('.LossQty').val() == 0)
+        {
             $Block.find('.ReceiveQty').val(qty.toFixed(DecPlaces));
-            $Block.find('.PassQty').val(qty.toFixed(DecPlaces));
+            if ($Block.find('.ProductGroupLossPer').val() != null && $Block.find('.ProductGroupLossPer').val() != 0)
+            {
+                var ProductGroupLossPer = parseFloat($Block.find('.ProductGroupLossPer').val());
+                var ProductGroupLoss = ProductGroupLossPer * qty / 100;
+                $Block.find('.PassQty').val((qty - ProductGroupLoss).toFixed(DecPlaces));
+            }
+            else
+            {
+                $Block.find('.PassQty').val(qty.toFixed(DecPlaces));
+            }
         }
-        else {
+        else
+        {
             $Block.find('.ReceiveQty').val(parseFloat(qty - $Block.find('.LossQty').val()).toFixed(DecPlaces));
-            $Block.find('.PassQty').val(qty.toFixed(DecPlaces));
+            if ($Block.find('.ProductGroupLossPer').val() != null && $Block.find('.ProductGroupLossPer').val() != 0) {
+                var ProductGroupLossPer = parseFloat($Block.find('.ProductGroupLossPer').val());
+                var ProductGroupLoss = ProductGroupLossPer * qty / 100;
+                $Block.find('.PassQty').val((qty - ProductGroupLoss).toFixed(DecPlaces));
+            }
+            else
+            {
+                $Block.find('.PassQty').val(qty.toFixed(DecPlaces));
+            }
         }
 
         ValidateData(this);
@@ -281,6 +303,16 @@
         //else {
         //    $Block.find('.ReceiveQty').val(parseFloat($Block.find('.JobQuantity').val()).toFixed(DecPlaces));
         //}
+
+            if ($Block.find('.ProductGroupLossPer').val() != null && $Block.find('.ProductGroupLossPer').val() != 0) {
+                var ProductGroupLossPer = parseFloat($Block.find('.ProductGroupLossPer').val());
+                var qty = parseFloat($Block.find('.JobQuantity').val());
+                var ProductGroupLoss = ProductGroupLossPer * qty / 100;
+                $Block.find('.PassQty').val((qty - ProductGroupLoss).toFixed(DecPlaces));
+            }
+            else {
+                $Block.find('.PassQty').val(qty.toFixed(DecPlaces));
+            }
 
     })
 

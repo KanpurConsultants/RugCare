@@ -54,6 +54,16 @@ namespace Model.Models
 
         public int? ProcessSr { get; set; }
 
+        [ForeignKey("SalesTaxGroupProduct")]
+        [Display(Name = "SalesTaxGroupProduct")]
+        public int? SalesTaxGroupProductId { get; set; }
+        public virtual ChargeGroupProduct SalesTaxGroupProduct { get; set; }
+
+        [ForeignKey("SalesTaxProductCode")]
+        [Display(Name = "Sales Tax Product Code")]
+        public int? SalesTaxProductCodeId { get; set; }
+        public virtual SalesTaxProductCode SalesTaxProductCode { get; set; }
+
         [Display(Name = "Created By")]
         public string CreatedBy { get; set; }
 

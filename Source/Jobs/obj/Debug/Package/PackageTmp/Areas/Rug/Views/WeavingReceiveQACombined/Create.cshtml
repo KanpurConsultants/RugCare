@@ -376,6 +376,23 @@
                                         </div>
                                     </div>
 
+                                    <div class="col-md-6" style="display:@(Model.JobReceiveSettings.IsVisibleIncentive? "" : "none")">
+                                        @Html.HiddenFor(m => m.JobReceiveSettings.IsVisibleIncentive)
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.IncentiveRate, "Incentive", new { @class = "control-label col-md-4 col-sm-2" })
+                                            <div class="col-md-7 col-sm-10" style="padding:0px">
+                                                <div class="col-xs-5" style="padding-right:0px">
+                                                    @Html.TextBoxFor(model => model.IncentiveRate, new { @class = "form-control cusrightnormal" })
+                                                    @Html.ValidationMessageFor(model => model.IncentiveRate, "", new { @class = "text-danger" })
+                                                </div>
+                                                <div class="col-xs-7" style="padding-left:0px">
+                                                    @Html.TextBoxFor(model => model.IncentiveAmt, new { @class = "form-control cusleftnormal" })
+                                                    @Html.ValidationMessageFor(model => model.IncentiveAmt, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div class="col-md-6" style="display:@(Model.JobReceiveSettings.isVisibleRate ? "" : "none")">
                                         <div class="form-group">
                                             @Html.LabelFor(model => model.Amount, "Amount", new { @class = "control-label col-md-4 col-sm-2" })
@@ -846,7 +863,7 @@
                     $("#ProductUidName").val(data.ProductUidName);
                     $("#ToProductUidId").val(data.ProductUIDId);
                     $("#ToProductUidName").val(data.ProductUidName);
-                    $("#LotNo").val(data.ProductUidName);
+                    $("#LotNo").val(data.LotNo);
 
                     if (data.DocTypeName=="Weaving Order(Over Tufting)")
                     {
@@ -1242,6 +1259,14 @@
     $('#DealQty,#Qty,#PenaltyRate,#Rate').keyup(function(){
         Calculation();
     });
+
+    $('#IncentiveRate').keyup(function(){
+
+        if($(this).val() && $(this).val() > 0)
+        {
+            $('#IncentiveAmt').val(($(this).val() * $('#DealQty').val()).toFixed(2))
+        }
+    })
 
     $("#DealUnitId").change(GetUnitConversionMultiplier);
 

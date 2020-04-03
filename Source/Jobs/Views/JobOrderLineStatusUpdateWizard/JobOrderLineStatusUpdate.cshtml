@@ -1,0 +1,323 @@
+﻿@{
+    ViewBag.Title = "Job Order Status Update";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Content/DataTables/css/dataTables.bootstrap.css" rel="stylesheet" />
+<link href="~/Content/DataTables/css/scroller.bootstrap.min.css" rel="stylesheet" />
+<link href="~/Content/ModalImage.css" rel="stylesheet" />
+
+<script src="~/Scripts/DataTables/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/DataTables/dataTables.scroller.js"></script>
+<style type="text/css">
+    .DTHidden {
+        display: none;
+    }
+
+    .TextRight {
+        text-align: right;
+    }
+
+    .dataTable {
+        font-size: 13px !important;
+        line-height: 1;
+    }
+
+    table.dataTable tbody td {
+        padding: 2px 10px;
+    }
+
+    .Filters.fSelected.label {
+        display: inline-block;
+    }
+
+    .Filters.fSelected .label-danger {
+        border-radius: 10px;
+    }
+
+    .Filters.fSelected strong {
+        padding: 5px;
+    }
+</style>
+
+<!-- modal placeholder-->
+<div id='myModal' class='modal fade in'>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div id='myModalContent'></div>
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3>
+            <span style="font-family: Calibri,sans-serif,Verdana;font-weight:bold" class="black"> <span class="glyphicon glyphicon-file black"></span>@ViewBag.Name</span>
+            @Html.ActionLink(" ", "Filters", "JobOrderLineStatusUpdateWizard", null, new { data_modalCustom = "", id = "btnCreateF", @class = "glyphicon glyphicon-filter toolbar right", @title = "Filters", @data_toggle = "tooltip" })
+        </h3>
+    </div>
+
+    <div class="panel-info" style="padding-left:15px">
+        <div class="form-horizontal">
+            @Html.ValidationSummary(true)
+
+            <div class="row">
+                <div>
+
+                </div>
+            </div>
+        </div>
+        <hr style="margin-top:0px;margin-bottom:0px" />
+
+        <div style="margin:20px;">
+
+
+            <div class="Filters fSelected" id="sFilter">
+                @*<strong>JobOrder:</strong>
+                    <span class="label label-danger">
+                        Star
+                    </span>*@
+
+            </div>
+
+            <table id="example" class="table table-striped display" cellspacing="0" width="100%">
+                <thead style="background: #428bca;color:white">
+                    <tr>
+                        <th>Jobworker</th>
+                        <th>Doc No</th>
+                        @*<th>Doc Date</th>*@
+                        <th>Product</th>                        
+                        <th>Dimension1</th>
+                        <th>Dimension2</th>
+                        <th>Prod Order No</th>
+                        <th>Qty</th>
+                        @if (@ViewBag.WizardType == "Pending To Production" || @ViewBag.WizardType == "All Production")
+                        {
+                        <th>Production No</th>
+                        <th>Production Date</th>
+                        }
+                        else if (@ViewBag.WizardType == "Pending To Dispatch" || @ViewBag.WizardType == "All Dispatch")
+                        {
+                            <th>Dispatch No</th>
+                            <th>Dispatch Date</th>
+                        }
+                        <th>JobOrderLineId</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        @*<th></th>*@
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    var selected = [];
+    var DocumentTypeId = '@ViewBag.Id';
+    var Filters = new AssignFilters();
+    Filters.WizardType = "@ViewBag.WizardType";
+    Filters.DocumentTypeId = "@ViewBag.Id";
+    $('#sFilter').html(GeneProductionDateFiltersForHtml());
+
+    var eXProductionDate = 0;
+
+    $(document).ready(function () {
+
+        var tab = $('#example').DataTable({
+            serverSide: true,
+            ordering: false,
+            searchDelay: 1000,
+            ajax: {
+                "url": "/JobOrderLineStatusUpdateWizard/AjaxGetJsonProductData/",
+                "type": "POST",
+                "data": function (d) {
+                    d.WizardType = Filters.WizardType ? Filters.WizardType : null;
+                    //d.ProductCategory = Filters.ProductCategory.length > 0 ? $.map(Filters.ProductCategory, function (val, i) { return (val.id) }).join(',') : "";
+                    //d.ProductCollection = Filters.ProductCollection.length > 0 ? $.map(Filters.ProductCollection, function (val, i) { return (val.id) }).join(',') : "";
+                    //d.SOD = Filters.SOD ? Filters.SOD : null;
+                    d.DocumentTypeId = Filters.DocumentTypeId ? Filters.DocumentTypeId : null;
+                },
+            },
+            columns: [
+                 { "data": "JobWorkerName", "width": "12%" },
+                 { "data": "JobOrderHeaderDocNo", "width": "8%" },
+                 //{ "data": "JobOrderHeaderDocDate", "width": "8%" },
+                 { "data": "ProductName", "width": "10%" },
+                 { "data": "Dimension1Name", "width": "8%" },
+                 { "data": "Dimension2Name", "width": "8%" },
+                 { "data": "ProdOrderDocNo", "width": "8%" },
+                 { "data": "Qty", "width": "8%" },
+                 { "data": "ProductionNo", "width": "8%", className: "Text", "render": function (data, type, row) { return '<input style="width:100%;" class="ProductionNo"  type="text" value="' + (row.ProductionNo == null ? '' : row.ProductionNo) + '" name="ProductionNo' + row.JobOrderLineId + '" id="ProductionNo' + row.JobOrderLineId + '" />'; }, "sortable": false },
+                 { "data": "ProductionDate", "width": "8%", className: "DateTime", "render": function (data, type, row) { return '<input style="width:100%;" class="ProductionDate" asp-format="{0:dd/MMM/yyyy}" type="date" value="' + (row.ProductionDate == null ? '' : row.ProductionDate) + '" name="ProductionDate' + row.JobOrderLineId + '" id="ProductionDate' + row.JobOrderLineId + '" />'; }, "sortable": false },
+                 { "data": "JobOrderLineId" },
+            ],
+            columnDefs: [
+            { "targets": 9, "searchable": false, className: "DTHidden", },
+            ],
+            scrollY: "400px",
+            dom: 'ftirp',
+            scroller: {
+                loadingIndicator: true,
+                serverWait: 1000,
+            },
+            language: {
+                "loadingRecords": "Please wait - loading..."
+            },
+            scrollCollapse: true,
+            //ForRowSelecting in ServerSideLogic--Commented cuz not needed in this entry point
+        });
+
+
+        $(document).click(function (e) {
+            if (($('#myModal').has(e.target).length == 0) && ($('td').has(e.target).length == 0)) {
+                Imgmodal.style.display = "none";
+            }
+        });
+
+        $(document).on('change', ' td > input', function () {
+
+            //alert($(this).val());
+            var Attribute = "";
+
+            if ($(this).val() && $(this).hasClass('ProductionNo')) {
+                eXProductionNo = $(this).val();
+                if (Filters.WizardType == "Pending To Dispatch" || Filters.WizardType == "All Dispatch")
+                    Attribute = "Dispatch No";
+                else
+                    Attribute = "Production No";
+            }
+            else if ($(this).val() && $(this).hasClass('ProductionDate')) {
+                eXProductionDate = $(this).val();
+                if (Filters.WizardType == "Pending To Dispatch" || Filters.WizardType == "All Dispatch")
+                    Attribute = "Dispatch Date";
+                else
+                    Attribute = "Production Date";
+            }
+
+            var td = $(this).closest('td').get(0);
+            var JData = $(this).closest('tr');
+
+
+            if ($(this).val() && $(this).val() != "") {
+                var data = tab.rows(JData).data();
+                $.ajax({
+                    url: '/JobOrderLineStatusUpdateWizard/UpdateCustomLineAttributes',
+                    type: "POST",
+                    data: { JobOrderLineId: data[0].JobOrderLineId, Attribute: Attribute, AttributeValue: $(this).val() },
+                    success: function (result) {
+                        if (result.Success == true) {
+
+                        }
+                        else if (!result.Success) {
+                            alert('Something went wrong');
+                        }
+                    },
+                    error: function () {
+
+                    },
+                });
+            }
+            return true;
+        });
+
+        $(document).on('focusin', ' td > input', function () {
+            if (eXProductionNo && $(this).hasClass('ProductionNo') && !$(this).val())
+            { $(this).val(eXProductionNo).trigger('change'); }
+
+            if (eXProductionDate && $(this).hasClass('ProductionDate') && !$(this).val())
+            { $(this).val(eXProductionDate).trigger('change'); }
+
+        })
+
+
+
+    });
+
+    $(function () {
+
+        $("a[data-modalCustom]").on("click", function (e) {
+            // hide dropdown if any
+            if (this.href == "") {
+                return false;
+            }
+
+            var data = new GeneProductionDateFiltersForParameter();
+            $.ajax({
+                url: this.href,
+                type: "POST",
+                data: data,
+                success: function (result) {
+                    $('#myModalContent').html(result);
+                    $('#myModal').modal({
+                        backdrop: 'static',
+                        keyboard: true
+                    }, 'show');
+
+                    bindForm1('#myModalContent');
+                },
+            });
+            return false;
+        });
+    });
+
+    function bindForm1(dialog) {
+        $('form#modform', dialog).submit(function () {
+            Filters = new AssignFilters();
+            $('#myModal').modal('hide');
+            $('#sFilter').html(GeneProductionDateFiltersForHtml());
+            var tab = $('#example').DataTable();
+            tab.ajax.reload();
+
+            return false;
+
+        });
+    }
+
+    function AssignFilters() {
+        var self = this;
+
+        self.WizardType = $('#WizardType', '.modal-body').val();
+        self.DocumentTypeId = $('#DocumentTypeId', '.modal-body').select2('data');
+        //self.ProductCollection = $('#ProductCollection', '.modal-body').select2('data');
+        //self.SOD = $('#SOD', '.modal-body').val();
+        //self.DisContinued = $('#DisContinued', '.modal-body').val();
+
+    }
+
+    function GeneProductionDateFiltersForParameter() {
+        var self = this;
+
+        self.WizardType = Filters.WizardType ? Filters.WizardType : null;
+        self.DocumentTypeId = Filters.DocumentTypeId ? Filters.DocumentTypeId : null;
+        //self.ProductCategory = Filters.ProductCategory.length > 0 ? $.map(Filters.ProductCategory, function (val, i) { return (val.id) }).join(',') : "";
+        //self.ProductCollection = Filters.ProductCollection.length > 0 ? $.map(Filters.ProductCollection, function (val, i) { return (val.id) }).join(',') : "";
+        //self.SOD = Filters.SOD ? Filters.SOD : null;
+        //self.DisContinued = Filters.DisContinued ? Filters.DisContinued : null;
+    }
+
+    function GeneProductionDateFiltersForHtml() {
+
+        var html = "";
+        html += Filters.WizardType ? "<strong>Type:</strong> <span class='label label-danger'> " + Filters.WizardType + " </span>" : "";
+        //html += Filters.ProductCategory.length > 0 ? "<strong>Construction:</strong>" + $.map(Filters.ProductCategory, function (val, i) { return ("<span class='label label-danger'>" + val.text + "</span>") }).join(' ') : "";
+        //html += Filters.ProductCollection.length > 0 ? "<strong>Collection:</strong>" + $.map(Filters.ProductCollection, function (val, i) { return ("<span class='label label-danger'>" + val.text + "</span>") }).join(' ') : "";
+        //html += Filters.SOD ? "<strong>SOD:</strong> <span class='label label-danger'> " + Filters.SOD + " </span>" : "";
+        //html += Filters.DisContinued ? "<strong>DisContinued:</strong> <span class='label label-danger'> " + Filters.DisContinued + " </span>" : "";
+        return html;
+    }
+
+</script>

@@ -60,7 +60,8 @@ namespace Service
                 if (vm.WagesPayType == "Jobwork")
                 {
                     System.Web.HttpContext.Current.Session["SalaryLineReferenceList"] = null;
-                    mQry = @"SELECT 0 As SalaryHeaderId, E.PersonID AS EmployeeId, E.Name+','+E.Suffix AS EmployeeName, Convert(int,E.Code) AS Code, 1.00 AS Days, 0.00 as BasicPay, 0.00 AS TDS, 0.00 AS TDSBaseValue, 0.00 AS Additions, 0.00 AS Deductions, 0.00 AS XAdditions, 0.00 AS XDeductions,
+                    mQry = @"SELECT 0 As SalaryHeaderId, E.PersonID AS EmployeeId, E.Name+','+E.Suffix AS EmployeeName, Convert(int,E.Code) AS Code, 1.00 AS Days, 0.00 as BasicPay, 0.00 AS TDS, 0.00 AS TDSBaseValue, 
+                        IsNull(VCNT.CNTAmount,0) AS Additions, IsNull(VCNT.CNTAmount,0) AS XAdditions, IsNull(VDBT.DBTAmount,0) AS Deductions, IsNull(VDBT.DBTAmount,0) AS XDeductions,
                         0.00 as RetensionAmount, IsNull(VLoan.LoanEMI,0) AS LoanEMI, IsNull(VAdvance.Advance,0) AS Advance, IsNull(VLoan.LoanEMI,0) AS XLoanEMI, IsNull(VAdvance.Advance,0) AS XAdvance, @DocDate As DocDate, 
                         @DocTypeId As DocTypeId, @WagesPayType AS WagesPayType, @Remark As HeaderRemark, Convert(Decimal(18,4),DAY(EOMONTH(@DocDate))) - IsNull(VSunday.NoOfSundays,0) AS MonthDays
                         FROM Web.People E
@@ -116,8 +117,45 @@ namespace Service
                             AND IsNull(L.AmtDr,0) - IsNull(VAdj.AdjustedAmount,0) > 0
 	                        GROUP BY E.PersonID
                         ) AS VAdvance ON E.PersonID = VAdvance.PersonID
-                        WHERE isnull(E.IsActive,1) =1 AND DT.DocumentTypeName = 'Job Worker'" +
-                        (vm.DepartmentId != null ? " AND E.PersonId IN (SELECT DISTINCT  PP.PersonId " +
+                        LEFT JOIN 
+                        (
+	                        SELECT E.PersonID, Sum(IsNull(L.AmtDr,0) - IsNull(VAdj.AdjustedAmount,0)) AS DBTAmount, Min(L.LedgerId) As LoanLedgerId
+	                        FROM Web.People E
+	                        LEFT JOIN Web.LedgerAccounts A ON E.PersonID = A.PersonId
+	                        LEFT JOIN Web.Ledgers L ON A.LedgerAccountId = L.LedgerAccountId
+	                        LEFT JOIN Web.LedgerLines LL ON L.LedgerLineId = LL.LedgerLineId
+	                        LEFT JOIN Web.LedgerHeaders H ON L.LedgerHeaderId = H.LedgerHeaderId
+	                        LEFT JOIN Web.DocumentTypes D ON H.DocTypeId = D.DocumentTypeId
+	                        LEFT JOIN (
+		                        SELECT La.DrLedgerId, Sum(La.Amount) AS AdjustedAmount
+		                        FROM Web.LedgerAdjs La
+		                        GROUP BY La.DrLedgerId
+	                        ) AS VAdj ON L.LedgerId = VAdj.DrLedgerId
+	                        WHERE H.AdjustmentType = '" + LedgerHeaderAdjustmentTypeConstants.DebitNote + "'" + @"
+                            AND IsNull(L.AmtDr,0) - IsNull(VAdj.AdjustedAmount,0) > 0
+	                        GROUP BY E.PersonID
+                        ) AS VDBT ON E.PersonID = VDBT.PersonID 
+                         LEFT JOIN 
+                        (
+	                        SELECT E.PersonID, Sum(IsNull(L.AmtCr,0) - IsNull(VAdj.AdjustedAmount,0)) AS CNTAmount, Min(L.LedgerId) As LoanLedgerId
+	                        FROM Web.People E
+	                        LEFT JOIN Web.LedgerAccounts A ON E.PersonID = A.PersonId
+	                        LEFT JOIN Web.Ledgers L ON A.LedgerAccountId = L.LedgerAccountId
+	                        LEFT JOIN Web.LedgerLines LL ON L.LedgerLineId = LL.LedgerLineId
+	                        LEFT JOIN Web.LedgerHeaders H ON L.LedgerHeaderId = H.LedgerHeaderId
+	                        LEFT JOIN Web.DocumentTypes D ON H.DocTypeId = D.DocumentTypeId
+	                        LEFT JOIN 
+	                        (
+		                        SELECT La.DrLedgerId, Sum(-La.Amount) AS AdjustedAmount
+		                        FROM Web.LedgerAdjs La
+		                        GROUP BY La.DrLedgerId
+	                        ) AS VAdj ON L.LedgerId = VAdj.DrLedgerId
+	                        WHERE H.AdjustmentType = '" + LedgerHeaderAdjustmentTypeConstants.CreditNote + "'" + @"
+                            AND IsNull(L.AmtCr,0) - IsNull(VAdj.AdjustedAmount,0) > 0
+	                        GROUP BY E.PersonID
+                        ) AS VCNT ON E.PersonID = VCNT.PersonID 
+                    WHERE isnull(E.IsActive,1) =1 AND DT.DocumentTypeName = 'Job Worker'" +
+                     (vm.DepartmentId != null ? " AND E.PersonId IN (SELECT DISTINCT  PP.PersonId " +
                     " FROM web.Processes P " +
                     " LEFT JOIN web.PersonProcesses PP ON PP.ProcessId = P.ProcessId " +
                     " WHERE PP.PersonId IS NOT NULL " +

@@ -190,6 +190,9 @@ namespace Service
                         join Ps in db.ProductSiteDetail on new { A1 = JobOrderHeaderTab.SiteId, A2 = JobOrderHeaderTab.DivisionId, A3 = JobOrderHeaderTab.ProcessId, A4 = JobOrderLineTab.ProductId }
                             equals new { A1 = Ps.SiteId, A2 = Ps.DivisionId, A3 = (Ps.ProcessId ?? 0), A4 = Ps.ProductId } into ProductSiteTable
                             from ProductSiteTab in ProductSiteTable.DefaultIfEmpty()
+                        join PGS in db.ProductGroupProcessSettings on new { A3 = JobOrderHeaderTab.ProcessId, A4 = (ProductTab.ProductGroupId ?? 0) }
+                            equals new { A3 = (PGS.ProcessId), A4 = PGS.ProductGroupId } into PGSTable
+                            from PGSTab in PGSTable.DefaultIfEmpty()
                         where JobOrderHeaderTab.ProcessId == JobReceive.ProcessId
                         && (string.IsNullOrEmpty(vm.ProductId) ? 1 == 1 : ProductIdArr.Contains(Vl.ProductId.ToString()))
                         && (string.IsNullOrEmpty(vm.JobOrderHeaderId) ? 1 == 1 : SaleOrderIdArr.Contains(Vl.JobOrderHeaderId.ToString()))
@@ -215,7 +218,7 @@ namespace Service
                             Qty = Vl.BalanceQty,
                             DocQty = Vl.BalanceQty,
                             ReceiveQty = Vl.BalanceQty,
-                            PassQty = Vl.BalanceQty,
+                            PassQty = (ProductSiteTab.ExcessReceiveAllowedAgainstOrderPer ?? 0) >0 ? (Vl.BalanceQty - Vl.BalanceQty* (Decimal)ProductSiteTab.ExcessReceiveAllowedAgainstOrderPer/100) : Vl.BalanceQty,
                             LotNo = JobOrderLineTab.LotNo,
                             //OrderQty = JobOrderLineTab.Qty,
                             //OrderDealQty = JobOrderLineTab.DealQty,
@@ -234,6 +237,7 @@ namespace Service
                             CostCenterName = JobOrderHeaderTab.CostCenter.CostCenterName,
                             ProdOrderLineId = JobOrderLineTab.ProdOrderLineId,
                             JobOrderHeaderId = JobOrderLineTab.JobOrderHeaderId,
+                            ProductGroupLossPer= PGSTab.LossPer,
                             ExcessReceiveAllowedAgainstOrderQty = JobOrderLineTab.Qty * (ProductSiteTab.ExcessReceiveAllowedAgainstOrderPer ?? 0) / 100 > (ProductSiteTab.ExcessReceiveAllowedAgainstOrderQty ?? 0) ? JobOrderLineTab.Qty * (ProductSiteTab.ExcessReceiveAllowedAgainstOrderPer ?? 0) / 100 : (ProductSiteTab.ExcessReceiveAllowedAgainstOrderQty ?? 0)
                         }
                         );
@@ -559,7 +563,7 @@ namespace Service
                             JobWorkerId = b.JobWorkerId,
                             CostCenterId = tab.JobOrderHeader.CostCenterId != null ? tab.JobOrderHeader.CostCenterId : null,
                             CostCenterName = tab.JobOrderHeader.CostCenterId != null ? tab.JobOrderHeader.CostCenter.CostCenterName : null,
-                            PenaltyAmt = p.PenaltyAmt - (p.IncentiveAmt ?? 0) + ((qatab == null) ? 0 : qatab.PenaltyAmt),
+                            PenaltyAmt = p.PenaltyAmt - (p.IncentiveAmt) + ((qatab == null) ? 0 : qatab.PenaltyAmt),
                         }).FirstOrDefault();
 
             var JobOrderLineId = (from p in db.JobReceiveLine

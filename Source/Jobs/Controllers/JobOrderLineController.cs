@@ -16,6 +16,7 @@ using DocumentEvents;
 using CustomEventArgs;
 using JobOrderDocumentEvents;
 using Reports.Controllers;
+using Model.DatabaseViews;
 
 namespace Jobs.Controllers
 {
@@ -951,6 +952,26 @@ namespace Jobs.Controllers
                 ModelState.AddModelError("DueDate", "Duedate should be greater than Docdate");
             }
 
+            if (svm.JobOrderLineId > 0)
+            {
+                JobOrderLine JOL = db.JobOrderLine.Where(m => m.JobOrderLineId == svm.JobOrderLineId).FirstOrDefault();
+                ViewJobOrderBalance VJ = db.ViewJobOrderBalance.Where(m => m.JobOrderLineId == svm.JobOrderLineId).FirstOrDefault();
+                if(svm.Qty < (JOL.Qty - VJ.BalanceQty))
+                {
+                    ModelState.AddModelError("Qty", "The Qty should not be less than Balance Job Order Qty.");
+                }
+
+                ProdOrderLine POL = db.ProdOrderLine.Where(m => m.ReferenceDocLineId == svm.JobOrderLineId && m.ReferenceDocTypeId == temp.DocTypeId).FirstOrDefault();
+                if (POL != null)
+                {
+                    ViewProdOrderBalance VP = db.ViewProdOrderBalance.Where(m => m.ProdOrderLineId == POL.ProdOrderLineId).FirstOrDefault();
+                    if (svm.Qty < (POL.Qty - VP.BalanceQty))
+                    {
+                        ModelState.AddModelError("Qty", "The Qty should not be less than Balance Prod Order Qty.");
+                    }
+                }
+            }
+
             if (svm.JobOrderLineId <= 0)
             {
                 ViewBag.LineMode = "Create";
@@ -978,6 +999,8 @@ namespace Jobs.Controllers
 
                     decimal PackingQty = svm.Qty / PackedPcs;
                     decimal PackingDealQty = svm.DealQty / PackedPcs;
+                    decimal PackingAmount = svm.Amount / PackedPcs;
+
                     Int64 PackingProductUidName = 0;
                     Int64 result;
                     if (Int64.TryParse(svm.ProductUidName, out result))
@@ -995,6 +1018,7 @@ namespace Jobs.Controllers
                         {
                             svmp.Qty = PackingQty;
                             svmp.DealQty = PackingDealQty;
+                            svmp.Amount = PackingAmount;
                             ProductUidName = (PackingProductUidName + Pcs).ToString();
 
                             ProductUid PU = db.ProductUid.Where(m => m.ProductUidName == ProductUidName).FirstOrDefault();
@@ -1683,6 +1707,28 @@ namespace Jobs.Controllers
                     }
 
 
+                    // To Create ProdOrder Only For IsSisterConcern ==true
+                    Settings settingToGenerateProdOrder = new SettingsService(_unitOfWork).GetSettingsForDocument(SettingFieldNameConstants.GeneratedProdOrderDocTypeId, svm.DocTypeId, svm.DivisionId, svm.SiteId, null);
+                    if (settingToGenerateProdOrder != null)
+                    {
+                        Person JW = db.Persons.Where(m => m.PersonID == temp.JobWorkerId).FirstOrDefault();
+                        if (JW.IsSisterConcern == true)
+                        {
+                            ProdOrderLine POL = db.ProdOrderLine.Where(m => m.ReferenceDocLineId == svm.JobOrderLineId && m.ReferenceDocTypeId == temp.DocTypeId).FirstOrDefault();
+                            POL.ProductId = svm.ProductId;
+                            POL.Qty = svm.Qty;
+                            POL.Remark = svm.Remark;
+                            POL.Dimension1Id = svm.Dimension1Id;
+                            POL.Dimension2Id = svm.Dimension2Id;
+                            POL.LockReason = svm.Remark;
+                            POL.Specification = svm.Specification;
+                            POL.ModifiedBy = User.Identity.Name;
+                            POL.ModifiedDate = DateTime.Now;
+                            POL.ObjectState = Model.ObjectState.Modified;
+                            db.ProdOrderLine.Add(POL);
+                        }
+                    }
+
                     temp.ObjectState = Model.ObjectState.Modified;
                     db.JobOrderHeader.Add(temp);
 
@@ -2128,6 +2174,8 @@ namespace Jobs.Controllers
                     //new StockAdjService(_unitOfWork).Create(Adj_IssQty);
                 }
 
+
+
                 s.CreatedDate = DateTime.Now;
                 s.ModifiedDate = DateTime.Now;
                 s.CreatedBy = User.Identity.Name;
@@ -2312,6 +2360,43 @@ namespace Jobs.Controllers
                     //    return PartialView("_Create", svm);
                     //}
 
+                }
+
+                // To Create ProdOrder Only For IsSisterConcern ==true
+                Settings settingToGenerateProdOrder = new SettingsService(_unitOfWork).GetSettingsForDocument(SettingFieldNameConstants.GeneratedProdOrderDocTypeId, svm.DocTypeId, svm.DivisionId, svm.SiteId, null);
+                if (settingToGenerateProdOrder != null)
+                {
+                    Person JW = db.Persons.Where(m => m.PersonID == temp.JobWorkerId).FirstOrDefault();
+                    if (JW.IsSisterConcern == true)
+                    {
+                        ProdOrderHeader POH = db.ProdOrderHeader.Where(m => m.ReferenceDocId == temp.JobOrderHeaderId && m.ReferenceDocTypeId == temp.DocTypeId).FirstOrDefault();
+
+                        ProdOrderLine POL = new ProdOrderLine();
+                        POL.ProdOrderHeaderId = POH.ProdOrderHeaderId;
+                        POL.ProductId = svm.ProductId;
+                        POL.Qty = svm.Qty;
+                        POL.Remark = svm.Remark;
+                        POL.ProcessId = temp.ProcessId;
+                        POL.ReferenceDocTypeId = svm.DocTypeId;
+                        POL.ReferenceDocLineId = s.JobOrderLineId;
+                        POL.Dimension1Id = svm.Dimension1Id;
+                        POL.Dimension2Id = svm.Dimension2Id;
+                        POL.LockReason = svm.Remark;
+                        POL.Specification = svm.Specification;
+                        POL.CreatedBy = User.Identity.Name;
+                        POL.ModifiedBy = User.Identity.Name;
+                        POL.CreatedDate = DateTime.Now;
+                        POL.ModifiedDate = DateTime.Now;
+                        POL.ObjectState = Model.ObjectState.Added;
+                        db.ProdOrderLine.Add(POL);
+
+                        ProdOrderLineStatus POLS = new ProdOrderLineStatus();
+                        POLS.ProdOrderLineId = POL.ProdOrderLineId;
+                        POLS.ObjectState = Model.ObjectState.Added;
+                        db.ProdOrderLineStatus.Add(POLS);
+
+                        db.SaveChanges();
+                    }
                 }
 
                 if (settings != null)
@@ -2523,6 +2608,31 @@ namespace Jobs.Controllers
         public ActionResult DeletePost(JobOrderLineViewModel vm)
         {
             bool BeforeSave = true;
+
+            JobOrderLine JOL = db.JobOrderLine.Where(m => m.JobOrderLineId == vm.JobOrderLineId).FirstOrDefault();
+            JobOrderHeader JOH = db.JobOrderHeader.Where(m => m.JobOrderHeaderId == JOL.JobOrderHeaderId).FirstOrDefault();
+            ViewJobOrderBalance VJ = db.ViewJobOrderBalance.Where(m => m.JobOrderLineId == vm.JobOrderLineId).FirstOrDefault();
+            if (JOL.Qty !=VJ.BalanceQty)
+            {
+                ModelState.AddModelError("Qty", "Please Check Balance Job Order Qty.");
+                PrepareViewBag(vm);
+                ViewBag.LineMode = "Delete";
+                return PartialView("_Create", vm);
+            }
+
+            ProdOrderLine POL = db.ProdOrderLine.Where(m => m.ReferenceDocLineId == vm.JobOrderLineId && m.ReferenceDocTypeId == JOH.DocTypeId).FirstOrDefault();
+            if (POL != null)
+            {
+                ViewProdOrderBalance VP = db.ViewProdOrderBalance.Where(m => m.ProdOrderLineId == POL.ProdOrderLineId).FirstOrDefault();
+                if (POL.Qty != VP.BalanceQty)
+                {
+                    ModelState.AddModelError("Qty", "Please Check Balance Prod Order Qty.");
+                    PrepareViewBag(vm);
+                    ViewBag.LineMode = "Delete";
+                    return PartialView("_Create", vm);
+                }
+            }
+
             try
             {
                 BeforeSave = JobOrderDocEvents.beforeLineDeleteEvent(this, new JobEventArgs(vm.JobOrderHeaderId, vm.JobOrderLineId), ref db);
@@ -2577,6 +2687,18 @@ namespace Jobs.Controllers
                 {
                     Obj = Mapper.Map<JobOrderLine>(JobOrderLine),
                 });
+
+                // To Delete ProdOrder Only For IsSisterConcern ==true
+
+                //if(POL !=null)
+                //{
+                //    ProdOrderLineStatus POLS = db.ProdOrderLineStatus.Where(m => m.ProdOrderLineId == POL.ProdOrderLineId).FirstOrDefault();
+                //    POLS.ObjectState = Model.ObjectState.Deleted;
+                //    db.ProdOrderLineStatus.Remove(POLS);
+
+                //    POL.ObjectState = Model.ObjectState.Deleted;
+                //    db.ProdOrderLine.Remove(POL);
+                //}
 
                 LineStatus.ObjectState = Model.ObjectState.Deleted;
                 db.JobOrderLineStatus.Remove(LineStatus);
@@ -2827,6 +2949,10 @@ namespace Jobs.Controllers
 
             IEnumerable<JobRate> RateList = _JobOrderLineService.GetJobRate(JobOrderId, ProductId);
 
+            var Record = new JobOrderHeaderService(_unitOfWork).Find(JobOrderId);
+
+            var Settings = new JobOrderSettingsService(_unitOfWork).GetJobOrderSettingsForDocument(Record.DocTypeId, Record.DivisionId, Record.SiteId);
+
             if (RateList != null)
             {
                 Rate = RateList.FirstOrDefault().Rate ?? 0;
@@ -2835,11 +2961,11 @@ namespace Jobs.Controllers
                 Loss = RateList.FirstOrDefault().LossRate ?? 0;
             }
 
-
-
-            var Record = new JobOrderHeaderService(_unitOfWork).Find(JobOrderId);
-
-            var Settings = new JobOrderSettingsService(_unitOfWork).GetJobOrderSettingsForDocument(Record.DocTypeId, Record.DivisionId, Record.SiteId);
+            if (Rate ==0 && Settings.FlateRate !=0)
+            {
+                Rate = Settings.FlateRate ?? 0;
+            }
+            
 
             //var DlUnit = new UnitService(_unitOfWork).Find(!string.IsNullOrEmpty(Settings.JobUnitId) ? Settings.JobUnitId : ((DealUnit == null) ? (Settings.DealUnitId == null ? product.UnitId : Settings.DealUnitId) : DealUnit.DealUnitId));
 

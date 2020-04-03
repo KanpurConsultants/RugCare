@@ -37,6 +37,9 @@
           <QueryParameter Name="@DocumentType">
             <Value>=Parameters!DocumentType.Value</Value>
           </QueryParameter>
+          <QueryParameter Name="@ReportType">
+            <Value>=Parameters!ReportType.Value</Value>
+          </QueryParameter>
         </QueryParameters>
         <CommandType>StoredProcedure</CommandType>
         <CommandText>Web.spRep_FinishingPaymentAdviseSummary</CommandText>
@@ -45,6 +48,10 @@
         <Field Name="SiteId">
           <DataField>SiteId</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="ProcessDetail">
+          <DataField>ProcessDetail</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Name">
           <DataField>Name</DataField>
@@ -57,6 +64,10 @@
         <Field Name="DocumentTypeName">
           <DataField>DocumentTypeName</DataField>
           <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="EmployeeId">
+          <DataField>EmployeeId</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
         <Field Name="DocDate">
           <DataField>DocDate</DataField>
@@ -123,19 +134,19 @@
                   <Width>2.27083in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.94216in</Width>
+                  <Width>0.87474in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.65625in</Width>
+                  <Width>0.6091in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.89583in</Width>
+                  <Width>0.68257in</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>0.875in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.02166in</Width>
+                  <Width>1.34951in</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
@@ -369,7 +380,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Remark</Value>
+                                  <Value>Process List</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -625,14 +636,14 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox5">
+                        <Textbox Name="ProcessDetail">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value />
+                                  <Value>=Fields!ProcessDetail.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -644,7 +655,7 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox5</rd:DefaultName>
+                          <rd:DefaultName>ProcessDetail</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>Silver</Color>
@@ -657,7 +668,6 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                   </TablixCells>
@@ -1032,7 +1042,7 @@
             <Top>2.08889in</Top>
             <Left>0.00493in</Left>
             <Height>1.02501in</Height>
-            <Width>7.43256in</Width>
+            <Width>7.43257in</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1723,6 +1733,7 @@
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox18</rd:DefaultName>
+              <Top>0in</Top>
               <Left>4.9209in</Left>
               <Height>0.25in</Height>
               <Width>2.44917in</Width>
@@ -1763,6 +1774,7 @@
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox19</rd:DefaultName>
+              <Top>0in</Top>
               <Left>0.05493in</Left>
               <Height>0.25in</Height>
               <Width>2.09923in</Width>

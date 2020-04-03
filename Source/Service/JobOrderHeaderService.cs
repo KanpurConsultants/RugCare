@@ -200,6 +200,8 @@ namespace Service
         public JobOrderHeaderViewModel GetJobOrderHeader(int id)
         {
             return (from p in db.JobOrderHeader
+                    join SH in db.StockHeaderTransport on p.StockHeaderId equals SH.StockHeaderId into SHTable
+                    from SHTab in SHTable.DefaultIfEmpty()
                     where p.JobOrderHeaderId == id
                     select new JobOrderHeaderViewModel
                     {
@@ -243,7 +245,13 @@ namespace Service
                         ReasonId = p.ReasonId,
                         SalesExecutiveId = p.SalesExecutiveId,
                         IsDoorDelivery = p.IsDoorDelivery ?? false,
-                        PayTermAdvancePer= p.PayTermAdvancePer,
+                        VehicleNo= SHTab.VehicleNo,
+                        LrDate = SHTab.LrDate,
+                        LrNo = SHTab.LrNo,
+                        EWayBillNo = SHTab.EWayBillNo,
+                        EWayBillDate = SHTab.EWayBillDate,
+                        TransportId = SHTab.TransportId,
+                        PayTermAdvancePer = p.PayTermAdvancePer,
                         PayTermOnDeliveryPer = p.PayTermOnDeliveryPer,
                         PayTermOnDueDatePer= p.PayTermOnDueDatePer,
                         PayTermCashPer = p.PayTermCashPer,

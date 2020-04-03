@@ -790,7 +790,7 @@ namespace Jobs.Controllers
                         ProductUid.Status = item.ProductUidStatus;
 
                         
-                        if (ProductUid.GenDocTypeId== vm.DocTypeId && ProductUid.GenLineId == item.StockLineId)
+                        if (ProductUid.GenDocTypeId== vm.DocTypeId && ProductUid.GenDocId == item.StockHeaderId)
                         {
                             ProductUid.ObjectState = Model.ObjectState.Deleted;
                             db.ProductUid.Remove(ProductUid);
@@ -826,6 +826,24 @@ namespace Jobs.Controllers
                 {
                     new StockProcessService(_unitOfWork).DeleteStockProcessDB(item, ref db, true);
                 }
+
+                ////To Delete Generated ProductUid ;
+                //var ProductUid = (from p in db.ProductUid
+                //                             where p.GenDocId == StockHeader.StockHeaderId && p.GenDocTypeId == StockHeader.DocTypeId
+                //                             select p).ToList();
+
+                //    foreach (var item2 in ProductUid)
+                //    {
+                //        if (item2.LastTransactionDocId == null || (item2.LastTransactionDocId == item2.GenDocId && item2.LastTransactionDocTypeId == item2.GenDocTypeId))
+                //        {
+                //            item2.ObjectState = Model.ObjectState.Deleted;
+                //            db.ProductUid.Remove(item2);
+                //        }
+                //        else
+                //        {
+                //            throw new Exception("Record Cannot be deleted as its Unique Id's are in use by other documents");
+                //        }
+                //    }
 
                 // Now delete the Purhcase Order Header
                 //new StockHeaderService(_unitOfWork).Delete(StockHeader);
@@ -3216,7 +3234,7 @@ namespace Jobs.Controllers
                         {
                             ProductId = p.ProductId,
                             ProductName = ProductTab.ProductName,
-                            ProductUIDId = PUTab.ProductUIDId,
+                            ProductUIDId = (int?)PUTab.ProductUIDId,
                             ProductUidName = PUTab.ProductUidName,
                             Dimension1Id = p.Dimension1Id,
                             Dimension1Name = Dimension1Tab.Dimension1Name,

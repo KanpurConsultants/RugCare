@@ -60,6 +60,9 @@ namespace Model.Models
         public virtual ICollection<PersonContact> PersonContacts { get; set; }
         public virtual ICollection<PersonAddress> PersonAddresses { get; set; }
 
+        [Display(Name = "Responsible User")]
+        public string ResponsibleUser { get; set; }
+
         [Display(Name = "Created By")]
         public string CreatedBy { get; set; }
         [Display(Name = "Modified By")]

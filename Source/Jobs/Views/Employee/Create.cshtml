@@ -583,12 +583,12 @@
     if(id==null||id==0)
     {
         $(function(){
-            AddCalculationFields(parseInt($('#EmployeeId').val()), true, '@Model.CalculationId', "Web.EmployeeCharges", "Web.EmployeeLineCharges", 0,$("#DocTypeId").val(), $("#SiteId").val(),$("#DivisionId").val());
+            AddCalculationFields(parseInt($('#EmployeeId').val()), false, '@Model.CalculationId', "Web.EmployeeCharges", "Web.EmployeeLineCharges", 0,$("#DocTypeId").val(), $("#SiteId").val(),$("#DivisionId").val());
         })
     }
     else{
         $(function(){
-            AddCalculationFieldsEdit(parseInt($('#EmployeeId').val()), $('#EmployeeId').val(), true, "Web.EmployeeCharges", "Web.EmployeeLineCharges");
+            AddCalculationFieldsEdit(parseInt($('#EmployeeId').val()), $('#EmployeeId').val(), false, "Web.EmployeeCharges", "Web.EmployeeLineCharges");
         })
     }
 </script>

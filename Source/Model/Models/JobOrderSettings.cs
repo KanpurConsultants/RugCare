@@ -58,7 +58,7 @@ namespace Model.Models
         public bool? isPostedInStock { get; set; }
         public bool? isPostedInStockProcess { get; set; }
         public bool? isPostedInStockVirtual { get; set; }
-
+        public bool? isVisibleTransportDetail { get; set; }
         public bool isVisibleLineUnitConversionFor { get; set; }
         public bool? isAllowedDuplicatePrint { get; set; }
         public bool? isAllowedToMaterialIssue { get; set; }
@@ -185,6 +185,8 @@ namespace Model.Models
         public int? OnApproveMenuId { get; set; }
         public virtual Menu OnApproveMenu { get; set; }
         public decimal NonCountedQty { get; set; }
+
+        public decimal? FlateRate { get; set; }
 
         public decimal? LossQty { get; set; }
 

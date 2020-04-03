@@ -980,6 +980,7 @@ namespace Jobs.Controllers
                                        //QtySum = g.Sum(m => m.Qty),
                                        UnitName = u1.UnitName,
                                        DecimalPlaces = u1.DecimalPlaces,
+                                       Sr = g.Key.Sr,
                                        GroupedItems = g,
                                    }).ToList().OrderBy(i => i.GroupedItems.Key.Sr);
 
@@ -1038,6 +1039,7 @@ namespace Jobs.Controllers
                         planline.PurchPlanQty = (item.PurchaseProduction == "Purchase") ? item.QtySum : 0;
                         planline.GeneratedFor = MaterialPlanConstants.ProdOrder;
                         planline.ProcessId = item.procid;
+                        planline.Sr = item.Sr;
                         Line.Add(planline);
 
                     }
@@ -1046,7 +1048,13 @@ namespace Jobs.Controllers
 
                     //MaterialPlanSummaryViewModel Summary = new MaterialPlanSummaryViewModel();
                     MPSummary.MaterialPlanSettings = Mapper.Map<MaterialPlanSettings, MaterialPlanSettingsViewModel>(settings);
-                    MPSummary.PlanLine = Line.OrderBy(m => m.ProductName).ThenBy(m => m.Dimension1Name).ThenByDescending(m => m.Dimension2Name).ThenByDescending(m => m.Dimension3Name).ThenByDescending(m => m.Dimension4Name).ToList();
+
+                    string CompanyName = ConfigurationManager.AppSettings["CompanyName"];
+
+                    if (CompanyName == "Orient Carpets")
+                        MPSummary.PlanLine = Line.OrderBy(m => m.Dimension2Name).ThenBy(m => m.Dimension3Name).ThenBy(m => m.Sr).ToList();
+                    else 
+                        MPSummary.PlanLine = Line.OrderBy(m => m.ProductName).ThenBy(m => m.Dimension1Name).ThenByDescending(m => m.Dimension2Name).ThenByDescending(m => m.Dimension3Name).ThenByDescending(m => m.Dimension4Name).ToList();
                 }
 
 

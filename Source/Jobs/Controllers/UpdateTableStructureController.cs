@@ -59,6 +59,47 @@ namespace Module
             }
 
 
+            try
+            {
+                if ((int)ExecuteScaler("SELECT Count(*) AS Cnt FROM INFORMATION_SCHEMA.Tables WHERE TABLE_NAME = 'CustomLineAttributes'") == 0)
+                {
+                    mQry = @"CREATE TABLE Web.CustomLineAttributes
+	                        (
+	                        Id                            INT IDENTITY NOT NULL,
+	                        HeaderTableId                 INT NOT NULL,
+	                        DocumentTypeHeaderAttributeId INT NOT NULL,
+	                        Value                         NVARCHAR (max),
+	                        LineTableId                   INT NOT NULL,
+	                        DocTypeId                     INT NOT NULL,
+	                        CreatedBy                     NVARCHAR (max),
+	                        ModifiedBy                    NVARCHAR (max),
+	                        CreatedDate                   DATETIME NOT NULL,
+	                        ModifiedDate                  DATETIME NOT NULL,
+	                        OMSId                         NVARCHAR (50),
+	                        CONSTRAINT [PK_Web.CustomLineAttributes] PRIMARY KEY (Id)
+	                        WITH (FILLFACTOR = 90),
+	                        CONSTRAINT [FK_Web.CustomLineAttributes_Web.DocumentTypeHeaderAttributes_DocumentTypeHeaderAttributeId] FOREIGN KEY (DocumentTypeHeaderAttributeId) REFERENCES Web.DocumentTypeHeaderAttributes (DocumentTypeHeaderAttributeId),
+	                        CONSTRAINT [FK_Web.CustomLine_Web.DocumentTypes_DocTypeId] FOREIGN KEY (DocTypeId) REFERENCES Web.DocumentTypes (DocumentTypeId)
+	                        )
+                            
+
+                            CREATE INDEX [IX_HeaderTableId]
+	                        ON Web.CustomLineAttributes (HeaderTableId)
+	                        WITH (FILLFACTOR = 90)
+
+
+                            CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
+	                        ON Web.CustomLineAttributes (DocumentTypeHeaderAttributeId)
+	                        WITH (FILLFACTOR = 90)
+                            ";
+                    ExecuteQuery(mQry);
+                }
+            }
+            catch (Exception ex)
+            {
+                RecordError(ex);
+            }
+
 
             try
             {
@@ -729,6 +770,7 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
             AddFields("JobInvoiceLines", "RetensionRate", "Decimal(18,4)");
             AddFields("JobInvoiceLines", "RetensionAmount", "Decimal(18,4)");
             AddFields("JobReceiveLines", "MfgDate", "DATETIME");
+            AddFields("Cities", "CityCode", "nvarchar(20)");
 
             AddFields("DocumentTypeSettings", "CostCenterCaption", "NVARCHAR (50)");
             AddFields("DocumentTypeSettings", "SpecificationCaption", "NVARCHAR (50)");
@@ -741,6 +783,7 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
             AddFields("JobInvoiceSettings", "isVisibleRateDiscountPer", "BIT");
             AddFields("JobInvoiceSettings", "isAllowedDuplicatePrint", "BIT NOT NULL DEFAULT(1)");
 
+            AddFields("JobOrderSettings", "FlateRate", " Decimal(18,4)");
             AddFields("JobOrderSettings", "isVisibleFinancier", "BIT");
             AddFields("JobOrderSettings", "isVisibleSalesExecutive", "BIT");
             AddFields("JobOrderSettings", "isVisibleReason", "BIT");
@@ -1963,10 +2006,11 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
             AddFields("LedgerSettings", "DefaultAdjustmentType", "nvarchar(50)");
 
             AddFields("CompanySettings", "isVisibleCompanyName", "BIT");
+            AddFields("CompanySettings", "isAllowAutoPlan", "BIT");
 
             AddFields("JobOrderLines", "StockInId", "Int", "Stocks");
             AddFields("JobOrderSettings", "isVisibleStockIn", "Bit");
-
+            AddFields("JobOrderSettings", "isVisibleTransportDetail", "BIT");
 
 
             try
@@ -2497,6 +2541,7 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
             AddFields("PackingSettings", "isPostedInSaleInvoice", "BIT");
             AddFields("PackingSettings", "SaleInvoiceTypeId", "Int", "DocumentTypes");
             AddFields("PackingSettings", "isAllowtoPackMultipleBarcode", "BIT");
+            AddFields("PackingSettings", "isAllowtoDirectPacking", "BIT");
             AddFields("PackingSettings", "isVisiblePackingUnit", "BIT");
 
             AddFields("SaleInvoiceSettings", "DoNotUpdateProductUidStatus", "BIT");
@@ -2909,6 +2954,7 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
             AddFields("JobInvoiceReturnHeaders", "Nature", "nvarchar(20) Not Null DEFAULT('Return')");
             AddFields("SaleInvoiceReturnHeaders", "Nature", "nvarchar(20) Not Null DEFAULT('Return')");
 
+            
             AddFields("States", "StateCode", "nvarchar(20)");
             AddFields("Charges", "PrintingDescription", "nvarchar(50)");
 
@@ -3542,6 +3588,8 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
             }
 
             AddFields("Processes", "SalesTaxProductCodeId", "Int", "SalesTaxProductCodes");
+            AddFields("Processes", "SalesTaxGroupProductId", "Int", "ChargeGroupProducts");
+
             AddFields("JobInvoiceHeaders", "CurrencyId", "Int", "Currencies");
             AddFields("DocumentTypeSettings", "DocIdCaption", "NVARCHAR (100)");
             AddFields("DocumentTypeSettings", "PrintProductGroup", "Bit");
@@ -3682,6 +3730,11 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
 
             AddFields("RoleDocTypes", "ProductTypeId", "Int","ProductTypes");
             AddFields("Menus", "ProductNatureId", "Int", "ProductNatures");
+
+            AddFields("Settings", "ProductTypeId", "Int", "ProductTypes");
+            AddFields("Settings", "ProductCategoryId", "Int", "ProductCategories");
+            AddFields("Settings", "BaseHead", "nvarchar(Max)");
+            AddFields("Settings", "BaseValue", "nvarchar(Max)");
 
             AddFields("SaleInvoiceSettings", "IsAutoDocNo", "BIT NOT NULL DEFAULT(0)");
 
@@ -4178,9 +4231,9 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
             AddFields("LedgerLines", "ReferenceLedgerAccountId", "Int", "LedgerAccounts");
             AddFields("LedgerLines", "DiscountAmount", "Decimal(18,4)");
             AddFields("LedgerLines", "DueDate", "DATETIME");
-             
 
-           	AddFields("People", "ReviewBy", "nvarchar(Max)");
+            AddFields("People", "ResponsibleUser", "nvarchar(Max)");
+            AddFields("People", "ReviewBy", "nvarchar(Max)");
             AddFields("People", "ReviewCount", "Int");
             AddFields("People", "Status", "Int");
 

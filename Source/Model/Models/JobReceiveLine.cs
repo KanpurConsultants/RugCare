@@ -83,7 +83,7 @@ namespace Model.Models
         public decimal LossQty { get; set; }
 
         [Display(Name = "Penalty Amount")]
-        public Decimal PenaltyAmt { get; set; }       
+        public Decimal PenaltyAmt { get; set; }
 
         [Display(Name = "Penalty Rate")]
         public Decimal PenaltyRate { get; set; }
@@ -92,7 +92,7 @@ namespace Model.Models
         public Decimal IncentiveRate { get; set; }
 
         [Display(Name = "Incentive Amount")]
-        public Decimal? IncentiveAmt { get; set; }
+        public Decimal IncentiveAmt { get; set; }
 
         [Display(Name = "Lot No."), MaxLength(10)]
         [Index("IX_JobReceiveLine_Unique", IsUnique = true, Order = 4)]

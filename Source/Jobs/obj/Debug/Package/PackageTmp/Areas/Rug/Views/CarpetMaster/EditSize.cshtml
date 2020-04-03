@@ -75,10 +75,11 @@
                             <div class="col-md-7 col-sm-10">
                                 @*@Html.TextBoxFor(model => model.StandardSizeId, null, new { @class = "form-control col-xs-7 height required" })*@
                                 @*@Html.ValidationMessageFor(model => model.StandardSizeId, "", new { @class = "text-danger" })*@
-                                @if (Model.IsOrderCreated == true)
+                                @*@if (Model.IsOrderCreated == true)
                                 { @Html.TextBoxFor(model => model.StandardSizeId, new { @class = "form-control col-xs-7 height required", @readonly = true }) }
                                 else
-                                { @Html.TextBoxFor(model => model.StandardSizeId, new { @class = "form-control col-xs-7 height required" })}
+                                { @Html.TextBoxFor(model => model.StandardSizeId, new { @class = "form-control col-xs-7 height required" })}*@
+                                @Html.TextBoxFor(model => model.StandardSizeId, new { @class = "form-control col-xs-7 height required" })
                             </div>
                         </div>
                     </div>
@@ -103,10 +104,11 @@
                             <div class="col-md-7 col-sm-10">
                                 @*@Html.TextBoxFor(model => model.FinishingSizeId, null, new { @class = "form-control col-xs-7 height required" })*@
                                 @*@Html.ValidationMessageFor(model => model.FinishingSizeId, "", new { @class = "text-danger" })*@
-                                @if (Model.IsOrderCreated == true)
+                                @*@if (Model.IsOrderCreated == true)
                                 { @Html.TextBoxFor(model => model.FinishingSizeId, new { @class = "form-control col-xs-7 height required", @readonly = true }) }
                                 else
-                                { @Html.TextBoxFor(model => model.FinishingSizeId, new { @class = "form-control col-xs-7 height required" })}
+                                { @Html.TextBoxFor(model => model.FinishingSizeId, new { @class = "form-control col-xs-7 height required" })}*@
+                                @Html.TextBoxFor(model => model.FinishingSizeId, new { @class = "form-control col-xs-7 height required" })
                             </div>
                         </div>
                     </div>
@@ -118,10 +120,11 @@
                             <div class="col-md-7 col-sm-10">
                                 @*@Html.TextBoxFor(model => model.StencilSizeId, null, new { @class = "form-control col-xs-7 height required" })*@
                                 @*@Html.ValidationMessageFor(model => model.StencilSizeId, "", new { @class = "text-danger" })*@
-                                @if (Model.IsOrderCreated == true)
+                                @*@if (Model.IsOrderCreated == true)
                                 { @Html.TextBoxFor(model => model.StencilSizeId, new { @class = "form-control col-xs-7 height required", @readonly = true }) }
                                 else
-                                { @Html.TextBoxFor(model => model.StencilSizeId, new { @class = "form-control col-xs-7 height required" })}
+                                { @Html.TextBoxFor(model => model.StencilSizeId, new { @class = "form-control col-xs-7 height required" })}*@
+                                @Html.TextBoxFor(model => model.StencilSizeId, new { @class = "form-control col-xs-7 height required" })
                             </div>
                         </div>
                     </div>
@@ -132,10 +135,11 @@
                             <div class="col-md-7 col-sm-10">
                                 @*@Html.TextBoxFor(model => model.MapSizeId, null, new { @class = "form-control col-xs-7 height required" })*@
                                 @*@Html.ValidationMessageFor(model => model.MapSizeId, "", new { @class = "text-danger" })*@
-                                @if (Model.IsOrderCreated == true)
+                                @*@if (Model.IsOrderCreated == true)
                                 { @Html.TextBoxFor(model => model.MapSizeId, new { @class = "form-control col-xs-7 height required", @readonly = true }) }
                                 else
-                                { @Html.TextBoxFor(model => model.MapSizeId, new { @class = "form-control col-xs-7 height required" })}
+                                { @Html.TextBoxFor(model => model.MapSizeId, new { @class = "form-control col-xs-7 height required" })}*@
+                                @Html.TextBoxFor(model => model.MapSizeId, new { @class = "form-control col-xs-7 height required" })
                             </div>
                         </div>
                     </div>

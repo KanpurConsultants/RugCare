@@ -521,21 +521,35 @@
               <TablixCells>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="CompanyName2">
+                    <Textbox Name="CompanyName8">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>Phone : </Value>
+                              <Value>State Code : </Value>
                               <Style>
                                 <FontFamily>tahoma</FontFamily>
                                 <FontSize>8pt</FontSize>
                               </Style>
                             </TextRun>
                             <TextRun>
-                              <Value>=Fields!Phone.Value</Value>
+                              <Value>=Fields!StateCode.Value</Value>
+                              <Style>
+                                <FontFamily>tahoma</FontFamily>
+                                <FontSize>8pt</FontSize>
+                              </Style>
+                            </TextRun>
+                            <TextRun>
+                              <Value>  District Code: </Value>
+                              <Style>
+                                <FontFamily>tahoma</FontFamily>
+                                <FontSize>8pt</FontSize>
+                              </Style>
+                            </TextRun>
+                            <TextRun>
+                              <Value>=Fields!CompanyCityCode.Value</Value>
                               <Style>
                                 <FontFamily>tahoma</FontFamily>
                                 <FontSize>8pt</FontSize>
@@ -551,9 +565,6 @@
                         <Border>
                           <Style>None</Style>
                         </Border>
-                        <LeftBorder>
-                          <Style>Solid</Style>
-                        </LeftBorder>
                         <PaddingLeft>4pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -561,6 +572,7 @@
                       </Style>
                     </Textbox>
                     <ColSpan>4</ColSpan>
+                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell />
@@ -621,14 +633,28 @@
               <TablixCells>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="CompanyName3">
+                    <Textbox Name="CompanyName7">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>Fax : </Value>
+                              <Value>Phone : </Value>
+                              <Style>
+                                <FontFamily>tahoma</FontFamily>
+                                <FontSize>8pt</FontSize>
+                              </Style>
+                            </TextRun>
+                            <TextRun>
+                              <Value>=Fields!Phone.Value</Value>
+                              <Style>
+                                <FontFamily>tahoma</FontFamily>
+                                <FontSize>8pt</FontSize>
+                              </Style>
+                            </TextRun>
+                            <TextRun>
+                              <Value>  Fax : </Value>
                               <Style>
                                 <FontFamily>tahoma</FontFamily>
                                 <FontSize>8pt</FontSize>
@@ -651,9 +677,6 @@
                         <Border>
                           <Style>None</Style>
                         </Border>
-                        <LeftBorder>
-                          <Style>Solid</Style>
-                        </LeftBorder>
                         <PaddingLeft>4pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -4928,6 +4951,10 @@
           <DataField>IECNo</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="CompanyCityCode">
+          <DataField>CompanyCityCode</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
         <Field Name="CompanyCity">
           <DataField>CompanyCity</DataField>
           <rd:TypeName>System.String</rd:TypeName>
@@ -4947,6 +4974,10 @@
         <Field Name="SubReportProcList">
           <DataField>SubReportProcList</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="StateCode">
+          <DataField>StateCode</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="BANKName">
           <DataField>BANKName</DataField>

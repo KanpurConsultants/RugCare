@@ -100,7 +100,7 @@ namespace Jobs.Areas.Rug.Controllers
                                    MaxDealUnitDecPlaces = g.Max(m => m.t.DealUnit.DecimalPlaces),
                                    DealUnitName = g.Max(m => m.t.DealUnit.UnitName),
                                    ValidationError = (g.Where(m => m.p.Weight > 0 && m.RetLin == null).Any() && g.Where(m => m.p.Weight == 0 && m.RetLin == null).Any()),
-                                   Penalty = g.Sum(m => m.p.PenaltyAmt) - (g.Sum(m => m.p.IncentiveAmt) ?? 0),
+                                   Penalty = g.Sum(m => m.p.PenaltyAmt) - (g.Sum(m => m.p.IncentiveAmt)),
                                }).ToList();
 
             JobReceiveSummaryDetailViewModel vm = new JobReceiveSummaryDetailViewModel();
@@ -289,7 +289,7 @@ namespace Jobs.Areas.Rug.Controllers
                                join t4 in db.ProductUid on p.ProductUidId equals t4.ProductUIDId
                                where p.JobReceiveHeaderId == id
                                orderby p.Sr
-                               select new JobReceiveIAPSummaryViewModel { ProductName = t2.ProductName, ProductUidId = t4.ProductUIDId, ProductUidName = t4.ProductUidName, DealQty = t.UnitConversionMultiplier * p.PassQty, DealUnitName = t3.UnitName, MaxDecPlaces = t3.DecimalPlaces, IncentiveAmt = p.IncentiveAmt ?? 0, PenalityAmt = p.PenaltyAmt, Remark = p.Remark, IsReturned=(rlintab!=null) }).ToList();
+                               select new JobReceiveIAPSummaryViewModel { ProductName = t2.ProductName, ProductUidId = t4.ProductUIDId, ProductUidName = t4.ProductUidName, DealQty = t.UnitConversionMultiplier * p.PassQty, DealUnitName = t3.UnitName, MaxDecPlaces = t3.DecimalPlaces, IncentiveAmt = p.IncentiveAmt, PenalityAmt = p.PenaltyAmt, Remark = p.Remark, IsReturned=(rlintab!=null) }).ToList();
 
             JobReceiveIAPSummaryDetailViewModel vm = new JobReceiveIAPSummaryDetailViewModel();
             vm.JobReceiveHeaderId = id;

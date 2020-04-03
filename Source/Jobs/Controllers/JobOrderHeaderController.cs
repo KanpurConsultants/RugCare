@@ -65,9 +65,6 @@ namespace Jobs.Controllers
 
         }
 
-        // GET: /JobOrderHeader/
-
-
         public ActionResult DocumentTypeIndex(int id)//DocumentCategoryId
         {
             var p = new DocumentTypeService(_unitOfWork).FindByDocumentCategory(id).ToList();
@@ -83,11 +80,6 @@ namespace Jobs.Controllers
 
         public ActionResult Index(int id, string IndexType)//DocumentTypeId 
         {
-            //var IpAddr = GetIPAddress();
-
-
-
-            
 
             if (IndexType == "PTS")
             {
@@ -143,7 +135,6 @@ namespace Jobs.Controllers
         private void PrepareViewBag(int id)
         {
             DocumentType DocType = new DocumentTypeService(_unitOfWork).Find(id);
-            //DocumentCategory DC = new DocumentCategoryService(_unitOfWork).Find(DocType.DocumentCategoryId);
             DocumentTypeSettingsViewModel DTS = new DocumentTypeSettingsService(_unitOfWork).GetDocumentTypeSettingsForDocument(id);
            
             int Cid = DocType.DocumentCategoryId;
@@ -199,31 +190,22 @@ namespace Jobs.Controllers
         [HttpGet]
         public ActionResult BarcodePrint(int id)
         {
-
             string GenDocId = "";
-
             JobOrderHeader header = _JobOrderHeaderService.Find(id);
             GenDocId = header.DocTypeId.ToString() + '-' + header.DocNo;
-            //return RedirectToAction("PrintBarCode", "Report_BarcodePrint", new { GenHeaderId = id });
-            return Redirect((string)System.Configuration.ConfigurationManager.AppSettings["JobsDomain"] + "/Report_BarcodePrint/PrintBarCode/?GenHeaderId=" + GenDocId + "&queryString=" + GenDocId);
-
-
+            return Redirect((string)System.Configuration.ConfigurationManager.AppSettings["JobsDomain"] + "/Report_BarcodePrint/PrintBarCode/?GenHeaderId=" + GenDocId + "&queryString=" + GenDocId);            
         }
 
 
         public JsonResult GetJobWorkerHelpList(int Processid, string term)//Order Header ID
         {
-
             return Json(_JobOrderHeaderService.GetJobWorkerHelpList(Processid, term), JsonRequestBehavior.AllowGet);
         }
 
 
         // GET: /JobOrderHeader/Create
-
         public ActionResult Create(int id)//DocumentTypeId
         {
-
-
             JobOrderHeaderViewModel p = new JobOrderHeaderViewModel();
             p.DocDate = DateTime.Now;
             p.DueDate = DateTime.Now;
@@ -333,6 +315,8 @@ namespace Jobs.Controllers
 
             var settings = new JobOrderSettingsService(_unitOfWork).GetJobOrderSettingsForDocument(svm.DocTypeId, svm.DivisionId, svm.SiteId);
 
+            Settings settingToGenerateProdOrder = new SettingsService(_unitOfWork).GetSettingsForDocument(SettingFieldNameConstants.GeneratedProdOrderDocTypeId, svm.DocTypeId, svm.DivisionId, svm.SiteId,null);
+
             if (settings != null)
             {
                 if (svm.JobOrderSettings.isVisiblePaymentTerms == true)
@@ -363,6 +347,26 @@ namespace Jobs.Controllers
                 if (settings.MaxDays.HasValue && (svm.DueDate - svm.DocDate).Days > settings.MaxDays.Value)
                 {
                     ModelState.AddModelError("DueDate", "DueDate is exceeding MaxDueDays.");
+                }
+            }
+
+            if (settingToGenerateProdOrder != null)
+            {
+                Person JW = context.Persons.Where(m => m.PersonID == svm.JobWorkerId).FirstOrDefault();
+                if (JW.IsSisterConcern ==true )
+                {
+                    Site S = new SiteService(_unitOfWork).FindByPerson(JW.PersonID);
+                    if (S == null)
+                    {
+                        ModelState.AddModelError("JobWorkerId", "Site Setting Not Find For This Job Worker");
+                    }
+                    else
+                    {
+                        if (S.DefaultDivisionId == null)
+                        {
+                            ModelState.AddModelError("JobWorkerId", "Division Setting Not Find For This Job Worker");
+                        }
+                    }
                 }
             }
 
@@ -449,7 +453,6 @@ namespace Jobs.Controllers
                                 costcen.ProcessId = svm.ProcessId;
                                 costcen.ObjectState = Model.ObjectState.Modified;
                                 context.CostCenter.Add(costcen);
-                                //new CostCenterService(_unitOfWork).Update(costcen);
                             }
                         }
                         else
@@ -471,7 +474,6 @@ namespace Jobs.Controllers
                             Cs.StartDate = svm.DocDate;
                             Cs.ParentCostCenterId = new ProcessService(_unitOfWork).Find(svm.ProcessId).CostCenterId;
                             Cs.ObjectState = Model.ObjectState.Added;
-                            //new CostCenterService(_unitOfWork).Create(Cs);
                             context.CostCenter.Add(Cs);
                             s.CostCenterId = Cs.CostCenterId;
 
@@ -510,6 +512,42 @@ namespace Jobs.Controllers
                     }
 
 
+                    if (settings.isVisibleTransportDetail == true)
+                    {
+                        StockHeaderTransport ST = new StockHeaderTransport();
+
+                        ST.DivisionId = svm.DivisionId;
+                        ST.SiteId = svm.SiteId;
+                        ST.DocTypeId = svm.DocTypeId;
+                        ST.ProcessId = svm.ProcessId;
+                        ST.ReferenceDocId = svm.JobOrderHeaderId;
+                        ST.ReferenceDocTypeId = svm.DocTypeId;
+                        ST.DocDate = svm.DocDate;
+                        ST.DocNo = svm.DocNo;
+                        ST.PersonId = svm.JobWorkerId;
+                        ST.GodownId = svm.GodownId;
+                        ST.Remark = svm.Remark;
+                        ST.Status = svm.Status;
+                        ST.TransportId = svm.TransportId;
+                        ST.VehicleNo = svm.VehicleNo;
+                        ST.LrNo = svm.LrNo;
+                        ST.EWayBillNo = svm.EWayBillNo;
+                        ST.EWayBillDate = svm.EWayBillDate;
+                        ST.LrDate = svm.LrDate;
+                        ST.PaymentType = svm.PaymentType;
+                        ST.Destination = svm.Destination;
+                        ST.CreatedBy = User.Identity.Name;
+                        ST.ModifiedBy = User.Identity.Name;
+                        ST.CreatedDate = DateTime.Now;
+                        ST.ModifiedDate = DateTime.Now;
+                        ST.ObjectState = Model.ObjectState.Added;
+                        context.StockHeaderTransport.Add(ST);
+
+                        s.StockHeaderId = ST.StockHeaderId;
+
+                    }
+
+
                     s.CreatedDate = DateTime.Now;
                     s.ModifiedDate = DateTime.Now;
                     s.ActualDueDate = s.DueDate;
@@ -518,10 +556,7 @@ namespace Jobs.Controllers
                     s.ModifiedBy = User.Identity.Name;
                     s.Status = (int)StatusConstants.Drafted;
                     s.ObjectState = Model.ObjectState.Added;
-                    //_JobOrderHeaderService.Create(s);
                     context.JobOrderHeader.Add(s);
-
-
 
 
                     new JobOrderHeaderStatusService(_unitOfWork).CreateHeaderStatus(s.JobOrderHeaderId, ref context, true);
@@ -539,9 +574,7 @@ namespace Jobs.Controllers
                             perk.JobOrderHeaderId = s.JobOrderHeaderId;
                             perk.JobOrderPerkId = perkpid;
                             perk.ObjectState = Model.ObjectState.Added;
-                            //new JobOrderPerkService(_unitOfWork).Create(perk);
                             context.JobOrderPerk.Add(perk);
-
                             perkpid++;
                         }
                     }
@@ -591,7 +624,6 @@ namespace Jobs.Controllers
                     {
                         if (EventException)
                         { throw new Exception(); }
-                        //_unitOfWork.Save();
                         context.SaveChanges();
                     }
 
@@ -629,6 +661,7 @@ namespace Jobs.Controllers
                         DocStatus = s.Status,
                     }));
 
+
                     //Update DocId in COstCenter
                     if (s.CostCenterId.HasValue && CostCenterGenerated)
                     {
@@ -638,8 +671,6 @@ namespace Jobs.Controllers
                         context.CostCenter.Add(CC);
 
                         context.SaveChanges();
-                        //new CostCenterService(_unitOfWork).Update(CC);
-                        //_unitOfWork.Save();
                     }
 
                     if (s.StockHeaderId.HasValue && settings.isAllowedToMaterialIssue == true)
@@ -650,8 +681,36 @@ namespace Jobs.Controllers
                         context.StockHeader.Add(CC);
 
                         context.SaveChanges();
-                        //new CostCenterService(_unitOfWork).Update(CC);
-                        //_unitOfWork.Save();
+                    }
+
+                    // To Create ProdOrder Only For IsSisterConcern ==true
+                    if (settingToGenerateProdOrder != null)
+                    {
+                        Person JW = context.Persons.Where(m => m.PersonID == svm.JobWorkerId).FirstOrDefault();
+                        if (JW.IsSisterConcern == true)
+                        {
+                            Site S = new SiteService(_unitOfWork).FindByPerson(JW.PersonID);
+                            DocumentType DT = new DocumentTypeService(_unitOfWork).FindByName(settingToGenerateProdOrder.Value);
+
+                            ProdOrderHeader POH = new ProdOrderHeader();
+                            POH.DivisionId = (int)S.DefaultDivisionId;
+                            POH.SiteId = S.SiteId;
+                            POH.DocTypeId = DT.DocumentTypeId;
+                            POH.ReferenceDocId = s.JobOrderHeaderId;
+                            POH.ReferenceDocTypeId = svm.DocTypeId;
+                            POH.DocDate = svm.DocDate;
+                            POH.DueDate = svm.DueDate;
+                            POH.DocNo = svm.DocNo;
+                            POH.Remark = svm.Remark;
+                            POH.Status = svm.Status;
+                            POH.CreatedBy = User.Identity.Name;
+                            POH.ModifiedBy = User.Identity.Name;
+                            POH.CreatedDate = DateTime.Now;
+                            POH.ModifiedDate = DateTime.Now;
+                            POH.ObjectState = Model.ObjectState.Added;
+                            context.ProdOrderHeader.Add(POH);
+                            context.SaveChanges();
+                        }
                     }
 
                     return RedirectToAction("Modify", "JobOrderHeader", new { Id = s.JobOrderHeaderId }).Success("Data saved successfully");
@@ -692,7 +751,6 @@ namespace Jobs.Controllers
                             temp.CostCenterId = CostCenter.CostCenterId;
                             if (temp.CostCenterId.HasValue)
                             {
-                                //var costcen = new CostCenterService(_unitOfWork).Find(temp.CostCenterId.Value);
                                 var costcen = (from p in context.CostCenter
                                                where p.CostCenterId == temp.CostCenterId
                                                select p).FirstOrDefault();
@@ -701,7 +759,6 @@ namespace Jobs.Controllers
 
                                 costcen.ObjectState = Model.ObjectState.Modified;
                                 context.CostCenter.Add(costcen);
-                                //new CostCenterService(_unitOfWork).Update(costcen);
                             }
                         }
                         else
@@ -716,8 +773,6 @@ namespace Jobs.Controllers
                         }
 
                     }
-
-
 
                         temp.ProcessId = s.ProcessId;
                         temp.DocDate = s.DocDate;
@@ -755,7 +810,6 @@ namespace Jobs.Controllers
                         temp.ModifiedBy = User.Identity.Name;
                         temp.ObjectState = Model.ObjectState.Modified;
                         context.JobOrderHeader.Add(temp);
-                    //_JobOrderHeaderService.Update(temp);
 
                     if (temp.JobWorkerId != ExRec.JobWorkerId || temp.DocNo != ExRec.DocNo || temp.DocDate != ExRec.DocDate)
                     {
@@ -777,7 +831,6 @@ namespace Jobs.Controllers
                                 perk.ModifiedBy = User.Identity.Name;
                                 perk.ModifiedDate = DateTime.Now;
                                 perk.ObjectState = Model.ObjectState.Modified;
-                                //new JobOrderPerkService(_unitOfWork).Update(perk);
                                 context.JobOrderPerk.Add(perk);
                             }
                             else
@@ -790,7 +843,6 @@ namespace Jobs.Controllers
                                 perkC.JobOrderHeaderId = temp.JobOrderHeaderId;
                                 perkC.ObjectState = Model.ObjectState.Added;
                                 context.JobOrderPerk.Add(perkC);
-                                //new JobOrderPerkService(_unitOfWork).Create(perkC);
                             }
                         }
                     }
@@ -834,19 +886,44 @@ namespace Jobs.Controllers
                         }
                         #endregion
 
-                        S.DocDate = temp.DocDate;
-                        S.DocNo = temp.DocNo;
-                        S.PersonId = temp.JobWorkerId;
-                        S.GodownId = temp.GodownId;
-                        S.Remark = temp.Remark;
-                        S.Status = temp.Status;
-                        S.ModifiedBy = temp.ModifiedBy;
-                        S.ModifiedDate = temp.ModifiedDate;
-                        S.ObjectState = Model.ObjectState.Modified;
-                        context.StockHeader.Add(S);
+                        StockHeaderTransport ST = (from SH in context.StockHeaderTransport
+                                                  where SH.StockHeaderId == temp.StockHeaderId
+                                         select SH).FirstOrDefault();
 
-
-                        //new StockHeaderService(_unitOfWork).UpdateStockHeader(S);
+                        if (ST != null)
+                        {
+                            ST.DocDate = temp.DocDate;
+                            ST.DocNo = temp.DocNo;
+                            ST.PersonId = temp.JobWorkerId;
+                            ST.GodownId = temp.GodownId;
+                            ST.Remark = temp.Remark;
+                            ST.Status = temp.Status;
+                            ST.TransportId = svm.TransportId;
+                            ST.VehicleNo = svm.VehicleNo;
+                            ST.LrNo = svm.LrNo;
+                            ST.EWayBillNo = svm.EWayBillNo;
+                            ST.EWayBillDate = svm.EWayBillDate;
+                            ST.LrDate = svm.LrDate;
+                            ST.PaymentType = svm.PaymentType;
+                            ST.Destination = svm.Destination;
+                            ST.ModifiedBy = temp.ModifiedBy;
+                            ST.ModifiedDate = temp.ModifiedDate;
+                            ST.ObjectState = Model.ObjectState.Modified;
+                            context.StockHeader.Add(ST);
+                        }
+                        else
+                        {
+                            S.DocDate = temp.DocDate;
+                            S.DocNo = temp.DocNo;
+                            S.PersonId = temp.JobWorkerId;
+                            S.GodownId = temp.GodownId;
+                            S.Remark = temp.Remark;
+                            S.Status = temp.Status;
+                            S.ModifiedBy = temp.ModifiedBy;
+                            S.ModifiedDate = temp.ModifiedDate;
+                            S.ObjectState = Model.ObjectState.Modified;
+                            context.StockHeader.Add(S);
+                        }                   
                     }
 
                     if (GodownChanged)
@@ -882,6 +959,18 @@ namespace Jobs.Controllers
                         }
                     }
 
+                    ProdOrderHeader POH = context.ProdOrderHeader.Where(m => m.ReferenceDocId == temp.JobOrderHeaderId && m.ReferenceDocTypeId == temp.DocTypeId).FirstOrDefault();
+                    if (POH != null)
+                    {
+                        POH.DocDate = temp.DocDate;
+                        POH.DocNo = temp.DocNo;
+                        POH.Remark = temp.Remark;
+                        POH.Status = temp.Status;
+                        POH.ModifiedBy = temp.ModifiedBy;
+                        POH.ModifiedDate = temp.ModifiedDate;
+                        POH.ObjectState = Model.ObjectState.Modified;
+                        context.ProdOrderHeader.Add(POH);
+                    }
 
 
                     if (svm.DocumentTypeHeaderAttributes != null)
@@ -947,7 +1036,6 @@ namespace Jobs.Controllers
                         { throw new Exception(); }
 
                         context.SaveChanges();
-                        //_unitOfWork.Save();
                     }
 
                     catch (Exception ex)
@@ -1300,29 +1388,8 @@ namespace Jobs.Controllers
         }
 
 
-        // GET: /PurchaseOrderHeader/Delete/5
 
-        //public ActionResult Delete(int id, string PrevAction, string PrevController)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    JobOrderHeader JobOrderHeader = _JobOrderHeaderService.Find(id);
-        //    if (JobOrderHeader == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    ReasonViewModel rvm = new ReasonViewModel()
-        //    {
-        //        id = id,
-        //    };
-        //    return PartialView("_Reason", rvm);
-        //}
-
-
-
-        // POST: /PurchaseOrderHeader/Delete/5
+        // POST: /JobOrderHeader/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(ReasonViewModel vm)
@@ -2227,28 +2294,6 @@ namespace Jobs.Controllers
                 }));
 
 
-
-                //if (!string.IsNullOrEmpty(IsContinue) && IsContinue == "True")
-                //{
-                //    JobOrderHeader HEader = _JobOrderHeaderService.Find(Id);
-
-                //    int nextId = new NextPrevIdService(_unitOfWork).GetNextPrevId(Id, HEader.DocTypeId, User.Identity.Name, ForActionConstants.PendingToReview, "Web.JobOrderHeaders", "JobOrderHeaderId", PrevNextConstants.Next);
-                //    if (nextId == 0)
-                //    {
-                //        var PendingtoSubmitCount = _JobOrderHeaderService.GetJobOrderHeaderListPendingToReview(HEader.DocTypeId, User.Identity.Name).Count();
-                //        if (PendingtoSubmitCount > 0)
-                //            return RedirectToAction("Index_PendingToReview", new { id = HEader.DocTypeId });
-                //        else
-                //            return RedirectToAction("Index", new { id = HEader.DocTypeId });
-
-                //    }
-
-                //    ViewBag.PendingToReview = PendingToReviewCount(Id);
-                //    return RedirectToAction("Detail", new { id = nextId, transactionType = "ReviewContinue" });
-                //}
-                //else
-                //    return RedirectToAction("Index", new { id = pd.DocTypeId }).Success(pd.DocNo + " Reviewed Successfully.");
-
                 string ReturnUrl = System.Configuration.ConfigurationManager.AppSettings["CurrentDomain"] + "/" + "JobOrderHeader" + "/" + "Index" + "/" + pd.DocTypeId + "?IndexType=" + IndexType;
                 if (!string.IsNullOrEmpty(IsContinue) && IsContinue == "True")
                 {
@@ -2454,22 +2499,6 @@ namespace Jobs.Controllers
             base.Dispose(disposing);
         }
 
-        //public void ExecuteCustomiseEvents(string EventName, object[] Parameters)
-        //{
-        //    if (EventName != null)
-        //    {
-        //        string[] FunctionPartArr;
-        //        FunctionPartArr = EventName.Split(new Char[] { '.' });
-
-        //        string NameSpace = FunctionPartArr[0];
-        //        string ClassName = FunctionPartArr[1];
-        //        string FunctionName = FunctionPartArr[2];
-
-        //        object obj = (object)Activator.CreateInstance("CustomiseEvents", NameSpace + "." + ClassName).Unwrap();
-        //        Type T = obj.GetType();
-        //        T.GetMethod(FunctionName).Invoke(obj, Parameters);
-        //    }
-        //}
 
 
         public ActionResult GenerateGatePass(string Ids, int DocTypeId)
@@ -2652,24 +2681,6 @@ namespace Jobs.Controllers
 
                     var GatePass = context.GatePassHeader.Find(pd.GatePassHeaderId);
 
-                    //LogList.Add(new LogTypeViewModel
-                    //{
-                    //    ExObj = GatePass,
-                    //});
-
-                    //var GatePassLines = (from p in context.GatePassLine
-                    //                     where p.GatePassHeaderId == GatePass.GatePassHeaderId
-                    //                     select p).ToList();
-
-                    //foreach (var item in GatePassLines)
-                    //{
-                    //    LogList.Add(new LogTypeViewModel
-                    //    {
-                    //        ExObj = item,
-                    //    });
-                    //    item.ObjectState = Model.ObjectState.Deleted;
-                    //    context.GatePassLine.Remove(item);
-                    //}
                     if (GatePass.Status != (int)StatusConstants.Submitted)
                     {
                         pd.GatePassHeaderId = null;
@@ -2733,22 +2744,6 @@ namespace Jobs.Controllers
                     return View("~/Views/Shared/PermissionDenied.cshtml").Warning("You don't have permission to do this task.");
                 }
 
-       //         DataTable Dt = new DataTable();
-			    //String MainQuery = Settings.SqlProcDocumentPrint + " " + Ids.Split(',')[0];
-       //         using (SqlConnection sqlConnection = new SqlConnection((string)System.Web.HttpContext.Current.Session["DefaultConnectionString"]))
-       //         {
-       //             SqlDataAdapter sqlDataAapter = new SqlDataAdapter(MainQuery, sqlConnection);
-       //             sqlDataAapter.Fill(Dt);
-       //         }
-       //         string Reportname = "";
-       //         string path = "";
-       //         if (Dt.Rows.Count > 0)
-       //         {
-       //             Reportname = Dt.Rows[0]["ReportName"].ToString();
-       //             path = ConfigurationManager.AppSettings["PhysicalRDLCPath"] + ConfigurationManager.AppSettings["ReportsPathFromService"] + Dt.Rows[0]["ReportName"].ToString();
-       //         }
-                //if (System.IO.File.Exists(path))
-                //{ 
                 string ReportSql = "";
 
                 if (!string.IsNullOrEmpty(Settings.DocumentPrint))
@@ -2885,15 +2880,9 @@ namespace Jobs.Controllers
 
                 return Json(new { success = "Success" }, JsonRequestBehavior.AllowGet);
             }
-            //return Json(new { success = "Error", data = "File Not Found. " }, JsonRequestBehavior.AllowGet);
 
-            //}
             return Json(new { success = "Error", data = "No Records Selected." }, JsonRequestBehavior.AllowGet);          
-            
-
-            
-
-
+                     
         }
 
 

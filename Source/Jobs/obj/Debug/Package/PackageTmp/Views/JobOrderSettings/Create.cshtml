@@ -769,6 +769,15 @@
                                 </div>
                             </div>
 
+                            <div class="col-md-6">
+                                <div class="form-group" style="margin-top:15px">
+                                    @Html.LabelFor(model => model.TermsAndConditions, "Terms & Conditions", new { @class = "control-label col-xs-4" })
+                                    <div class="col-xs-6">
+                                        @Html.TextBoxFor(m => m.TermsAndConditions, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.TermsAndConditions, null, new { @class = "has-error" })
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
 

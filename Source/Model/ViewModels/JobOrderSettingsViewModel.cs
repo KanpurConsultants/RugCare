@@ -27,7 +27,7 @@ namespace Model.ViewModel
         public bool isVisibleDimension2 { get; set; }
         public bool isVisibleDimension3 { get; set; }
         public bool isVisibleDimension4 { get; set; }
-
+        public bool isVisibleTransportDetail { get; set; }
         public bool isVisibleStockIn { get; set; }
         public bool IsMandatoryStockIn { get; set; }
         public bool isVisibleLineUnitConversionFor { get; set; }

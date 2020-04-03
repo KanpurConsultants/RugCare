@@ -62,6 +62,8 @@ namespace Model.ViewModel
         public decimal ? LastWeight { get; set; }
         public decimal Rate { get; set; }
         public decimal Amount { get; set; }
+        public Decimal IncentiveAmt { get; set; }
+        public Decimal IncentiveRate { get; set; }
         public decimal? PenaltyRate { get; set; }
         public decimal? PenaltyAmt { get; set; }
 

@@ -587,6 +587,100 @@
                 }
 
 
+                @Html.HiddenFor(m => m.JobOrderSettings.isVisibleTransportDetail)
+                @if (Model.JobOrderSettings.isVisibleTransportDetail == true)
+                {
+                    <hr />
+                    <div class="row">
+                        <h4 class="col-md-12 black" style="margin-top:15px">
+                            <span class="glyphicon glyphicon-align-justify"></span>
+                            Transport Detail
+                        </h4>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.TransportId, "Transport", new { @class = "control-label col-md-4 col-sm-2" })
+                            <div class="col-md-7 col-sm-10">
+                                @Html.TextBoxFor(m => m.TransportId, new { @class = "form-control " })
+                                @Html.ValidationMessageFor(m => m.TransportId, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.VehicleNo, "VehicleNo", new { @class = "control-label col-md-4 col-sm-2" })
+                            <div class="col-md-7 col-sm-10">
+                                @Html.TextBoxFor(m => m.VehicleNo, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.VehicleNo, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.LrNo, "LR No", new { @class = "control-label col-md-4 col-sm-2" })
+                            <div class="col-md-7 col-sm-10">
+                                @Html.TextBoxFor(m => m.LrNo, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.LrNo, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.LrDate, "LR Date", new { @class = "control-label col-md-4 col-sm-2" })
+                            <div class="col-md-7 col-sm-10">
+                                @Html.TextBoxFor(m => m.LrDate, "{0:dd/MMMM/yyyy}", new { @class = "datepicker form-control " })
+                                @Html.ValidationMessageFor(model => model.LrDate, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.EWayBillNo, "E-Way Bill No", new { @class = "control-label col-md-4 col-sm-2" })
+                            <div class="col-md-7 col-sm-10">
+                                @Html.TextBoxFor(m => m.EWayBillNo, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.EWayBillNo, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.EWayBillDate, "E-Way Bill Date", new { @class = "control-label col-md-4 col-sm-2" })
+                            <div class="col-md-7 col-sm-10">
+                                @Html.TextBoxFor(m => m.EWayBillDate, "{0:dd/MMMM/yyyy}", new { @class = "datepicker form-control " })
+                                @Html.ValidationMessageFor(model => model.EWayBillDate, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.PaymentType, "Payment Type", new { @class = "control-label col-md-4 col-sm-2" })
+                            <div class="col-md-7 col-sm-10">
+                                @Html.TextBoxFor(m => m.PaymentType, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.PaymentType, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Destination, "Destination", new { @class = "control-label col-md-4 col-sm-2" })
+                            <div class="col-md-7 col-sm-10">
+                                @Html.TextBoxFor(m => m.Destination, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Destination, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+
+
+                }
+
                 <hr />
 
                 <div class="row">
@@ -970,7 +1064,7 @@
         CustomSelectFunction($("#FinancierId"), '/ComboHelpList/GetFinanciers', '/ComboHelpList/SetSinglePerson', ' ', false, 0, $('#ProcessId').val());
         CustomSelectFunction($("#SalesExecutiveId"), '/ComboHelpList/GetSalesExecutives', '/ComboHelpList/SetSinglePerson', ' ', false, 0);
         CustomSelectFunction($("#ProcessId"), '/ComboHelpList/GetProcessWithChildProcess', '/ComboHelpList/SetSingleProcess', ' ', false,0, $('#JobOrderSettings_ProcessId').val());
-
+        CustomSelectFunction($("#TransportId"), '/ComboHelpList/GetTransporters', '/ComboHelpList/SetSingleTransporter', ' ', false, 0);
 
         $("#ProcessId").change(function(){
             CustomSelectFunction($("#OrderById"), '/ComboHelpList/GetEmployeeWithProcess', '/ComboHelpList/SetSingleEmployee', ' ', false, 0, $('#ProcessId').val());

@@ -137,7 +137,7 @@ namespace Jobs.Controllers
                     }
 
 
-                    cmd.CommandTimeout = 200;
+                    cmd.CommandTimeout = 600;
                     SqlDataAdapter sqlDataAapter = new SqlDataAdapter(cmd);
                     sqlDataAapter.SelectCommand.CommandType = CommandType.StoredProcedure;
                     dsRep.EnforceConstraints = false;

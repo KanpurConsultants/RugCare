@@ -221,6 +221,8 @@ namespace Service
                 //JobReceiveLine.DealQty = pt.DealQty;
                 JobReceiveLine.DealQty = pt.DealQty / Qty;
                 JobReceiveLine.DealUnitId = pt.DealUnitId;
+                JobReceiveLine.IncentiveRate = pt.IncentiveRate;
+                JobReceiveLine.IncentiveAmt = pt.IncentiveAmt;
 
                 if (pt.LastWeight != null && pt.LastWeight != 0)
                     JobReceiveLine.Weight = pt.LastWeight == 0 ? pt.Weight : pt.Weight - (decimal)pt.LastWeight;
@@ -646,6 +648,8 @@ namespace Service
                 JobReceiveLine.DealQty = pt.DealQty / Qty;
                 JobReceiveLine.DealUnitId = pt.DealUnitId;
                 JobReceiveLine.Weight = pt.Weight / Qty;
+                JobReceiveLine.IncentiveRate = pt.IncentiveRate;
+                JobReceiveLine.IncentiveAmt = pt.IncentiveAmt;
                 JobReceiveLine.Sr = 1;
                 JobReceiveLine.ModifiedBy = UserName;
                 JobReceiveLine.ModifiedDate = DateTime.Now;
@@ -886,7 +890,7 @@ namespace Service
                     Max(L.DealUnitId) AS DealUnitId,   Max(RQ.UnitConversionMultiplier) AS UnitConversionMultiplier,
                     sum(RQ.DealQty) AS DealQty, sum(L.Weight) AS Weight, Max(U.DecimalPlaces) AS UnitDecimalPlaces, Max(DU.DecimalPlaces) AS   DealUnitDecimalPlaces ,
                     Max(JOL.Rate) AS Rate , Max(JOL.Rate) AS  XRate, sum(L.DealQty)* max(JOL.Rate) AS  Amount,
-                    Max(L.PenaltyRate) AS  PenaltyRate, sum(L.PenaltyAmt) AS PenaltyAmt,  Max(H.DivisionId) AS DivisionId , Max(H.SiteId) AS SiteId, 
+                    Max(L.PenaltyRate) AS  PenaltyRate, sum(L.PenaltyAmt) AS PenaltyAmt,  Max(L.IncentiveRate) AS  IncentiveRate, sum(L.IncentiveAmt) AS IncentiveAmt, Max(H.DivisionId) AS DivisionId , Max(H.SiteId) AS SiteId, 
                     Max(H.ProcessId) AS ProcessId,
                     Max(H.DocDate) DocDate, Max(H.DocTypeId) AS DocTypeId, Max(H.DocNo) AS DocNo, 
                     Max(PQ.ProductQualityName) ProductQualityName,
@@ -1386,6 +1390,7 @@ namespace Service
                         {
                             ProductUid.LastTransactionDocDate = JobReceiveLine.ProductUidLastTransactionDocDate;
                             ProductUid.LastTransactionDocId = JobReceiveLine.ProductUidLastTransactionDocId;
+                            //ProductUid.LastTransactionLineId = JobReceiveLine.ProductUidLastTransactionLineId;
                             ProductUid.LastTransactionDocNo = JobReceiveLine.ProductUidLastTransactionDocNo;
                             ProductUid.LastTransactionDocTypeId = JobReceiveLine.ProductUidLastTransactionDocTypeId;
                             ProductUid.LastTransactionPersonId = JobReceiveLine.ProductUidLastTransactionPersonId;

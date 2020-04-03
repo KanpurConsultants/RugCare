@@ -182,6 +182,7 @@ namespace Jobs.Controllers
                     temp.isVisibleLoss = pt.isVisibleLoss;
                     temp.UnitConversionForId = pt.UnitConversionForId;
                     temp.SqlProcConsumption = pt.SqlProcConsumption;
+                    temp.TermsAndConditions = pt.TermsAndConditions;
                     temp.isPostedInStockProcess = pt.isPostedInStockProcess;
                     temp.isPostedInStockVirtual = pt.isPostedInStockVirtual;
                     temp.isVisibleCostCenter = pt.isVisibleCostCenter;

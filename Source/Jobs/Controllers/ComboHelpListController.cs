@@ -2633,12 +2633,14 @@ namespace Jobs.Controllers
         public ActionResult GetProductGroupForRug(string searchTerm, int pageSize, int pageNum)
         {
             //Get the paged results and the total count of the results for this query. ProductCacheKeyHint
-            var productCacheKeyHint = ConfigurationManager.AppSettings["ProductGroupCacheKeyHint"];
+            //var productCacheKeyHint = ConfigurationManager.AppSettings["ProductGroupCacheKeyHint"];
 
             //THis statement has been changed because GetProductHelpList was calling again and again. 
 
-            AutoCompleteComboBoxRepositoryAndHelper ar = new AutoCompleteComboBoxRepositoryAndHelper(cbl.GetProductGroupForRugHelpList(), productCacheKeyHint, RefreshData.RefreshProductData);
+            //AutoCompleteComboBoxRepositoryAndHelper ar = new AutoCompleteComboBoxRepositoryAndHelper(cbl.GetProductGroupForRugHelpList(), productCacheKeyHint, RefreshData.RefreshProductData);
             //AutoCompleteComboBoxRepositoryAndHelper ar = new AutoCompleteComboBoxRepositoryAndHelper(null, productCacheKeyHint);
+
+            AutoCompleteComboBoxRepositoryAndHelper ar = new AutoCompleteComboBoxRepositoryAndHelper(cbl.GetProductGroupForRugHelpList());
 
             if (RefreshData.RefreshProductData == true) { RefreshData.RefreshProductData = false; }
 
@@ -3636,9 +3638,10 @@ namespace Jobs.Controllers
 
           public ActionResult GetMachine(string searchTerm, int pageSize, int pageNum)
           {
-              var productCacheKeyHint = ConfigurationManager.AppSettings["MachineCacheKeyHint"];
-              AutoCompleteComboBoxRepositoryAndHelper ar = new AutoCompleteComboBoxRepositoryAndHelper(cbl.GetMachineHelpList(), productCacheKeyHint, RefreshData.RefreshProductData);
-              if (RefreshData.RefreshProductData == true) { RefreshData.RefreshProductData = false; }
+              //var productCacheKeyHint = ConfigurationManager.AppSettings["MachineCacheKeyHint"];
+              //AutoCompleteComboBoxRepositoryAndHelper ar = new AutoCompleteComboBoxRepositoryAndHelper(cbl.GetMachineHelpList(), productCacheKeyHint, RefreshData.RefreshProductData);
+            AutoCompleteComboBoxRepositoryAndHelper ar = new AutoCompleteComboBoxRepositoryAndHelper(cbl.GetMachineHelpList());
+            if (RefreshData.RefreshProductData == true) { RefreshData.RefreshProductData = false; }
 
               List<ComboBoxList> prodLst = ar.GetListForComboBox(searchTerm, pageSize, pageNum);
               int prodCount = ar.GetCountForComboBox(searchTerm, pageSize, pageNum);

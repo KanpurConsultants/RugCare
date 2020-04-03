@@ -23,6 +23,10 @@
   </DataSets>
   <Reports>
     <ProjectItem>
+      <Name>AdvancePrint.rdl</Name>
+      <FullPath>AdvancePrint.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>AmountTransferBetweenCostCenters.rdl</Name>
       <FullPath>AmountTransferBetweenCostCenters.rdl</FullPath>
     </ProjectItem>
@@ -1097,6 +1101,10 @@
       <FullPath>HandSpunInvoicePrint_BC1.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>HandSpunReceivePrint.rdl</Name>
+      <FullPath>HandSpunReceivePrint.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>HisabOfPurja.rdl</Name>
       <FullPath>HisabOfPurja.rdl</FullPath>
     </ProjectItem>
@@ -1393,8 +1401,16 @@
       <FullPath>JobOrderLineStatusCheck.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>JobOrderPrint_SpinningBC.rdl</Name>
+      <FullPath>JobOrderPrint_SpinningBC.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>JobOrderPrint_WithMaterialIssue.rdl</Name>
       <FullPath>JobOrderPrint_WithMaterialIssue.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>JobOrderPrint_WithMaterialIssue_HSBC.rdl</Name>
+      <FullPath>JobOrderPrint_WithMaterialIssue_HSBC.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>JobOrderPrint_WithMaterialIssue1.rdl</Name>
@@ -3369,6 +3385,10 @@
       <FullPath>Rug_FinishingOrder_Print.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Rug_FinishingOrder_Print_MC.rdl</Name>
+      <FullPath>Rug_FinishingOrder_Print_MC.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>Rug_FinishingOrder_Print1.rdl</Name>
       <FullPath>Rug_FinishingOrder_Print1.rdl</FullPath>
     </ProjectItem>
@@ -3545,6 +3565,14 @@
       <FullPath>Rug_SaleOrderTracking_Summary.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Rug_SaleOrderTracking_Summary_BC.rdl</Name>
+      <FullPath>Rug_SaleOrderTracking_Summary_BC.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Rug_SaleOrderTracking_Summary_OC.rdl</Name>
+      <FullPath>Rug_SaleOrderTracking_Summary_OC.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>Rug_StockinHand_DocumentTypeWise.rdl</Name>
       <FullPath>Rug_StockinHand_DocumentTypeWise.rdl</FullPath>
     </ProjectItem>
@@ -3595,6 +3623,10 @@
     <ProjectItem>
       <Name>Rug_WeavingInvoice_Print_Bhadohi_Hata.rdl</Name>
       <FullPath>Rug_WeavingInvoice_Print_Bhadohi_Hata.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Rug_WeavingInvoice_Print_OC.rdl</Name>
+      <FullPath>Rug_WeavingInvoice_Print_OC.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Rug_WeavingOrder_Print_Bhadohi.rdl</Name>
@@ -4173,6 +4205,10 @@
       <FullPath>SmallChunkAdvise.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>SpinningInvoicePrint_BC.rdl</Name>
+      <FullPath>SpinningInvoicePrint_BC.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>SpinningOrderPrint.rdl</Name>
       <FullPath>SpinningOrderPrint.rdl</FullPath>
     </ProjectItem>
@@ -4643,6 +4679,10 @@
     <ProjectItem>
       <Name>TraceMapInvoicePrint.rdl</Name>
       <FullPath>TraceMapInvoicePrint.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>TraceMapInvoicePrint_BC.rdl</Name>
+      <FullPath>TraceMapInvoicePrint_BC.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>TraceMapIssuePrint.rdl</Name>
@@ -5384,6 +5424,10 @@
       <FullPath>WorkingOnOrderIssue.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>WorkingOnSaleOrderBalance.rdl</Name>
+      <FullPath>WorkingOnSaleOrderBalance.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>WorkingOnStatus.rdl</Name>
       <FullPath>WorkingOnStatus.rdl</FullPath>
     </ProjectItem>
@@ -5492,8 +5536,8 @@
       <FullPath>YearlyListOfPurja.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>WorkingOnSaleOrderBalance.rdl</Name>
-      <FullPath>WorkingOnSaleOrderBalance.rdl</FullPath>
+      <Name>Rug_WeavingInvoice_Print_MC.rdl</Name>
+      <FullPath>Rug_WeavingInvoice_Print_MC.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>

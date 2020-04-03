@@ -139,6 +139,7 @@ namespace Service
                 line.Dimension4Id = values[5] == System.DBNull.Value ? null : (int?)Convert.ToInt32(values[5].ToString());
                 line.ProcessId = values[6] == System.DBNull.Value ? null : (int?)Convert.ToInt32(values[6].ToString());
                 line.Qty = values[7] == System.DBNull.Value ? 0 : Convert.ToDecimal(values[7].ToString());
+                line.Sr = values[8] == System.DBNull.Value ? 0 : Convert.ToInt16(values[8].ToString());
                 temp.Add(line);
 
             }

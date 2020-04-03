@@ -820,7 +820,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>Standard </Value>
+                              <Value>Map</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
                                 <FontSize>8pt</FontSize>
@@ -3064,7 +3064,7 @@
           </TablixColumns>
           <TablixRows>
             <TablixRow>
-              <Height>1.46875in</Height>
+              <Height>1.48958in</Height>
               <TablixCells>
                 <TablixCell>
                   <CellContents>
@@ -3080,7 +3080,79 @@
                         </TablixColumns>
                         <TablixRows>
                           <TablixRow>
-                            <Height>0.24479in</Height>
+                            <Height>0.2128in</Height>
+                            <TablixCells>
+                              <TablixCell>
+                                <CellContents>
+                                  <Textbox Name="Textbox188">
+                                    <CanGrow>true</CanGrow>
+                                    <KeepTogether>true</KeepTogether>
+                                    <Paragraphs>
+                                      <Paragraph>
+                                        <TextRuns>
+                                          <TextRun>
+                                            <Value>Plan Due Date</Value>
+                                            <Style>
+                                              <FontFamily>Tahoma</FontFamily>
+                                              <FontSize>9pt</FontSize>
+                                              <FontWeight>Bold</FontWeight>
+                                            </Style>
+                                          </TextRun>
+                                        </TextRuns>
+                                        <Style />
+                                      </Paragraph>
+                                    </Paragraphs>
+                                    <rd:DefaultName>Textbox184</rd:DefaultName>
+                                    <Style>
+                                      <Border>
+                                        <Style>Solid</Style>
+                                      </Border>
+                                      <PaddingLeft>2pt</PaddingLeft>
+                                      <PaddingRight>2pt</PaddingRight>
+                                      <PaddingTop>2pt</PaddingTop>
+                                      <PaddingBottom>2pt</PaddingBottom>
+                                    </Style>
+                                  </Textbox>
+                                </CellContents>
+                              </TablixCell>
+                              <TablixCell>
+                                <CellContents>
+                                  <Textbox Name="PlanDueDate">
+                                    <CanGrow>true</CanGrow>
+                                    <KeepTogether>true</KeepTogether>
+                                    <Paragraphs>
+                                      <Paragraph>
+                                        <TextRuns>
+                                          <TextRun>
+                                            <Value>=Fields!PlanDueDate.Value</Value>
+                                            <Style>
+                                              <Format>dd/MMM/yyyy</Format>
+                                            </Style>
+                                          </TextRun>
+                                        </TextRuns>
+                                        <Style>
+                                          <TextAlign>Left</TextAlign>
+                                        </Style>
+                                      </Paragraph>
+                                    </Paragraphs>
+                                    <rd:DefaultName>PlanDueDate</rd:DefaultName>
+                                    <Style>
+                                      <Border>
+                                        <Style>Solid</Style>
+                                      </Border>
+                                      <PaddingLeft>2pt</PaddingLeft>
+                                      <PaddingRight>2pt</PaddingRight>
+                                      <PaddingTop>2pt</PaddingTop>
+                                      <PaddingBottom>2pt</PaddingBottom>
+                                    </Style>
+                                  </Textbox>
+                                  <rd:Selected>true</rd:Selected>
+                                </CellContents>
+                              </TablixCell>
+                            </TablixCells>
+                          </TablixRow>
+                          <TablixRow>
+                            <Height>0.2128in</Height>
                             <TablixCells>
                               <TablixCell>
                                 <CellContents>
@@ -3147,7 +3219,7 @@
                             </TablixCells>
                           </TablixRow>
                           <TablixRow>
-                            <Height>0.24479in</Height>
+                            <Height>0.2128in</Height>
                             <TablixCells>
                               <TablixCell>
                                 <CellContents>
@@ -3214,7 +3286,7 @@
                             </TablixCells>
                           </TablixRow>
                           <TablixRow>
-                            <Height>0.24479in</Height>
+                            <Height>0.2128in</Height>
                             <TablixCells>
                               <TablixCell>
                                 <CellContents>
@@ -3281,7 +3353,7 @@
                             </TablixCells>
                           </TablixRow>
                           <TablixRow>
-                            <Height>0.24479in</Height>
+                            <Height>0.2128in</Height>
                             <TablixCells>
                               <TablixCell>
                                 <CellContents>
@@ -3348,7 +3420,7 @@
                             </TablixCells>
                           </TablixRow>
                           <TablixRow>
-                            <Height>0.24479in</Height>
+                            <Height>0.2128in</Height>
                             <TablixCells>
                               <TablixCell>
                                 <CellContents>
@@ -3415,7 +3487,7 @@
                             </TablixCells>
                           </TablixRow>
                           <TablixRow>
-                            <Height>0.24479in</Height>
+                            <Height>0.2128in</Height>
                             <TablixCells>
                               <TablixCell>
                                 <CellContents>
@@ -3497,8 +3569,10 @@
                           <TablixMember />
                           <TablixMember />
                           <TablixMember />
+                          <TablixMember />
                         </TablixMembers>
                       </TablixRowHierarchy>
+                      <DataSetName>DsMain</DataSetName>
                       <Style>
                         <Border>
                           <Style>Solid</Style>
@@ -3656,7 +3730,7 @@
         <DataSetName>DsMain</DataSetName>
         <Top>2.46327in</Top>
         <Left>0.04939in</Left>
-        <Height>1.46875in</Height>
+        <Height>1.48958in</Height>
         <Width>7.41344in</Width>
         <ZIndex>5</ZIndex>
         <Style>
@@ -3666,7 +3740,7 @@
         </Style>
       </Tablix>
     </ReportItems>
-    <Height>4.98487in</Height>
+    <Height>4.94321in</Height>
     <Style />
   </Body>
   <Width>7.46284in</Width>
@@ -3934,6 +4008,10 @@
         <Field Name="BuyerOrderNo">
           <DataField>BuyerOrderNo</DataField>
           <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="PlanDueDate">
+          <DataField>PlanDueDate</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
         </Field>
         <Field Name="Remark">
           <DataField>Remark</DataField>

@@ -1128,7 +1128,7 @@ namespace Service
                         Specification = L.JobReceiveLine.ProductUid.ProductUidSpecification ?? L.JobReceiveLine.JobOrderLine.Specification,
                         Weight = L.JobReceiveLine.Weight,
                         PenaltyAmt = L.JobReceiveLine.PenaltyAmt,
-                        IncentiveAmt = L.JobReceiveLine.IncentiveAmt ?? 0,
+                        IncentiveAmt = L.JobReceiveLine.IncentiveAmt,
                         IncentiveRate = L.JobReceiveLine.IncentiveRate,
                         PenaltyRate = L.JobReceiveLine.PenaltyRate,
                         RateDiscountPer = L.RateDiscountPer,

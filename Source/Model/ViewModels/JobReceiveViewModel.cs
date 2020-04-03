@@ -186,6 +186,9 @@ namespace Model.ViewModel
         [Display(Name = "Loss Per")]
         public decimal LossPer { get; set; }
 
+        [Display(Name = "ProductGroup Loss Per")]
+        public decimal? ProductGroupLossPer { get; set; }
+
         [Display(Name = "Loss Qty")]
         public decimal LossQty { get; set; }
 
@@ -241,7 +244,7 @@ namespace Model.ViewModel
         public byte DealUnitDecimalPlaces { get; set; }
         public decimal Rate { get; set; }
         public decimal Amount { get; set; }
-        public Decimal ? IncentiveAmt { get; set; }
+        public Decimal IncentiveAmt { get; set; }
         public Decimal IncentiveRate { get; set; }
 
         public List<HeaderCharges> RHeaderCharges { get; set; }

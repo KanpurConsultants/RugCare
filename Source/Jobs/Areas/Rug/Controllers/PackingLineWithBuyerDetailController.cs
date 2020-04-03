@@ -1430,6 +1430,18 @@ namespace Jobs.Areas.Rug.Controllers
                 packingline.CreatedBy = User.Identity.Name;
                 packingline.ModifiedBy = User.Identity.Name;
 
+                if (PackingSetting.isAllowtoDirectPacking != true  && svm.StockInId != null)
+                {
+                    StockAdj Adj_IssQty = new StockAdj();
+                    Adj_IssQty.StockInId = (int)svm.StockInId;
+                    Adj_IssQty.StockOutId = (int)StockViewModel_Issue.StockId;
+                    Adj_IssQty.DivisionId = packingheader.DivisionId;
+                    Adj_IssQty.SiteId = packingheader.SiteId;
+                    Adj_IssQty.AdjustedQty = packingline.Qty;
+                    Adj_IssQty.ObjectState = Model.ObjectState.Added;
+                    //db.StockAdj.Add(Adj_IssQty);
+                    new StockAdjService(_unitOfWork).Create(Adj_IssQty);
+                }
 
                 if (svm.ProductUidId != null && svm.ProductUidName != null)
                 {
@@ -3664,8 +3676,16 @@ namespace Jobs.Areas.Rug.Controllers
 
         public ActionResult GetStockInForProduct(string searchTerm, int pageSize, int pageNum, int filter, int? ProductId, int? Dimension1Id, int? Dimension2Id, int? Dimension3Id, int? Dimension4Id)//DocTypeId
         {
-            //var Query = _PackingLineService.GetPendingStockInForIssue(filter, ProductId, Dimension1Id, Dimension2Id, Dimension3Id, Dimension4Id, searchTerm);
-            var Query = _PackingLineService.GetPendingStockForPacking(filter, ProductId, Dimension1Id, Dimension2Id, Dimension3Id, Dimension4Id, searchTerm);
+            IEnumerable<ComboBoxResult> Query;
+
+            PackingHeader H = new PackingHeaderService(_unitOfWork).GetPackingHeader(filter);
+            PackingSetting PackingSetting = new PackingSettingService(_unitOfWork).GetPackingSettingForDocument(H.DocTypeId, H.DivisionId, H.SiteId);
+
+            if (PackingSetting.isAllowtoDirectPacking ==true )
+                Query = _PackingLineService.GetPendingStockForPacking(filter, ProductId, Dimension1Id, Dimension2Id, Dimension3Id, Dimension4Id, searchTerm);
+            else
+                Query = _PackingLineService.GetPendingStockInForIssue(filter, ProductId, Dimension1Id, Dimension2Id, Dimension3Id, Dimension4Id, searchTerm);
+
             var temp = Query.Skip(pageSize * (pageNum - 1))
                 .Take(pageSize)
                 .ToList();

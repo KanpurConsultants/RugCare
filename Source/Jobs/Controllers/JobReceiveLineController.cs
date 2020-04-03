@@ -2306,8 +2306,10 @@ namespace Jobs.Controllers
                 {
                     var Productuids = new JobReceiveLineService(_unitOfWork).ProductUidsExist(s.JobReceiveHeaderId, Productids.ProductUIDId).FirstOrDefault();
                     if (Productuids != null)
-                    {
-                        ModelState.AddModelError("ProductUidId", "Already Received");
+                    {  if (Productuids.JobReceiveLineId != svm.JobReceiveLineId)
+                        {
+                            ModelState.AddModelError("ProductUidId", "Already Received");
+                        }
                     }
                 }
             }

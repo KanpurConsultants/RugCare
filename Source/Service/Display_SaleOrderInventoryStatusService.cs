@@ -413,7 +413,7 @@ namespace Service
                     FROM Web.MaterialPlanHeaders H WITH (Nolock)
                     LEFT JOIN Web.MaterialPlanLines  L WITH (Nolock) ON H.MaterialPlanHeaderId = L.MaterialPlanHeaderId
                     LEFT JOIN web.MaterialPlanForSaleOrders S WITH (Nolock) ON S.MaterialPlanLineId = L.MaterialPlanLineId
-                    WHERE H.DocTypeId = 313 AND S.SaleOrderLineId IS NOT NULL AND L.StockPlanQty > 0
+                    WHERE H.DocTypeId = 313 AND H.DocDate <'01/Jan/2020' AND S.SaleOrderLineId IS NOT NULL AND L.StockPlanQty > 0
                     Group By S.SaleOrderLineId
 					) A
 					LEFT JOIN 
@@ -533,12 +533,13 @@ namespace Service
                     -----------------F Dispatched -------------
 
 
-                    SELECT PL.SaleOrderLineId, sum(PL.Qty) AS DispQty, sum(CASE WHEN (isnull(PU.SaleOrderLineId,0) <> isnull(PL.SaleOrderLineId,0) AND PU.ProductUIDId IS NOT NULL) THEN  PL.Qty ELSE 0 END  ) AS O_X, sum(isnull(PL.Qty,0)) * max(VRS.StandardSqYard)  AS DispYard 
+                    SELECT PL.SaleOrderLineId, sum(PL.Qty) AS DispQty, sum(CASE WHEN (isnull(PU.SaleOrderLineId,isnull(PU1.SaleOrderLineId,0)) <> isnull(PL.SaleOrderLineId,0) AND PU.ProductUIDId IS NOT NULL AND PU1.ProductUIDId IS NOT NULL) THEN  PL.Qty ELSE 0 END  ) AS O_X, sum(isnull(PL.Qty,0)) * max(VRS.StandardSqYard)  AS DispYard 
                     INTO #FDisp
                     FROM web.SaleDispatchHeaders H WITH (Nolock)
                     LEFT JOIN web.SaleDispatchLines L WITH (Nolock) ON L.SaleDispatchHeaderId = H.SaleDispatchHeaderId 
                     LEFT JOIN web.PackingLines PL WITH (Nolock) ON PL.PackingLineId = L.PackingLineId 
-                    LEFT JOIN web.ProductUids PU WITH (Nolock) ON PU.ProductUIDId = PL.ProductUidId OR PU.ProductUidName = PL.LotNo
+                    LEFT JOIN web.ProductUids PU WITH (Nolock) ON PU.ProductUIDId = PL.ProductUidId 
+                    LEFT JOIN web.ProductUids PU1 WITH (Nolock) ON PU1.ProductUidName = PL.LotNo 
                     LEFT JOIN Web._ViewRugSize VRS WITH (Nolock) ON PL.ProductId=VRS.ProductId
                     WHERE 1 = 1 
                     And H.SiteId =@Site 

@@ -300,7 +300,7 @@ namespace Jobs.Controllers
                             select new ReferenceLineChargeViewModel
                             {
                                 LineId = g.Key.JobReceiveLineId,
-                                PenaltyAmt = g.Select(m => m.p.PenaltyAmt - (m.p.IncentiveAmt ?? 0)).FirstOrDefault() + ((g.Select(m => m.qatab).FirstOrDefault() == null) ? 0 : g.Select(m => m.qatab.PenaltyAmt).FirstOrDefault()),
+                                PenaltyAmt = g.Select(m => m.p.PenaltyAmt - (m.p.IncentiveAmt)).FirstOrDefault() + ((g.Select(m => m.qatab).FirstOrDefault() == null) ? 0 : g.Select(m => m.qatab.PenaltyAmt).FirstOrDefault()),
                                 ChargeGroupProductId = g.Select(m => m.p.JobOrderLine.Product.SalesTaxGroupProductId ?? m.p.JobOrderLine.Product.ProductGroup.DefaultSalesTaxGroupProductId).FirstOrDefault(),
                             }).ToList();
 
@@ -313,7 +313,7 @@ namespace Jobs.Controllers
                                  select new ReferenceLineChargeViewModel
                                  {
                                      LineId = g.Key.JobReceiveLineId,
-                                     PenaltyAmt = g.Select(m => m.p.PenaltyAmt - (m.p.IncentiveAmt ?? 0)).FirstOrDefault() + ((g.Select(m => m.qatab).FirstOrDefault() == null) ? 0 : g.Select(m => m.qatab.PenaltyAmt).FirstOrDefault()),
+                                     PenaltyAmt = g.Select(m => m.p.PenaltyAmt - (m.p.IncentiveAmt)).FirstOrDefault() + ((g.Select(m => m.qatab).FirstOrDefault() == null) ? 0 : g.Select(m => m.qatab.PenaltyAmt).FirstOrDefault()),
                                      ChargeGroupProductId = g.Select(m => m.p.JobOrderLine.Product.SalesTaxGroupProductId ?? m.p.JobOrderLine.Product.ProductGroup.DefaultSalesTaxGroupProductId).FirstOrDefault(),
                                  });
 

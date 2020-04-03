@@ -64,6 +64,7 @@ namespace Jobs.Areas.Rug.Controllers
                 CostCenterId = m.CostCenterId,
                 Design = m.Design,
                 BalAmount = m.BalAmount > 0 ? m.BalAmount.ToString() + " Dr" : Math.Abs((decimal)m.BalAmount).ToString() + " Cr",
+                BalMaterial = m.BalMaterial,
             }).ToList();
 
 
@@ -80,6 +81,7 @@ namespace Jobs.Areas.Rug.Controllers
             public DateTime StartDate { get; set; }
             public DateTime CompleteDate { get; set; }
             public decimal BalAmount { get; set; }
+            public decimal BalMaterial { get; set; }
         }
 
 

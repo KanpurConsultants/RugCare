@@ -55,6 +55,7 @@ namespace Model.ViewModel
 
         public MaterialPlanSettingsViewModel MaterialPlanSettings { get; set; }
         public DocumentTypeSettingsViewModel DocumentTypeSettings { get; set; }
+        public int? Sr { get; set; }
     }
 
 

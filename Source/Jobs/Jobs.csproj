@@ -450,6 +450,7 @@
     <Compile Include="Controllers\CustomHeaderController.cs" />
     <Compile Include="Areas\Rug\Controllers\WeavingOrderInspectionLineController.cs" />
     <Compile Include="Areas\Rug\Controllers\WeavingOrderInspectionHeaderController.cs" />
+    <Compile Include="Controllers\JobOrderLineStatusUpdateWizardController.cs" />
     <Compile Include="Controllers\RugDashBoardBCController.cs" />
     <Compile Include="Controllers\DashBoardRugController.cs" />
     <Compile Include="Controllers\MapTraceController.cs" />
@@ -5510,6 +5511,14 @@
     <Content Include="Areas\Rug\Views\WeavingOrderInspectionLine\_Sequence.cshtml" />
     <Content Include="Areas\Rug\Views\WeavingOrderInspectionLine\_Sequence2.cshtml" />
     <Content Include="Views\JobInvoiceLine\_InspectionFilters.cshtml" />
+    <Content Include="Views\JobOrderLineStatusUpdateWizard\_Filters.cshtml" />
+    <Content Include="Views\JobOrderLineStatusUpdateWizard\Delete.cshtml" />
+    <Content Include="Views\JobOrderLineStatusUpdateWizard\DocumentTypeList.cshtml" />
+    <Content Include="Views\JobOrderLineStatusUpdateWizard\Edit.cshtml" />
+    <Content Include="Views\JobOrderLineStatusUpdateWizard\PendingToApprove.cshtml" />
+    <Content Include="Views\JobOrderLineStatusUpdateWizard\PendingToSubmit.cshtml" />
+    <Content Include="Views\JobOrderLineStatusUpdateWizard\JobOrderLineStatusUpdate.cshtml" />
+    <Content Include="Views\JobOrderLineStatusUpdateWizard\RateListHeaderIndex.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -299,6 +299,8 @@ namespace Jobs.Controllers
                 #region EditRecord
                 else
                 {
+                    bool GodownChanged = false;
+                    bool DocDateChanged = false;
                     List<LogTypeViewModel> LogList = new List<LogTypeViewModel>();
 
 
@@ -313,6 +315,8 @@ namespace Jobs.Controllers
                     if (temp.Status != (int)StatusConstants.Drafted && temp.Status != (int)StatusConstants.Import)
                         temp.Status = (int)StatusConstants.Modified;
 
+                    GodownChanged = (temp.GodownId == vm.GodownId) ? false : true;
+                    DocDateChanged = (temp.DocDate == vm.DocDate) ? false : true;
 
                     temp.Remark = pt.Remark;
                     temp.JobWorkerId = pt.JobWorkerId;
@@ -326,6 +330,26 @@ namespace Jobs.Controllers
                     temp.ObjectState = Model.ObjectState.Modified;
                     //_JobReturnHeaderService.Update(temp);
                     db.JobReturnHeader.Add(temp);
+
+                    if (temp.StockHeaderId != null)
+                    {
+                        StockHeader S = new StockHeaderService(_unitOfWork).Find(temp.StockHeaderId.Value);
+
+                        S.DocDate = temp.DocDate;
+                        S.DocNo = temp.DocNo;
+                        S.PersonId = temp.JobWorkerId;
+                        S.ProcessId = temp.ProcessId;
+                        S.GodownId = temp.GodownId;
+                        S.Remark = temp.Remark;
+                        S.Status = temp.Status;
+                        S.ModifiedBy = temp.ModifiedBy;
+                        S.ModifiedDate = temp.ModifiedDate;
+                        S.ObjectState = Model.ObjectState.Modified;
+                        db.StockHeader.Add(S);
+                    }
+
+                    if (GodownChanged || DocDateChanged)
+                        new StockService(_unitOfWork).UpdateStockGodownId(temp.StockHeaderId, temp.GodownId, temp.DocDate, db);
 
                     LogList.Add(new LogTypeViewModel
                     {

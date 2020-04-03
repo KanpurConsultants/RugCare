@@ -2128,7 +2128,7 @@ namespace Jobs.Areas.Rug.Controllers
 
             if (DT.DocumentTypeName == "Weaving Order(Over Tufting)")
             mQry = @"SELECT H.JobOrderNo AS JobOrderHeaderDocNo, JOH.DocDate AS JobOrderHeaderDocDate, C.CostCenterName AS  CostCenterNo, 
-                            H.JobOrderLineId, JOH.DocTypeId AS DocTypeId,
+                            H.JobOrderLineId, JOH.DocTypeId AS DocTypeId, JOL.LotNo,
                            DT.DocumentTypeName AS DocTypeName,  JOH.JobWorkerId AS JobWorkerId,  JW.Name AS JobWorkerName, B1.Code AS BuyerName,                           
                            JOL.UnitId,  U.UnitName AS UnitName,  JOL.DealUnitId,   convert(INT,DU.DecimalPlaces) DealUnitDecimalPlaces,
                            JOl.UnitConversionMultiplier AS UnitConversionMultiplier, JOL.ProductId, JOL.Rate,
@@ -2377,7 +2377,7 @@ namespace Jobs.Areas.Rug.Controllers
                         join D2 in db.Dimension2 on L.Dimension2Id equals D2.Dimension2Id into Dimension2Table
                         from Dimension2Tab in Dimension2Table.DefaultIfEmpty()
                         where L.JobOrderLineId == JOL.JobOrderLineId && PUS.LastTransactionDocId == JOH.JobOrderHeaderId && (int)PUS.LastTransactionDocTypeId == JOH.DocTypeId
-                        && L.SiteId == SiteId && L.DivisionId == DivisionId
+                        && L.SiteId == SiteId && L.DivisionId == DivisionId && JWTab.IsSisterConcern != true
                         select new JobOrderDetail
                         {
                             JobOrderHeaderDocNo = L.JobOrderNo,
@@ -2479,18 +2479,21 @@ namespace Jobs.Areas.Rug.Controllers
             JobReceiveSettings Settings = new JobReceiveSettingsService(_unitOfWork).GetJobReceiveSettingsForDocument(DocTypeId, DivisionId, SiteId);
             List<string> uids = new List<string>();
 
-            using (SqlConnection sqlConnection = new SqlConnection((string)System.Web.HttpContext.Current.Session["DefaultConnectionString"]))
+            if (Settings.SqlProcGenProductUID != null)
             {
-                sqlConnection.Open();
-
-                int TypeId = DocTypeId;
-
-                SqlCommand Totalf = new SqlCommand("SELECT * FROM " + Settings.SqlProcGenProductUID + "( " + TypeId + ", " + Qty + ", " + ProductId + ")", sqlConnection);
-
-                SqlDataReader ExcessStockQty = (Totalf.ExecuteReader());
-                while (ExcessStockQty.Read())
+                using (SqlConnection sqlConnection = new SqlConnection((string)System.Web.HttpContext.Current.Session["DefaultConnectionString"]))
                 {
-                    uids.Add((string)ExcessStockQty.GetValue(0));
+                    sqlConnection.Open();
+
+                    int TypeId = DocTypeId;
+
+                    SqlCommand Totalf = new SqlCommand("SELECT * FROM " + Settings.SqlProcGenProductUID + "( " + TypeId + ", " + Qty + ", " + ProductId + ")", sqlConnection);
+
+                    SqlDataReader ExcessStockQty = (Totalf.ExecuteReader());
+                    while (ExcessStockQty.Read())
+                    {
+                        uids.Add((string)ExcessStockQty.GetValue(0));
+                    }
                 }
             }
 
@@ -2851,6 +2854,7 @@ namespace Jobs.Areas.Rug.Controllers
         public int? DimensionUnitDecimalPlaces { get; set; }
         public string ProductQualityName { get; set; }
         public string ProductName { get; set; }
+        public string LotNo { get; set; }        
         public Decimal? LastWeight { get; set; }
     }
 

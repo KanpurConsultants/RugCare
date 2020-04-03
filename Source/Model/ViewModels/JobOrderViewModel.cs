@@ -126,6 +126,81 @@ namespace Model.ViewModel
         public Decimal? PayTermCashPer { get; set; }
         public Decimal? PayTermBankPer { get; set; }
 
+        [Display(Name = "Transport")]
+        public int? TransportId { get; set; }
+        public string TransportName { get; set; }
+
+        public string LrNo { get; set; }
+
+        [Display(Name = "Lr Date")]
+        public DateTime? LrDate { get; set; }
+
+        [Display(Name = "Private Mark")]
+        public string PrivateMark { get; set; }
+
+        [Display(Name = "Weight")]
+        public Decimal? Weight { get; set; }
+
+        [Display(Name = "ChargedWeight")]
+        public Decimal? ChargedWeight { get; set; }
+
+        [Display(Name = "Freight")]
+        public Decimal? Freight { get; set; }
+
+
+        [Display(Name = "Payment Type")]
+        public string PaymentType { get; set; }
+
+        [Display(Name = "Road Permit No")]
+        public string RoadPermitNo { get; set; }
+
+        [Display(Name = "Road Permit Date")]
+        public DateTime? RoadPermitDate { get; set; }
+
+
+        [Display(Name = "EWay Bill No")]
+        public string EWayBillNo { get; set; }
+
+        [Display(Name = "EWay Bill Date")]
+        public DateTime? EWayBillDate { get; set; }
+
+        [Display(Name = "Upload Date")]
+        public DateTime? UploadDate { get; set; }
+
+        [Display(Name = "Vehicle No")]
+        public string VehicleNo { get; set; }
+
+        //[Display(Name = "Ship Method")]
+        //[ForeignKey("ShipMethod")]
+        //public int? ShipMethodId { get; set; }
+        //public virtual ShipMethod ShipMethod { get; set; }
+
+        [Display(Name = "PreCarriage By")]
+        public string PreCarriageBy { get; set; }
+
+
+        [Display(Name = "PreCarriage Place")]
+        public string PreCarriagePlace { get; set; }
+
+        [Display(Name = "Booked From")]
+        public string BookedFrom { get; set; }
+
+        [Display(Name = "Booked To")]
+        public string BookedTo { get; set; }
+
+
+        [Display(Name = "Destination")]
+        public string Destination { get; set; }
+
+
+        [Display(Name = "Description Of Goods")]
+        public string DescriptionOfGoods { get; set; }
+
+
+        [Display(Name = "Description Of Packing")]
+        public string DescriptionOfPacking { get; set; }
+
+
     }
 
     public class JobOrderLineViewModel
@@ -133,6 +208,7 @@ namespace Model.ViewModel
         public int JobOrderLineId { get; set; }
         public int JobOrderHeaderId { get; set; }
         public string JobOrderHeaderDocNo { get; set; }
+        public string JobOrderHeaderDocDate { get; set; }
         public int ProgressPerc { get; set; }
         public int ProgressPercCancelled { get; set; }
         public int? StockId { get; set; }

@@ -36,6 +36,19 @@ namespace Model.Models
         public int ? DocTypeId { get; set; }
         public virtual DocumentType DocType { get; set; }
 
+        [ForeignKey("ProductCategory"), Display(Name = "Product Category")]
+        public int? ProductCategoryId { get; set; }
+        public virtual ProductCategory ProductCategory { get; set; }
+
+
+        [ForeignKey("ProductType"), Display(Name = "Product Type")]
+        public int? ProductTypeId { get; set; }
+        public virtual ProductType ProductType { get; set; }
+
+        public string BaseHead { get; set; }
+
+        public string BaseValue { get; set; }
+
         public string Value { get; set; }
         
         public string CreatedBy { get; set; }

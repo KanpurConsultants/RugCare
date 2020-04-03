@@ -13,7 +13,12 @@ namespace Model.Models
         [MaxLength(50, ErrorMessage = "City Name cannot exceed 50 characters"), Required]
         [Index("IX_City_CityName", IsUnique = true)]
         public string CityName { get; set; }
-                     
+
+        [Display(Name = "City Code")]
+        [MaxLength(20, ErrorMessage = "City Code cannot exceed 20 characters")]
+        [Index("IX_City_CityCode", IsUnique = true)]
+        public string CityCode { get; set; }
+
         [Display(Name = "State")]
         public int StateId { get; set; }
         [ForeignKey("StateId")]

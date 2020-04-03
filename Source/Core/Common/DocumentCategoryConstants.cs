@@ -18,6 +18,8 @@ namespace Core.Common
     public class SettingFieldNameConstants
     {
         public const string DefaultDocDate = "DefaultDocDate";
+        public const string GeneratedProdOrderDocTypeId = "GeneratedProdOrderDocTypeId";
+        public const string ExtraYarnPercentageRequiredForDyeing = "ExtraYarnPercentageRequiredForDyeing";
     }
 
 

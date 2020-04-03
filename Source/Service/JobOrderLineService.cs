@@ -12,7 +12,8 @@ using Data.Models;
 using Model.ViewModel;
 using System.Data.SqlClient;
 using System.Configuration;
-
+using System.Xml.Linq;
+using AutoMapper;
 
 namespace Service
 {
@@ -50,7 +51,7 @@ namespace Service
         IEnumerable<ComboBoxResult> GetPendingProdOrderForProductUid(int JobOrderHeaderId, int ProductUidId, string term);
         IEnumerable<ComboBoxResult> FGetProductUidHelpList(int Id, string term);
         IEnumerable<ComboBoxResult> FGetUnitConversionForHelpList(int Id, string term);
-
+        bool UpdateJobOrderLineStatus(int JobOrderLineId, string Attribute, string AttributeValue, string User, out XElement Modifications);
         IEnumerable<ComboBoxResult> GetPendingStockInForIssue(int id, int? ProductId, int? Dimension1Id, int? Dimension2Id, int? Dimension3Id, int? Dimension4Id, string term);
         IEnumerable<ComboBoxResult> GetPendingStockInHeaderForIssue(int StockHeaderId, string term);
         Decimal? GetExcessReceiveAllowedAgainstOrderQty(int JobOrderLineId);
@@ -200,6 +201,79 @@ namespace Service
 
             return temp;
         }
+
+        public bool UpdateJobOrderLineStatus(int JobOrderLineId, string Attribute, string AttributeValue, string User, out XElement Modifications)
+        {
+            Modifications = null;
+            if (JobOrderLineId == 0)
+                return false;
+
+            JobOrderLine JOL = db.JobOrderLine.Where(m => m.JobOrderLineId == JobOrderLineId).FirstOrDefault();
+            JobOrderHeader JOH = db.JobOrderHeader.Where(m => m.JobOrderHeaderId == JOL.JobOrderHeaderId).FirstOrDefault();
+
+            DocumentTypeHeaderAttribute A = db.DocumentTypeHeaderAttribute.Where(m => m.Name == Attribute).FirstOrDefault();
+            List<LogTypeViewModel> LogList = new List<LogTypeViewModel>();
+
+            var ExistingProducts = (from p in db.CustomLineAttributes 
+                                    where p.DocumentTypeHeaderAttributeId == A.DocumentTypeHeaderAttributeId
+                                    && p.LineTableId  == JobOrderLineId
+                                    select p).FirstOrDefault();
+
+
+            if (ExistingProducts == null)
+            {
+                CustomLineAttributes Rll = new CustomLineAttributes();
+                Rll.LineTableId = JobOrderLineId;
+                Rll.DocumentTypeHeaderAttributeId = A.DocumentTypeHeaderAttributeId;
+                Rll.Value = AttributeValue;
+                Rll.HeaderTableId = JOH.JobOrderHeaderId;
+                Rll.DocTypeId = JOH.DocTypeId;
+                Rll.ModifiedBy = User;
+                Rll.CreatedBy = User;
+                Rll.ModifiedDate = DateTime.Now;
+                Rll.CreatedDate = DateTime.Now;
+                Rll.ObjectState = Model.ObjectState.Added;
+                db.CustomLineAttributes.Add(Rll);
+
+                LogList.Add(new LogTypeViewModel
+                {
+                    ExObj = Rll,
+                });
+
+            }
+            else
+            {
+                CustomLineAttributes ExRec = Mapper.Map<CustomLineAttributes>(ExistingProducts);
+                ExistingProducts.Value = AttributeValue;
+                ExistingProducts.ModifiedBy = User;
+                ExistingProducts.ModifiedDate = DateTime.Now;
+                ExistingProducts.ObjectState = Model.ObjectState.Modified;
+                db.CustomLineAttributes.Add(ExistingProducts);
+
+                LogList.Add(new LogTypeViewModel
+                {
+                    ExObj = ExRec,
+                    Obj = ExistingProducts,
+                });
+
+
+            }
+
+            Modifications = new ModificationsCheckService().CheckChanges(LogList);
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+            return true;
+
+        }
+
 
         public JobOrderLastTransaction GetLastTransactionDetail(int JobOrderHeaderId)
         {

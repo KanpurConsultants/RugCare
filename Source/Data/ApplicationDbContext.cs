@@ -466,6 +466,7 @@ namespace Data.Models
         public DbSet<SaleInvoiceReturnLineCharge> SaleInvoiceReturnLineCharge { get; set; }
         public DbSet<ViewSaleInvoiceWithCustomAttribute> ViewSaleInvoiceWithCustomAttribute { get; set; }
         public DbSet<ViewCustomHeaderAttribute> ViewCustomHeaderAttribute { get; set; }
+        public DbSet<CustomLineAttributes> CustomLineAttributes { get; set; }
         //Job Models
         public DbSet<LedgerHeaderCharge> LedgerHeaderCharges { get; set; }
         public DbSet<LedgerLineCharge> LedgerLineCharge { get; set; }

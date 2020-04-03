@@ -1426,101 +1426,6 @@ namespace Service
 
 
 
-            //return (from p in db.ViewStockInBalance
-            //        join L in db.Stock on p.StockInId equals L.StockId into StockTable
-            //        from StockTab in StockTable.DefaultIfEmpty()
-            //        join pt in db.Product on p.ProductId equals pt.ProductId into ProductTable
-            //        from ProductTab in ProductTable.DefaultIfEmpty()
-            //        join D1 in db.Dimension1 on p.Dimension1Id equals D1.Dimension1Id into Dimension1Table
-            //        from Dimension1Tab in Dimension1Table.DefaultIfEmpty()
-            //        join D2 in db.Dimension2 on p.Dimension2Id equals D2.Dimension2Id into Dimension2Table
-            //        from Dimension2Tab in Dimension2Table.DefaultIfEmpty()
-            //        join D3 in db.Dimension3 on p.Dimension3Id equals D3.Dimension3Id into Dimension3Table
-            //        from Dimension3Tab in Dimension3Table.DefaultIfEmpty()
-            //        join D4 in db.Dimension4 on p.Dimension4Id equals D4.Dimension4Id into Dimension4Table
-            //        from Dimension4Tab in Dimension4Table.DefaultIfEmpty()
-            //        where p.BalanceQty > 0 && StockTab.GodownId == PackingHeader.GodownId
-            //            && StockTab.StockHeader.DocTypeId != PackingHeader.DocTypeId
-            //        //&& (ProductId == null || ProductId == 0 ? 1 == 1 : p.ProductId == ProductId)
-            //        //&& (Dimension1Id == null ? 1 == 1 : p.Dimension1Id == Dimension1Id)
-            //        //&& (Dimension2Id == null ? 1 == 1 : p.Dimension2Id == Dimension2Id)
-            //        //&& (Dimension3Id == null ? 1 == 1 : p.Dimension3Id == Dimension3Id)
-            //        //&& (Dimension4Id == null ? 1 == 1 : p.Dimension4Id == Dimension4Id)
-            //        && (string.IsNullOrEmpty(settings.filterProductTypes) ? 1 == 1 : ProductTypes.Contains(StockTab.Product.ProductGroup.ProductTypeId.ToString()))
-            //        //&& (string.IsNullOrEmpty(settings.filterContraSites) ? p.SiteId == CurrentSiteId : contraSites.Contains(p.SiteId.ToString()))
-            //        //&& (string.IsNullOrEmpty(settings.filterContraDivisions) ? p.DivisionId == CurrentDivisionId : contraDivisions.Contains(p.DivisionId.ToString()))
-            //        && (string.IsNullOrEmpty(term) ? 1 == 1 : p.StockInNo.ToLower().Contains(term.ToLower())
-            //            || string.IsNullOrEmpty(term) ? 1 == 1 : StockTab.StockHeader.DocType.DocumentTypeShortName.ToLower().Contains(term.ToLower())
-            //            || string.IsNullOrEmpty(term) ? 1 == 1 : ProductTab.ProductName.ToLower().Contains(term.ToLower())
-            //            //|| string.IsNullOrEmpty(term) ? 1 == 1 : Dimension1Tab.Dimension1Name.ToLower().Contains(term.ToLower())
-            //            //|| string.IsNullOrEmpty(term) ? 1 == 1 : Dimension2Tab.Dimension2Name.ToLower().Contains(term.ToLower())
-            //            //|| string.IsNullOrEmpty(term) ? 1 == 1 : Dimension3Tab.Dimension3Name.ToLower().Contains(term.ToLower())
-            //            //|| string.IsNullOrEmpty(term) ? 1 == 1 : Dimension4Tab.Dimension4Name.ToLower().Contains(term.ToLower())
-            //            || string.IsNullOrEmpty(term) ? 1 == 1 : StockTab.LotNo.ToLower().Contains(term.ToLower())
-            //            || string.IsNullOrEmpty(term) ? 1 == 1 : StockTab.ProductUid.ProductUidName.ToLower().Contains(term.ToLower())
-            //            || string.IsNullOrEmpty(term) ? 1 == 1 : StockTab.ProductUid.LotNo.ToLower().Contains(term.ToLower())
-            //            )
-            //        select new ComboBoxResult
-            //        {
-            //            id = p.StockInId.ToString(),
-            //            text = StockTab.StockHeader.DocType.DocumentTypeShortName + "-" + p.StockInNo,
-            //            TextProp1 = "Balance :" + p.BalanceQty,
-            //            TextProp2 = "Date :" + p.StockInDate,
-            //            AProp1 = ProductTab.ProductName + ((StockTab.ProductUid.ProductUidName == null) ? "" : "," + StockTab.ProductUid.ProductUidName) + ((StockTab.ProductUid.LotNo == null) ? "" : "," + StockTab.ProductUid.LotNo) ,
-            //            AProp2 = ((Dimension1Tab.Dimension1Name == null) ? "" : Dimension1Tab.Dimension1Name) +
-            //                        ((Dimension2Tab.Dimension2Name == null) ? "" : "," + Dimension2Tab.Dimension2Name) +
-            //                        ((Dimension3Tab.Dimension3Name == null) ? "" : "," + Dimension3Tab.Dimension3Name) +
-            //                        ((Dimension4Tab.Dimension4Name == null) ? "" : "," + Dimension4Tab.Dimension4Name) +
-            //                        ((p.LotNo == null) ? "" : ",CN:" + p.LotNo)
-            //        });
-
-            /*
-            var a = from p in db.ViewStockInBalance
-                    join L in db.Stock on p.StockInId equals L.StockId into StockTable
-                    from StockTab in StockTable.DefaultIfEmpty()
-                    where p.BalanceQty > 0 && StockTab.GodownId == PackingHeader.GodownId
-                        && StockTab.StockHeader.DocTypeId != PackingHeader.DocTypeId
-            select new
-            {
-                p.BalanceQty,
-                p.StockInId,
-                p.ProductId,
-                p.StockInNo,
-                p.StockInDate,
-                p.LotNo,
-            };
-
-
-            var b = from p in a
-                    join L in db.Stock on p.StockInId equals L.StockId into StockTable
-                    from StockTab in StockTable.DefaultIfEmpty()
-                    join pt in db.Product on p.ProductId equals pt.ProductId into ProductTable
-                    from ProductTab in ProductTable.DefaultIfEmpty()
-                    where p.BalanceQty > 0 && StockTab.GodownId == PackingHeader.GodownId
-                        && StockTab.StockHeader.DocTypeId != PackingHeader.DocTypeId
-                    && (string.IsNullOrEmpty(settings.filterProductTypes) ? 1 == 1 : ProductTypes.Contains(StockTab.Product.ProductGroup.ProductTypeId.ToString()))
-                    && (string.IsNullOrEmpty(term) ? 1 == 1 : p.StockInNo.ToLower().Contains(term.ToLower())
-                        || string.IsNullOrEmpty(term) ? 1 == 1 : StockTab.StockHeader.DocType.DocumentTypeShortName.ToLower().Contains(term.ToLower())
-                        || string.IsNullOrEmpty(term) ? 1 == 1 : ProductTab.ProductName.ToLower().Contains(term.ToLower())
-                        || string.IsNullOrEmpty(term) ? 1 == 1 : StockTab.LotNo.ToLower().Contains(term.ToLower())
-                        || string.IsNullOrEmpty(term) ? 1 == 1 : StockTab.ProductUid.ProductUidName.ToLower().Contains(term.ToLower())
-                        || string.IsNullOrEmpty(term) ? 1 == 1 : StockTab.ProductUid.LotNo.ToLower().Contains(term.ToLower())
-                        )
-
-            select new ComboBoxResult
-                    {
-                        id = p.StockInId.ToString(),
-                        text = StockTab.StockHeader.DocType.DocumentTypeShortName + "-" + p.StockInNo,
-                        TextProp1 = "Balance :" + p.BalanceQty,
-                        TextProp2 = "Date :" + p.StockInDate,
-                        AProp1 = ProductTab.ProductName + ((StockTab.ProductUid.ProductUidName == null) ? "" : "," + StockTab.ProductUid.ProductUidName) + ((StockTab.ProductUid.LotNo == null) ? "" : "," + StockTab.ProductUid.LotNo),
-                        AProp2 = ((p.LotNo == null) ? "" : ",CN:" + p.LotNo)
-                    };
-
-
-            return b;
-            */
-
             string mQry = @"DECLARE @PackingHeaderId INT = " + PackingHeaderId + @" 
                             DECLARE @filterProductTypes NVARCHAR(Max)
                             DECLARE @DocTypeId INT 
@@ -1534,12 +1439,12 @@ namespace Service
                             SELECT H.StockInId, DT.DocumentTypeShortName + '-' + H.StockInNo AS StockInNo, H.BalanceQty, Replace(convert(NVARCHAR,H.StockInDate,106),' ','/') AS StockInDate, P.ProductName, PU.ProductUidName, PU.LotNo, H.LotNo AS StockLotNo
                             FROM Web.ViewStockInBalance H WITH (Nolock)
                             LEFT JOIN web.Stocks S WITH (Nolock) ON S.StockId = H.StockInId 
-                            LEFT JOIN web.Products P ON P.ProductId = H.ProductId
-                            LEFT JOIN web.ProductUids PU ON PU.ProductUIDId = S.ProductUIDId
-                            LEFT JOIN web.ProductGroups PG ON PG.ProductGroupId = P.ProductGroupId
+                            LEFT JOIN web.Products P WITH (Nolock) ON P.ProductId = H.ProductId
+                            LEFT JOIN web.ProductUids PU WITH (Nolock) ON PU.ProductUIDId = S.ProductUIDId
+                            LEFT JOIN web.ProductGroups PG WITH (Nolock) ON PG.ProductGroupId = P.ProductGroupId
                             LEFT JOIN web.StockHeaders SH WITH (Nolock) ON SH.StockHeaderId = S.StockHeaderId 
-                            LEFT JOIN web.DocumentTypes DT ON DT.DocumentTypeId = SH.DocTypeId
-                            WHERE H.BalanceQty > 0 AND S.GodownId =@GodownId AND SH.DocTypeId <> @DocTypeId 
+                            LEFT JOIN web.DocumentTypes DT WITH (Nolock) ON DT.DocumentTypeId = SH.DocTypeId
+                            WHERE H.BalanceQty > 0 AND S.GodownId =@GodownId 
                             AND (P.ProductName +' '+ DT.DocumentTypeShortName + '-' + H.StockInNo + ' '+ isnull(H.LotNo, '') + ' '+isnull(PU.LotNo, '') + ' '+ isnull(PU.ProductUidName, ''))  LIKE '%" + term.ToLower() + "%'  ";
 
             if (settings.filterProductTypes != null && settings.filterProductTypes != "")
