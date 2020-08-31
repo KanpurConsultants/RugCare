@@ -884,6 +884,30 @@ namespace Jobs.Controllers
                     TempData["CSEXC"] += message;
                 }
 
+                var ProductUidList = (from p in context.ProductUid
+                                       where p.GenDocId == vm.id && p.GenDocTypeId == StockHeader.DocTypeId
+                                    select p).ToList();
+
+                foreach (var item in ProductUidList)
+                {
+                    new ProductUidService(_unitOfWork).Delete(item);
+                }
+
+                try
+                {
+                    if (EventException)
+                        throw new Exception();
+                    //context.SaveChanges();
+                    _unitOfWork.Save();
+                }
+
+                catch (Exception ex)
+                {
+                    string message = _exception.HandleException(ex);
+                    TempData["CSEXC"] += message;
+                    return PartialView("_Reason", vm);
+                }
+
                 LogActivity.LogActivityDetail(LogVm.Map(new ActiivtyLogViewModel
                 {
                     DocTypeId = StockHeader.DocTypeId,

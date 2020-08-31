@@ -64,6 +64,11 @@ namespace Model.Models
         [Index("IX_JobOrderLine_Unique", IsUnique = true, Order = 9)]
         public string Specification { get; set; }
 
+        [ForeignKey("SaleOrderLine"), Display(Name = "SaleOrder")]
+        [Index("IX_JobOrderLine_Unique", IsUnique = true, Order = 10)]
+        public int? SaleOrderLineId { get; set; }
+        public virtual SaleOrderLine SaleOrderLine { get; set; }
+
         public decimal Qty { get; set; }
 
         public DateTime ? DueDate { get; set; }

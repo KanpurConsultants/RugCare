@@ -414,6 +414,19 @@ namespace Jobs.Controllers
                         new SaleOrderHeaderService(_unitOfWork).Update(ExistingSaleOrder);
                     }
 
+                    ProdOrderHeader ExistingProdOrder = new ProdOrderHeaderService(_unitOfWork).Find_ByReferenceDocId(temp.SaleEnquiryHeaderId, temp.DocTypeId);
+
+                    if (ExistingProdOrder != null)
+                    {
+                        ExistingProdOrder.ModifiedBy = User.Identity.Name;
+                        ExistingProdOrder.ModifiedDate = DateTime.Now;
+                        ExistingProdOrder.Remark = temp.Remark;
+                        ExistingProdOrder.DocDate = temp.DocDate;
+                        ExistingProdOrder.DueDate = temp.DueDate;
+                        ExistingProdOrder.ObjectState = Model.ObjectState.Added;
+                        new ProdOrderHeaderService(_unitOfWork).Update(ExistingProdOrder);
+                    }
+
                     LogList.Add(new LogTypeViewModel
                     {
                         ExObj = ExRec,
@@ -697,9 +710,22 @@ namespace Jobs.Controllers
                         new SaleOrderLineService(_unitOfWork).Delete(SOL.SaleOrderLineId);
                     }
 
+                    ProdOrderLine POL = new ProdOrderLineService(_unitOfWork).Find_ByReferenceDocLineId(SaleEnquiryHeader.DocTypeId, item.SaleEnquiryLineId);
+                    if (POL != null)
+                    {
+                        new ProdOrderLineStatusService(_unitOfWork).Delete(POL.ProdOrderLineId);
+                        new ProdOrderLineService(_unitOfWork).Delete(POL.ProdOrderLineId);
+                    }
+
                     //new SaleEnquiryLineStatusService(_unitOfWork).Delete(item.SaleEnquiryLineId);
                     new SaleEnquiryLineExtendedService(_unitOfWork).Delete(item.SaleEnquiryLineId);
                     new SaleEnquiryLineService(_unitOfWork).Delete(item.SaleEnquiryLineId);
+                }
+
+                ProdOrderHeader POH = new ProdOrderHeaderService(_unitOfWork).Find_ByReferenceDocId(SaleEnquiryHeader.DocTypeId, SaleEnquiryHeader.SaleEnquiryHeaderId);
+                if (POH != null)
+                {
+                    new ProdOrderHeaderService(_unitOfWork).Delete(POH.ProdOrderHeaderId);
                 }
 
                 SaleOrderHeader SOH = new SaleOrderHeaderService(_unitOfWork).Find_ByReferenceDocId(SaleEnquiryHeader.DocTypeId, SaleEnquiryHeader.SaleEnquiryHeaderId);
@@ -817,6 +843,12 @@ namespace Jobs.Controllers
 
                     //pd.LockReason = "Sale order is created for enquiry.Now you can't modify enquiry, changes can be done in sale order.";
                     _SaleEnquiryHeaderService.Update(pd);
+
+                    CompanySettings CS = context.CompanySettings.FirstOrDefault();
+                    if(CS.isAllowAutoPlan==true)
+                    { 
+                    CreateProdOrder(Id);
+                    }
 
                     CreateSaleOrder(Id);
 
@@ -1095,6 +1127,15 @@ namespace Jobs.Controllers
                     OrderLine.DealQty = Line.DealQty;
                     OrderLine.DealUnitId = Line.DealUnitId;
                     OrderLine.UnitConversionMultiplier = Line.UnitConversionMultiplier;
+
+
+                    var t = context.SaleOrderLine.Where(m => m.SaleOrderHeader.SaleToBuyerId == EnquiryHeader.SaleToBuyerId && m.ProductId == Line.ProductId && m.Rate != null).ToList();
+                    if (t != null && t.Count != 0)
+                    {
+                        var LastSaleOrderLine = t.OrderByDescending(item => item.SaleOrderLineId).First();
+                        OrderLine.Rate = LastSaleOrderLine.Rate;
+                    }
+
                     OrderLine.Rate = Line.Rate;
                     OrderLine.Amount = Line.Amount;
                     OrderLine.Remark = Line.Remark;
@@ -1172,6 +1213,119 @@ namespace Jobs.Controllers
                         new SaleOrderLineService(_unitOfWork).Create(OrderLine);
 
                         new SaleOrderLineStatusService(_unitOfWork).CreateLineStatus(OrderLine.SaleOrderLineId);
+
+                        //Line.LockReason = "Sale order is created for enquiry.Now you can't modify enquiry, changes can be done in sale order.";
+                        new SaleEnquiryLineService(_unitOfWork).Update(Line);
+                    }
+                }
+            }
+        }
+
+        public void CreateProdOrder(int SaleEnquiryHeaderId)
+        {
+            SaleEnquiryHeader EnquiryHeader = _SaleEnquiryHeaderService.Find(SaleEnquiryHeaderId);
+            ProdOrderHeader EnquiProdOrderHeaderryHeader = new ProdOrderHeaderService(_unitOfWork).Find_ByReferenceDocId(EnquiryHeader.DocTypeId, SaleEnquiryHeaderId);
+            SaleEnquirySettings Settings = new SaleEnquirySettingsService(_unitOfWork).GetSaleEnquirySettingsForDucument(EnquiryHeader.DocTypeId, EnquiryHeader.DivisionId, EnquiryHeader.SiteId);
+
+            if (EnquiProdOrderHeaderryHeader == null)
+            {
+                DocumentType Dt = context.DocumentType.Where(m =>m.DocumentTypeName== "Weaving Plan").FirstOrDefault();
+                ProdOrderHeader OrderHeader = new ProdOrderHeader();
+
+                OrderHeader.DocTypeId = Dt.DocumentTypeId;
+                OrderHeader.DocDate = EnquiryHeader.DocDate;
+                OrderHeader.DocNo = EnquiryHeader.DocNo;
+                OrderHeader.DivisionId = EnquiryHeader.DivisionId;
+                OrderHeader.SiteId = EnquiryHeader.SiteId;
+                OrderHeader.BuyerId = EnquiryHeader.SaleToBuyerId;
+                OrderHeader.Remark = EnquiryHeader.Remark;
+                OrderHeader.DueDate = EnquiryHeader.DueDate;
+                OrderHeader.ReferenceDocId = EnquiryHeader.SaleEnquiryHeaderId;
+                OrderHeader.ReferenceDocTypeId = EnquiryHeader.DocTypeId;
+                OrderHeader.CreatedDate = DateTime.Now;
+                OrderHeader.ModifiedDate = DateTime.Now;
+                OrderHeader.ModifiedDate = DateTime.Now;
+                OrderHeader.ModifiedBy = User.Identity.Name;
+                OrderHeader.Status = (int)StatusConstants.Submitted;
+                OrderHeader.ReviewBy = User.Identity.Name;
+                OrderHeader.ReviewCount = 1;
+                //OrderHeader.LockReason = "Sale order is created for enquiry.Now you can't modify enquiry, changes can be done in sale order.";
+                new ProdOrderHeaderService(_unitOfWork).Create(OrderHeader);
+
+
+                IEnumerable<SaleEnquiryLine> LineList = new SaleEnquiryLineService(_unitOfWork).GetSaleEnquiryLineListForHeader(SaleEnquiryHeaderId);
+                int i = 0;
+                foreach (SaleEnquiryLine Line in LineList)
+                {
+                    ProdOrderLine OrderLine = new ProdOrderLine();
+                    OrderLine.ProdOrderLineId = i;
+                    i = i - 1;
+                    OrderLine.DueDate = Line.DueDate;
+                    OrderLine.ProductId = Line.ProductId ?? 0;
+                    OrderLine.Specification = Line.Specification;
+                    OrderLine.Dimension1Id = Line.Dimension1Id;
+                    OrderLine.Dimension2Id = Line.Dimension2Id;
+                    OrderLine.Qty = Line.Qty;
+                    OrderLine.Remark = Line.Remark;
+                    OrderLine.ReferenceDocTypeId = EnquiryHeader.DocTypeId;
+                    OrderLine.ReferenceDocLineId = Line.SaleEnquiryLineId;
+                    OrderLine.CreatedDate = DateTime.Now;
+                    OrderLine.ModifiedDate = DateTime.Now;
+                    OrderLine.CreatedBy = User.Identity.Name;
+                    OrderLine.ModifiedBy = User.Identity.Name;
+                    new ProdOrderLineService(_unitOfWork).Create(OrderLine);
+
+                    new ProdOrderLineStatusService(_unitOfWork).CreateLineStatus(OrderLine.ProdOrderLineId);
+
+                    //Line.LockReason = "Sale order is created for enquiry.Now you can't modify enquiry, changes can be done in sale order.";
+                    new SaleEnquiryLineService(_unitOfWork).Update(Line);
+                }
+            }
+            else
+            {
+                ProdOrderHeader OrderHeader = new ProdOrderHeaderService(_unitOfWork).Find(EnquiProdOrderHeaderryHeader.ProdOrderHeaderId);
+
+
+                OrderHeader.DocDate = EnquiryHeader.DocDate;
+                OrderHeader.DocNo = EnquiryHeader.DocNo;
+                OrderHeader.BuyerId = EnquiryHeader.SaleToBuyerId;
+                OrderHeader.Remark = EnquiryHeader.Remark;
+                OrderHeader.DueDate = EnquiryHeader.DueDate;
+                OrderHeader.ModifiedDate = DateTime.Now;
+                OrderHeader.ModifiedBy = User.Identity.Name;
+                OrderHeader.Status = (int)StatusConstants.Submitted;
+                OrderHeader.ReviewBy = User.Identity.Name;
+                OrderHeader.ReviewCount = 1;
+                //OrderHeader.LockReason = "Sale order is created for enquiry.Now you can't modify enquiry, changes can be done in sale order.";
+                new ProdOrderHeaderService(_unitOfWork).Update(OrderHeader);
+
+                IEnumerable<SaleEnquiryLine> LineList = new SaleEnquiryLineService(_unitOfWork).GetSaleEnquiryLineListForHeader(SaleEnquiryHeaderId);
+                int i = 0;
+                foreach (SaleEnquiryLine Line in LineList)
+                {
+                    ProdOrderLine ProdOrderLine = new ProdOrderLineService(_unitOfWork).Find_ByReferenceDocLineId(EnquiryHeader.DocTypeId, Line.SaleEnquiryLineId);
+
+                    if (ProdOrderLine == null)
+                    {
+                        ProdOrderLine OrderLine = new ProdOrderLine();
+                        OrderLine.ProdOrderHeaderId = EnquiProdOrderHeaderryHeader.ProdOrderHeaderId;
+                        OrderLine.ProdOrderLineId = i--;
+                        OrderLine.DueDate = Line.DueDate;
+                        OrderLine.ProductId = Line.ProductId ?? 0;
+                        OrderLine.Specification = Line.Specification;
+                        OrderLine.Dimension1Id = Line.Dimension1Id;
+                        OrderLine.Dimension2Id = Line.Dimension2Id;
+                        OrderLine.Qty = Line.Qty;
+                        OrderLine.Remark = Line.Remark;
+                        OrderLine.ReferenceDocTypeId = EnquiryHeader.DocTypeId;
+                        OrderLine.ReferenceDocLineId = Line.SaleEnquiryLineId;
+                        OrderLine.CreatedDate = DateTime.Now;
+                        OrderLine.ModifiedDate = DateTime.Now;
+                        OrderLine.CreatedBy = User.Identity.Name;
+                        OrderLine.ModifiedBy = User.Identity.Name;
+                        new ProdOrderLineService(_unitOfWork).Create(OrderLine);
+
+                        new ProdOrderLineStatusService(_unitOfWork).CreateLineStatus(OrderLine.ProdOrderLineId);
 
                         //Line.LockReason = "Sale order is created for enquiry.Now you can't modify enquiry, changes can be done in sale order.";
                         new SaleEnquiryLineService(_unitOfWork).Update(Line);

@@ -251,7 +251,13 @@ namespace Module
         {
             AssignSiteDivModuleSession(vm.SiteId, vm.DivisionId);
 
-            return RedirectToAction("DefaultGodownSelection");
+            var UserId = User.Identity.GetUserId();
+            IEnumerable<string> UserRoles =  _userRolesService.GetUserRolesForSession(UserId);
+
+            if (UserRoles.Contains("Admin"))
+                return RedirectToAction("Module", "Menu");
+            else
+                return RedirectToAction("DefaultGodownSelection");
         }
 
 

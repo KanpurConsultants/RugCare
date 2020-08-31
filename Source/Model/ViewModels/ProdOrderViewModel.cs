@@ -113,8 +113,11 @@ namespace Model.ViewModel
         public string DocNo { get; set; }
         public decimal Qty { get; set; }
         public decimal Rate { get; set; }
+        public int ProductId { get; set; }
         public string ProductName { get; set; }
+        public int? Dimension1Id { get; set; }
         public string Dimension1Name { get; set; }
+        public int? Dimension2Id { get; set; }
         public string Dimension2Name { get; set; }
         public string Dimension3Name { get; set; }
         public string Dimension4Name { get; set; }

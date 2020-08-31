@@ -1944,6 +1944,11 @@ EXEC(@Qry);	";
             int PersonAccountId = 6612;
             int LedgerHeaderId = 0;
 
+            int FixProcessLedgerAccountId = (from A in db.LedgerAccount where A.LedgerAccountName == "|Process|" select A.LedgerAccountId).FirstOrDefault();
+            int? ProcessId = LedgerHeaderViewModel.ProcessId;
+            int HeaderProcessLedgerAccountId = (from P in db.Process where P.ProcessId == ProcessId select P.AccountId).FirstOrDefault();
+
+
             if (LedgerHeaderViewModel.LedgerHeaderId == 0)
             {
                 LedgerHeader LedgerHeader = new LedgerHeader();
@@ -2152,6 +2157,12 @@ EXEC(@Qry);	";
 
                 Ledger.ReferenceDocLineId = item.ReferenceDocLineId;
                 Ledger.ReferenceDocTypeId = LedgerHeaderViewModel.DocTypeId;
+
+                if (item.LedgerAccountId == FixProcessLedgerAccountId)
+                    Ledger.LedgerAccountId = HeaderProcessLedgerAccountId;
+
+                if (item.ContraLedgerAccountId == FixProcessLedgerAccountId)
+                    Ledger.ContraLedgerAccountId = HeaderProcessLedgerAccountId;
 
 
 

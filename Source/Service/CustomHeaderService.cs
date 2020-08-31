@@ -42,10 +42,12 @@ namespace Service
         //IEnumerable<CustomHeader> GetSaleInvoiceListForReport(int BuyerId);
 
         IQueryable<CustomHeaderIndexViewModel> GetCustomHeaderIndex(int id, string Uname);
+        IQueryable<ShipmentDetailIndexViewModel> GetShipmentDetailIndex(int id, string Uname);
         int NextId(int id);
         int PrevId(int id);
         CustomHeader FindCustomHeader(int id);
         //IQueryable<ComboBoxResult> GetCustomPerson(int Id, string term);
+        IQueryable<ComboBoxResult> GetDocIdHelpList(int DocTypeId, string term);//PurchaseOrderHeaderId
         IEnumerable<DocumentTypeHeaderAttributeViewModel> GetDocumentHeaderAttribute(int id);
         //string GetNarration(int CustomHeaderId);
     }
@@ -60,6 +62,48 @@ namespace Service
             _unitOfWork = unit;
         }
 
+        public IQueryable<ShipmentDetailIndexViewModel> GetShipmentDetailIndex(int id, string Uname)
+        {
+            var DivisionId = (int)System.Web.HttpContext.Current.Session["DivisionId"];
+            var SiteId = (int)System.Web.HttpContext.Current.Session["SiteId"];
+
+
+            var temp = from p in db.ViewShipmentDetailAttribute
+                       join c in db.CustomHeader on p.CustomHeaderId equals c.CustomHeaderId into cTable
+                       from cTab in cTable.DefaultIfEmpty()
+                       join SIH in db.SaleInvoiceHeader on cTab.DocId equals SIH.SaleInvoiceHeaderId into SIHTable
+                       from SIHTab in SIHTable.DefaultIfEmpty()
+                       join VSIH in db.ViewSaleInvoiceHeader on cTab.DocId equals VSIH.SaleInvoiceHeaderId into VSIHTable
+                       from VSIHTab in VSIHTable.DefaultIfEmpty()
+                       join SIHD in db.SaleInvoiceHeaderDetail on cTab.DocId equals SIHD.SaleInvoiceHeaderId into SIHDTable
+                       from SIHDTab in SIHDTable.DefaultIfEmpty()
+                       where p.DivisionId == DivisionId && p.SiteId == SiteId && p.DocTypeId == id
+                       orderby p.CustomHeaderId descending
+                       select new ShipmentDetailIndexViewModel
+                       {
+                           CustomHeaderId = p.CustomHeaderId,
+                           DocNo = p.DocNo,
+                           DocDate = SIHTab.DocDate,
+                           ShippingBillNo = p.ShippingBillNo,
+                           ShippingBillDate = p.ShippingBillDate,
+                           BLNo = p.BLNo,
+                           BLDate = p.BLDate,
+                           BankReferenceNo = p.BankReferenceNo,
+                           BankReferenceDate = p.BankReferenceDate,
+                           PortOfLoading = SIHDTab.PortOfLoading,
+                           InvoiceAmount = VSIHTab.TotalAmount,
+                           DrawBackAmount = p.DrawBackAmount,
+                           DrawBackReceivedAmount = p.DrawBackReceivedAmount,
+                           LicenseNo = p.LicenseNo,
+                           LicenseAmount = p.LicenseAmount,
+                           GoodsDispatchdate = p.GoodsDispatchdate,
+                           Transporter = p.Transporter,
+                           ModifiedBy = cTab.ModifiedBy,
+                           ModifiedDate = cTab.ModifiedDate,
+                           Remark = p.Remark
+                       };
+            return temp;
+        }
 
         public IQueryable<CustomHeaderIndexViewModel> GetCustomHeaderIndex(int id, string Uname)
         {
@@ -82,6 +126,32 @@ namespace Service
                            Remark = p.Remark
                        };
             return temp;
+        }
+
+        public IQueryable<ComboBoxResult> GetDocIdHelpList(int DocTypeId, string term)
+        {
+
+            int CurrentSiteId = (int)System.Web.HttpContext.Current.Session["SiteId"];
+            int CurrentDivisionId = (int)System.Web.HttpContext.Current.Session["DivisionId"];
+
+            var temp = db.CustomHeader.Where(m => m.DocTypeId == DocTypeId);
+
+            var list = (from p in db.SaleInvoiceHeader
+                        join CH in temp on p.SaleInvoiceHeaderId equals CH.DocId into CHTable
+                        from CHTab in CHTable.DefaultIfEmpty()
+                        where p.SiteId == CurrentSiteId && p.DivisionId == CurrentDivisionId && CHTab == null
+                        && (string.IsNullOrEmpty(term) ? 1 == 1 : (p.DocNo.ToLower().Contains(term.ToLower())))
+                        group new { p } by new { p.SaleInvoiceHeaderId } into Result
+                        orderby Result.Max(m => m.p.SaleInvoiceHeaderId)
+                        select new ComboBoxResult
+                        {
+                            id = Result.Key.SaleInvoiceHeaderId.ToString(),
+                            text = Result.Max(m => m.p.DocNo),
+                        }
+                    );
+
+            return list;
+
         }
 
         public CustomHeader Create(CustomHeader s)

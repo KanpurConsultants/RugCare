@@ -35,9 +35,9 @@ namespace Jobs.Areas.Rug.Controllers
         IUnitOfWork _unitOfWork;
         IExceptionHandlingService _exception;
 
-        public DyeingOrderWizardController(IJobOrderHeaderService PurchaseOrderHeaderService, IUnitOfWork unitOfWork, IExceptionHandlingService exec)
+        public DyeingOrderWizardController(IJobOrderHeaderService JobOrderHeaderService, IUnitOfWork unitOfWork, IExceptionHandlingService exec)
         {
-            _JobOrderHeaderService = PurchaseOrderHeaderService;
+            _JobOrderHeaderService = JobOrderHeaderService;
             _exception = exec;
             _unitOfWork = unitOfWork;
 
@@ -50,7 +50,64 @@ namespace Jobs.Areas.Rug.Controllers
             LogVm.User = System.Web.HttpContext.Current.Request.RequestContext.HttpContext.User.Identity.Name;
         }
 
-        public ActionResult CreateDyeingOrder()
+        public ActionResult CreateWeavingOrder(int id)//DocTypeId
+        {
+
+            int DivisionId = (int)System.Web.HttpContext.Current.Session["DivisionId"];
+            int SiteId = (int)System.Web.HttpContext.Current.Session["SiteId"];
+            List<string> UserRoles = (List<string>)System.Web.HttpContext.Current.Session["Roles"];
+            ViewBag.WizardType = "Pending";
+
+            int DocTypeId = id;
+
+            //Getting Settings
+            var settings = new JobOrderSettingsService(_unitOfWork).GetJobOrderSettingsForDocument(DocTypeId, DivisionId, SiteId);
+
+            if (settings == null && UserRoles.Contains("SysAdmin"))
+            {
+                return RedirectToAction("Create", "JobOrderSettings", new { id = DocTypeId }).Warning("Please create settings");
+            }
+            else if (settings == null && !UserRoles.Contains("SysAdmin"))
+            {
+                return View("~/Views/Shared/InValidSettings.cshtml");
+            }
+
+            return View("CreateWeavingOrder");
+        }
+
+        public JsonResult PendingProdOrderForDyeing(string WizardType)//DocTypeId
+        {
+
+            var temp = _JobOrderHeaderService.GetProdOrdersForDyeingWizard(WizardType).ToList();
+
+            return Json(new { data = temp }, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult CreateDyeingOrder(int id)
+        {
+
+            int DivisionId = (int)System.Web.HttpContext.Current.Session["DivisionId"];
+            int SiteId = (int)System.Web.HttpContext.Current.Session["SiteId"];
+            List<string> UserRoles = (List<string>)System.Web.HttpContext.Current.Session["Roles"];
+            ViewBag.id = id;
+            //int DocTypeId = new DocumentTypeService(_unitOfWork).Find(TransactionDoctypeConstants.DyeingOrder).DocumentTypeId;
+
+            //Getting Settings
+            var settings = new JobOrderSettingsService(_unitOfWork).GetJobOrderSettingsForDocument(id, DivisionId, SiteId);
+
+            if (settings == null && UserRoles.Contains("SysAdmin"))
+            {
+                return RedirectToAction("Create", "JobOrderSettings", new { id = id }).Warning("Please create settings");
+            }
+            else if (settings == null && !UserRoles.Contains("SysAdmin"))
+            {
+                return View("~/Views/Shared/InValidSettings.cshtml");
+            }
+
+            return View("CreateDyeingOrder");
+        }
+
+        public ActionResult CreateDyeingOrderFromProdOrder()
         {
 
             int DivisionId = (int)System.Web.HttpContext.Current.Session["DivisionId"];
@@ -71,7 +128,7 @@ namespace Jobs.Areas.Rug.Controllers
                 return View("~/Views/Shared/InValidSettings.cshtml");
             }
 
-            return View("CreateDyeingOrder");
+            return View("CreateDyeingOrderFromProdOrder");
         }
 
         public JsonResult PendingProdOrders()
@@ -90,6 +147,61 @@ namespace Jobs.Areas.Rug.Controllers
             return Json(new { data = FgetProdOrders }, JsonRequestBehavior.AllowGet);
         }
 
+        public JsonResult PendingDyeingOrderFromProdOrder()
+        {
+
+            int SiteId = (int)System.Web.HttpContext.Current.Session["SiteId"];
+            int DivisionId = (int)System.Web.HttpContext.Current.Session["DivisionId"];
+
+            SqlParameter SqlParameterSiteId = new SqlParameter("@SiteId", SiteId);
+            SqlParameter SqlParameterDivisionId = new SqlParameter("@DivisionId", DivisionId);
+            //SqlParameter SqlParameterDocCateId = new SqlParameter("@DocumentCategoryId", new DocumentCategoryService(_unitOfWork).FindByName(TransactionDocCategoryConstants.DyeingPlanning).DocumentCategoryId);
+
+            List<WeavingOrderWizardViewModel> ProdOrderIds = (List<WeavingOrderWizardViewModel>)System.Web.HttpContext.Current.Session["ConfirmWeavingProdOrderIds"];
+
+            var FgetProdOrders= (from p in ProdOrderIds
+                                 join POL in db.ProdOrderLine on p.ProdOrderLineId equals POL.ProdOrderLineId into tablePOL
+                                 from tabPOL in tablePOL.DefaultIfEmpty()
+                                 join POH in db.ProdOrderHeader on tabPOL.ProdOrderHeaderId equals POH.ProdOrderHeaderId into tablePOH
+                                 from tabPOH in tablePOH.DefaultIfEmpty()
+                                 join B in db.Persons on tabPOH.BuyerId equals B.PersonID into tableB
+                                 from tabB in tableB.DefaultIfEmpty()
+                                 join BD in db.BomDetail on tabPOL.ProductId equals BD.BaseProductId into tableBD
+                                 from tabBD in tableBD.DefaultIfEmpty()
+                                 join BD1 in db.BomDetail on tabBD.ProductId equals BD1.BaseProductId into tableBD1
+                                 from tabBD1 in tableBD1.DefaultIfEmpty()
+                                 join P in db.Product on tabBD1.ProductId equals P.ProductId into tableP
+                                 from tabP in tableP.DefaultIfEmpty()
+                                 join D1 in db.Dimension1 on tabBD1.Dimension1Id equals D1.Dimension1Id into tableD1
+                                 from tabD1 in tableD1.DefaultIfEmpty()
+                                 join P1 in db.Product on tabPOL.ProductId equals P1.ProductId into tableP1
+                                 from tabP1 in tableP1.DefaultIfEmpty()
+                                 join D2 in db.Dimension2 on tabP1.ProductGroupId.ToString() equals D2.Description into tableD2
+                                 from tabD2 in tableD2.DefaultIfEmpty()
+                                 where tabBD1.Dimension1Id != null
+                                 orderby tabPOH.DocDate, tabPOH.DocNo, tabPOL.Sr
+                                 select new DyeingOrderWizardViewModel
+                                 {
+                                     ProdOrderHeaderId = (int)tabPOL.ProdOrderHeaderId,
+                                     ProdOrderNo = tabPOH.DocNo != null ? tabPOH.DocNo : "",
+                                     DocDate = tabPOH.DocDate,
+                                     BuyerCode = tabB.Code != null ? tabB.Code : "",
+                                     ProdOrderLineId = (int) p.ProdOrderLineId,
+                                     ProdOrderLineIdList = p.ProdOrderLineId.ToString() + ", ",
+                                     ProductList = tabP.ProductName,
+                                     ProductId = tabP.ProductId,
+                                     Dimension1Id = tabD1.Dimension1Id,
+                                     Dimension2Id = tabD2.Dimension2Id,
+                                     Dimension1List = tabBD1.Dimension1Id !=null ? tabD1.Dimension1Name : "",
+                                     Dimension2Name = tabP1.ProductGroupId != null ? tabD2.Dimension2Name : "",
+                                     Rate = (decimal)p.Rate,
+                                     Qty = (decimal)(tabBD1.Qty * p.Area),
+                                     BalanceQty = (decimal)(tabBD1.Qty * p.Area),
+                                 }).ToList();
+
+            return Json(new { data = FgetProdOrders }, JsonRequestBehavior.AllowGet);
+        }
+
 
         public ActionResult SelectedProdOrderList(string ProdOrderLineId)
         {
@@ -99,24 +211,26 @@ namespace Jobs.Areas.Rug.Controllers
             return Json(new { Success = true, Data = FgetProdOrders }, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult SummarizeProdOrderList(string ProdOrderLineId)
+
+        public ActionResult SummarizeProdOrderList(string ProdOrderLineId, int id)
         {
             TempData["TempProdOrders"] = ProdOrderLineId;
-            return Json(new { Success = "URL", Data = "/Rug/DyeingOrderWizard/SummarizeProdOrders" }, JsonRequestBehavior.AllowGet);
+            ViewBag.id = id;
+            return Json(new { Success = "URL", Data = "/Rug/DyeingOrderWizard/SummarizeProdOrders/"+ id.ToString() }, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult SummarizeProdOrders()
+        public ActionResult SummarizeProdOrders(int id)
         {
 
             int DivisionId = (int)System.Web.HttpContext.Current.Session["DivisionId"];
             int SiteId = (int)System.Web.HttpContext.Current.Session["SiteId"];
             List<string> UserRoles = (List<string>)System.Web.HttpContext.Current.Session["Roles"];
 
-            int DocTypeId = new DocumentTypeService(_unitOfWork).Find(TransactionDoctypeConstants.DyeingOrder).DocumentTypeId;
-
+            //int DocTypeId = new DocumentTypeService(_unitOfWork).Find(TransactionDoctypeConstants.DyeingOrder).DocumentTypeId;
+            int DocTypeId = id;
             //Getting Settings
             var settings = new JobOrderSettingsService(_unitOfWork).GetJobOrderSettingsForDocument(DocTypeId, DivisionId, SiteId);
-
+            ViewBag.id = id;
             ViewBag.AllowedPerc = settings.ExcessQtyAllowedPer;
 
             return View("SummarizeProdOrders");
@@ -149,6 +263,9 @@ namespace Jobs.Areas.Rug.Controllers
                                   ProdOrderNo = p.ProdOrderNo,
                                   BuyerCode = t2.Buyer.Code,
                                   ProductList = p.Product.ProductName,
+                                  ProductId=t.ProductId,
+                                  Dimension1Id=t.Dimension1Id,
+                                  Dimension2Id = t.Dimension2Id,
                                   Qty = p.BalanceQty,
                                   BalanceQty = p.BalanceQty,
                               }).ToList();
@@ -163,6 +280,9 @@ namespace Jobs.Areas.Rug.Controllers
                                    ProdOrderLineId = p.ProdOrderLineId,
                                    ProdOrderNo = p.ProdOrderNo,
                                    BuyerCode = p.BuyerCode,
+                                   ProductId = p.ProductId,
+                                   Dimension1Id = p.Dimension1Id,
+                                   Dimension2Id = p.Dimension2Id,
                                    ProductList = p.ProductList,
                                    Qty = p.Qty,
                                    BalanceQty = p.BalanceQty,
@@ -174,15 +294,31 @@ namespace Jobs.Areas.Rug.Controllers
                 return Json(new { data = "" }, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult Filters(FilterArgs Fvm)
+        {
+            List<SelectListItem> temp = new List<SelectListItem>();
+            temp.Add(new SelectListItem { Text = "Pending", Value = "Pending" });
+            temp.Add(new SelectListItem { Text = "All", Value = "All" });
 
-        public ActionResult ConfirmProdOrderList(List<ProdOrderHeaderListViewModel> ProdOrderLineId, bool CancelBalProdOrdrs)
+            ViewBag.WizType = new SelectList(temp, "Value", "Text", Fvm.WizardType);
+
+            return PartialView("_Filters", Fvm);
+        }
+        public ActionResult ConfirmProdOrderList(List<ProdOrderHeaderListViewModel> ProdOrderLineId, bool CancelBalProdOrdrs, int id)
         {
             System.Web.HttpContext.Current.Session["ConfirmProdOrderIds"] = ProdOrderLineId;
             System.Web.HttpContext.Current.Session["CancelBalProdOrdrs"] = CancelBalProdOrdrs;
 
-            return Json(new { Success = "URL", Data = "/Rug/DyeingOrderWizard/Create" }, JsonRequestBehavior.AllowGet);
+            return Json(new { Success = "URL", Data = "/Rug/DyeingOrderWizard/Create/" + id.ToString() }, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult ConfirmWeavingProdOrderList(List<WeavingOrderWizardViewModel> Selected)
+        {
+            System.Web.HttpContext.Current.Session["ConfirmWeavingProdOrderIds"] = Selected;
+            //System.Web.HttpContext.Current.Session["CancelBalProdOrdrs"] = CancelBalProdOrdrs;
+
+            return Json(new { Success = "URL", Data = "/Rug/DyeingOrderWizard/CreateDyeingOrderFromProdOrder" }, JsonRequestBehavior.AllowGet);
+        }
 
         private void PrepareViewBag()
         {
@@ -192,7 +328,7 @@ namespace Jobs.Areas.Rug.Controllers
 
         // GET: /JobOrderHeader/Create
 
-        public ActionResult Create()//DocumentTypeId
+        public ActionResult Create(int id)//DocumentTypeId
         {
             JobOrderHeaderViewModel p = new JobOrderHeaderViewModel();
 
@@ -204,14 +340,14 @@ namespace Jobs.Areas.Rug.Controllers
 
             List<string> UserRoles = (List<string>)System.Web.HttpContext.Current.Session["Roles"];
 
-            int DocTypeId = new DocumentTypeService(_unitOfWork).Find(TransactionDoctypeConstants.DyeingOrder).DocumentTypeId;
+            //int DocTypeId = new DocumentTypeService(_unitOfWork).Find(TransactionDoctypeConstants.DyeingOrder).DocumentTypeId;
 
             //Getting Settings
-            var settings = new JobOrderSettingsService(_unitOfWork).GetJobOrderSettingsForDocument(DocTypeId, p.DivisionId, p.SiteId);
+            var settings = new JobOrderSettingsService(_unitOfWork).GetJobOrderSettingsForDocument(id, p.DivisionId, p.SiteId);
 
             if (settings == null && UserRoles.Contains("SysAdmin"))
             {
-                return RedirectToAction("Create", "JobOrderSettings", new { id = DocTypeId }).Warning("Please create job order settings");
+                return RedirectToAction("Create", "JobOrderSettings", new { id = id }).Warning("Please create job order settings");
             }
             else if (settings == null && !UserRoles.Contains("SysAdmin"))
             {
@@ -233,7 +369,7 @@ namespace Jobs.Areas.Rug.Controllers
 
             p.ProcessId = settings.ProcessId;
             PrepareViewBag();
-            p.DocTypeId = DocTypeId;
+            p.DocTypeId = id;
             p.DocNo = new DocumentTypeService(_unitOfWork).FGetNewDocNo("DocNo", ConfigurationManager.AppSettings["DataBaseSchema"] + ".JobOrderHeaders", p.DocTypeId, p.DocDate, p.DivisionId, p.SiteId);
             if (p.JobOrderSettings.isVisibleCostCenter)
             {
@@ -265,6 +401,8 @@ namespace Jobs.Areas.Rug.Controllers
                 }
             }
 
+            JobOrderSettings Settings = new JobOrderSettingsService(_unitOfWork).GetJobOrderSettingsForDocument(s.DocTypeId, s.DivisionId, s.SiteId);
+
             #region DocTypeTimeLineValidation
 
             try
@@ -289,6 +427,7 @@ namespace Jobs.Areas.Rug.Controllers
                 decimal OrderQty = 0;
                 decimal OrderDealQty = 0;
                 decimal BomQty = 0;
+                int JRC = 0;
 
                 List<ProdOrderHeaderListViewModel> ProdOrderIds = (List<ProdOrderHeaderListViewModel>)System.Web.HttpContext.Current.Session["ConfirmProdOrderIds"];
                 bool CancelBalProdOrders = (bool)System.Web.HttpContext.Current.Session["CancelBalProdOrdrs"];
@@ -367,6 +506,33 @@ namespace Jobs.Areas.Rug.Controllers
                     BusinessEntity BE = new BusinessEntityService(_unitOfWork).Find(s.JobWorkerId);
                     s.SalesTaxGroupPersonId = BE.SalesTaxGroupPartyId;
 
+                    
+                    if (Settings.isAllowDirectReceive == true)
+                    {
+                        JobReceiveHeader RH = new JobReceiveHeader();
+
+                        RH.JobReceiveHeaderId = JRC;
+                        RH.DivisionId = svm.DivisionId;
+                        RH.SiteId = svm.SiteId;
+                        RH.DocTypeId = svm.DocTypeId;
+                        RH.ProcessId = svm.ProcessId;
+                        RH.ReferenceDocId = svm.JobOrderHeaderId;
+                        RH.ReferenceDocTypeId = svm.DocTypeId;
+                        RH.DocDate = svm.DocDate;
+                        RH.DocNo = svm.DocNo;
+                        RH.JobWorkerId = svm.JobWorkerId;
+                        RH.GodownId = (int)s.GodownId;
+                        RH.JobReceiveById = s.OrderById;
+                        RH.Remark = svm.Remark;
+                        RH.Status = svm.Status;
+                        RH.CreatedBy = User.Identity.Name;
+                        RH.ModifiedBy = User.Identity.Name;
+                        RH.CreatedDate = DateTime.Now;
+                        RH.ModifiedDate = DateTime.Now;
+                        RH.ObjectState = Model.ObjectState.Added;
+                        new JobReceiveHeaderService(_unitOfWork).Create(RH);
+
+                    }
                     s.CreatedDate = DateTime.Now;
                     s.ModifiedDate = DateTime.Now;
                     s.ActualDueDate = s.DueDate;
@@ -420,7 +586,7 @@ namespace Jobs.Areas.Rug.Controllers
 
 
 
-                JobOrderSettings Settings = new JobOrderSettingsService(_unitOfWork).GetJobOrderSettingsForDocument(s.DocTypeId, s.DivisionId, s.SiteId);
+
 
                 int? MaxLineId = new JobOrderLineChargeService(_unitOfWork).GetMaxProductCharge(s.JobOrderHeaderId, "Web.JobOrderLines", "JobOrderHeaderId", "JobOrderLineId");
 
@@ -434,14 +600,17 @@ namespace Jobs.Areas.Rug.Controllers
 
                 List<LineDetailListViewModel> LineList = new List<LineDetailListViewModel>();
 
+                CompanySettings C = db.CompanySettings.FirstOrDefault();
                 foreach (var ProdORderLineId in ProdOrderIds)
                 {
 
                     var BalProdOrderLine = BalProdOrders.Where(m => m.ProdOrderLineId == ProdORderLineId.ProdOrderLineId).FirstOrDefault();
-                    var Product = Products.Where(m => m.ProductId == BalProdOrderLine.ProductId).FirstOrDefault();
+                    //var Product = Products.Where(m => m.ProductId == BalProdOrderLine.ProductId).FirstOrDefault();
+                    var Product = db.Product.Where(m => m.ProductId == ProdORderLineId.ProductId).FirstOrDefault();
 
 
-                    if (ProdORderLineId.Qty <= BalProdOrderLine.BalanceQty && ProdORderLineId.Qty > 0)
+
+                    if (C.isAllowAutoPlan == true || ( ProdORderLineId.Qty <= BalProdOrderLine.BalanceQty && ProdORderLineId.Qty > 0))
                         if (((Settings.isVisibleRate == false || Settings.isVisibleRate == true)))
                         {
                             JobOrderLine line = new JobOrderLine();
@@ -492,8 +661,8 @@ namespace Jobs.Areas.Rug.Controllers
                                 StockViewModel.Rate = 0;
                                 StockViewModel.ExpiryDate = null;
                                 StockViewModel.Specification = ProdOrderLines.Where(m => m.ProdOrderLineId == ProdORderLineId.ProdOrderLineId).FirstOrDefault().Specification;
-                                StockViewModel.Dimension1Id = BalProdOrderLine.Dimension1Id;
-                                StockViewModel.Dimension2Id = BalProdOrderLine.Dimension2Id;
+                                StockViewModel.Dimension1Id = ProdORderLineId.Dimension1Id;
+                                StockViewModel.Dimension2Id = ProdORderLineId.Dimension2Id;
                                 StockViewModel.CreatedBy = User.Identity.Name;
                                 StockViewModel.CreatedDate = DateTime.Now;
                                 StockViewModel.ModifiedBy = User.Identity.Name;
@@ -549,7 +718,7 @@ namespace Jobs.Areas.Rug.Controllers
                                 StockProcessViewModel.SiteId = s.SiteId;
                                 StockProcessViewModel.CurrencyId = null;
                                 StockProcessViewModel.PersonId = s.JobWorkerId;
-                                StockProcessViewModel.ProductId = BalProdOrderLine.ProductId;
+                                StockProcessViewModel.ProductId = ProdORderLineId.ProductId;
                                 StockProcessViewModel.HeaderFromGodownId = null;
                                 StockProcessViewModel.HeaderGodownId = s.GodownId;
                                 StockProcessViewModel.HeaderProcessId = s.ProcessId;
@@ -564,8 +733,8 @@ namespace Jobs.Areas.Rug.Controllers
                                 StockProcessViewModel.Rate = 0;
                                 StockProcessViewModel.ExpiryDate = null;
                                 StockProcessViewModel.Specification = ProdOrderLines.Where(m => m.ProdOrderLineId == ProdORderLineId.ProdOrderLineId).FirstOrDefault().Specification;
-                                StockProcessViewModel.Dimension1Id = BalProdOrderLine.Dimension1Id;
-                                StockProcessViewModel.Dimension2Id = BalProdOrderLine.Dimension2Id;
+                                StockProcessViewModel.Dimension1Id = ProdORderLineId.Dimension1Id;
+                                StockProcessViewModel.Dimension2Id = ProdORderLineId.Dimension2Id;
                                 StockProcessViewModel.CreatedBy = User.Identity.Name;
                                 StockProcessViewModel.CreatedDate = DateTime.Now;
                                 StockProcessViewModel.ModifiedBy = User.Identity.Name;
@@ -594,12 +763,109 @@ namespace Jobs.Areas.Rug.Controllers
                             }
 
 
+                            if (Settings.isAllowDirectReceive ?? false)
+                            {
+                                StockViewModel StockViewModel = new StockViewModel();
+
+                                if (Cnt == 0)
+                                {
+                                    StockViewModel.StockHeaderId = s.StockHeaderId ?? 0;
+                                }
+                                else
+                                {
+                                    if (s.StockHeaderId != null && s.StockHeaderId != 0)
+                                    {
+                                        StockViewModel.StockHeaderId = (int)s.StockHeaderId;
+                                    }
+                                    else
+                                    {
+                                        StockViewModel.StockHeaderId = -1;
+                                    }
+                                }
+
+                                StockViewModel.StockId = -Cnt;
+                                StockViewModel.DocHeaderId = s.JobOrderHeaderId;
+                                StockViewModel.DocLineId = line.JobOrderLineId;
+                                StockViewModel.DocTypeId = s.DocTypeId;
+                                StockViewModel.StockHeaderDocDate = s.DocDate;
+                                StockViewModel.StockDocDate = s.DocDate;
+                                StockViewModel.DocNo = s.DocNo;
+                                StockViewModel.DivisionId = s.DivisionId;
+                                StockViewModel.SiteId = s.SiteId;
+                                StockViewModel.CurrencyId = null;
+                                StockViewModel.PersonId = s.JobWorkerId;
+                                StockViewModel.ProductId = BalProdOrderLine.ProductId;
+                                StockViewModel.HeaderFromGodownId = null;
+                                StockViewModel.HeaderGodownId = s.GodownId;
+                                StockViewModel.HeaderProcessId = s.ProcessId;
+                                StockViewModel.GodownId = (int)s.GodownId;
+                                StockViewModel.Remark = s.Remark;
+                                StockViewModel.Status = s.Status;
+                                StockViewModel.ProcessId = s.ProcessId;
+                                StockViewModel.LotNo = null;
+                                StockViewModel.CostCenterId = s.CostCenterId;
+                                StockViewModel.Qty_Iss = 0;
+                                StockViewModel.Qty_Rec = ProdORderLineId.Qty;  
+                                StockViewModel.Rate = 0;
+                                StockViewModel.ExpiryDate = null;
+                                StockViewModel.Specification = ProdOrderLines.Where(m => m.ProdOrderLineId == ProdORderLineId.ProdOrderLineId).FirstOrDefault().Specification;
+                                StockViewModel.Dimension1Id = ProdORderLineId.Dimension1Id;
+                                StockViewModel.Dimension2Id = ProdORderLineId.Dimension2Id;
+                                StockViewModel.CreatedBy = User.Identity.Name;
+                                StockViewModel.CreatedDate = DateTime.Now;
+                                StockViewModel.ModifiedBy = User.Identity.Name;
+                                StockViewModel.ModifiedDate = DateTime.Now;
+
+                                string StockPostingError = "";
+                                StockPostingError = new StockService(_unitOfWork).StockPost(ref StockViewModel);
+
+                                if (StockPostingError != "")
+                                {
+                                    string message = StockPostingError;
+                                    ModelState.AddModelError("", message);
+                                    return View("Create", svm);
+                                }
+
+                                if (Cnt == 0)
+                                {
+                                    s.StockHeaderId = StockViewModel.StockHeaderId;
+                                }
+
+                                line.StockId = StockViewModel.StockId;
+
+                                JobReceiveLine JRL = new JobReceiveLine();
+                                
+                                JRL.JobReceiveHeaderId = JRC;
+
+                                JRL.JobReceiveLineId = -Cnt;
+                                //JRL.JobOrderLineId = line.JobOrderLineId;
+                                JRL.JobOrderLineId = pk;                                
+                                JRL.Qty = ProdORderLineId.Qty;
+                                JRL.LossQty = 0;
+                                JRL.PassQty = ProdORderLineId.Qty;
+                                JRL.ProductId = ProdORderLineId.ProductId;
+                                JRL.Specification = ProdOrderLines.Where(m => m.ProdOrderLineId == ProdORderLineId.ProdOrderLineId).FirstOrDefault().Specification;
+                                JRL.Dimension1Id = ProdORderLineId.Dimension1Id;
+                                JRL.Dimension2Id = ProdORderLineId.Dimension2Id;
+                                JRL.ReferenceDocLineId = line.JobOrderLineId;
+                                JRL.ReferenceDocTypeId = svm.DocTypeId;
+                                JRL.StockId = StockViewModel.StockId;
+
+                                JRL.CreatedBy = User.Identity.Name;
+                                JRL.CreatedDate = DateTime.Now;
+                                JRL.ModifiedBy = User.Identity.Name;
+                                JRL.ModifiedDate = DateTime.Now;
+                                new JobReceiveLineService(_unitOfWork).Create(JRL);
+
+                                new JobReceiveLineStatusService(_unitOfWork).CreateLineStatus(JRL.JobReceiveLineId, ref db, false);
+
+                            }
 
                             line.JobOrderHeaderId = s.JobOrderHeaderId;
                             line.ProdOrderLineId = BalProdOrderLine.ProdOrderLineId;
-                            line.ProductId = BalProdOrderLine.ProductId;
-                            line.Dimension1Id = BalProdOrderLine.Dimension1Id;
-                            line.Dimension2Id = BalProdOrderLine.Dimension2Id;
+                            line.ProductId = ProdORderLineId.ProductId;
+                            line.Dimension1Id = ProdORderLineId.Dimension1Id;
+                            line.Dimension2Id = ProdORderLineId.Dimension2Id;
                             line.Specification = ProdOrderLines.Where(m => m.ProdOrderLineId == ProdORderLineId.ProdOrderLineId).FirstOrDefault().Specification;
                             line.Qty = ProdORderLineId.Qty;
                             line.Rate = ProdORderLineId.Rate;
@@ -667,15 +933,18 @@ namespace Jobs.Areas.Rug.Controllers
                     decimal StatExtRate = ProdOrderIds.Min(m => m.Rate) > 0 ? ProdOrderIds.Min(m => m.Rate) : svm.Rate;
 
                     var CostCenterStatusExtended = db.CostCenterStatusExtended.Find(s.CostCenterId);
-                    CostCenterStatusExtended.Rate = (!CostCenterStatusExtended.Rate.HasValue || CostCenterStatusExtended.Rate == 0)
-                        ? StatExtRate
-                        : (CostCenterStatusExtended.Rate > StatExtRate ? StatExtRate : CostCenterStatusExtended.Rate);
-                    CostCenterStatusExtended.OrderQty = CostCenterStatusExtended.OrderQty ?? 0 + OrderQty;
-                    CostCenterStatusExtended.OrderDealQty = CostCenterStatusExtended.OrderDealQty ?? 0 + OrderDealQty;
-                    //CostCenterStatusExtended.BOMQty = CostCenterStatusExtended.BOMQty ?? 0 + BomQty;
+                    if (CostCenterStatusExtended != null)
+                    {
+                        CostCenterStatusExtended.Rate = (!CostCenterStatusExtended.Rate.HasValue || CostCenterStatusExtended.Rate == 0)
+                            ? StatExtRate
+                            : (CostCenterStatusExtended.Rate > StatExtRate ? StatExtRate : CostCenterStatusExtended.Rate);
+                        CostCenterStatusExtended.OrderQty = CostCenterStatusExtended.OrderQty ?? 0 + OrderQty;
+                        CostCenterStatusExtended.OrderDealQty = CostCenterStatusExtended.OrderDealQty ?? 0 + OrderDealQty;
+                        //CostCenterStatusExtended.BOMQty = CostCenterStatusExtended.BOMQty ?? 0 + BomQty;
 
-                    CostCenterStatusExtended.ObjectState = Model.ObjectState.Modified;
-                    _unitOfWork.Repository<CostCenterStatusExtended>().Update(CostCenterStatusExtended);
+                        CostCenterStatusExtended.ObjectState = Model.ObjectState.Modified;
+                        _unitOfWork.Repository<CostCenterStatusExtended>().Update(CostCenterStatusExtended);
+                    }
                 }
 
                 new ChargesCalculationService(_unitOfWork).CalculateCharges(LineList, s.JobOrderHeaderId, CalculationId, MaxLineId, out LineCharges, out HeaderChargeEdit, out HeaderCharges, "Web.JobOrderHeaderCharges", "Web.JobOrderLineCharges", out PersonCount, s.DocTypeId, s.SiteId, s.DivisionId);
@@ -738,6 +1007,7 @@ namespace Jobs.Areas.Rug.Controllers
                     new CostCenterService(_unitOfWork).Update(CC);
                 }
 
+
                 try
                 {
                     _unitOfWork.Save();
@@ -751,6 +1021,19 @@ namespace Jobs.Areas.Rug.Controllers
                     ViewBag.Mode = "Add";
                     return View("Create", svm);
 
+                }
+
+                if (Settings.isAllowDirectReceive == true)
+                {
+                    var RH = db.JobReceiveHeader.Where(m => m.SiteId == s.SiteId && m.DivisionId == s.DivisionId && m.DocTypeId == s.DocTypeId && m.DocNo == s.DocNo).FirstOrDefault();
+                    if (RH != null)
+                    {
+                        RH.ReferenceDocId = s.JobOrderHeaderId;
+                        RH.ObjectState = Model.ObjectState.Modified;
+                        //new JobReceiveHeaderService(_unitOfWork).Update(RH);
+                        db.JobReceiveHeader.Add(RH);
+                        db.SaveChanges();
+                    }
                 }
 
                 LogActivity.LogActivityDetail(LogVm.Map(new ActiivtyLogViewModel

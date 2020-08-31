@@ -17,6 +17,7 @@ using Model.ViewModel;
 using System.Xml.Linq;
 using Reports.Controllers;
 using System.Data.SqlClient;
+using System.ComponentModel.DataAnnotations;
 
 namespace Jobs.Areas.Rug.Controllers
 {
@@ -62,7 +63,14 @@ namespace Jobs.Areas.Rug.Controllers
         public JsonResult Index(int id)
         {
             var p = _PackingLineService.GetPackingLineViewModelForHeaderId(id);
-            return Json(p, JsonRequestBehavior.AllowGet);
+            //return Json(p, JsonRequestBehavior.AllowGet);
+
+            return new JsonResult()
+            {
+                Data = p,
+                MaxJsonLength = Int32.MaxValue,
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet
+            };
 
         }
 
@@ -1092,7 +1100,7 @@ namespace Jobs.Areas.Rug.Controllers
                         new PackingLineExtendedService(_unitOfWork).Update(LineExtended);
                     }
 
-
+                    SaleOrderLine SaleOrderLine = db.SaleOrderLine.Where(m => m.SaleOrderLineId == svm.SaleOrderLineId).FirstOrDefault();
 
                     if (PackingSetting.isPostedInSaleInvoice == true)
                     {
@@ -1102,9 +1110,11 @@ namespace Jobs.Areas.Rug.Controllers
                         saledispatchline.ModifiedBy = User.Identity.Name;
                         _SaleDispatchLineService.Update(saledispatchline);
 
+
                         SaleInvoiceLine saleinvoiceline = db.SaleInvoiceLine.Where(m => m.SaleDispatchLineId == saledispatchline.SaleDispatchLineId).FirstOrDefault();
                         saleinvoiceline.Remark = svm.Remark;
                         saleinvoiceline.DealQty = svm.DealQty;
+                        saleinvoiceline.Rate = SaleOrderLine.Rate;
                         saleinvoiceline.Amount = svm.DealQty* saleinvoiceline.Rate;
                         saleinvoiceline.UnitConversionMultiplier = svm.DealQty / svm.Qty;
                         saleinvoiceline.RateRemark = svm.RateRemark;
@@ -1117,7 +1127,7 @@ namespace Jobs.Areas.Rug.Controllers
                     #region "Update Product Buyer"
                     if (svm.SaleOrderLineId != null)
                     {
-                        SaleOrderLine SaleOrderLine = db.SaleOrderLine.Where(m => m.SaleOrderLineId == svm.SaleOrderLineId).FirstOrDefault();
+                       
                         if (SaleOrderLine != null)
                         {
                             SaleEnquiryLine SEL = new SaleEnquiryLineService(_unitOfWork).Find((int)SaleOrderLine.ReferenceDocLineId);
@@ -1779,7 +1789,7 @@ namespace Jobs.Areas.Rug.Controllers
                     //    productuid.IsActive = false;
 
                     //    productuid.ObjectState = Model.ObjectState.Modified;
-                    //    db.ProductUid.Add(productuid);
+                    //    db.ProductUid.Add(productuid);SaleOrderLine.Rate
                     //}
 
 
@@ -1792,6 +1802,13 @@ namespace Jobs.Areas.Rug.Controllers
                     saleinvoiceline.SaleOrderLineId = packingline.SaleOrderLineId;
                     saleinvoiceline.Qty = packingline.Qty;
                     saleinvoiceline.DealQty = packingline.DealQty;
+
+                    SaleOrderLine SaleOrderLine = db.SaleOrderLine.Where(m => m.SaleOrderLineId == svm.SaleOrderLineId).FirstOrDefault();
+                    if (SaleOrderLine != null)
+                    {
+                        saleinvoiceline.Rate = SaleOrderLine.Rate;
+                        saleinvoiceline.Amount = SaleOrderLine.Rate * packingline.DealQty;
+                    }
                     saleinvoiceline.DealUnitId = packingline.DealUnitId;
                     saleinvoiceline.UnitConversionMultiplier = packingline.UnitConversionMultiplier;
                     saleinvoiceline.ProductId = packingline.ProductId;
@@ -2424,11 +2441,11 @@ namespace Jobs.Areas.Rug.Controllers
                 return ValidationMsg;
             }
 
-            if (svm.ProductUidName != "" && svm.ProductUidName != null && svm.Qty > 1)
-            {
-                ValidationMsg = "Qty can't be greater then 1 for a Bar Code.";
-                return ValidationMsg;
-            }
+            //if (svm.ProductUidName != "" && svm.ProductUidName != null && svm.Qty > 1)
+            //{
+            //    ValidationMsg = "Qty can't be greater then 1 for a Bar Code.";
+            //    return ValidationMsg;
+            //}
 
             if (svm.GrossWeight > Decimal.MaxValue || svm.GrossWeight < Decimal.MinValue)
             {
@@ -2444,9 +2461,16 @@ namespace Jobs.Areas.Rug.Controllers
 
             if (svm.StockInId !=null)
             {
-                Decimal BalanceQty = (from L in db.ViewStockInBalanceForPacking
+                Decimal BalanceQty = 0;
+                if (PS.isAllowtoDirectPacking == true)
+                    BalanceQty = (from L in db.ViewStockInBalanceForPacking
                                      where L.StockInId == svm.StockInId
                                      select new { BalanceQty = L.BalanceQty }).FirstOrDefault().BalanceQty;
+                else 
+                    BalanceQty = (from L in db.ViewStockInBalance
+                                  where L.StockInId == svm.StockInId
+                                  select new { BalanceQty = L.BalanceQty }).FirstOrDefault().BalanceQty;
+
                 if (BalanceQty < svm.Qty)
                 {
                     ValidationMsg = "Qty can't be greater then " + BalanceQty.ToString(); ;
@@ -3704,46 +3728,90 @@ namespace Jobs.Areas.Rug.Controllers
         }
 
 
-        public JsonResult GetStockInDetailJson(int StockInId)
+        public JsonResult GetStockInDetailJson(int StockInId, int PackingHeaderId)
         {
-            var temp = (from p in db.ViewStockInBalanceForPacking
-                        join S in db.Stock on p.StockInId equals S.StockId into StockTable
-                        from StockTab in StockTable.DefaultIfEmpty()
-                        join pt in db.Product on p.ProductId equals pt.ProductId into ProductTable
-                        from ProductTab in ProductTable.DefaultIfEmpty()
-                        join D1 in db.Dimension1 on p.Dimension1Id equals D1.Dimension1Id into Dimension1Table
-                        from Dimension1Tab in Dimension1Table.DefaultIfEmpty()
-                        join D2 in db.Dimension2 on p.Dimension2Id equals D2.Dimension2Id into Dimension2Table
-                        from Dimension2Tab in Dimension2Table.DefaultIfEmpty()
-                        join D3 in db.Dimension3 on p.Dimension3Id equals D3.Dimension3Id into Dimension3Table
-                        from Dimension3Tab in Dimension3Table.DefaultIfEmpty()
-                        join D4 in db.Dimension4 on p.Dimension4Id equals D4.Dimension4Id into Dimension4Table
-                        from Dimension4Tab in Dimension4Table.DefaultIfEmpty()
-                        join PU in db.ProductUid on StockTab.ProductUidId equals PU.ProductUIDId into PUTable
-                        from PUTab in PUTable.DefaultIfEmpty()
-                        where p.StockInId == StockInId
+            PackingHeader H = new PackingHeaderService(_unitOfWork).GetPackingHeader(PackingHeaderId);
+            PackingSetting PackingSetting = new PackingSettingService(_unitOfWork).GetPackingSettingForDocument(H.DocTypeId, H.DivisionId, H.SiteId);
+
+            string mQry = "";
+            if (PackingSetting.isAllowtoDirectPacking == true)
+                 mQry = @"SELECT S.ProductUidId, PU.ProductUidName, S.ProductId, P.ProductName, 
+                            H.BalanceQty, S.LotNo, S.ProcessId FromProcessId, PR.ProcessName AS FromProcessName, 
+                            isnull(PU.CurrenctGodownId,S.GodownId) AS CurrenctGodownId, PU.Status 
+                            FROM web.ViewStockInBalanceForPacking H WITH (Nolock)
+                            LEFT JOIN web.Stocks S WITH (Nolock) ON S.StockId = H.StockInId
+                            LEFT JOIN web.Products P WITH (Nolock) ON P.ProductId = S.ProductId 
+                            LEFT JOIN web.ProductUids PU WITH (Nolock) ON PU.ProductUIDId = S.ProductUidId
+                            LEFT JOIN web.Processes PR WITH (Nolock) ON PR.ProcessId = S.ProcessId  
+                            Where H.StockInId = " + StockInId + "";
+            else
+                mQry = @"SELECT S.ProductUidId, PU.ProductUidName, S.ProductId, P.ProductName, S.Dimension1Id, D1.Dimension1Name, S.Dimension2Id, D2.Dimension2Name,
+                            H.BalanceQty, S.LotNo, S.ProcessId FromProcessId, PR.ProcessName AS FromProcessName, 
+                            isnull(PU.CurrenctGodownId,S.GodownId) AS CurrenctGodownId, PU.Status 
+                            FROM web.ViewStockInBalance H WITH (Nolock)
+                            LEFT JOIN web.Stocks S WITH (Nolock) ON S.StockId = H.StockInId
+                            LEFT JOIN web.Products P WITH (Nolock) ON P.ProductId = S.ProductId 
+                            LEFT JOIN web.Dimension1 D1 WITH (Nolock) ON D1.Dimension1Id = S.Dimension1Id 
+                            LEFT JOIN web.Dimension2 D2 WITH (Nolock) ON D2.Dimension2Id = S.Dimension2Id 
+                            LEFT JOIN web.ProductUids PU WITH (Nolock) ON PU.ProductUIDId = S.ProductUidId
+                            LEFT JOIN web.Processes PR WITH (Nolock) ON PR.ProcessId = S.ProcessId  
+                            Where H.StockInId = " + StockInId + "";
+
+            IEnumerable<ViewStockInBalance> temp1 = db.Database.SqlQuery<ViewStockInBalance>(mQry).ToList();
+
+            var temp = (from p in temp1
                         select new
                         {
-                            ProductUidId = StockTab.ProductUidId,
-                            ProductUidName = StockTab.ProductUid.ProductUidName,
+                            ProductUidId = p.ProductUidId,
+                            ProductUidName = p.ProductUidName,
                             ProductId = p.ProductId,
-                            ProductName = ProductTab.ProductName,
-                            Dimension1Id = p.Dimension1Id,
-                            Dimension1Name = Dimension1Tab.Dimension1Name,
-                            Dimension2Id = p.Dimension2Id,
-                            Dimension2Name = Dimension2Tab.Dimension2Name,
-                            Dimension3Id = p.Dimension3Id,
-                            Dimension3Name = Dimension3Tab.Dimension3Name,
-                            Dimension4Id = p.Dimension4Id,
-                            Dimension4Name = Dimension4Tab.Dimension4Name,
+                            ProductName = p.ProductName,
                             BalanceQty = p.BalanceQty,
                             LotNo = p.LotNo,
-                            FromProcessId = StockTab.ProcessId,
-                            FromProcessName = StockTab.Process.ProcessName,
-                            CurrenctGodownId = StockTab.ProductUidId ==null ? StockTab.GodownId : PUTab.CurrenctGodownId,
-                            Status = PUTab.Status
-
+                            FromProcessId = p.FromProcessId,
+                            FromProcessName = p.FromProcessName,
+                            CurrenctGodownId = p.CurrenctGodownId,
+                            Status = p.Status
                         }).FirstOrDefault();
+
+            //var temp = (from p in db.ViewStockInBalanceForPacking
+            //            join S in db.Stock on p.StockInId equals S.StockId into StockTable
+            //            from StockTab in StockTable.DefaultIfEmpty()
+            //            join pt in db.Product on p.ProductId equals pt.ProductId into ProductTable
+            //            from ProductTab in ProductTable.DefaultIfEmpty()
+            //            join D1 in db.Dimension1 on p.Dimension1Id equals D1.Dimension1Id into Dimension1Table
+            //            from Dimension1Tab in Dimension1Table.DefaultIfEmpty()
+            //            join D2 in db.Dimension2 on p.Dimension2Id equals D2.Dimension2Id into Dimension2Table
+            //            from Dimension2Tab in Dimension2Table.DefaultIfEmpty()
+            //            join D3 in db.Dimension3 on p.Dimension3Id equals D3.Dimension3Id into Dimension3Table
+            //            from Dimension3Tab in Dimension3Table.DefaultIfEmpty()
+            //            join D4 in db.Dimension4 on p.Dimension4Id equals D4.Dimension4Id into Dimension4Table
+            //            from Dimension4Tab in Dimension4Table.DefaultIfEmpty()
+            //            join PU in db.ProductUid on StockTab.ProductUidId equals PU.ProductUIDId into PUTable
+            //            from PUTab in PUTable.DefaultIfEmpty()
+            //            where p.StockInId == StockInId
+            //            select new
+            //            {
+            //                ProductUidId = StockTab.ProductUidId,
+            //                ProductUidName = StockTab.ProductUid.ProductUidName,
+            //                ProductId = p.ProductId,
+            //                ProductName = ProductTab.ProductName,
+            //                Dimension1Id = p.Dimension1Id,
+            //                Dimension1Name = Dimension1Tab.Dimension1Name,
+            //                Dimension2Id = p.Dimension2Id,
+            //                Dimension2Name = Dimension2Tab.Dimension2Name,
+            //                Dimension3Id = p.Dimension3Id,
+            //                Dimension3Name = Dimension3Tab.Dimension3Name,
+            //                Dimension4Id = p.Dimension4Id,
+            //                Dimension4Name = Dimension4Tab.Dimension4Name,
+            //                BalanceQty = p.BalanceQty,
+            //                LotNo = p.LotNo,
+            //                FromProcessId = StockTab.ProcessId,
+            //                FromProcessName = StockTab.Process.ProcessName,
+            //                CurrenctGodownId = StockTab.ProductUidId == null ? StockTab.GodownId : PUTab.CurrenctGodownId,
+            //                Status = PUTab.Status
+
+            //            }).FirstOrDefault();
 
             if (temp != null)
             {
@@ -3756,6 +3824,24 @@ namespace Jobs.Areas.Rug.Controllers
         }
 
 
+    }
+
+    public class ViewStockInBalance    {
+
+        public int ? ProductUidId { get; set; }
+        public string ProductUidName { get; set; }
+        public int ProductId { get; set; }
+        public string ProductName { get; set; }
+        //public int Dimension1Id { get; set; }
+        //public string Dimension1Name { get; set; }
+        //public int Dimension2Id { get; set; }
+        //public string Dimension2Name { get; set; }
+        public Decimal BalanceQty { get; set; }
+        public string LotNo { get; set; }
+        public int ? FromProcessId { get; set; }
+        public string FromProcessName { get; set; }
+        public int CurrenctGodownId { get; set; }
+        public string Status { get; set; }
     }
 
 

@@ -4051,7 +4051,34 @@ namespace Jobs.Controllers
               };
           }
 
-          public ActionResult GetDimension1(string searchTerm, int pageSize, int pageNum)
+        public ActionResult GetFirstSaleOrderLine(string searchTerm, int pageSize, int pageNum)
+        {
+            //Get the paged results and the total count of the results for this query. ProductCacheKeyHint
+            var productCacheKeyHint = "FirstSaleOrderLineCacheKeyHint";
+
+            //THis statement has been changed because GetProductHelpList was calling again and again. 
+
+            AutoCompleteComboBoxRepositoryAndHelper ar = new AutoCompleteComboBoxRepositoryAndHelper(cbl.GetFirstSaleOrderLineHelpList(), productCacheKeyHint, RefreshData.RefreshProductData);
+            //AutoCompleteComboBoxRepositoryAndHelper ar = new AutoCompleteComboBoxRepositoryAndHelper(null, productCacheKeyHint);
+
+            if (RefreshData.RefreshProductData == true) { RefreshData.RefreshProductData = false; }
+
+
+            List<ComboBoxList> prodLst = ar.GetListForComboBox(searchTerm, pageSize, pageNum);
+            int prodCount = ar.GetCountForComboBox(searchTerm, pageSize, pageNum);
+
+            //Translate the attendees into a format the select2 dropdown expects
+            ComboBoxPagedResult pagedAttendees = ar.TranslateToComboBoxFormat(prodLst, prodCount);
+
+            //Return the data as a jsonp result
+            return new JsonpResult
+            {
+                Data = pagedAttendees,
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet
+            };
+        }
+
+        public ActionResult GetDimension1(string searchTerm, int pageSize, int pageNum)
           {
               //Get the paged results and the total count of the results for this query. ProductCacheKeyHint
               var productCacheKeyHint = "Dimension1CacheKeyHint";
@@ -4557,7 +4584,7 @@ namespace Jobs.Controllers
             var SaleOrderHeader = (from p in db.SaleOrderLine
                                                            join H in db.SaleOrderHeader on p.SaleOrderHeaderId equals H.SaleOrderHeaderId into tableH
                                                            from tabH in tableH.DefaultIfEmpty()
-                                                           where p.ProductId == Ids
+                                                           where p.SaleOrderLineId == Ids
                                                       select new SaleOrderLineBalance
                                                       {
                                                           SaleOrderLineId = p.SaleOrderLineId,

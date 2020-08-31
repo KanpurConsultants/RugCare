@@ -956,9 +956,19 @@ namespace Jobs.Controllers
             {
                 JobOrderLine JOL = db.JobOrderLine.Where(m => m.JobOrderLineId == svm.JobOrderLineId).FirstOrDefault();
                 ViewJobOrderBalance VJ = db.ViewJobOrderBalance.Where(m => m.JobOrderLineId == svm.JobOrderLineId).FirstOrDefault();
-                if(svm.Qty < (JOL.Qty - VJ.BalanceQty))
+                if (VJ == null)
                 {
-                    ModelState.AddModelError("Qty", "The Qty should not be less than Balance Job Order Qty.");
+                    if (svm.Qty < (JOL.Qty))
+                    {
+                        ModelState.AddModelError("Qty", "The Qty should not be less than Balance Job Order Qty.");
+                    }
+                }
+                else
+                {
+                    if (svm.Qty < (JOL.Qty - VJ.BalanceQty))
+                    {
+                        ModelState.AddModelError("Qty", "The Qty should not be less than Balance Job Order Qty.");
+                    }
                 }
 
                 ProdOrderLine POL = db.ProdOrderLine.Where(m => m.ReferenceDocLineId == svm.JobOrderLineId && m.ReferenceDocTypeId == temp.DocTypeId).FirstOrDefault();
@@ -1669,6 +1679,7 @@ namespace Jobs.Controllers
                     templine.ProductId = s.ProductId;
                     templine.ProductUidId = s.ProductUidId;
                     templine.ProdOrderLineId = s.ProdOrderLineId;
+                    templine.SaleOrderLineId = s.SaleOrderLineId;
                     templine.DueDate = s.DueDate;
                     templine.LotNo = s.LotNo;
                     templine.FromProcessId = s.FromProcessId;
@@ -2362,6 +2373,100 @@ namespace Jobs.Controllers
 
                 }
 
+                if (settings.isAllowDirectReceive ?? false)
+                {
+                    StockViewModel.StockHeaderId = temp.StockHeaderId ?? 0;
+                    StockViewModel.DocHeaderId = temp.JobOrderHeaderId;
+                    StockViewModel.DocLineId = s.JobOrderLineId;
+                    StockViewModel.DocTypeId = temp.DocTypeId;
+                    StockViewModel.StockHeaderDocDate = temp.DocDate;
+                    StockViewModel.StockDocDate = temp.DocDate;
+                    StockViewModel.DocNo = temp.DocNo;
+                    StockViewModel.DivisionId = temp.DivisionId;
+                    StockViewModel.SiteId = temp.SiteId;
+                    StockViewModel.CurrencyId = null;
+                    StockViewModel.HeaderProcessId = null;
+                    StockViewModel.PersonId = temp.JobWorkerId;
+                    StockViewModel.ProductId = s.ProductId;
+                    StockViewModel.HeaderFromGodownId = null;
+                    StockViewModel.HeaderGodownId = null;
+                    StockViewModel.GodownId = temp.GodownId ?? 0;
+                    StockViewModel.ProcessId = temp.ProcessId;
+                    StockViewModel.LotNo = s.LotNo;
+                    StockViewModel.CostCenterId = temp.CostCenterId;
+                    StockViewModel.Qty_Iss = 0;
+                    StockViewModel.Qty_Rec = s.Qty; 
+                    StockViewModel.Rate = s.Rate;
+                    StockViewModel.ExpiryDate = null;
+                    StockViewModel.Specification = s.Specification;
+                    StockViewModel.Dimension1Id = s.Dimension1Id;
+                    StockViewModel.Dimension2Id = s.Dimension2Id;
+                    StockViewModel.Dimension3Id = s.Dimension3Id;
+                    StockViewModel.Dimension4Id = s.Dimension4Id;
+                    StockViewModel.Remark = s.Remark;
+                    StockViewModel.ProductUidId = s.ProductUidId;
+                    StockViewModel.Status = temp.Status;
+                    StockViewModel.CreatedBy = temp.CreatedBy;
+                    StockViewModel.CreatedDate = DateTime.Now;
+                    StockViewModel.ModifiedBy = temp.ModifiedBy;
+                    StockViewModel.ModifiedDate = DateTime.Now;
+
+                    string StockPostingError = "";
+                    StockPostingError = new StockService(_unitOfWork).StockPostDB(ref StockViewModel, ref db);
+
+                    if (StockPostingError != "")
+                    {
+                        ModelState.AddModelError("", StockPostingError);
+                        Message = StockPostingError;
+                    }
+
+                    
+
+                    if (temp.StockHeaderId == null || temp.StockHeaderId == 0)
+                    {
+                        temp.StockHeaderId = StockViewModel.StockHeaderId;
+                        temp.ObjectState = Model.ObjectState.Modified;
+                        db.JobOrderHeader.Add(temp);
+                    }
+
+                    s.StockId = StockViewModel.StockId;
+                    s.ObjectState = Model.ObjectState.Modified;
+                    db.JobOrderLine.Add(s);
+
+                    JobReceiveLine JRL = new JobReceiveLine();
+
+                    var RH = db.JobReceiveHeader.Where(m => m.SiteId == svm.SiteId && m.DivisionId == svm.DivisionId && m.DocTypeId == svm.DocTypeId && m.DocNo == temp.DocNo).FirstOrDefault();
+                    JRL.JobReceiveHeaderId = RH.JobReceiveHeaderId;
+
+                    //JRL.JobReceiveLineId = -Cnt;
+                    JRL.JobOrderLineId = s.JobOrderLineId;
+                    //JRL.JobOrderLineId = pk;
+                    JRL.Qty = svm.Qty;
+                    JRL.LossQty = 0;
+                    JRL.PassQty = svm.Qty;
+                    JRL.ProductId = svm.ProductId;
+                    JRL.Specification = svm.Specification;
+                    JRL.Dimension1Id = svm.Dimension1Id;
+                    JRL.Dimension2Id = svm.Dimension2Id;
+                    JRL.ReferenceDocLineId = s.JobOrderLineId;
+                    JRL.ReferenceDocTypeId = svm.DocTypeId;
+                    JRL.StockId = StockViewModel.StockId;
+
+
+                    JRL.CreatedBy = User.Identity.Name;
+                    JRL.ModifiedBy = User.Identity.Name;
+                    JRL.CreatedDate = DateTime.Now;
+                    JRL.ModifiedDate = DateTime.Now;
+                    JRL.ObjectState = Model.ObjectState.Added;
+                    db.JobReceiveLine.Add(JRL);
+
+                    JobReceiveLineStatus JRLS = new JobReceiveLineStatus();
+                    JRLS.JobReceiveLineId = JRL.JobReceiveLineId;
+                    JRLS.ObjectState = Model.ObjectState.Added;
+                    db.JobReceiveLineStatus.Add(JRLS);
+
+                    db.SaveChanges();
+                }
                 // To Create ProdOrder Only For IsSisterConcern ==true
                 Settings settingToGenerateProdOrder = new SettingsService(_unitOfWork).GetSettingsForDocument(SettingFieldNameConstants.GeneratedProdOrderDocTypeId, svm.DocTypeId, svm.DivisionId, svm.SiteId, null);
                 if (settingToGenerateProdOrder != null)
@@ -2611,13 +2716,17 @@ namespace Jobs.Controllers
 
             JobOrderLine JOL = db.JobOrderLine.Where(m => m.JobOrderLineId == vm.JobOrderLineId).FirstOrDefault();
             JobOrderHeader JOH = db.JobOrderHeader.Where(m => m.JobOrderHeaderId == JOL.JobOrderHeaderId).FirstOrDefault();
+            var settings = new JobOrderSettingsService(_unitOfWork).GetJobOrderSettingsForDocument(JOH.DocTypeId, JOH.DivisionId, JOH.SiteId);
             ViewJobOrderBalance VJ = db.ViewJobOrderBalance.Where(m => m.JobOrderLineId == vm.JobOrderLineId).FirstOrDefault();
-            if (JOL.Qty !=VJ.BalanceQty)
-            {
-                ModelState.AddModelError("Qty", "Please Check Balance Job Order Qty.");
-                PrepareViewBag(vm);
-                ViewBag.LineMode = "Delete";
-                return PartialView("_Create", vm);
+            if (settings.isAllowDirectReceive != true)
+            { 
+                if (JOL.Qty !=VJ.BalanceQty)
+                {
+                    ModelState.AddModelError("Qty", "Please Check Balance Job Order Qty.");
+                    PrepareViewBag(vm);
+                    ViewBag.LineMode = "Delete";
+                    return PartialView("_Create", vm);
+                }
             }
 
             ProdOrderLine POL = db.ProdOrderLine.Where(m => m.ReferenceDocLineId == vm.JobOrderLineId && m.ReferenceDocTypeId == JOH.DocTypeId).FirstOrDefault();
@@ -2687,6 +2796,32 @@ namespace Jobs.Controllers
                 {
                     Obj = Mapper.Map<JobOrderLine>(JobOrderLine),
                 });
+
+
+
+                if (settings.isAllowDirectReceive == true)
+                {
+                    JobReceiveLine RL = (from p in db.JobReceiveLine
+                                                     where p.JobOrderLineId == JobOrderLine.JobOrderLineId
+                                                     select p).FirstOrDefault();
+
+                    JobReceiveLineStatus RLS = (from p in db.JobReceiveLineStatus
+                                                where p.JobReceiveLineId == RL.JobReceiveLineId
+                                                select p).FirstOrDefault();
+                    if (RLS != null)
+                    {
+                        RLS.ObjectState = Model.ObjectState.Deleted;
+                        db.JobReceiveLineStatus.Remove(RLS);
+                    }
+
+                    if (RL != null)
+                    {
+                        RL.ObjectState = Model.ObjectState.Deleted;
+                        db.JobReceiveLine.Remove(RL);
+                    }
+
+                }
+
 
                 // To Delete ProdOrder Only For IsSisterConcern ==true
 
@@ -2858,7 +2993,7 @@ namespace Jobs.Controllers
 
 
 
-                var settings = new JobOrderSettingsService(_unitOfWork).GetJobOrderSettingsForDocument(header.DocTypeId, header.DivisionId, header.SiteId);
+                
                 if (settings != null)
                 {
                     new CommonService().ExecuteCustomiseEvents(settings.Event_OnLineDelete, new object[] { _unitOfWork, header.JobOrderHeaderId, JobOrderLine.JobOrderLineId });

@@ -54,6 +54,7 @@ namespace Service
 
         IEnumerable<ComboBoxList> GetProductNatureHelpList();
         IEnumerable<ComboBoxList> GetProductCategoryHelpList();
+        IEnumerable<ComboBoxList> GetFirstSaleOrderLineHelpList();
         IEnumerable<ComboBoxList> GetDimension1HelpList();
         IEnumerable<ComboBoxList> GetDimension2HelpList();
         IEnumerable<ComboBoxList> GetDimension3HelpList();
@@ -612,6 +613,27 @@ namespace Service
             });
 
             return ProdCategoryList;
+        }
+
+        public IEnumerable<ComboBoxList> GetFirstSaleOrderLineHelpList()
+        {
+            
+            IEnumerable<ComboBoxList> Helplist = (from H in db.SaleOrderHeader
+                                                  join DY in db.DocumentType on H.DocTypeId equals DY.DocumentTypeId into DocumentTypeTable
+                                                  from DocumentTypeTab in DocumentTypeTable.DefaultIfEmpty()
+                                                  join L in db.SaleOrderLine on H.SaleOrderHeaderId equals L.SaleOrderHeaderId into LTable
+                                                  from LTab in LTable.DefaultIfEmpty()
+                                                  where 1 == 1 && LTab.SaleOrderLineId != null
+                                                  group new { H, LTab } by new { H.SaleOrderHeaderId } into g
+                                                  orderby g.Max(m => m.H.DocDate), g.Max(m => m.H.DocNo)
+                                                  select new ComboBoxList
+                                                  {
+                                                      Id = g.Max(m => m.LTab.SaleOrderLineId),
+                                                      PropFirst = g.Max(m => m.H.DocType.DocumentTypeShortName) + "-" + g.Max(m => m.H.DocNo)
+                                                  });
+
+            return Helplist;
+
         }
 
         public IEnumerable<ComboBoxList> GetDimension1HelpList()

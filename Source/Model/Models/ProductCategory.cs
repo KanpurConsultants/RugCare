@@ -32,6 +32,15 @@ namespace Model.Models
         public int? DefaultSalesTaxProductCodeId { get; set; }
         public virtual SalesTaxProductCode DefaultSalesTaxProductCode { get; set; }
 
+
+
+
+        [ForeignKey("LedgerAccount")]
+        [Display(Name = "Ledger Account")]
+        public int? LedgerAccountId { get; set; }
+        public virtual LedgerAccount LedgerAccount { get; set; }
+
+
         [Display(Name = "Is System Define ?")]
         public Boolean IsSystemDefine { get; set; }
 

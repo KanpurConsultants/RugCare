@@ -30,6 +30,11 @@ namespace Model.Models
         public int? RequisitionLineId { get; set; }
         public virtual RequisitionLine RequisitionLine { get; set; }
 
+        [ForeignKey("SaleOrderLine"), Display(Name = "SaleOrder")]
+        [Index("IX_JobOrderLine_Unique", IsUnique = true, Order = 10)]
+        public int? SaleOrderLineId { get; set; }
+        public virtual SaleOrderLine SaleOrderLine { get; set; }
+
         [Display(Name = "Product"), Required]
         [ForeignKey("Product")]
         public int ProductId { get; set; }
@@ -40,7 +45,7 @@ namespace Model.Models
         public int ? FromProcessId { get; set; }
         public virtual Process FromProcess { get; set; }
 
-        [Display(Name = "Lot No."), MaxLength(10)]
+        [Display(Name = "Lot No."), MaxLength(20)]
         public string LotNo { get; set; }
 
         [Display(Name = "Qty"), Required]

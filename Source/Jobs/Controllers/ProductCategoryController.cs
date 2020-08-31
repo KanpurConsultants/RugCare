@@ -156,6 +156,7 @@ namespace Jobs.Controllers
                     temp.ProductCategoryName = pt.ProductCategoryName;
                     temp.ProductTypeId = pt.ProductTypeId;
                     temp.DefaultSalesTaxProductCodeId = pt.DefaultSalesTaxProductCodeId;
+					temp.LedgerAccountId = pt.LedgerAccountId;
                     temp.IsActive = pt.IsActive;
                     temp.ModifiedDate = DateTime.Now;
                     temp.ModifiedBy = User.Identity.Name;

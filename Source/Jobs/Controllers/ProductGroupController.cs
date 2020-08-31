@@ -180,6 +180,7 @@ namespace Jobs.Controllers
                     ProductGroup ExRec = Mapper.Map<ProductGroup>(temp);
 
                     temp.ProductGroupName = pt.ProductGroupName;
+                    temp.LedgerAccountId = pt.LedgerAccountId;
                     temp.ProductTypeId = pt.ProductTypeId;
                     temp.DefaultSalesTaxProductCodeId = pt.DefaultSalesTaxProductCodeId;
                     temp.DefaultSalesTaxGroupProductId = pt.DefaultSalesTaxGroupProductId;

@@ -691,12 +691,14 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
             AddFields("SaleInvoiceHeaderDetail", "FreightRemark", "NVARCHAR (50)");
             AddFields("SaleInvoiceHeaderDetail", "InsuranceRemark", "NVARCHAR (50)");
             AddFields("SaleInvoiceHeaderDetail", "Deduction", "Decimal(18,4)");
+            AddFields("SaleInvoiceHeaders", "Tenor", "INT");
 
             AddFields("TdsRates", "LedgerAccountId", "INT", "LedgerAccounts");
             AddFields("ProductSiteDetails", "BinLocationId", "INT", "BinLocations");
 
             AddFields("Products", "ProductCategoryId", "INT", "ProductCategories");
             AddFields("Products", "SaleRate", " Decimal(18,4)");
+            AddFields("ProductQualities", "Rate", " Decimal(18,4)");
 
             AddFields("ProductCategories", "DyeingDaysPer", " Decimal(18,4)");
             AddFields("ProductCategories", "MinimumDyeingDays", " Decimal(18,4)");
@@ -743,7 +745,7 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
             AddFields("JobReceiveLines", "isHoldForInvoice", "BIT");
             AddFields("JobReceiveLines", "ReasonInvoiceHold", "NVARCHAR(Max)");
 
-            AddFields("DocumentTypeHeaderAttributes", "IsCustomUI", "BIT");	
+            AddFields("DocumentTypeHeaderAttributes", "IsCustomUI", "BIT");
             AddFields("ProductTypeSettings", "ProductNameCaption", "NVARCHAR(Max)");
             AddFields("ProductTypeSettings", "ProductCodeCaption", "NVARCHAR(Max)");
             AddFields("ProductTypeSettings", "ProductDescriptionCaption", "NVARCHAR(Max)");
@@ -774,6 +776,7 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
 
             AddFields("DocumentTypeSettings", "CostCenterCaption", "NVARCHAR (50)");
             AddFields("DocumentTypeSettings", "SpecificationCaption", "NVARCHAR (50)");
+            AddFields("DocumentTypeSettings", "IsDefaultCreateFromWizard", "BIT");
 
             AddFields("JobInvoiceSettings", "isGenerateProductUid", "BIT");
             AddFields("JobInvoiceSettings", "isVisiblePenalty", "BIT");
@@ -785,6 +788,7 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
 
             AddFields("JobOrderSettings", "FlateRate", " Decimal(18,4)");
             AddFields("JobOrderSettings", "isVisibleFinancier", "BIT");
+            AddFields("JobOrderSettings", "isAllowDirectReceive", "BIT");
             AddFields("JobOrderSettings", "isVisibleSalesExecutive", "BIT");
             AddFields("JobOrderSettings", "isVisibleReason", "BIT");
             AddFields("JobOrderSettings", "isAllowedDuplicatePrint", "BIT NOT NULL DEFAULT(1)");
@@ -804,6 +808,8 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
             AddFields("SaleOrderSettings", "isVisibleSalesExecutive", "BIT");
             AddFields("SaleOrderHeaders", "FinancierId", "Int", "People");
             AddFields("SaleOrderHeaders", "SalesExecutiveId", "Int", "People");
+
+            AddFields("CustomHeaders", "DocId", "Int");
 
             AddFields("SaleInvoiceSettings", "isVisibleFinancier", "BIT");
             AddFields("SaleInvoiceSettings", "isVisibleSalesExecutive", "BIT");
@@ -1832,6 +1838,10 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
             AddFields("SaleInvoiceSettings", "isVisibleRewardPoints", "BIT");
 
             AddFields("SaleDispatchSettings", "isVisibleFreeQty", "BIT");
+            AddFields("SaleDispatchSettings", "isVisibleForProdOrder", "BIT");
+
+            AddFields("JobOrderSettings", "isVisibleSaleOrderLine", "BIT");
+            AddFields("StockHeaderSettings", "isVisibleSaleOrderLine", "BIT");
 
             AddFields("PackingLines", "SealNo", "nvarchar(Max)");
             AddFields("PackingLines", "RateRemark", "nvarchar(Max)");
@@ -1855,6 +1865,8 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
             AddFields("StockLines", "LossPer", "Decimal(18,4)");
             AddFields("StockLines", "StockInId", "Int","Stocks");
             AddFields("StockLines", "ProdOrderLineId", "Int", "ProdOrderLines");
+            AddFields("StockLines", "SaleOrderLineId", "Int", "SaleOrderLines");
+            AddFields("JobOrderLines", "SaleOrderLineId", "Int", "SaleOrderLines");
             AddFields("Stocks", "ProdOrderLineId", "Int", "ProdOrderLines");
 
             try
@@ -2308,6 +2320,8 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
             AddFields("Ledgers", "Priority", "Int");
 
             AddFields("ProductUids", "IsFinished", "Int");
+
+
 
 
             try
@@ -3084,6 +3098,7 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
             AddFields("PackingLines", "StockInId", "INT", "Stocks");
             AddFields("PackingLines", "ReferenceDocTypeId", "INT", "DocumentTypes");
             AddFields("PackingLines", "ReferenceDocLineId", "INT");
+            AddFields("PackingLines", "ProdOrderLineId", "Int", "ProdOrderLines");
 
             AddFields("PackingSettings", "isVisibleStockIn", "BIT");
             AddFields("PackingSettings", "isVisibleSpecification", "BIT");
@@ -4868,6 +4883,8 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
                 RecordError(ex);
             }
 
+            AddFields("ProductCategories", "LedgerAccountId", "INT", "LedgerAccounts");
+            AddFields("ProductGroups", "LedgerAccountId", "INT", "LedgerAccounts");
 
             ReCreateProcedures();
             DataCorrection();

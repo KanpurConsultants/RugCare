@@ -1294,6 +1294,13 @@ namespace Jobs.Areas.Rug.Controllers
                 return HttpNotFound();
             }
 
+            CostCenter c = db.CostCenter.Where(m => m.CostCenterId == temp.CostCenterId).FirstOrDefault();
+            if (c !=null)
+            { 
+            if (c.Status == (int)StatusConstants.Closed)
+                temp.LockReason = "Cost Center is Closed !";
+            }
+
             #region DocTypeTimeLineValidation
             try
             {

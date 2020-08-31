@@ -49,7 +49,7 @@ namespace Model.Models
         public bool? isVisibleProcessLine { get; set; }
         public bool? isVisibleProcessHeader { get; set; }
         public bool? isVisibleProdOrder { get; set; }
-
+        public bool? isVisibleSaleOrderLine { get; set; }
         public bool? isVisibleLossPer { get; set; }
         public decimal? MaxLossPer { get; set; }
 

@@ -296,6 +296,30 @@ namespace Service
 
             int? ProductLedgerAccountId = null;
             int? ChargeTypeId_SalesTaxTaxableAmount = null;
+
+            if (ProductId != null)
+            {
+                var ProductCategoryLedgerAccount = (from P in db.Product
+                                                    join Pc in db.ProductCategory on P.ProductCategoryId equals Pc.ProductCategoryId
+                                                    where P.ProductId == ProductId select Pc).FirstOrDefault();
+                if (ProductCategoryLedgerAccount != null)
+                    if (ProductCategoryLedgerAccount.LedgerAccountId != null)
+                        ProductLedgerAccountId = ProductCategoryLedgerAccount.LedgerAccountId;
+            }
+
+            if (ProductId != null)
+            {
+                var ProductGroupLedgerAccount = (from P in db.Product
+                                                    join Pc in db.ProductGroups on P.ProductGroupId equals Pc.ProductGroupId
+                                                    where P.ProductId == ProductId
+                                                    select Pc).FirstOrDefault();
+                if (ProductGroupLedgerAccount != null)
+                    if (ProductGroupLedgerAccount.LedgerAccountId != null)
+                        ProductLedgerAccountId = ProductGroupLedgerAccount.LedgerAccountId;
+            }
+
+
+
             if (ProductId != null)
             {
                 var ProductLedgerAccount = (from L in db.LedgerAccount where L.ProductId == ProductId select L).FirstOrDefault();

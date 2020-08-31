@@ -400,7 +400,7 @@
                 if(data.length!=0)
                 {
                     $.each(data, function (index, item) {
-                        row += "<tr><td><input type='hidden' class='id' value='" + item.PackingLineId + "'/></td> <td><a Detail='' href='/PackingLineWithBuyerDetail/_Detail/"+item.PackingLineId+"'>"+srno+"</a></td> <td>" + ((item.ProductUidName==null)?" ":item.ProductUidName) + "</td> <td><strong>"+item.ProductName+"</strong><br/>" + item.BuyerSKUName + "</td> <td>" + ((item.Qty==null)?" ":item.Qty) + "</td> <td>" + ((item.DealQty==null)?" ":item.DealQty ) + "</td><td>" + ((item.SaleOrderNo==null)?" ":item.SaleOrderNo )+ "</td><td> "+((item.BaleNo==null)?" ":item.BaleNo )+"</td><td> "+((item.LotNo==null)?" ":item.LotNo )+"</td> <td><a class='rowEditBlue hidden' Modify href='/PackingLineWithBuyerDetail/_Edit/"+item.PackingLineId+"' ></a></td>       <td style='padding-top:0px;padding-bottom:0px'><a class='glyphicon glyphicon-trash icon-Cus-Size' data-modal='' delete='' href='"+LineDeleteUrl+item.PackingLineId+"'></a><a  edit='' href='"+LineEditUrl+item.PackingLineId+"'></a></td>  </tr>";
+                        row += "<tr><td><input type='hidden' class='id' value='" + item.PackingLineId + "'/></td> <td><a Detail='' href='/PackingLineWithBuyerDetail/_Detail/"+item.PackingLineId+"'>"+srno+"</a></td> <td>" + ((item.ProductUidName==null)?" ":item.ProductUidName) + "</td> <td><strong>"+item.ProductName+"</strong><br/>" + item.BuyerSKUName + "<br/>" + item.Specification +"<td>" + ((item.Qty==null)?" ":item.Qty) + "</td> <td>" + ((item.DealQty==null)?" ":item.DealQty ) + "</td><td>" + ((item.SaleOrderNo==null)?" ":item.SaleOrderNo )+ "</td><td> "+((item.BaleNo==null)?" ":item.BaleNo )+"</td><td> "+((item.LotNo==null)?" ":item.LotNo )+"</td> <td><a class='rowEditBlue hidden' Modify href='/PackingLineWithBuyerDetail/_Edit/"+item.PackingLineId+"' ></a></td>       <td style='padding-top:0px;padding-bottom:0px'><a class='glyphicon glyphicon-trash icon-Cus-Size' data-modal='' delete='' href='"+LineDeleteUrl+item.PackingLineId+"'></a><a  edit='' href='"+LineEditUrl+item.PackingLineId+"'></a></td>  </tr>";
                         srno++;
                         QtyCount+=item.Qty;
                         DealQtyCount+=item.DealQty;
@@ -432,6 +432,7 @@
             },
             error: function (result) {
                 alert("Error");
+                console.log(result); 
             }
         });
     }

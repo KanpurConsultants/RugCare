@@ -36,6 +36,7 @@ namespace Model.ViewModel
         public int GodownId { get; set; }
         public int ProcessId { get; set; }
         public int JobWorkerId { get; set; }
+        public string JobWorkerDocNo { get; set; }        
         public int? JobReceiveById { get; set; }
         public int? ProductUidId { get; set; }
         public string ProductUidName { get; set; }

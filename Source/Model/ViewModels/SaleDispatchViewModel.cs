@@ -80,6 +80,10 @@ namespace Model.ViewModels
         public int? SaleOrderLineId { get; set; }
         public string SaleOrderHeaderDocNo { get; set; }
 
+        [Display(Name = "Prod Order")]
+        public int? ProdOrderLineId { get; set; }
+        public string ProdOrderHeaderDocNo { get; set; }
+
         public int? StockInId { get; set; }
         public string StockInNo { get; set; }
 

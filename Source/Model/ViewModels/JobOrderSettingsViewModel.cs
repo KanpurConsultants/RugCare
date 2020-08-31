@@ -35,6 +35,7 @@ namespace Model.ViewModel
         public bool isVisibleDealUnit { get; set; }
         public bool isVisibleDiscountPer { get; set; }
         public bool isVisibleReason { get; set; }
+        public bool isAllowDirectReceive { get; set; }
         public bool isVisibleUncountableQty { get; set; }
         public bool isVisibleFromProdOrder { get; set; }
         public string SqlProcConsumption { get; set; }
@@ -57,6 +58,7 @@ namespace Model.ViewModel
         public bool isVisibleBillToParty { get; set; }
         public bool isVisibleUnitConversionFor { get; set; }
         public bool isVisibleSpecification { get; set; }
+        public bool isVisibleSaleOrderLine { get; set; }
         public bool isVisibleCreditDays { get; set; }
         public bool isPostedInStock { get; set; }
         public bool isPostedInStockProcess { get; set; }

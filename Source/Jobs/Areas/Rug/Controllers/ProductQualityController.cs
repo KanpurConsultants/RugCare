@@ -138,6 +138,8 @@ namespace Jobs.Areas.Rug.Controllers
                     temp.TermsAndConditions = pt.TermsAndConditions;
                     temp.ProductQualityName = pt.ProductQualityName;
                     temp.LossQty = pt.LossQty;
+                    temp.Weight = pt.Weight;
+                    temp.Rate = pt.Rate;
                     temp.IsActive = pt.IsActive;
                     temp.ModifiedDate = DateTime.Now;
                     temp.ModifiedBy = User.Identity.Name;

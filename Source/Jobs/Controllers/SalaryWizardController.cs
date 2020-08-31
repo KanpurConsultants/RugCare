@@ -247,16 +247,16 @@ namespace Jobs.Controllers
                                         if (E.GrossSalary!=null && E.GrossSalary !=0 && ChargeName== ChargeConstants.PF)
                                         {
                                             if (WagesPayType == "Daily")
-                                                LineCharge.Amount = EmployeeCharge.Rate / 100 * E.GrossSalary * Line.Days;
+                                                LineCharge.Amount = Math.Round((decimal)(EmployeeCharge.Rate / 100 * E.GrossSalary * Line.Days));
                                             else
-                                                LineCharge.Amount = (EmployeeCharge.Rate / 100 * E.GrossSalary * Line.Days / SalaryData.MonthDays);
+                                                LineCharge.Amount = Math.Round((decimal)(EmployeeCharge.Rate / 100 * E.GrossSalary * Line.Days / SalaryData.MonthDays));
                                         }
                                         else
                                         {
                                             if (WagesPayType == "Daily")
-                                                LineCharge.Amount = EmployeeCharge.Rate / 100 * Line.BasicSalary * Line.Days;
+                                                LineCharge.Amount = Math.Round((decimal)(EmployeeCharge.Rate / 100 * Line.BasicSalary * Line.Days));
                                             else
-                                                LineCharge.Amount = (EmployeeCharge.Rate / 100 * Line.BasicSalary * Line.Days / SalaryData.MonthDays);
+                                                LineCharge.Amount =  Math.Round((decimal)(EmployeeCharge.Rate / 100 * Line.BasicSalary * Line.Days / SalaryData.MonthDays));
                                         }
 
                                     }
@@ -265,9 +265,9 @@ namespace Jobs.Controllers
                                         if (ChargeName == "Basic Salary")
                                         {
                                             if (WagesPayType == "Daily")
-                                                LineCharge.Amount = EmployeeCharge.Amount * Line.Days;
+                                                LineCharge.Amount = Math.Round((decimal)(EmployeeCharge.Amount * Line.Days));
                                             else
-                                                LineCharge.Amount = (EmployeeCharge.Amount * Line.Days / SalaryData.MonthDays);
+                                                LineCharge.Amount = Math.Round((decimal)(EmployeeCharge.Amount * Line.Days / SalaryData.MonthDays));
                                         }
                                         else if (ChargeName == "Net Salary")
                                         {

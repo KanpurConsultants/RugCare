@@ -36,6 +36,7 @@ namespace Service
         IEnumerable<ComboBoxList> GetJobWorkerHelpList(int Processid, string term);//PurchaseOrderHeaderId
         string FGetJobOrderCostCenter(int DocTypeId, DateTime DocDate, int DivisionId, int SiteId);
         IEnumerable<WeavingOrderWizardViewModel> GetProdOrdersForWeavingWizard(int DocTypeId);
+        IEnumerable<WeavingOrderWizardViewModel> GetProdOrdersForDyeingWizard(string Type);
         DateTime AddDueDate(DateTime Base, int DueDays);
         void UpdateProdUidJobWorkers(ref ApplicationDbContext context, JobOrderHeader Header);
         string ValidateCostCenter(int DocTypeId, int HeaderId, int JobWorkerId, string CostCenterName);
@@ -121,6 +122,7 @@ namespace Service
             
             return (from p in db.JobOrderHeader
                     join t in db.Persons on p.JobWorkerId equals t.PersonID
+                    join OB in db.Persons on p.OrderById equals OB.PersonID
                     join dt in db.DocumentType on p.DocTypeId equals dt.DocumentTypeId
                     orderby p.DocDate descending, p.DocNo descending
                     where p.DocTypeId == DocumentTypeId && p.DivisionId == DivisionId && p.SiteId == SiteId
@@ -129,6 +131,7 @@ namespace Service
                         DocTypeName = dt.DocumentTypeName,
                         DueDate = p.DueDate,
                         JobWorkerName = t.Name + "," + t.Suffix,
+                        OrderByName = OB.Name,
                         DocDate = p.DocDate,
                         DocNo = p.DocNo,
                         CostCenterName = p.CostCenter.CostCenterName,
@@ -452,6 +455,79 @@ namespace Service
                 return null;
             }
         }
+                
+
+         public IEnumerable<WeavingOrderWizardViewModel> GetProdOrdersForDyeingWizard(string Type)
+        {
+
+            int SiteId = (int)System.Web.HttpContext.Current.Session["SiteId"];
+            int DivisionId = (int)System.Web.HttpContext.Current.Session["DivisionId"];
+
+            //var settings = new JobOrderSettingsService(_unitOfWork).GetJobOrderSettingsForDocument(DocTypeId, DivisionId, SiteId);
+
+            //string[] ProductCategories = null;
+            //if (!string.IsNullOrEmpty(settings.filterProductCategories)) { ProductCategories = settings.filterProductCategories.Split(",".ToCharArray()); }
+            //else { ProductCategories = new string[] { "NA" }; }
+
+            SqlParameter SqlParameterSiteId = new SqlParameter("@SiteId", SiteId);
+            SqlParameter SqlParameterDivisionId = new SqlParameter("@DivisionId", DivisionId);
+            //SqlParameter SqlParameterDocTypeId = new SqlParameter("@DocumentTypeId", DocTypeId);
+
+            IEnumerable<WeavingOrderWizardViewModel> PendingProdOrderList = db.Database.SqlQuery<WeavingOrderWizardViewModel>("Web.ProcPendingDyeingOrderWizard @SiteId, @DivisionId", SqlParameterSiteId, SqlParameterDivisionId).ToList();
+
+            IEnumerable<WeavingOrderWizardViewModel> temp = (from p in PendingProdOrderList                                                            
+                                                             orderby p.ProdOrderLineId
+                                                             select p).ToList();
+
+
+
+
+            //var settings = new JobOrderSettingsService(_unitOfWork).GetJobOrderSettingsForDocument(DocTypeId, DivisionId, SiteId);
+
+            //string[] ContraSites = null;
+            //if (!string.IsNullOrEmpty(settings.filterContraSites)) { ContraSites = settings.filterContraSites.Split(",".ToCharArray()); }
+            //else { ContraSites = new string[] { "NA" }; }
+
+            //string[] ContraDivisions = null;
+            //if (!string.IsNullOrEmpty(settings.filterContraDivisions)) { ContraDivisions = settings.filterContraDivisions.Split(",".ToCharArray()); }
+            //else { ContraDivisions = new string[] { "NA" }; }
+
+            //string[] ContraDocTypes = null;
+            //if (!string.IsNullOrEmpty(settings.filterContraDocTypes)) { ContraDocTypes = settings.filterContraDocTypes.Split(",".ToCharArray()); }
+            //else { ContraDocTypes = new string[] { "NA" }; }
+
+            //var temp = from p in db.ViewProdOrderBalance
+            //           where (string.IsNullOrEmpty(settings.filterContraSites) ? p.SiteId == SiteId : ContraSites.Contains(p.SiteId.ToString()))
+            //           && (string.IsNullOrEmpty(settings.filterContraDivisions) ? p.DivisionId== DivisionId : ContraDivisions.Contains(p.DivisionId.ToString()))
+            //           && (string.IsNullOrEmpty(settings.filterContraDocTypes) ? 1 == 1 : ContraDocTypes.Contains(p.DocTypeId.ToString()))
+            //           join t in db.FinishedProduct on p.ProductId equals t.ProductId into table
+            //           from tab in table.DefaultIfEmpty()
+            //           join t2 in db.ViewRugSize on p.ProductId equals t2.ProductId into table2
+            //           from tab2 in table2.DefaultIfEmpty()
+            //           join t3 in db.ProdOrderHeader on p.ProdOrderHeaderId equals t3.ProdOrderHeaderId into table3
+            //           from tab3 in table3.DefaultIfEmpty()
+            //           select new WeavingOrderWizardViewModel
+            //           {
+            //               Area = tab2.ManufaturingSizeArea * p.BalanceQty,
+            //               BalanceQty = p.BalanceQty,
+            //               BuyerId = tab3.BuyerId,
+            //               BuyerName = tab3.Buyer.Person.Name,
+            //               DesignName = tab.ProductGroup.ProductGroupName,
+            //               Date = p.IndentDate.ToString(),
+            //               DocNo = p.ProdOrderNo,
+            //               DueDate = tab3.DueDate.ToString(),
+            //               Qty = p.BalanceQty,
+            //               Quality = tab.ProductQuality.ProductQualityName,
+            //               Size = tab2.ManufaturingSizeName,
+            //               ProdOrderLineId=p.ProdOrderLineId,
+            //               RefDocLineId=p.ReferenceDocLineId,
+            //               RefDocTypeId=p.ReferenceDocTypeId,
+            //               DesignPatternName=tab.ProductDesign.ProductDesignName,
+            //           };
+            return temp;
+
+        }
+
 
         public IEnumerable<WeavingOrderWizardViewModel> GetProdOrdersForWeavingWizard(int DocTypeId)//DocTypeId
         {

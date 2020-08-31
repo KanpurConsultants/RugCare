@@ -461,11 +461,13 @@ namespace Data.Models
         public DbSet<ViewSaleDispatchBalance> ViewSaleDispatchBalance { get; set; }
         public DbSet<ViewLedgerBalance> ViewLedgerBalance { get; set; }
         public DbSet<ViewSaleInvoiceBalance> ViewSaleInvoiceBalance { get; set; }
+        public DbSet<ViewSaleInvoiceHeader> ViewSaleInvoiceHeader { get; set; }
         public DbSet<ViewSaleInvoiceBalanceForWaybill> ViewSaleInvoiceBalanceForWaybill { get; set; }        
         public DbSet<SaleInvoiceReturnHeaderCharge> SaleInvoiceReturnHeaderCharge { get; set; }
         public DbSet<SaleInvoiceReturnLineCharge> SaleInvoiceReturnLineCharge { get; set; }
         public DbSet<ViewSaleInvoiceWithCustomAttribute> ViewSaleInvoiceWithCustomAttribute { get; set; }
         public DbSet<ViewCustomHeaderAttribute> ViewCustomHeaderAttribute { get; set; }
+        public DbSet<ViewShipmentDetailAttribute> ViewShipmentDetailAttribute { get; set; }
         public DbSet<CustomLineAttributes> CustomLineAttributes { get; set; }
         //Job Models
         public DbSet<LedgerHeaderCharge> LedgerHeaderCharges { get; set; }
@@ -647,6 +649,7 @@ namespace Data.Models
         public DbSet<ViewProdOrderHeader> ViewProdOrderHeader { get; set; }
         public DbSet<ViewProdOrderLine> ViewProdOrderLine { get; set; }
         public DbSet<ViewProdOrderBalance> ViewProdOrderBalance { get; set; }
+        public DbSet<ViewProdOrderBalanceForDispatch> ViewProdOrderBalanceForDispatch { get; set; }
         public DbSet<ViewProdOrderBalanceForMPlan> ViewProdOrderBalanceForMPlan { get; set; }
         public DbSet<ViewSaleInvoiceBalanceForDelivery> ViewSaleInvoiceBalanceForDelivery { get; set; }
 

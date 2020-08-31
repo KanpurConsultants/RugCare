@@ -94,7 +94,7 @@ namespace Model.Models
         [Display(Name = "Incentive Amount")]
         public Decimal IncentiveAmt { get; set; }
 
-        [Display(Name = "Lot No."), MaxLength(10)]
+        [Display(Name = "Lot No."), MaxLength(20)]
         [Index("IX_JobReceiveLine_Unique", IsUnique = true, Order = 4)]
         public string LotNo { get; set; }
 

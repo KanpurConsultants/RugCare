@@ -33,6 +33,7 @@ namespace Jobs.Controllers
             //_afterHeaderDelete += JobInvoiceEvents__afterHeaderDelete;
             _onLineSaveBulk += JobInvoiceEvents__onLineSaveBulk;
             _onHeaderSubmit += JobInvoiceEvents__onHeaderSubmit;
+            _afterHeaderSubmit += JobInvoiceEvents__afterHeaderSubmit;
         }
 
 
@@ -78,7 +79,45 @@ namespace Jobs.Controllers
         }
 
 
+        private void JobInvoiceEvents__afterHeaderSubmit(object sender, JobEventArgs EventArgs, ref ApplicationDbContext db)
+        {
 
+            int Id = EventArgs.DocId;
+
+            string ConnectionString = (string)System.Web.HttpContext.Current.Session["DefaultConnectionString"];
+
+
+            try
+            {
+
+                using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
+                {
+                    sqlConnection.Open();
+
+
+                    using (SqlCommand cmd = new SqlCommand("Web.SpUpdate_LedgerPostingInvoice"))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Connection = sqlConnection;
+                        cmd.Parameters.AddWithValue("@JobInvoiceHeaderId", Id);
+                        cmd.CommandTimeout = 1000;
+                        //cmd.Connection.Open();
+                        cmd.ExecuteNonQuery();
+                        //cmd.Connection.Close();
+                    }
+
+                }
+            }
+
+            catch (Exception ex)
+            {
+                //Header.Status = (int)StatusConstants.Drafted;
+                //new JobReceiveHeaderService(_unitOfWork).Update(Header);
+                //_unitOfWork.Save();
+                throw ex;
+            }
+            // return Redirect(ReturnUrl);
+        }
 
 
         void JobInvoiceEvents__onHeaderDelete(object sender, JobEventArgs EventArgs, ref ApplicationDbContext db)

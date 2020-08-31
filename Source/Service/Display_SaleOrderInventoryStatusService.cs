@@ -550,7 +550,7 @@ namespace Service
 
                     -----------------F Dispatched For Other -------------
 
-                    SELECT PU.SaleOrderLineId, sum(CASE WHEN isnull(SOH.SaleToBuyerId,0) = isnull(SOH1.SaleToBuyerId,0) THEN PL.Qty ELSE 0 END ) AS D_O,sum(CASE WHEN isnull(SOH.SaleToBuyerId,0) <> isnull(SOH1.SaleToBuyerId,0) THEN PL.Qty ELSE 0 END ) AS O_B
+                    SELECT isnull(PU.SaleOrderLineId, PU1.SaleOrderLineId) AS SaleOrderLineId, sum(CASE WHEN isnull(SOH.SaleToBuyerId,0) = isnull(SOH1.SaleToBuyerId,0) THEN PL.Qty ELSE 0 END ) AS D_O,sum(CASE WHEN isnull(SOH.SaleToBuyerId,0) <> isnull(SOH1.SaleToBuyerId,0) THEN PL.Qty ELSE 0 END ) AS O_B
                     INTO #FDispO
                     FROM web.SaleDispatchHeaders H WITH (Nolock)
                     LEFT JOIN web.SaleDispatchLines L WITH (Nolock) ON L.SaleDispatchHeaderId = H.SaleDispatchHeaderId 
@@ -558,14 +558,15 @@ namespace Service
                     LEFT JOIN web.SaleOrderLines SOL ON SOL.SaleOrderLineId = PL.SaleOrderLineId 
                     LEFT JOIN web.SaleOrderHeaders SOH ON SOH.SaleOrderHeaderId = SOL.SaleOrderHeaderId 
                     LEFT JOIN web.ProductUids PU WITH (Nolock) ON PU.ProductUIDId = PL.ProductUidId 
+                    LEFT JOIN web.ProductUids PU1 WITH (Nolock) ON PU1.ProductUIDName = PL.lotNo
                     LEFT JOIN web.SaleOrderLines SOL1 ON SOL1.SaleOrderLineId = PU.SaleOrderLineId 
                     LEFT JOIN web.SaleOrderHeaders SOH1 ON SOH1.SaleOrderHeaderId = SOL1.SaleOrderHeaderId 
                     LEFT JOIN Web._ViewRugSize VRS WITH (Nolock) ON PL.ProductId=VRS.ProductId
                     WHERE H.SiteId =@Site AND H.DivisionId = @Division " +
                     (Buyer != null ? " And SOH1.SaleToBuyerId IN (SELECT Items FROM [dbo].[Split] (@Buyer, ','))" : "") +
                     @" AND isnull(PU.SaleOrderLineId,0) <> isnull(PL.SaleOrderLineId,0) 
-                    AND PU.SaleOrderLineId IS NOT NULL 
-                    GROUP BY PU.SaleOrderLineId 
+                    AND isnull(PU.SaleOrderLineId, PU1.SaleOrderLineId) IS NOT NULL 
+                    GROUP BY isnull(PU.SaleOrderLineId, PU1.SaleOrderLineId)
 
 
                     ----------- Main Query-------------

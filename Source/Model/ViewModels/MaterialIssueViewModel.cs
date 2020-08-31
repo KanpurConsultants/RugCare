@@ -197,7 +197,7 @@ namespace Model.ViewModel
         public int ? FromProcessId { get; set; }
         public string FromProcessName { get; set; }
 
-        [Display(Name = "Lot No."), MaxLength(10)]
+        [Display(Name = "Lot No."), MaxLength(20)]
         public string LotNo { get; set; }
 
         [Display(Name = "Qty"), Required]

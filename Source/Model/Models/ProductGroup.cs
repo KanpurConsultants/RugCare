@@ -39,6 +39,11 @@ namespace Model.Models
         public int? DefaultSalesTaxGroupProductId { get; set; }
         public virtual ChargeGroupProduct DefaultSalesTaxGroupProduct { get; set; }
 
+        [ForeignKey("LedgerAccount")]
+        [Display(Name = "Ledger Account")]
+        public int? LedgerAccountId { get; set; }
+        public virtual LedgerAccount LedgerAccount { get; set; }
+
         public Byte RateDecimalPlaces { get; set; }
 
 

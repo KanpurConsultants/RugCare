@@ -31,6 +31,7 @@ namespace Service
         int NextId(int id);
         int PrevId(int id);
         decimal GetProdOrderBalance(int? id);//ProdOrderLineId
+
         IEnumerable<ProdOrderLine> GetProdOrderLineForMaterialPlan(int id);
         IEnumerable<ProdOrderLineViewModel> GetProdOrderForFilters(ProdOrderLineFilterViewModel vm);
         IQueryable<ComboBoxResult> GetPendingMaterialPlanHelpList(int Id, string term);//PurchaseOrderHeaderId
@@ -53,6 +54,10 @@ namespace Service
             ProdOrderLineRepository = new RepositoryQuery<ProdOrderLine>(_ProdOrderLineRepository);
         }
 
+        public ProdOrderLine Find_ByReferenceDocLineId(int ReferenceDocTypeId, int ReferenceDocLineId)
+        {
+            return _unitOfWork.Repository<ProdOrderLine>().Query().Get().Where(m => m.ReferenceDocTypeId == ReferenceDocTypeId && m.ReferenceDocLineId == ReferenceDocLineId).FirstOrDefault();
+        }
 
         public ProdOrderLine Find(int id)
         {

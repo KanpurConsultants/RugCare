@@ -116,7 +116,16 @@
                         </div>
                     </div>
                     
-
+                    <div class="col-md-6" style="display:@(Model.StockHeaderSettings.isVisibleSaleOrderLine?"":"none")">
+                        @Html.HiddenFor(m => m.StockHeaderSettings.isVisibleSaleOrderLine)
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.SaleOrderLineId, "Sale Order", new { @class = "control-label col-md-4 col-sm-2" })
+                            <div class="col-md-7 col-sm-10">
+                                @Html.TextBoxFor(model => model.SaleOrderLineId, new { @class = "form-control col-xs-7 required" })
+                                @Html.ValidationMessageFor(model => model.SaleOrderLineId, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="col-md-6" style="display:@(Model.StockHeaderSettings.isVisibleSpecification?"":"none")">
                         @Html.HiddenFor(m => m.StockHeaderSettings.isVisibleSpecification)
@@ -331,6 +340,7 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
+        CustomSelectFunction($("#SaleOrderLineId"), '/ComboHelpList/GetFirstSaleOrderLine', '/ComboHelpList/SetSingleSaleOrderLine', ' ', false, 0);
         CustomSelectFunction($("#ProductId"), '/StockIssueLine/GetProductsHelpList', '/ComboHelpList/SetSingleProducts', ' ', false, 0,$('#StockHeaderId','.modal-body').val());
         CustomSelectFunction($("#Dimension1Id"), '/ComboHelpList/GetDimension1', '/ComboHelpList/SetSingleDimension1', ' ', false, 0);
         CustomSelectFunction($("#Dimension2Id"), '/ComboHelpList/GetDimension2', '/ComboHelpList/SetSingleDimension2', ' ', false, 0);

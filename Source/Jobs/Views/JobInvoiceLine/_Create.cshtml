@@ -368,7 +368,7 @@ else
     });
 
     function Validate_SalesTaxGroupProduct() {
-        GetChargeRates('@Model.JobInvoiceSettings.CalculationId',$('#DocTypeId','.modal-body').val(),$('#SiteId','.modal-body').val(),$('#DivisionId','.modal-body').val(),$('#JobInvoiceSettings_ProcessId','.modal-body').val(),$('#SalesTaxGroupPersonId','.modal-body').val(),$('#SalesTaxGroupProductId','.modal-body').val());
+        GetChargeRates('@Model.JobInvoiceSettings.CalculationId',$('#DocTypeId','.modal-body').val(),$('#SiteId','.modal-body').val(),$('#DivisionId','.modal-body').val(),$('#JobInvoiceSettings_ProcessId','.modal-body').val(),$('#SalesTaxGroupPersonId','.modal-body').val(),$('#SalesTaxGroupProductId','.modal-body').val(),$('#ProductId','.modal-body').val());
     }
 
     function LockFields(){
@@ -504,7 +504,7 @@ else
 
                         LockFields();
 
-                        GetChargeRates('@Model.JobInvoiceSettings.CalculationId',$('#DocTypeId','.modal-body').val(),$('#SiteId','.modal-body').val(),$('#DivisionId','.modal-body').val(),$('#JobInvoiceSettings_ProcessId','.modal-body').val(),$('#SalesTaxGroupPersonId','.modal-body').val(),$('#SalesTaxGroupProductId','.modal-body').val())
+                        GetChargeRates('@Model.JobInvoiceSettings.CalculationId',$('#DocTypeId','.modal-body').val(),$('#SiteId','.modal-body').val(),$('#DivisionId','.modal-body').val(),$('#JobInvoiceSettings_ProcessId','.modal-body').val(),$('#SalesTaxGroupPersonId','.modal-body').val(),$('#SalesTaxGroupProductId','.modal-body').val(),$('#ProductId','.modal-body').val())
                         ChargeCalculation();
 
                     },
@@ -590,7 +590,7 @@ else
                         cache: false,
                         type: "POST",
                         url: "@(Url.Action("GetCustomProducts"))",
-                        data: { id:DocID, JobWorkerId:$("#JobWorkerId", '.modal-body').val(), term:request.term,Limit:30 },
+                        data: { id:DocID, JobWorkerId:$("#JobWorkerId", '.modal-body').val(), term:request.term,Limit:50 },
                         success: function (data) {
                             if(data.length>0){
                                 var cachearray = data.error ? [] : $.map(data, function(m) {

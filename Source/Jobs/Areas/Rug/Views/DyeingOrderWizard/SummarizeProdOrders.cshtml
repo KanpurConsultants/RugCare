@@ -70,6 +70,9 @@
                     <th>Rate</th>
                     <th>Excess-%</th>
                     <th>ProdOrderLineId</th>
+                    <th>ProductId</th>
+                    <th>Dimension1Id</th>
+                    <th>Dimension2Id</th>
                 </tr>
             </thead>
             <tfoot>
@@ -90,6 +93,7 @@
 
     var rSelected = [];
     var AllowedPerc = '@ViewBag.AllowedPerc'
+    var id = '@ViewBag.id'
 
     $(document).ready(function () {
         var tab = $('#example').DataTable({
@@ -108,7 +112,10 @@
                 { "data": "Qty", className: "TextRight", "width": "7%", "render": function (data, type, row) { return '<input style="width:100%;text-align:right" class="Qty"  type="text" name="Qty' + row.ProdOrderLineId + '" id="Qty' + row.ProdOrderLineId + '" value="' + data + '"/>'; } },
                 { "data": "Rate", className: "TextRight", "width": "7%", "render": function (data, type, row) { return '<input style="width:100%;text-align:right" class="Rate"  type="text" name="Rate' + row.ProdOrderLineId + '" id="Rate' + row.ProdOrderLineId + '" value="' + data + '"/>'; } },
                 { "data": "Excess", className: "TextRight Excess", "width": "7%", "render": function (data, type, row) { return ''; } },
-                { "data": "ProdOrderLineId", "searchable": false, className: "DTHidden", }
+                { "data": "ProdOrderLineId", "searchable": false, className: "DTHidden", },
+                { "data": "ProductId", "searchable": false, className: "DTHidden", },
+                { "data": "Dimension1Id", "searchable": false, className: "DTHidden", },
+                { "data": "Dimension2Id", "searchable": false, className: "DTHidden", }
             ],
             dom: 'T<"clear">frti',
             TableTools: {
@@ -255,7 +262,7 @@
             var test = table.rows('.rSelected').data();
             var List = [];
             $.each(test, function (index, value) {
-                List.push({ ProdOrderLineId: value.ProdOrderLineId, Qty: value.Qty, Rate: value.Rate });
+                List.push({ ProdOrderLineId: value.ProdOrderLineId, ProductId: value.ProductId, Dimension1Id: value.Dimension1Id, Dimension2Id: value.Dimension2Id, Qty: value.Qty, Rate: value.Rate });
             })
 
             var Errorrec = table.rows('.qtyExceeded').data();
@@ -265,7 +272,7 @@
                 $.ajax({
                     url: $(this).attr('href'),
                     type: "POST",
-                    data: { ProdOrderLineId: List, CancelBalProdOrdrs: $('#cProdOrders').is(":checked") },
+                    data: { ProdOrderLineId: List, CancelBalProdOrdrs: $('#cProdOrders').is(":checked"), id: id },
                     success: function (result) {
                         if (result.Success == true) {
 

@@ -101,6 +101,7 @@ namespace Model.Models
         public bool? isVisibleProductCode { get; set; }
         public bool? isVisibleBaleNo { get; set; }
         public bool? isVisibleForSaleOrder { get; set; }
+        public bool? isVisibleForProdOrder { get; set; }
         public bool? isVisibleWeight { get; set; }
 
 

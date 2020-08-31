@@ -55,12 +55,11 @@ namespace Jobs.Controllers
             return View("DocumentTypeList", p);
         }
 
-        public ActionResult JobOrderLineStatusUpdate(int Id, string WizardType)
+        public ActionResult JobOrderLineStatusUpdate(int Id)
         {
             ViewBag.Id = Id;
             ViewBag.Name = "Status Update -" + new DocumentTypeService(_unitOfWork).Find(Id).DocumentTypeName;
-            if (WizardType==null) 
-            ViewBag.WizardType = "All Dispatch";
+            ViewBag.WizardType = "Pending To Production";
 
             return View();
         }
@@ -166,11 +165,11 @@ namespace Jobs.Controllers
             if (string.IsNullOrEmpty(Fvm.WizardType) || Fvm.WizardType == "Pending To Production")
                 mQry = mQry + " AND  VS.ProductionNo is Null";
             else if (string.IsNullOrEmpty(Fvm.WizardType) || Fvm.WizardType == "All Production")
-                mQry = mQry + " AND  VS.DispatchNo is Null ";
+                mQry = mQry + " AND  VS.ProductionNo is Not Null ";
             else if (string.IsNullOrEmpty(Fvm.WizardType) || Fvm.WizardType == "Pending To Dispatch")
                 mQry = mQry + " AND  VS.ProductionNo is Not Null AND  VS.DispatchNo is Null ";
             else if (string.IsNullOrEmpty(Fvm.WizardType) || Fvm.WizardType == "All Dispatch")
-                mQry = mQry + " AND  VS.ProductionNo is Not Null ";
+                mQry = mQry + " AND  VS.DispatchNo is Not Null ";
 
             IEnumerable<JobOrderLineStatusViewModel> _data1 = db.Database.SqlQuery<JobOrderLineStatusViewModel>(mQry).ToList();
 
@@ -258,11 +257,11 @@ namespace Jobs.Controllers
         }
 
 
-        [HttpPost]
-        public ActionResult _FilterPost(FilterJobOrderLineStatusArgs vm)
-        {         
-         return RedirectToAction("JobOrderLineStatusUpdate", new { Id=vm.DocumentTypeId, WizardType=vm.WizardType });
-        }
+        //[HttpPost]
+        //public ActionResult _FilterPost(FilterJobOrderLineStatusArgs vm)
+        //{         
+        // return RedirectToAction("JobOrderLineStatusUpdate", new { Id=vm.DocumentTypeId, WizardType=vm.WizardType });
+        //}
 
         protected override void Dispose(bool disposing)
         {

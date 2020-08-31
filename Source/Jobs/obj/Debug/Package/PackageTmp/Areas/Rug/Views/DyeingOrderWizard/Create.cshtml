@@ -139,8 +139,10 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6" style='display:@(Model.JobOrderSettings.isPostedInStock?"":"none")'>
-                                @Html.HiddenFor(m => m.JobOrderSettings.isPostedInStock)
+
+                            <div class="col-md-6" style='display:@(Model.JobOrderSettings.isVisibleGodown?"":"none")'>
+                                @Html.HiddenFor(m => m.JobOrderSettings.isVisibleGodown)
+                                @Html.HiddenFor(m => m.JobOrderSettings.isMandatoryGodown)
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.GodownId, "Godown", new { @class = "control-label col-xs-4" })
                                     <div class="col-xs-6">

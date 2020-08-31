@@ -1755,7 +1755,7 @@ namespace Jobs.Areas.Rug.Controllers
 	
 	SELECT 
 	--Header Table Fields	
-	H.StockHeaderId,H.DocTypeId,H.DocNo,DocIdCaption+' No' AS DocIdCaption ,
+	H.StockHeaderId,H.DocTypeId,Dt.DocumentTypeShortName +'-'+ H.DocNo AS DocNo,DocIdCaption+' No' AS DocIdCaption ,
 	H.SiteId,H.DivisionId,H.DocDate,DTS.DocIdCaption +' Date' AS DocIdCaptionDate,
 	PS.ProcessName AS ProcessName, 	H.Remark,DT.DocumentTypeShortName,(CASE WHEN H.IsGatePassPrinted=1 THEN NULL ELSE  H.GatePassHeaderId END) as GatePassHeaderId,H.ModifiedBy +' ' + Replace(replace(convert(NVARCHAR, H.ModifiedDate, 106), ' ', '/'),'/20','/') + substring (convert(NVARCHAR,H.ModifiedDate),13,7) AS ModifiedBy,
 	H.ModifiedDate,(CASE WHEN Isnull(H.Status,0)=0 OR Isnull(H.Status,0)=8 THEN 0 ELSE 1 END)  AS Status,

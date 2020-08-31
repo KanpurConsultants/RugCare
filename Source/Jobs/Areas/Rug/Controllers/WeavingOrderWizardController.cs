@@ -254,7 +254,10 @@ namespace Jobs.Areas.Rug.Controllers
 
             int ProdOrderLineId = ProdOrderLin.ProdOrderLineId;
 
+            if (System.Web.HttpContext.Current.Session["DefaultGodownId"] != null)
+            { 
             p.GodownId = (int)System.Web.HttpContext.Current.Session["DefaultGodownId"];
+            }
 
             var DesignPatternId = (from pol in db.ProdOrderLine
                                    where pol.ProdOrderLineId == ProdOrderLineId

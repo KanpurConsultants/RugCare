@@ -68,6 +68,18 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
+                            @Html.LabelFor(model => model.LedgerAccountId, "Ledger Account", new { @class = "control-label col-xs-4" })
+                            <div class="col-md-7 col-sm-10">
+                                @Html.TextBoxFor(m => m.LedgerAccountId, null, new { @class = "form-control col-xs-6 " })
+                                @Html.ValidationMessageFor(m => m.LedgerAccountId, null, new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
                             @Html.LabelFor(model => model.IsActive, "Is Active", new { @class = "control-label col-md-4 col-sm-2" })
                             <div class="col-md-7 col-sm-10" style=" padding-top:4px">
                                 @Html.CheckBoxFor(m => m.IsActive, new { @class = "checkbox col-xs-1" })
@@ -98,6 +110,7 @@
 
     $(document).ready(function () {
         CustomSelectFunction($("#DefaultSalesTaxProductCodeId"), '/ComboHelpList/GetSalesTaxProductCodes', '/ComboHelpList/SetSingleSalesTaxProductCode', ' ', false, 0);
+        CustomSelectFunction($("#LedgerAccountId"), '/ComboHelpList/GetLedgerAccounts', '/ComboHelpList/SetSingleLedgerAccount', ' ', false, 0);
     });
 
      var IsSaved=false;

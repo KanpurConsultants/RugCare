@@ -136,7 +136,7 @@ namespace Jobs.Areas.Rug.Controllers
 
 
             string mQry = @"SELECT L.JobReceiveLineId, Max(L.JobOrderLineId) AS JobOrderLineId, isnull(Max(JRQP.JobReceiveQAPenaltyId),0) AS JobReceiveQAPenaltyId,
-                            max(PU.ProductUidName) AS ProductUidName, Max(H.DocNo)AS DocNo, Max(DT.DocumentTypeShortName) + '-' + Max(JOH.DocNo) AS OrderNo,
+                            max(PU.ProductUidName) AS ProductUidName, Max(H.DocNo)AS DocNo, Max(DT.DocumentTypeShortName) + '-' + Max(JOH.DocNo) AS OrderNo, convert(NVARCHAR,Max(JOH.DocDate),103) AS OrderDate,
                             convert(NVARCHAR,Max(H.DocDate),103) AS DocDate, Max(JW.name) AS JobWorkerName, Max(R.ReasonName) AS PenaltyResion,
                             Max(PC.ProductCategoryName) ProductCategory, Max(PQ.ProductQualityName) ProductQuality,  Max(P.ProductName) ProductName,
                             Max( CASE WHEN L.isHoldForInvoice = 1 THEN 'Yes' ELSE 'No' END ) IsHoldForInvoice,
@@ -175,7 +175,8 @@ namespace Jobs.Areas.Rug.Controllers
                 DocNo = m.DocNo,
                 OrderNo = m.OrderNo,
                 DocDate = m.DocDate,
-                IsHoldForInvoice=m.IsHoldForInvoice,
+                OrderDate=m.OrderDate,
+                IsHoldForInvoice =m.IsHoldForInvoice,
                 JobWorkerName = m.JobWorkerName,
                 PenaltyRemark = m.PenaltyRemark,
                 PenaltyResion = m.PenaltyResion,
@@ -199,6 +200,7 @@ namespace Jobs.Areas.Rug.Controllers
             public string DocNo { get; set; }
             public string OrderNo { get; set; }
             public string DocDate { get; set; }
+            public string OrderDate { get; set; }
             public string JobWorkerName { get; set; }
             public string ProductCategory { get; set; }
             public string ProductQuality { get; set; }            

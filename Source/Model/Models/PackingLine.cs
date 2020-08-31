@@ -47,6 +47,11 @@ namespace Model.Models
         public int? SaleOrderLineId { get; set; }
         public virtual SaleOrderLine SaleOrderLine { get; set; }
 
+        [Display(Name = "Prod Order")]
+        [ForeignKey("ProdOrderLine")]
+        public int? ProdOrderLineId { get; set; }
+        public virtual ProdOrderLine ProdOrderLine { get; set; }
+
         [Display(Name = "Sale Delivery Order")]
         [ForeignKey("SaleDeliveryOrderLine")]
         public int? SaleDeliveryOrderLineId { get; set; }

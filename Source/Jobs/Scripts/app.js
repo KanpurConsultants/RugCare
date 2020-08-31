@@ -247,6 +247,20 @@ app.controller('MainCtrl', ['$scope', '$log', '$http', 'uiGridConstants', 'uiGri
               }
           }
 
+          selects = document.getElementsByTagName('select');
+          for (index = 0; index < selects.length; ++index)
+          {
+              if (selects[index].type == 'select-one' && selects[index].hidden == false && selects[index].id.toString().toLowerCase().indexOf("autogen") === -1) {
+                  var selectid = selects[index].id
+                  var Caption = selectid.replace(/([A-Z])/g, ' $1').trim()
+                  if ($("#" + selectid).val() != '' && $("#" + selectid).val() != null) {
+                      if (FilterStr != "") { FilterStr = FilterStr.concat(", "); }
+                      FilterStr = FilterStr.concat(Caption + ' : ' + $("#" + selectid).val());
+                  }
+              }
+          }
+          
+
           divs = document.getElementsByTagName('div');
           for (index = 0; index < divs.length; ++index) {
               if (divs[index].id.toString().toLowerCase().indexOf("s2id_") != -1) {
@@ -260,7 +274,7 @@ app.controller('MainCtrl', ['$scope', '$log', '$http', 'uiGridConstants', 'uiGri
                           if (i > 0) { FilterStr = FilterStr.concat(", "); }
                           FilterStr = FilterStr.concat($("#" + divid).select2('data')[i].text);
                       }
-                  }
+                  }                  
               }
           }
 

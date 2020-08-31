@@ -70,6 +70,7 @@ namespace Service
                         DealQtyCaption = DocumentTypeSettingsTab.DealQtyCaption,
                         WeightCaption = DocumentTypeSettingsTab.WeightCaption,
                         DocIdCaption= DocumentTypeSettingsTab.DocIdCaption,
+                        IsDefaultCreateFromWizard = DocumentTypeSettingsTab.IsDefaultCreateFromWizard,
                         CostCenterCaption = DocumentTypeSettingsTab.CostCenterCaption,
                         SpecificationCaption = DocumentTypeSettingsTab.SpecificationCaption,
                         ReferenceDocTypeCaption = DocumentTypeSettingsTab.ReferenceDocTypeCaption,

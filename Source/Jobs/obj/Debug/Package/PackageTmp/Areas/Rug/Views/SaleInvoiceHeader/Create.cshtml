@@ -266,10 +266,10 @@
 
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                @Html.LabelFor(model => model.ShipMethodId, "Ship Method", new { @class = "control-label col-xs-4" })
+                                                @Html.LabelFor(model => model.Tenor, "Tenor", new { @class = "control-label col-xs-4" })
                                                 <div class="col-xs-6">
-                                                    @Html.DropDownListFor(m => m.ShipMethodId, new SelectList(ViewBag.ShipMethodList as System.Collections.IEnumerable, "ShipMethodId", "ShipMethodName"), new { @class = "form-control col-xs-6 height" })
-                                                    @Html.ValidationMessageFor(model => model.ShipMethodId)
+                                                    @Html.TextBoxFor(m => m.Tenor, new { @class = "form-control col-xs-6" })
+                                                    @Html.ValidationMessageFor(model => model.Tenor)
                                                 </div>
                                             </div>
                                         </div>
@@ -301,20 +301,20 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                @Html.LabelFor(model => model.PrivateMark, "Private Mark", new { @class = "control-label col-xs-4" })
+                                                @Html.LabelFor(model => model.PortOfLoading, "Port Of Loading", new { @class = "control-label col-xs-4" })
                                                 <div class="col-xs-6">
-                                                    @Html.TextBoxFor(m => m.PrivateMark, new { @class = "form-control col-xs-6 height" })
-                                                    @Html.ValidationMessageFor(model => model.PrivateMark)
+                                                    @Html.TextBoxFor(m => m.PortOfLoading, new { @class = "form-control col-xs-6 height" })
+                                                    @Html.ValidationMessageFor(model => model.PortOfLoading)
                                                 </div>
                                             </div>
                                         </div>
 
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                @Html.LabelFor(model => model.PortOfLoading, "Port Of Loading", new { @class = "control-label col-xs-4" })
+                                                @Html.LabelFor(model => model.ShipMethodId, "Ship Method", new { @class = "control-label col-xs-4" })
                                                 <div class="col-xs-6">
-                                                    @Html.TextBoxFor(m => m.PortOfLoading, new { @class = "form-control col-xs-6 height" })
-                                                    @Html.ValidationMessageFor(model => model.PortOfLoading)
+                                                    @Html.DropDownListFor(m => m.ShipMethodId, new SelectList(ViewBag.ShipMethodList as System.Collections.IEnumerable, "ShipMethodId", "ShipMethodName"), new { @class = "form-control col-xs-6 height" })
+                                                    @Html.ValidationMessageFor(model => model.ShipMethodId)
                                                 </div>
                                             </div>
                                         </div>
@@ -566,17 +566,26 @@
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-md-6">
                                             <div class="form-group">
-                                                @Html.LabelFor(model => model.TermsOfSale, "Terms Of Sale", new { @class = "control-label col-xs-2" })
-                                                <div class="col-xs-9">
+                                                @Html.LabelFor(model => model.TermsOfSale, "Terms Of Sale", new { @class = "control-label col-xs-4" })
+                                                <div class="col-xs-6">
                                                     @Html.TextAreaFor(m => m.TermsOfSale, new { @class = "form-control col-xs-6" })
                                                     @Html.ValidationMessageFor(model => model.TermsOfSale)
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
 
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.PrivateMark, "Private Mark", new { @class = "control-label col-xs-4" })
+                                                <div class="col-xs-6">
+                                                    @Html.TextAreaFor(m => m.PrivateMark, new { @class = "form-control col-xs-6" })
+                                                    @Html.ValidationMessageFor(model => model.PrivateMark)
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
 
 
                                     <div class="row">

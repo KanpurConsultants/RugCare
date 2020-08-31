@@ -751,9 +751,9 @@ namespace Service
                     LEFT JOIN web.ProductQualities PQ WITH (Nolock) ON PQ.ProductQualityId = FP.ProductQualityId
                     WHERE 1=1 AND isnull(J.IsSisterConcern,0)=0 
                     And PB.PersonBlockedDocumentTypeId IS NULL 
-                    AND isnull(H.BalanceQty,0) >0 AND PC.ProductCategoryName <> 'OVER TUFT' 
+                    AND isnull(H.BalanceQty,0) >0 --AND PC.ProductCategoryName <> 'OVER TUFT' 
 					GROUP BY SOH.SaleToBuyerId, JOH.JobWorkerId, H.ProductId					
-					UNION ALL 
+					/*UNION ALL 
                     SELECT Max(B.Code) AS Buyer, Max(JW.Name)+'-'+Max(S.SiteCode) JobWorker, Max(P.ProductName) AS ProductName, Max(PC.ProductCategoryName) ProductCategoryName, Max(PQ.ProductQualityName) AS ProductQualityName,
                     Sum(isnull(L.Qty, 0)-isnull(V.RecQty, 0)) AS Qty,  Sum((isnull(L.Qty, 0)-isnull(V.RecQty, 0))*(web.FConvertSqFeetToSqYard(VRS.ManufaturingSizeArea))) AS Area
                     FROM web.JobOrderHeaders H WITH(Nolock)
@@ -792,7 +792,7 @@ namespace Service
                     And PB.PersonBlockedDocumentTypeId IS NULL 
                     AND POL.ProdOrderHeaderId IS NOT NULL AND PC.ProductCategoryName = 'OVER TUFT'
                     AND isnull(L.Qty, 0)-isnull(V.RecQty, 0) > 0 
-                    GROUP BY SOH.SaleToBuyerId,H.JobWorkerId, L.ProductId  ";
+                    GROUP BY SOH.SaleToBuyerId,H.JobWorkerId, L.ProductId */ ";
             return mQry;
         }
         public IEnumerable<DashBoardDoubleValue> GetOnLoomSummary()
@@ -846,8 +846,7 @@ namespace Service
         //10 Block
         public string GetDyeingOrderBalance()
         {
-            mQry = @"
-                    SELECT H.DocDate AS DocDate, P.ProductName, JW.Name AS JobWorkerName,
+            mQry = @"SELECT  Max(H.DocDate) AS DocDate, Max(P.ProductName) AS ProductName, Max(JW.Name) AS JobWorkerName,
 					sum(L.Qty - isnull(CL.CQty,0) - isnull(SL.Qty,0) + isnull(RT.Qty,0) ) AS Qty
                     FROM Web.JobOrderHeaders H WITH (Nolock)
                     LEFT JOIN web.People JW ON JW.PersonID =  H.JobWorkerId 
@@ -860,21 +859,21 @@ namespace Service
                     ) CL ON CL.JobOrderLineId = L.JobOrderLineId
                     LEFT JOIN 
                     (
-                    SELECT L.JobOrderLineId, sum(L.Qty) AS Qty  
+                    SELECT L.JobOrderLineId, sum(isnull(L.Qty,0)+isnull(L.LossQty,0)) AS Qty 
                     FROM web.JobReceiveHeaders  H WITH (Nolock)
                     LEFT JOIN web.JobReceiveLines L WITH (Nolock) ON L.JobReceiveHeaderId = H.JobReceiveHeaderId
                     GROUP BY L.JobOrderLineId                    
                     ) SL ON SL.JobOrderLineId = L.JobOrderLineId
                     LEFT JOIN 
                     (
-                    SELECT L.JobOrderLineId, sum(RT.Qty) AS Qty  
+                    SELECT L.JobOrderLineId, sum( isnull(RT.Qty,0)+isnull(RT.LossQty,0)) AS Qty  
                     FROM web.JobReturnLines  RT WITH (Nolock)
                     LEFT JOIN web.JobReceiveLines L WITH (Nolock) ON L.JobReceiveLineId = RT.JobReceiveLineId
                     GROUP BY L.JobOrderLineId                    
                     ) RT ON RT.JobOrderLineId = L.JobOrderLineId
-                    WHERE 1=1 AND H.ProcessId =1003
+                    WHERE 1=1 AND H.ProcessId =1003 AND H.SiteId =1
                     AND L.Qty - isnull(CL.CQty,0) - isnull(SL.Qty,0) > 0
-                    GROUP BY H.DocDate, P.ProductName, JW.Name ";
+                    GROUP BY L.JobOrderLineId ";
             return mQry;
         }
         public IEnumerable<DashBoardSingleValue> GetDyeingOrderBalanceSummary()

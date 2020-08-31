@@ -19,6 +19,7 @@ namespace Core.Common
     {
         public const string DefaultDocDate = "DefaultDocDate";
         public const string GeneratedProdOrderDocTypeId = "GeneratedProdOrderDocTypeId";
+        public const string GeneratedProdOrderBuyerId = "GeneratedProdOrderBuyerId";
         public const string ExtraYarnPercentageRequiredForDyeing = "ExtraYarnPercentageRequiredForDyeing";
     }
 

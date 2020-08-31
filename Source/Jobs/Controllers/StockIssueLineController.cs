@@ -1003,7 +1003,7 @@ namespace Jobs.Controllers
                     }
 
 
-
+                    templine.SaleOrderLineId = s.SaleOrderLineId;
                     templine.ProductId = s.ProductId;
                     templine.ProductUidId = s.ProductUidId;
                     templine.RequisitionLineId = s.RequisitionLineId;
@@ -1190,6 +1190,13 @@ namespace Jobs.Controllers
             if (temp == null)
             {
                 return HttpNotFound();
+            }
+
+            CostCenter c = db.CostCenter.Where(m => m.CostCenterId == temp.CostCenterId).FirstOrDefault();
+            if (c != null)
+            {
+                if (c.Status == (int)StatusConstants.Closed)
+                    temp.LockReason = "Cost Center is Closed !";
             }
 
             #region DocTypeTimeLineValidation

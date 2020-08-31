@@ -18,34 +18,46 @@
               <Width>0.48571in</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>0.85141in</Width>
+              <Width>0.7in</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>0.78917in</Width>
+              <Width>0.7in</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>0.74436in</Width>
+              <Width>0.2in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>0.2in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>0.2in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>0.2in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>0.2in</Width>
             </TablixColumn>
             <TablixColumn>
               <Width>0.55402in</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>0.43494in</Width>
+              <Width>0.43117in</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>0.47917in</Width>
+              <Width>0.55209in</Width>
             </TablixColumn>
             <TablixColumn>
               <Width>0.49735in</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>0.5945in</Width>
+              <Width>0.55458in</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>0.36533in</Width>
+              <Width>0.52269in</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>0.66311in</Width>
+              <Width>0.47917in</Width>
             </TablixColumn>
           </TablixColumns>
           <TablixRows>
@@ -63,8 +75,8 @@
                             <TextRun>
                               <Value>Roll # </Value>
                               <Style>
-                                <FontFamily>tahoma</FontFamily>
-                                <FontSize>7pt</FontSize>
+                                <FontFamily>Arial Narrow</FontFamily>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -98,7 +110,6 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
-                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
@@ -112,8 +123,8 @@
                             <TextRun>
                               <Value>Sl.</Value>
                               <Style>
-                                <FontFamily>tahoma</FontFamily>
-                                <FontSize>7pt</FontSize>
+                                <FontFamily>Arial Narrow</FontFamily>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -127,8 +138,8 @@
                             <TextRun>
                               <Value>#</Value>
                               <Style>
-                                <FontFamily>tahoma</FontFamily>
-                                <FontSize>7pt</FontSize>
+                                <FontFamily>Arial Narrow</FontFamily>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -162,7 +173,6 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
-                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
@@ -176,8 +186,8 @@
                             <TextRun>
                               <Value>Quality</Value>
                               <Style>
-                                <FontFamily>tahoma</FontFamily>
-                                <FontSize>7pt</FontSize>
+                                <FontFamily>Arial Narrow</FontFamily>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -211,7 +221,6 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
-                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
@@ -225,8 +234,8 @@
                             <TextRun>
                               <Value>Carpet #</Value>
                               <Style>
-                                <FontFamily>tahoma</FontFamily>
-                                <FontSize>7pt</FontSize>
+                                <FontFamily>Arial Narrow</FontFamily>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -260,7 +269,6 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
-                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
@@ -274,8 +282,8 @@
                             <TextRun>
                               <Value>Design</Value>
                               <Style>
-                                <FontFamily>tahoma</FontFamily>
-                                <FontSize>7pt</FontSize>
+                                <FontFamily>Arial Narrow</FontFamily>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -309,7 +317,6 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
-                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
@@ -323,8 +330,8 @@
                             <TextRun>
                               <Value>Colour</Value>
                               <Style>
-                                <FontFamily>tahoma</FontFamily>
-                                <FontSize>7pt</FontSize>
+                                <FontFamily>Arial Narrow</FontFamily>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -358,58 +365,285 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
-                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="Textbox250">
-                      <CanGrow>true</CanGrow>
-                      <KeepTogether>true</KeepTogether>
-                      <Paragraphs>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value>Size</Value>
-                              <Style>
-                                <FontFamily>tahoma</FontFamily>
-                                <FontSize>7pt</FontSize>
-                                <FontWeight>Bold</FontWeight>
-                              </Style>
-                            </TextRun>
-                          </TextRuns>
-                          <Style>
-                            <TextAlign>Center</TextAlign>
-                          </Style>
-                        </Paragraph>
-                      </Paragraphs>
-                      <rd:DefaultName>Textbox249</rd:DefaultName>
+                    <Tablix Name="Tablix1">
+                      <TablixBody>
+                        <TablixColumns>
+                          <TablixColumn>
+                            <Width>0.2in</Width>
+                          </TablixColumn>
+                          <TablixColumn>
+                            <Width>0.2in</Width>
+                          </TablixColumn>
+                          <TablixColumn>
+                            <Width>0.2in</Width>
+                          </TablixColumn>
+                          <TablixColumn>
+                            <Width>0.2in</Width>
+                          </TablixColumn>
+                          <TablixColumn>
+                            <Width>0.2in</Width>
+                          </TablixColumn>
+                        </TablixColumns>
+                        <TablixRows>
+                          <TablixRow>
+                            <Height>0.16667in</Height>
+                            <TablixCells>
+                              <TablixCell>
+                                <CellContents>
+                                  <Textbox Name="Textbox35">
+                                    <CanGrow>true</CanGrow>
+                                    <KeepTogether>true</KeepTogether>
+                                    <Paragraphs>
+                                      <Paragraph>
+                                        <TextRuns>
+                                          <TextRun>
+                                            <Value>Size</Value>
+                                            <Style>
+                                              <FontFamily>tahoma</FontFamily>
+                                              <FontSize>7pt</FontSize>
+                                              <FontWeight>Bold</FontWeight>
+                                            </Style>
+                                          </TextRun>
+                                        </TextRuns>
+                                        <Style>
+                                          <TextAlign>Center</TextAlign>
+                                        </Style>
+                                      </Paragraph>
+                                    </Paragraphs>
+                                    <rd:DefaultName>Textbox35</rd:DefaultName>
+                                    <Style>
+                                      <Border>
+                                        <Style>Solid</Style>
+                                      </Border>
+                                      <PaddingLeft>2pt</PaddingLeft>
+                                      <PaddingRight>2pt</PaddingRight>
+                                      <PaddingTop>2pt</PaddingTop>
+                                      <PaddingBottom>2pt</PaddingBottom>
+                                    </Style>
+                                  </Textbox>
+                                  <ColSpan>5</ColSpan>
+                                </CellContents>
+                              </TablixCell>
+                              <TablixCell />
+                              <TablixCell />
+                              <TablixCell />
+                              <TablixCell />
+                            </TablixCells>
+                          </TablixRow>
+                          <TablixRow>
+                            <Height>0.16667in</Height>
+                            <TablixCells>
+                              <TablixCell>
+                                <CellContents>
+                                  <Textbox Name="Textbox57">
+                                    <CanGrow>true</CanGrow>
+                                    <KeepTogether>true</KeepTogether>
+                                    <Paragraphs>
+                                      <Paragraph>
+                                        <TextRuns>
+                                          <TextRun>
+                                            <Value>Ft</Value>
+                                            <Style>
+                                              <FontFamily>tahoma</FontFamily>
+                                              <FontSize>7pt</FontSize>
+                                              <FontWeight>Bold</FontWeight>
+                                            </Style>
+                                          </TextRun>
+                                        </TextRuns>
+                                        <Style>
+                                          <TextAlign>Center</TextAlign>
+                                        </Style>
+                                      </Paragraph>
+                                    </Paragraphs>
+                                    <rd:DefaultName>Textbox57</rd:DefaultName>
+                                    <Style>
+                                      <Border>
+                                        <Style>Solid</Style>
+                                      </Border>
+                                      <PaddingLeft>2pt</PaddingLeft>
+                                      <PaddingRight>2pt</PaddingRight>
+                                      <PaddingTop>2pt</PaddingTop>
+                                      <PaddingBottom>2pt</PaddingBottom>
+                                    </Style>
+                                  </Textbox>
+                                </CellContents>
+                              </TablixCell>
+                              <TablixCell>
+                                <CellContents>
+                                  <Textbox Name="Textbox42">
+                                    <CanGrow>true</CanGrow>
+                                    <KeepTogether>true</KeepTogether>
+                                    <Paragraphs>
+                                      <Paragraph>
+                                        <TextRuns>
+                                          <TextRun>
+                                            <Value>In</Value>
+                                            <Style>
+                                              <FontFamily>tahoma</FontFamily>
+                                              <FontSize>7pt</FontSize>
+                                              <FontWeight>Bold</FontWeight>
+                                            </Style>
+                                          </TextRun>
+                                        </TextRuns>
+                                        <Style>
+                                          <TextAlign>Center</TextAlign>
+                                        </Style>
+                                      </Paragraph>
+                                    </Paragraphs>
+                                    <rd:DefaultName>Textbox42</rd:DefaultName>
+                                    <Style>
+                                      <Border>
+                                        <Style>Solid</Style>
+                                      </Border>
+                                      <PaddingLeft>2pt</PaddingLeft>
+                                      <PaddingRight>2pt</PaddingRight>
+                                      <PaddingTop>2pt</PaddingTop>
+                                      <PaddingBottom>2pt</PaddingBottom>
+                                    </Style>
+                                  </Textbox>
+                                </CellContents>
+                              </TablixCell>
+                              <TablixCell>
+                                <CellContents>
+                                  <Textbox Name="Textbox43">
+                                    <CanGrow>true</CanGrow>
+                                    <KeepTogether>true</KeepTogether>
+                                    <Paragraphs>
+                                      <Paragraph>
+                                        <TextRuns>
+                                          <TextRun>
+                                            <Value> X</Value>
+                                            <Style>
+                                              <FontFamily>tahoma</FontFamily>
+                                              <FontSize>7pt</FontSize>
+                                              <FontWeight>Bold</FontWeight>
+                                            </Style>
+                                          </TextRun>
+                                        </TextRuns>
+                                        <Style>
+                                          <TextAlign>Center</TextAlign>
+                                        </Style>
+                                      </Paragraph>
+                                    </Paragraphs>
+                                    <rd:DefaultName>Textbox43</rd:DefaultName>
+                                    <Style>
+                                      <Border>
+                                        <Style>Solid</Style>
+                                      </Border>
+                                      <PaddingLeft>2pt</PaddingLeft>
+                                      <PaddingRight>2pt</PaddingRight>
+                                      <PaddingTop>2pt</PaddingTop>
+                                      <PaddingBottom>2pt</PaddingBottom>
+                                    </Style>
+                                  </Textbox>
+                                </CellContents>
+                              </TablixCell>
+                              <TablixCell>
+                                <CellContents>
+                                  <Textbox Name="Textbox61">
+                                    <CanGrow>true</CanGrow>
+                                    <KeepTogether>true</KeepTogether>
+                                    <Paragraphs>
+                                      <Paragraph>
+                                        <TextRuns>
+                                          <TextRun>
+                                            <Value>Ft</Value>
+                                            <Style>
+                                              <FontFamily>tahoma</FontFamily>
+                                              <FontSize>7pt</FontSize>
+                                              <FontWeight>Bold</FontWeight>
+                                            </Style>
+                                          </TextRun>
+                                        </TextRuns>
+                                        <Style>
+                                          <TextAlign>Center</TextAlign>
+                                        </Style>
+                                      </Paragraph>
+                                    </Paragraphs>
+                                    <rd:DefaultName>Textbox61</rd:DefaultName>
+                                    <Style>
+                                      <Border>
+                                        <Style>Solid</Style>
+                                      </Border>
+                                      <PaddingLeft>2pt</PaddingLeft>
+                                      <PaddingRight>2pt</PaddingRight>
+                                      <PaddingTop>2pt</PaddingTop>
+                                      <PaddingBottom>2pt</PaddingBottom>
+                                    </Style>
+                                  </Textbox>
+                                </CellContents>
+                              </TablixCell>
+                              <TablixCell>
+                                <CellContents>
+                                  <Textbox Name="PlaceOfPreCarriage">
+                                    <CanGrow>true</CanGrow>
+                                    <KeepTogether>true</KeepTogether>
+                                    <Paragraphs>
+                                      <Paragraph>
+                                        <TextRuns>
+                                          <TextRun>
+                                            <Value>In</Value>
+                                            <Style>
+                                              <FontFamily>tahoma</FontFamily>
+                                              <FontSize>7pt</FontSize>
+                                              <FontWeight>Bold</FontWeight>
+                                            </Style>
+                                          </TextRun>
+                                        </TextRuns>
+                                        <Style>
+                                          <TextAlign>Center</TextAlign>
+                                        </Style>
+                                      </Paragraph>
+                                    </Paragraphs>
+                                    <rd:DefaultName>PlaceOfPreCarriage</rd:DefaultName>
+                                    <Style>
+                                      <Border>
+                                        <Style>Solid</Style>
+                                      </Border>
+                                      <PaddingLeft>2pt</PaddingLeft>
+                                      <PaddingRight>2pt</PaddingRight>
+                                      <PaddingTop>2pt</PaddingTop>
+                                      <PaddingBottom>2pt</PaddingBottom>
+                                    </Style>
+                                  </Textbox>
+                                </CellContents>
+                              </TablixCell>
+                            </TablixCells>
+                          </TablixRow>
+                        </TablixRows>
+                      </TablixBody>
+                      <TablixColumnHierarchy>
+                        <TablixMembers>
+                          <TablixMember />
+                          <TablixMember />
+                          <TablixMember />
+                          <TablixMember />
+                          <TablixMember />
+                        </TablixMembers>
+                      </TablixColumnHierarchy>
+                      <TablixRowHierarchy>
+                        <TablixMembers>
+                          <TablixMember />
+                          <TablixMember />
+                        </TablixMembers>
+                      </TablixRowHierarchy>
                       <Style>
                         <Border>
-                          <Style>Solid</Style>
+                          <Style>None</Style>
                         </Border>
-                        <TopBorder>
-                          <Width>1pt</Width>
-                        </TopBorder>
-                        <BottomBorder>
-                          <Width>1pt</Width>
-                        </BottomBorder>
-                        <LeftBorder>
-                          <Width>1pt</Width>
-                        </LeftBorder>
-                        <RightBorder>
-                          <Width>1pt</Width>
-                        </RightBorder>
-                        <VerticalAlign>Bottom</VerticalAlign>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
                       </Style>
-                    </Textbox>
-                    <rd:Selected>true</rd:Selected>
+                    </Tablix>
+                    <ColSpan>5</ColSpan>
                   </CellContents>
                 </TablixCell>
+                <TablixCell />
+                <TablixCell />
+                <TablixCell />
+                <TablixCell />
                 <TablixCell>
                   <CellContents>
                     <Textbox Name="Textbox269">
@@ -419,25 +653,10 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>Area In </Value>
+                              <Value>Area F2</Value>
                               <Style>
-                                <FontFamily>tahoma</FontFamily>
-                                <FontSize>7pt</FontSize>
-                                <FontWeight>Bold</FontWeight>
-                              </Style>
-                            </TextRun>
-                          </TextRuns>
-                          <Style>
-                            <TextAlign>Center</TextAlign>
-                          </Style>
-                        </Paragraph>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value>Sq. Feet</Value>
-                              <Style>
-                                <FontFamily>tahoma</FontFamily>
-                                <FontSize>7pt</FontSize>
+                                <FontFamily>Arial Narrow</FontFamily>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -471,7 +690,6 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
-                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
@@ -483,11 +701,32 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>Rate</Value>
+                              <Value>Rate </Value>
                               <Style>
-                                <FontFamily>tahoma</FontFamily>
-                                <FontSize>7pt</FontSize>
+                                <FontStyle>Normal</FontStyle>
+                                <FontFamily>Arial Narrow</FontFamily>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
+                                <TextDecoration>None</TextDecoration>
+                                <Color>#000000</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>FOB/F2</Value>
+                              <Style>
+                                <FontStyle>Normal</FontStyle>
+                                <FontFamily>Arial Narrow</FontFamily>
+                                <FontSize>8pt</FontSize>
+                                <FontWeight>Bold</FontWeight>
+                                <TextDecoration>None</TextDecoration>
+                                <Color>#000000</Color>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -520,7 +759,6 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
-                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
@@ -532,11 +770,32 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>Amount</Value>
+                              <Value>Amount </Value>
                               <Style>
-                                <FontFamily>tahoma</FontFamily>
-                                <FontSize>7pt</FontSize>
+                                <FontStyle>Normal</FontStyle>
+                                <FontFamily>Arial Narrow</FontFamily>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
+                                <TextDecoration>None</TextDecoration>
+                                <Color>#000000</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>in US.$</Value>
+                              <Style>
+                                <FontStyle>Normal</FontStyle>
+                                <FontFamily>Arial Narrow</FontFamily>
+                                <FontSize>8pt</FontSize>
+                                <FontWeight>Bold</FontWeight>
+                                <TextDecoration>None</TextDecoration>
+                                <Color>#000000</Color>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -569,7 +828,6 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
-                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
@@ -583,8 +841,8 @@
                             <TextRun>
                               <Value>Order #</Value>
                               <Style>
-                                <FontFamily>tahoma</FontFamily>
-                                <FontSize>7pt</FontSize>
+                                <FontFamily>Arial Narrow</FontFamily>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -618,7 +876,6 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
-                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
@@ -632,8 +889,8 @@
                             <TextRun>
                               <Value>Date</Value>
                               <Style>
-                                <FontFamily>tahoma</FontFamily>
-                                <FontSize>7pt</FontSize>
+                                <FontFamily>Arial Narrow</FontFamily>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -667,7 +924,6 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
-                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
@@ -679,10 +935,10 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>SKU</Value>
+                              <Value>SKU #</Value>
                               <Style>
-                                <FontFamily>tahoma</FontFamily>
-                                <FontSize>7pt</FontSize>
+                                <FontFamily>Arial Narrow</FontFamily>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -716,7 +972,6 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
-                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
@@ -728,10 +983,10 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>Item No</Value>
+                              <Value>ITEM  #</Value>
                               <Style>
-                                <FontFamily>tahoma</FontFamily>
-                                <FontSize>7pt</FontSize>
+                                <FontFamily>Arial Narrow</FontFamily>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -765,13 +1020,12 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
-                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
               </TablixCells>
             </TablixRow>
             <TablixRow>
-              <Height>0.20833in</Height>
+              <Height>0.15in</Height>
               <TablixCells>
                 <TablixCell>
                   <CellContents>
@@ -784,12 +1038,14 @@
                             <TextRun>
                               <Value>=Fields!BaleNo.Value</Value>
                               <Style>
-                                <FontFamily>Tahoma</FontFamily>
+                                <FontFamily>Arial Narrow</FontFamily>
                                 <FontSize>7pt</FontSize>
                               </Style>
                             </TextRun>
                           </TextRuns>
-                          <Style />
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
                         </Paragraph>
                       </Paragraphs>
                       <rd:DefaultName>BaleNo1</rd:DefaultName>
@@ -816,12 +1072,14 @@
                             <TextRun>
                               <Value>=Fields!Sr.Value</Value>
                               <Style>
-                                <FontFamily>Tahoma</FontFamily>
+                                <FontFamily>Arial Narrow</FontFamily>
                                 <FontSize>7pt</FontSize>
                               </Style>
                             </TextRun>
                           </TextRuns>
-                          <Style />
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
                         </Paragraph>
                       </Paragraphs>
                       <rd:DefaultName>Sr</rd:DefaultName>
@@ -848,12 +1106,14 @@
                             <TextRun>
                               <Value>=Fields!ProductQualityName.Value</Value>
                               <Style>
-                                <FontFamily>Tahoma</FontFamily>
+                                <FontFamily>Arial Narrow</FontFamily>
                                 <FontSize>7pt</FontSize>
                               </Style>
                             </TextRun>
                           </TextRuns>
-                          <Style />
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
                         </Paragraph>
                       </Paragraphs>
                       <rd:DefaultName>ProductQualityName1</rd:DefaultName>
@@ -880,12 +1140,14 @@
                             <TextRun>
                               <Value>=Fields!ProductUidName.Value</Value>
                               <Style>
-                                <FontFamily>Tahoma</FontFamily>
+                                <FontFamily>Arial Narrow</FontFamily>
                                 <FontSize>7pt</FontSize>
                               </Style>
                             </TextRun>
                           </TextRuns>
-                          <Style />
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
                         </Paragraph>
                       </Paragraphs>
                       <rd:DefaultName>ProductUidName1</rd:DefaultName>
@@ -912,7 +1174,7 @@
                             <TextRun>
                               <Value>=Fields!Design.Value</Value>
                               <Style>
-                                <FontFamily>Tahoma</FontFamily>
+                                <FontFamily>Arial Narrow</FontFamily>
                                 <FontSize>7pt</FontSize>
                               </Style>
                             </TextRun>
@@ -944,7 +1206,7 @@
                             <TextRun>
                               <Value>=Fields!ColourName.Value</Value>
                               <Style>
-                                <FontFamily>Tahoma</FontFamily>
+                                <FontFamily>Arial Narrow</FontFamily>
                                 <FontSize>7pt</FontSize>
                               </Style>
                             </TextRun>
@@ -967,24 +1229,167 @@
                 </TablixCell>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="StandardSizeName1">
+                    <Textbox Name="L_F">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!StandardSizeName.Value</Value>
+                              <Value>=Fields!L_F.Value</Value>
                               <Style>
-                                <FontFamily>Tahoma</FontFamily>
+                                <FontFamily>Arial Narrow</FontFamily>
                                 <FontSize>7pt</FontSize>
+                                <Format>0;-0;'-'</Format>
                               </Style>
                             </TextRun>
                           </TextRuns>
-                          <Style />
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>StandardSizeName1</rd:DefaultName>
+                      <rd:DefaultName>L_F</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>Solid</Style>
+                        </Border>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="L_I">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!L_I.Value</Value>
+                              <Style>
+                                <FontFamily>Arial Narrow</FontFamily>
+                                <FontSize>7pt</FontSize>
+                                <Format>0;-0;'-'</Format>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>L_I</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>Solid</Style>
+                        </Border>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox1254">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>X</Value>
+                              <Style>
+                                <FontFamily>Arial Narrow</FontFamily>
+                                <FontSize>7pt</FontSize>
+                                <Format>0;-0;'-'</Format>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox1254</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>Solid</Style>
+                        </Border>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="W_F">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!W_F.Value</Value>
+                              <Style>
+                                <FontFamily>Arial Narrow</FontFamily>
+                                <FontSize>7pt</FontSize>
+                                <Format>0;-0;'-'</Format>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>W_F</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>Solid</Style>
+                        </Border>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="W_I">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!W_I.Value</Value>
+                              <Style>
+                                <FontFamily>Arial Narrow</FontFamily>
+                                <FontSize>7pt</FontSize>
+                                <Format>0;-0;'-'</Format>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>W_I</rd:DefaultName>
                       <Style>
                         <Border>
                           <Style>Solid</Style>
@@ -1008,13 +1413,15 @@
                             <TextRun>
                               <Value>=Fields!AreaInSqFeet.Value</Value>
                               <Style>
-                                <FontFamily>Tahoma</FontFamily>
+                                <FontFamily>Arial Narrow</FontFamily>
                                 <FontSize>7pt</FontSize>
                                 <Format>0.00;-0.00;'-'</Format>
                               </Style>
                             </TextRun>
                           </TextRuns>
-                          <Style />
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
                         </Paragraph>
                       </Paragraphs>
                       <rd:DefaultName>AreaInSqFeet1</rd:DefaultName>
@@ -1041,13 +1448,15 @@
                             <TextRun>
                               <Value>=Fields!Rate.Value</Value>
                               <Style>
-                                <FontFamily>Tahoma</FontFamily>
+                                <FontFamily>Arial Narrow</FontFamily>
                                 <FontSize>7pt</FontSize>
                                 <Format>0.00;-0.00;'-'</Format>
                               </Style>
                             </TextRun>
                           </TextRuns>
-                          <Style />
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
                         </Paragraph>
                       </Paragraphs>
                       <rd:DefaultName>Rate</rd:DefaultName>
@@ -1074,13 +1483,15 @@
                             <TextRun>
                               <Value>=Fields!Amount.Value</Value>
                               <Style>
-                                <FontFamily>Tahoma</FontFamily>
+                                <FontFamily>Arial Narrow</FontFamily>
                                 <FontSize>7pt</FontSize>
                                 <Format>0.00;-0.00;'-'</Format>
                               </Style>
                             </TextRun>
                           </TextRuns>
-                          <Style />
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
                         </Paragraph>
                       </Paragraphs>
                       <rd:DefaultName>Amount</rd:DefaultName>
@@ -1107,12 +1518,14 @@
                             <TextRun>
                               <Value>=Fields!BuyerOrderNo.Value</Value>
                               <Style>
-                                <FontFamily>Tahoma</FontFamily>
+                                <FontFamily>Arial Narrow</FontFamily>
                                 <FontSize>7pt</FontSize>
                               </Style>
                             </TextRun>
                           </TextRuns>
-                          <Style />
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
                         </Paragraph>
                       </Paragraphs>
                       <rd:DefaultName>BuyerOrderNo</rd:DefaultName>
@@ -1137,15 +1550,17 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!OrderDate.Value</Value>
+                              <Value>=Fields!BuyerOrderDate.Value</Value>
                               <Style>
-                                <FontFamily>Tahoma</FontFamily>
+                                <FontFamily>Arial Narrow</FontFamily>
                                 <FontSize>7pt</FontSize>
                                 <Format>dd-MMM-yy</Format>
                               </Style>
                             </TextRun>
                           </TextRuns>
-                          <Style />
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
                         </Paragraph>
                       </Paragraphs>
                       <rd:DefaultName>OrderDate</rd:DefaultName>
@@ -1159,6 +1574,7 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
+                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
@@ -1172,12 +1588,14 @@
                             <TextRun>
                               <Value>=Fields!BuyerSKU.Value</Value>
                               <Style>
-                                <FontFamily>Tahoma</FontFamily>
+                                <FontFamily>Arial Narrow</FontFamily>
                                 <FontSize>7pt</FontSize>
                               </Style>
                             </TextRun>
                           </TextRuns>
-                          <Style />
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
                         </Paragraph>
                       </Paragraphs>
                       <rd:DefaultName>BuyerSKU</rd:DefaultName>
@@ -1204,12 +1622,14 @@
                             <TextRun>
                               <Value>=Fields!ItemNo.Value</Value>
                               <Style>
-                                <FontFamily>Tahoma</FontFamily>
+                                <FontFamily>Arial Narrow</FontFamily>
                                 <FontSize>7pt</FontSize>
                               </Style>
                             </TextRun>
                           </TextRuns>
-                          <Style />
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
                         </Paragraph>
                       </Paragraphs>
                       <rd:DefaultName>ItemNo</rd:DefaultName>
@@ -1228,46 +1648,8 @@
               </TablixCells>
             </TablixRow>
             <TablixRow>
-              <Height>0.25in</Height>
+              <Height>0.28125in</Height>
               <TablixCells>
-                <TablixCell>
-                  <CellContents>
-                    <Textbox Name="Textbox387">
-                      <CanGrow>true</CanGrow>
-                      <KeepTogether>true</KeepTogether>
-                      <Paragraphs>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value>Total :</Value>
-                              <Style>
-                                <FontFamily>Tahoma</FontFamily>
-                                <FontSize>7pt</FontSize>
-                                <FontWeight>Bold</FontWeight>
-                              </Style>
-                            </TextRun>
-                          </TextRuns>
-                          <Style />
-                        </Paragraph>
-                      </Paragraphs>
-                      <rd:DefaultName>Textbox387</rd:DefaultName>
-                      <Style>
-                        <Border>
-                          <Style>Solid</Style>
-                        </Border>
-                        <RightBorder>
-                          <Style>None</Style>
-                        </RightBorder>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
-                      </Style>
-                    </Textbox>
-                    <ColSpan>2</ColSpan>
-                  </CellContents>
-                </TablixCell>
-                <TablixCell />
                 <TablixCell>
                   <CellContents>
                     <Textbox Name="TotalRolls">
@@ -1277,10 +1659,12 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Max(Fields!TotalRolls.Value).ToString()+" Rolls"</Value>
+                              <Value>="Total : "+Max(Fields!TotalRolls.Value).ToString()+" Rolls,Nos "
++Max(Fields!BaleNoSeries.Value)</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
                                 <FontSize>7pt</FontSize>
+                                <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -1304,9 +1688,11 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
-                    <ColSpan>2</ColSpan>
+                    <ColSpan>4</ColSpan>
                   </CellContents>
                 </TablixCell>
+                <TablixCell />
+                <TablixCell />
                 <TablixCell />
                 <TablixCell>
                   <CellContents>
@@ -1357,6 +1743,20 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
+                              <Value>="Sq. Fts : "+ Format(Sum(Fields!AreaInSqFeet.Value),"F2")</Value>
+                              <Style>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontSize>7pt</FontSize>
+                                <FontWeight>Bold</FontWeight>
+                                <Format>0.00;-0.00;'-'</Format>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
                               <Value>="Sq. Mtrs. : "+ Format(Sum(Fields!AreaInSqMeter.Value),"F2")</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
@@ -1383,32 +1783,35 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
-                    <ColSpan>2</ColSpan>
+                    <ColSpan>6</ColSpan>
                   </CellContents>
                 </TablixCell>
                 <TablixCell />
+                <TablixCell />
+                <TablixCell />
+                <TablixCell />
+                <TablixCell />
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="AreaInSqFeet2">
+                    <Textbox Name="Textbox137">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=sum(Fields!AreaInSqFeet.Value)</Value>
+                              <Value />
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
                                 <FontSize>7pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
-                                <Format>0.00;-0.00;'-'</Format>
                               </Style>
                             </TextRun>
                           </TextRuns>
                           <Style />
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>AreaInSqFeet1</rd:DefaultName>
+                      <rd:DefaultName>Textbox137</rd:DefaultName>
                       <Style>
                         <Border>
                           <Style>Solid</Style>
@@ -1636,6 +2039,10 @@
             <TablixMember />
             <TablixMember />
             <TablixMember />
+            <TablixMember />
+            <TablixMember />
+            <TablixMember />
+            <TablixMember />
           </TablixMembers>
         </TablixColumnHierarchy>
         <TablixRowHierarchy>
@@ -1654,9 +2061,8 @@
           </TablixMembers>
         </TablixRowHierarchy>
         <DataSetName>DsMain</DataSetName>
-        <Left>0.01772in</Left>
-        <Height>0.79166in</Height>
-        <Width>7.56706in</Width>
+        <Height>0.76458in</Height>
+        <Width>7.58478in</Width>
         <Style>
           <Border>
             <Style>Solid</Style>
@@ -1664,11 +2070,23 @@
         </Style>
       </Tablix>
     </ReportItems>
-    <Height>0.79166in</Height>
+    <Height>0.76458in</Height>
     <Style>
       <Border>
         <Style>Solid</Style>
       </Border>
+      <TopBorder>
+        <Style>None</Style>
+      </TopBorder>
+      <BottomBorder>
+        <Style>None</Style>
+      </BottomBorder>
+      <LeftBorder>
+        <Width>3pt</Width>
+      </LeftBorder>
+      <RightBorder>
+        <Width>3pt</Width>
+      </RightBorder>
     </Style>
   </Body>
   <Width>7.58478in</Width>
@@ -1889,7 +2307,7 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>=Fields!ReportHeaderTextRight1.Value</Value>
+                  <Value />
                   <Style>
                     <FontFamily>tahoma</FontFamily>
                     <FontSize>8pt</FontSize>
@@ -1965,7 +2383,7 @@
           <rd:DefaultName>Textbox53</rd:DefaultName>
           <Top>0.4097in</Top>
           <Left>3.74845in</Left>
-          <Height>0.20139in</Height>
+          <Height>0.15973in</Height>
           <Width>3.61683in</Width>
           <ZIndex>3</ZIndex>
           <Style>
@@ -1998,19 +2416,6 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>=Fields!BillToBuyerName.Value</Value>
-                  <Style>
-                    <FontFamily>Tahoma</FontFamily>
-                    <FontSize>8pt</FontSize>
-                    <FontWeight>Bold</FontWeight>
-                  </Style>
-                </TextRun>
-              </TextRuns>
-              <Style />
-            </Paragraph>
-            <Paragraph>
-              <TextRuns>
-                <TextRun>
                   <Value>=Fields!BillToBuyerAddress.Value</Value>
                   <Style>
                     <FontFamily>Tahoma</FontFamily>
@@ -2022,10 +2427,10 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>BillToBuyerAddress</rd:DefaultName>
-          <Top>0.63887in</Top>
-          <Left>3.73456in</Left>
-          <Height>0.77145in</Height>
-          <Width>3.7453in</Width>
+          <Top>0.61109in</Top>
+          <Left>3.72067in</Left>
+          <Height>0.79923in</Height>
+          <Width>3.86411in</Width>
           <ZIndex>4</ZIndex>
           <Style>
             <Border>
@@ -2042,170 +2447,97 @@
         <Border>
           <Style>Solid</Style>
         </Border>
+        <TopBorder>
+          <Color>Black</Color>
+          <Width>3pt</Width>
+        </TopBorder>
+        <BottomBorder>
+          <Style>None</Style>
+        </BottomBorder>
+        <LeftBorder>
+          <Color>Black</Color>
+          <Width>3pt</Width>
+        </LeftBorder>
+        <RightBorder>
+          <Color>Black</Color>
+          <Width>3pt</Width>
+        </RightBorder>
       </Style>
     </PageHeader>
     <PageFooter>
-      <Height>1.06514in</Height>
+      <Height>0.33334in</Height>
       <PrintOnFirstPage>true</PrintOnFirstPage>
       <PrintOnLastPage>true</PrintOnLastPage>
       <ReportItems>
-        <Rectangle Name="Rectangle5">
-          <ReportItems>
-            <Textbox Name="Textbox376">
-              <CanGrow>true</CanGrow>
-              <KeepTogether>true</KeepTogether>
-              <Paragraphs>
-                <Paragraph>
-                  <TextRuns>
-                    <TextRun>
-                      <Value>Declaration : We declare that invoice shows the actual price of the</Value>
-                      <Style>
-                        <FontSize>8pt</FontSize>
-                        <FontWeight>Normal</FontWeight>
-                      </Style>
-                    </TextRun>
-                  </TextRuns>
-                  <Style />
-                </Paragraph>
-                <Paragraph>
-                  <TextRuns>
-                    <TextRun>
-                      <Value>goods described and that all particular are true and correct</Value>
-                      <Style>
-                        <FontSize>8pt</FontSize>
-                        <FontWeight>Normal</FontWeight>
-                      </Style>
-                    </TextRun>
-                  </TextRuns>
-                  <Style />
-                </Paragraph>
-              </Paragraphs>
-              <rd:DefaultName>Textbox375</rd:DefaultName>
-              <Top>0.61632in</Top>
-              <Height>0.32in</Height>
-              <Width>3.73906in</Width>
-              <Visibility>
-                <Hidden>true</Hidden>
-              </Visibility>
-              <Style>
-                <Border>
-                  <Style>None</Style>
-                </Border>
-                <LeftBorder>
-                  <Style>Solid</Style>
-                </LeftBorder>
-                <PaddingLeft>2pt</PaddingLeft>
-                <PaddingRight>2pt</PaddingRight>
-                <PaddingTop>2pt</PaddingTop>
-                <PaddingBottom>2pt</PaddingBottom>
-              </Style>
-            </Textbox>
-            <Textbox Name="Textbox19">
-              <CanGrow>true</CanGrow>
-              <KeepTogether>true</KeepTogether>
-              <Paragraphs>
-                <Paragraph>
-                  <TextRuns>
-                    <TextRun>
-                      <Value>Contd.Page : </Value>
-                      <Style>
-                        <FontFamily>tahoma</FontFamily>
-                        <FontSize>8pt</FontSize>
-                      </Style>
-                    </TextRun>
-                    <TextRun>
-                      <Value>=Globals!PageNumber+1</Value>
-                      <Style>
-                        <FontFamily>tahoma</FontFamily>
-                        <FontSize>8pt</FontSize>
-                      </Style>
-                    </TextRun>
-                  </TextRuns>
-                  <Style />
-                </Paragraph>
-              </Paragraphs>
-              <rd:DefaultName>Textbox19</rd:DefaultName>
-              <Top>0.08263in</Top>
-              <Left>5.47458in</Left>
-              <Height>0.18in</Height>
-              <Width>1.60437in</Width>
-              <ZIndex>1</ZIndex>
-              <Visibility>
-                <Hidden>=iif(Globals!PageNumber=Globals!TotalPages,true,false)</Hidden>
-              </Visibility>
-              <Style>
-                <Border>
-                  <Style>None</Style>
-                </Border>
-                <PaddingLeft>2pt</PaddingLeft>
-                <PaddingRight>2pt</PaddingRight>
-                <PaddingTop>2pt</PaddingTop>
-                <PaddingBottom>2pt</PaddingBottom>
-              </Style>
-            </Textbox>
-            <Textbox Name="Textbox15">
-              <CanGrow>true</CanGrow>
-              <KeepTogether>true</KeepTogether>
-              <Paragraphs>
-                <Paragraph>
-                  <TextRuns>
-                    <TextRun>
-                      <Value>Signature &amp; Date</Value>
-                      <Style>
-                        <FontWeight>Bold</FontWeight>
-                      </Style>
-                    </TextRun>
-                  </TextRuns>
-                  <Style>
-                    <TextAlign>Left</TextAlign>
-                  </Style>
-                </Paragraph>
-              </Paragraphs>
-              <rd:DefaultName>Textbox1</rd:DefaultName>
-              <Top>0.31819in</Top>
-              <Left>5.4725in</Left>
-              <Height>0.69327in</Height>
-              <Width>2.10289in</Width>
-              <ZIndex>2</ZIndex>
-              <Style>
-                <Border>
-                  <Style>Solid</Style>
-                </Border>
-                <PaddingLeft>2pt</PaddingLeft>
-                <PaddingRight>2pt</PaddingRight>
-                <PaddingTop>2pt</PaddingTop>
-                <PaddingBottom>2pt</PaddingBottom>
-              </Style>
-            </Textbox>
-          </ReportItems>
+        <Textbox Name="Textbox377">
+          <CanGrow>true</CanGrow>
           <KeepTogether>true</KeepTogether>
-          <Top>0.025in</Top>
-          <Left>0.00939in</Left>
-          <Height>1.01146in</Height>
-          <Width>7.57539in</Width>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>" COLOURS OF INDO - TIBETAN IN HANDSPUN YARN CAN VARY UPTO 5 TO 10% BECAUSE HANDSPUN YARN "</Value>
+                  <Style>
+                    <FontSize>8pt</FontSize>
+                    <FontWeight>Normal</FontWeight>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style>
+                <TextAlign>Center</TextAlign>
+              </Style>
+            </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>NO CHILD LABOUR USED IN THESE CARPETS.</Value>
+                  <Style>
+                    <FontSize>9pt</FontSize>
+                    <FontWeight>Bold</FontWeight>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style>
+                <TextAlign>Center</TextAlign>
+              </Style>
+            </Paragraph>
+          </Paragraphs>
+          <rd:DefaultName>Textbox375</rd:DefaultName>
+          <Height>0.33334in</Height>
+          <Width>7.58478in</Width>
+          <Visibility>
+            <Hidden>=Globals.PageNumber&lt;Globals.TotalPages</Hidden>
+          </Visibility>
           <Style>
             <Border>
               <Style>None</Style>
             </Border>
-            <TopBorder>
-              <Style>None</Style>
-            </TopBorder>
-            <BottomBorder>
-              <Style>None</Style>
-            </BottomBorder>
-            <LeftBorder>
-              <Style>None</Style>
-            </LeftBorder>
-            <RightBorder>
-              <Style>None</Style>
-            </RightBorder>
+            <PaddingLeft>2pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
           </Style>
-        </Rectangle>
+        </Textbox>
       </ReportItems>
       <Style>
         <Border>
           <Style>Solid</Style>
         </Border>
+        <TopBorder>
+          <Style>None</Style>
+        </TopBorder>
+        <BottomBorder>
+          <Color>Black</Color>
+          <Width>3pt</Width>
+        </BottomBorder>
+        <LeftBorder>
+          <Color>Black</Color>
+          <Width>3pt</Width>
+        </LeftBorder>
+        <RightBorder>
+          <Color>Black</Color>
+          <Width>3pt</Width>
+        </RightBorder>
       </Style>
     </PageFooter>
     <PageHeight>11.69in</PageHeight>
@@ -2250,10 +2582,14 @@
         </Field>
         <Field Name="OrderDate">
           <DataField>OrderDate</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="BuyerSKU">
           <DataField>BuyerSKU</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ProductCollectionName">
+          <DataField>ProductCollectionName</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="ItemNo">
@@ -2268,24 +2604,56 @@
           <DataField>SaleInvoiceHeaderId</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
+        <Field Name="ShipMethodName">
+          <DataField>ShipMethodName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="DeliveryTermsName">
+          <DataField>DeliveryTermsName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
         <Field Name="DivisionId">
           <DataField>DivisionId</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="BaleNoSeries">
+          <DataField>BaleNoSeries</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="DocDate">
           <DataField>DocDate</DataField>
           <rd:TypeName>System.DateTime</rd:TypeName>
         </Field>
+        <Field Name="ECGC">
+          <DataField>ECGC</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
         <Field Name="HeaderRemark">
           <DataField>HeaderRemark</DataField>
           <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="GrossWeight">
+          <DataField>GrossWeight</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
         <Field Name="DocNo">
           <DataField>DocNo</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="NetWeight">
+          <DataField>NetWeight</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="OrderNo">
+          <DataField>OrderNo</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
         <Field Name="ProductQualityName">
           <DataField>ProductQualityName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="BuyerOtherthanConsignee">
+          <DataField>BuyerOtherthanConsignee</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Design">
@@ -2296,20 +2664,44 @@
           <DataField>ColourName</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="TermsOfSale">
+          <DataField>TermsOfSale</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
         <Field Name="StandardSizeName">
           <DataField>StandardSizeName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="PrivateMark">
+          <DataField>PrivateMark</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="AreaInSqFeet">
           <DataField>AreaInSqFeet</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
+        <Field Name="PortOfLoading">
+          <DataField>PortOfLoading</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="DestinationPort">
+          <DataField>DestinationPort</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
         <Field Name="ProductUidName">
           <DataField>ProductUidName</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="FinalPlaceOfDelivery">
+          <DataField>FinalPlaceOfDelivery</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
         <Field Name="Remark">
           <DataField>Remark</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="PreCarriageBy">
+          <DataField>PreCarriageBy</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="SealNo">
@@ -2319,6 +2711,10 @@
         <Field Name="AreaInSqMeter">
           <DataField>AreaInSqMeter</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="PlaceOfPreCarriage">
+          <DataField>PlaceOfPreCarriage</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="BuyerOrderNo">
           <DataField>BuyerOrderNo</DataField>
@@ -2335,6 +2731,10 @@
         <Field Name="CompanyCity">
           <DataField>CompanyCity</DataField>
           <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="BuyerOrderDate">
+          <DataField>BuyerOrderDate</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
         </Field>
         <Field Name="TinNo">
           <DataField>TinNo</DataField>
@@ -2372,12 +2772,20 @@
           <DataField>BANKName</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="Colour1">
+          <DataField>Colour1</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
         <Field Name="BANKBranch">
           <DataField>BANKBranch</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Phone">
           <DataField>Phone</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Colour2">
+          <DataField>Colour2</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Fax">
@@ -2416,12 +2824,92 @@
           <DataField>Amount</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
+        <Field Name="Size">
+          <DataField>Size</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Length">
+          <DataField>Length</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
         <Field Name="BIllToPartyCity">
           <DataField>BIllToPartyCity</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="L_F">
+          <DataField>L_F</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
         <Field Name="BillToPartyCountry">
           <DataField>BillToPartyCountry</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="DescriptionOfGoods">
+          <DataField>DescriptionOfGoods</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="L_I">
+          <DataField>L_I</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="X">
+          <DataField>X</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Width">
+          <DataField>Width</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="W_F">
+          <DataField>W_F</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="W_I">
+          <DataField>W_I</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="NotifyParty">
+          <DataField>NotifyParty</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="yarn1">
+          <DataField>yarn1</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="yarn2">
+          <DataField>yarn2</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="yarn3">
+          <DataField>yarn3</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="yarn4">
+          <DataField>yarn4</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="yarn5">
+          <DataField>yarn5</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="yarntype1">
+          <DataField>yarntype1</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="yarntype2">
+          <DataField>yarntype2</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="yarntype3">
+          <DataField>yarntype3</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="yarntype4">
+          <DataField>yarntype4</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="yarntype5">
+          <DataField>yarntype5</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>

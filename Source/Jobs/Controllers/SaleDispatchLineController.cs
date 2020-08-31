@@ -398,7 +398,10 @@ namespace Jobs.Controllers
             PrepareViewBag();
             if (IsSaleBased == true)
             {
-                return PartialView("_CreateForSaleOrder", s);
+                if (settings.isVisibleForProdOrder == true)
+                    return PartialView("_CreateForProdOrder", s);
+                else
+                    return PartialView("_CreateForSaleOrder", s);
 
             }
             else
@@ -581,6 +584,8 @@ namespace Jobs.Controllers
                         PrepareViewBag();
                         if (svm.SaleOrderLineId.HasValue && svm.SaleOrderLineId.Value > 0)
                             return PartialView("_CreateForSaleOrder", svm);
+                        else if (svm.ProdOrderLineId.HasValue && svm.ProdOrderLineId.Value > 0)
+                            return PartialView("_CreateForProdOrder", svm);
                         else
                             return PartialView("_Create", svm);
                     }
@@ -597,7 +602,10 @@ namespace Jobs.Controllers
                     }));
 
 
-                    return RedirectToAction("_Create", new { id = Dh.SaleDispatchHeaderId, IsSaleBased = (Pl.SaleOrderLineId == null ? false : true) });
+                    if (svm.ProdOrderLineId.HasValue && svm.ProdOrderLineId.Value > 0)
+                        return RedirectToAction("_Create", new { id = Dh.SaleDispatchHeaderId, IsSaleBased = (Pl.ProdOrderLineId == null ? false : true) });
+                    else
+                        return RedirectToAction("_Create", new { id = Dh.SaleDispatchHeaderId, IsSaleBased = (Pl.SaleOrderLineId == null ? false : true) });
                 }
                 else
                 {
@@ -868,6 +876,12 @@ namespace Jobs.Controllers
             {
                 vm.IsSaleBased = true;
                 return PartialView("_CreateForSaleOrder", vm);
+
+            }
+            else if (Pl.ProdOrderLineId.HasValue && Pl.ProdOrderLineId.Value > 0)
+            {
+                vm.IsSaleBased = true;
+                return PartialView("_CreateForProdOrder", vm);
 
             }
             else
@@ -1244,6 +1258,46 @@ namespace Jobs.Controllers
             }
         }
 
+        public JsonResult GetProdOrderDetailJson(int ProdOrderLineId)
+        {
+            var temp = (from L in db.ViewProdOrderBalanceForDispatch
+                        join Dl in db.ProdOrderLine on L.ProdOrderLineId equals Dl.ProdOrderLineId into ProdOrderLineTable
+                        from ProdOrderLineTab in ProdOrderLineTable.DefaultIfEmpty()
+                        join P in db.Product on L.ProductId equals P.ProductId into ProductTable
+                        from ProductTab in ProductTable.DefaultIfEmpty()
+                        join U in db.Units on ProductTab.UnitId equals U.UnitId into UnitTable
+                        from UnitTab in UnitTable.DefaultIfEmpty()
+                        join D1 in db.Dimension1 on L.Dimension1Id equals D1.Dimension1Id into Dimension1Table
+                        from Dimension1Tab in Dimension1Table.DefaultIfEmpty()
+                        join D2 in db.Dimension2 on L.Dimension2Id equals D2.Dimension2Id into Dimension2Table
+                        from Dimension2Tab in Dimension2Table.DefaultIfEmpty()
+                        where L.ProdOrderLineId == ProdOrderLineId
+                        select new
+                        {
+                            ProdOrderHeaderDocNo = L.ProdOrderNo,
+                            UnitId = UnitTab.UnitId,
+                            UnitName = UnitTab.UnitName,
+                            DealUnitId = UnitTab.UnitId,
+                            Specification = ProdOrderLineTab.Specification,
+                            UnitConversionMultiplier = 1,
+                            ProductId = L.ProductId,
+                            Dimension1Id = L.Dimension1Id,
+                            Dimension1Name = Dimension1Tab.Dimension1Name,
+                            Dimension2Id = L.Dimension2Id,
+                            Dimension2Name = Dimension2Tab.Dimension2Name,
+                            BalanceQty = L.BalanceQty
+                        }).FirstOrDefault();
+
+            if (temp != null)
+            {
+                return Json(temp);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public JsonResult GetPendingSaleOrderCount(int ProductId, int SaleDispatchHeaderId)
         {
             int BuyerId = new SaleDispatchHeaderService(_unitOfWork).Find(SaleDispatchHeaderId).SaleToBuyerId;
@@ -1325,6 +1379,27 @@ namespace Jobs.Controllers
             };
         }
 
+        public ActionResult GetProdOrderForProduct(string searchTerm, int pageSize, int pageNum, int filter)//DocTypeId
+        {
+            var Query = _SaleDispatchLineService.GetProdOrderHelpListForProduct(filter, searchTerm);
+            var temp = Query.Skip(pageSize * (pageNum - 1))
+                .Take(pageSize)
+                .ToList();
+
+            var count = Query.Count();
+
+            ComboBoxPagedResult Data = new ComboBoxPagedResult();
+            Data.Results = temp;
+            Data.Total = count;
+
+            return new JsonpResult
+            {
+                Data = Data,
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet
+            };
+        }
+
+
         public JsonResult GetCustomProductsForSaleDispatch(string searchTerm, int pageSize, int pageNum, int filter)//DocTypeId
         {
 
@@ -1365,9 +1440,9 @@ namespace Jobs.Controllers
             };
         }
 
-        public ActionResult GetFirstStockInForProduct(int SaleDispatchHeaderId, int GodownId, int ProductId, int? Dimension1Id, int? Dimension2Id)//DocTypeId
+        public ActionResult GetFirstStockInForProduct(int SaleDispatchHeaderId, int GodownId, int ProductId, int? Dimension1Id, int? Dimension2Id, int? ProdOrderLineId)//DocTypeId
         {
-            var Query = _SaleDispatchLineService.GetPendingStockInForDispatch(SaleDispatchHeaderId, GodownId, ProductId, Dimension1Id, Dimension2Id, "");
+            var Query = _SaleDispatchLineService.GetPendingStockInForDispatch(SaleDispatchHeaderId, GodownId, ProductId, Dimension1Id, Dimension2Id, ProdOrderLineId,"");
             var temp = Query.ToList();
 
             var count = Query.Count();
@@ -1392,7 +1467,7 @@ namespace Jobs.Controllers
 
         public ActionResult GetStockInForProduct(string searchTerm, int pageSize, int pageNum, int SaleDispatchHeaderId, int GodownId, int ProductId, int? Dimension1Id, int? Dimension2Id)//DocTypeId
         {
-            var Query = _SaleDispatchLineService.GetPendingStockInForDispatch(SaleDispatchHeaderId, GodownId, ProductId, Dimension1Id, Dimension2Id, searchTerm);
+            var Query = _SaleDispatchLineService.GetPendingStockInForDispatch(SaleDispatchHeaderId, GodownId, ProductId, Dimension1Id, Dimension2Id, null, searchTerm);
             var temp = Query.Skip(pageSize * (pageNum - 1))
                 .Take(pageSize)
                 .ToList();

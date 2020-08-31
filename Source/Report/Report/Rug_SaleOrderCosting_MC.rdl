@@ -4026,7 +4026,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Sum(Fields!CostPerPcs.Value*Max(Fields!Qty.Value))</Value>
+                                  <Value>=Sum(Fields!CostPerPcs.Value*Fields!Qty.Value)</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -4114,8 +4114,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Sum((Fields!CostPerPcs.Value * Fields!Qty.Value)+
-(Fields!CostPerPcs.Value * Fields!Qty.Value* Fields!Tax.Value/100))</Value>
+                                  <Value>=Sum(Fields!CostPerPcs.Value*Fields!Qty.Value)+Sum(Fields!CostPerPcs.Value * Fields!Qty.Value* Fields!Tax.Value)/100</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -4259,7 +4258,7 @@
             <Top>3.8276in</Top>
             <Left>0.05493in</Left>
             <Height>1.60417in</Height>
-            <Width>10.88062in</Width>
+            <Width>10.88063in</Width>
             <ZIndex>3</ZIndex>
             <Style>
               <Border>
@@ -4271,7 +4270,7 @@
         <Height>5.43646in</Height>
         <Style />
       </Body>
-      <Width>10.93555in</Width>
+      <Width>10.93556in</Width>
       <Page>
         <PageHeader>
           <Height>0.32166in</Height>

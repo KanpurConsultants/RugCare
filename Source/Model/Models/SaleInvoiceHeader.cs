@@ -97,6 +97,10 @@ namespace Model.Models
        [ForeignKey("PaymentTerms"), Display(Name = "Payment Terms")]
         public int ? PaymentTermsId { get; set; }
         public virtual PaymentTerms PaymentTerms { get; set; }
+
+        [Display(Name = "Tenor")]
+        public int? Tenor { get; set; }
+
         [Display(Name = "Remark")]
         public string Remark { get; set; }
 

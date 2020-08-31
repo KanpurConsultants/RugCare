@@ -52,6 +52,7 @@ namespace Model.ViewModel
         [MaxLength(50)]
         public string WeightCaption { get; set; }
 
+        public bool? IsDefaultCreateFromWizard { get; set; }
 
         [MaxLength(50)]
         public string CostCenterCaption { get; set; }

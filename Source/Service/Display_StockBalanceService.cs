@@ -72,7 +72,7 @@ namespace Service
                             SELECT 'Product' AS Product, 'Product' AS Product UNION ALL
                             SELECT 'Process' AS Process, 'Process' AS Process UNION ALL
                             SELECT 'Godown' AS Godown, 'Godown' AS Godown UNION ALL
-                            SELECT 'Lot No'  AS LotNo, 'Lot No'  AS LotNo UNION ALL
+                            SELECT 'LotNo'  AS LotNo, 'LotNo'  AS LotNo UNION ALL
                             SELECT 'Dimension2' AS Dimension1Id, Dimension2TypeName  FROM Web.Dimension2Types  UNION ALL
                             SELECT 'Dimension3' AS Dimension1Id, Dimension3TypeName  FROM Web.Dimension3Types  UNION ALL
                             SELECT 'Dimension4' AS Dimension1Id, Dimension4TypeName  FROM Web.Dimension4Types

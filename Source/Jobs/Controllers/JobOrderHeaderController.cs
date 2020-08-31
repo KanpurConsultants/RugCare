@@ -142,6 +142,7 @@ namespace Jobs.Controllers
             //ViewBag.ReasonList = new ReasonService(_unitOfWork).GetReasonList(DC.DocumentCategoryName).ToList();
             ViewBag.Name = DocType.DocumentTypeName;
             ViewBag.PartyCaption = DTS.PartyCaption;
+            ViewBag.IsDefaultCreateFromWizard = DTS.IsDefaultCreateFromWizard;
             ViewBag.id = id;
             ViewBag.UnitConvForList = (from p in context.UnitConversonFor
                                        select p).ToList();
@@ -315,7 +316,8 @@ namespace Jobs.Controllers
 
             var settings = new JobOrderSettingsService(_unitOfWork).GetJobOrderSettingsForDocument(svm.DocTypeId, svm.DivisionId, svm.SiteId);
 
-            Settings settingToGenerateProdOrder = new SettingsService(_unitOfWork).GetSettingsForDocument(SettingFieldNameConstants.GeneratedProdOrderDocTypeId, svm.DocTypeId, svm.DivisionId, svm.SiteId,null);
+            Settings settingToGenerateProdOrder = new SettingsService(_unitOfWork).GetSettingsForDocument(SettingFieldNameConstants.GeneratedProdOrderDocTypeId, svm.DivisionId, svm.SiteId, svm.DocTypeId, null);
+            Settings settingToGenerateProdOrderBuyerId = new SettingsService(_unitOfWork).GetSettingsForDocument(SettingFieldNameConstants.GeneratedProdOrderBuyerId, svm.DivisionId, svm.SiteId, svm.DocTypeId, null);
 
             if (settings != null)
             {
@@ -512,6 +514,31 @@ namespace Jobs.Controllers
                     }
 
 
+                    if (settings.isAllowDirectReceive == true)
+                    {
+                        JobReceiveHeader RH = new JobReceiveHeader();
+
+                        RH.DivisionId = svm.DivisionId;
+                        RH.SiteId = svm.SiteId;
+                        RH.DocTypeId = svm.DocTypeId;
+                        RH.ProcessId = svm.ProcessId;
+                        RH.ReferenceDocId = svm.JobOrderHeaderId;
+                        RH.ReferenceDocTypeId = svm.DocTypeId;
+                        RH.DocDate = svm.DocDate;
+                        RH.DocNo = svm.DocNo;
+                        RH.JobWorkerId = svm.JobWorkerId;
+                        RH.GodownId = (int)svm.GodownId;
+                        RH.Remark = svm.Remark;
+                        RH.Status = svm.Status;
+                        RH.CreatedBy = User.Identity.Name;
+                        RH.ModifiedBy = User.Identity.Name;
+                        RH.CreatedDate = DateTime.Now;
+                        RH.ModifiedDate = DateTime.Now;
+                        RH.ObjectState = Model.ObjectState.Added;
+                        context.JobReceiveHeader.Add(RH);
+
+                    }
+
                     if (settings.isVisibleTransportDetail == true)
                     {
                         StockHeaderTransport ST = new StockHeaderTransport();
@@ -683,6 +710,18 @@ namespace Jobs.Controllers
                         context.SaveChanges();
                     }
 
+                    if (settings.isAllowDirectReceive == true)
+                    {
+                        var RH = context.JobReceiveHeader.Where(m => m.SiteId == s.SiteId && m.DivisionId == s.DivisionId && m.DocTypeId == s.DocTypeId && m.DocNo == s.DocNo).FirstOrDefault();
+                        if (RH != null)
+                        {
+                            RH.ReferenceDocId = s.JobOrderHeaderId;
+                            RH.ObjectState = Model.ObjectState.Modified;
+                            context.JobReceiveHeader.Add(RH);
+                            context.SaveChanges();
+                        }
+                    }
+
                     // To Create ProdOrder Only For IsSisterConcern ==true
                     if (settingToGenerateProdOrder != null)
                     {
@@ -702,6 +741,13 @@ namespace Jobs.Controllers
                             POH.DueDate = svm.DueDate;
                             POH.DocNo = svm.DocNo;
                             POH.Remark = svm.Remark;
+
+                            if (settingToGenerateProdOrderBuyerId != null)
+                            {   int BuyerId =Convert.ToInt32(settingToGenerateProdOrderBuyerId.Value);
+                                Person P = new PersonService(_unitOfWork).Find(BuyerId);
+                                POH.BuyerId = P.PersonID;
+                            }
+
                             POH.Status = svm.Status;
                             POH.CreatedBy = User.Identity.Name;
                             POH.ModifiedBy = User.Identity.Name;
@@ -1524,6 +1570,34 @@ namespace Jobs.Controllers
                     context.JobOrderLineStatus.Remove(item);
                 }
 
+                //Getting Settings
+                var settings = new JobOrderSettingsService(_unitOfWork).GetJobOrderSettingsForDocument(JobOrderHeader.DocTypeId, JobOrderHeader.DivisionId, JobOrderHeader.SiteId);
+
+                if (settings.isAllowDirectReceive == true)
+                    {
+                    var JobReceiveLineRecords = (from p in context.JobReceiveLine
+                                                 where JOLineIds.Contains(p.JobOrderLineId ?? 0)
+                                                 select p).ToList();
+
+                    var JobReceiveLineStatusRecords = (from p in context.JobReceiveLineStatus
+                                                       join t in context.JobReceiveLine on p.JobReceiveLineId equals t.JobReceiveLineId
+                                                       where JOLineIds.Contains(t.JobOrderLineId ?? 0)
+                                                 select p).ToList();
+
+                    foreach (var item in JobReceiveLineStatusRecords)
+                    {
+                        item.ObjectState = Model.ObjectState.Deleted;
+                        context.JobReceiveLineStatus.Remove(item);
+                    }
+                    
+                    foreach (var item in JobReceiveLineRecords)
+                    {
+                        item.ObjectState = Model.ObjectState.Deleted;
+                        context.JobReceiveLine.Remove(item);
+                    }
+
+                }
+
                 foreach (var item in JobOrderLineExtendedRecords)
                 {
                     item.ObjectState = Model.ObjectState.Deleted;
@@ -1680,6 +1754,16 @@ namespace Jobs.Controllers
                 JobORderHEaderStatus.ObjectState = Model.ObjectState.Deleted;
                 context.JobOrderHeaderStatus.Remove(JobORderHEaderStatus);
 
+                var JobReceiveHeader = (from p in context.JobReceiveHeader
+                                        where p.ReferenceDocId == vm.id && p.ReferenceDocTypeId == JobOrderHeader.DocTypeId
+                                            select p).FirstOrDefault();
+
+                if(JobReceiveHeader!=null)
+                { 
+                JobReceiveHeader.ObjectState = Model.ObjectState.Deleted;
+                context.JobReceiveHeader.Remove(JobReceiveHeader);
+                 }
+
                 // Now delete the Purhcase Order Header
                 //_JobOrderHeaderService.Delete(JobOrderHeader);
 
@@ -1773,7 +1857,6 @@ namespace Jobs.Controllers
                 }
 
 
-                var settings = new JobOrderSettingsService(_unitOfWork).GetJobOrderSettingsForDocument(JobOrderHeader.DocTypeId, JobOrderHeader.DivisionId, JobOrderHeader.SiteId);
                 if (settings != null)
                 {
                     new CommonService().ExecuteCustomiseEvents(settings.Event_OnHeaderDelete, new object[] { _unitOfWork, JobOrderHeader.JobOrderHeaderId });

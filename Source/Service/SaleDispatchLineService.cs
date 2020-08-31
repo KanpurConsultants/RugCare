@@ -41,6 +41,7 @@ namespace Service
         IQueryable<ComboBoxResult> GetCustomProducts(int Id, string term);
 
         IQueryable<ComboBoxResult> GetSaleOrderHelpListForProduct(int PersonId, string term);
+        IQueryable<ComboBoxResult> GetProdOrderHelpListForProduct(int PersonId, string term);
         SaleDispatchLineViewModel GetSaleDispatchDetailBalance(int id);
 
         SaleDispatchLineViewModel GetSaleDispatchDetailForInvoice(int id);
@@ -51,7 +52,7 @@ namespace Service
 
         IEnumerable<ComboBoxResult> GetPendingOrdersForDispatch(int id, string term);
 
-        IEnumerable<ComboBoxResult> GetPendingStockInForDispatch(int id, int ProductId, int GodownId, int? Dimension1Id, int? Dimension2Id, string term);
+        IEnumerable<ComboBoxResult> GetPendingStockInForDispatch(int id, int ProductId, int GodownId, int? Dimension1Id, int? Dimension2Id, int? ProdOrderLineId, string term);
 
         
 
@@ -146,7 +147,11 @@ namespace Service
                                                                               from tab1 in table1.DefaultIfEmpty()
                                                                               join t2 in db.SaleOrderHeader on tab1.SaleOrderHeaderId equals t2.SaleOrderHeaderId into table2
                                                                               from tab2 in table2.DefaultIfEmpty()
-                                                                              join t3 in db.ProductUid on PackingLineTab.ProductUidId equals t3.ProductUIDId into table3
+                                                                                join POL in db.ProdOrderLine on PackingLineTab.ProdOrderLineId equals POL.ProdOrderLineId into tablePOL
+                                                                                from tabPOL in tablePOL.DefaultIfEmpty()
+                                                                                join POH in db.ProdOrderHeader on tabPOL.ProdOrderHeaderId equals POH.ProdOrderHeaderId into tablePOH
+                                                                                from tabPOH in tablePOH.DefaultIfEmpty()
+                                                                                join t3 in db.ProductUid on PackingLineTab.ProductUidId equals t3.ProductUIDId into table3
                                                                               from tab3 in table3.DefaultIfEmpty()
                                                                               join u in db.Units on PackingLineTab.DealUnitId equals u.UnitId into DealUnitTable
                                                                               from DealUnitTab in DealUnitTable.DefaultIfEmpty()
@@ -163,7 +168,7 @@ namespace Service
                                                                                   Dimension1Name = PackingLineTab.Dimension1.Dimension1Name,
                                                                                   Dimension2Name = PackingLineTab.Dimension2.Dimension2Name,
                                                                                   Specification = PackingLineTab.Specification,
-                                                                                  SaleOrderHeaderDocNo = tab2.DocNo,
+                                                                                  SaleOrderHeaderDocNo = (tab2.DocNo == null  ? tabPOH.DocNo : tab2.DocNo),
                                                                                   ProductUidName = tab3.ProductUidName,
                                                                                   BaleNo = PackingLineTab.BaleNo,
                                                                                   Qty = PackingLineTab.Qty,
@@ -268,7 +273,7 @@ namespace Service
                         ProductCode = Pl.Product.ProductCode,
                         ProductId = Pl.ProductId,
                         ProductName = Pl.Product.ProductName,
-                        SaleOrderHeaderDocNo = Pl.SaleOrderLine.SaleOrderHeader.DocNo,
+                        SaleOrderHeaderDocNo =  Pl.SaleOrderLine.SaleOrderHeader.DocNo ,
                         LossQty = Pl.LossQty,
                         FreeQty = Pl.FreeQty,
                         PassQty = Pl.PassQty,
@@ -291,6 +296,8 @@ namespace Service
                         SaleDispatchLineId = p.SaleDispatchLineId,
                         PackingLineId = Pl.PackingLineId,
                         SaleOrderLineId = Pl.SaleOrderLineId,
+                        ProdOrderLineId = Pl.ProdOrderLineId,
+                        ProdOrderHeaderDocNo= Pl.ProdOrderLine.ProdOrderHeader.DocNo,
                         Weight = Pl.NetWeight,
                         StockInId = p.StockInId,
                         StockInNo = StockHeaderTab.DocNo
@@ -425,6 +432,89 @@ namespace Service
             return list;
         }
 
+        public IQueryable<ComboBoxResult> GetProdOrderHelpListForProduct(int filter, string term)
+        {
+            var SaleDispatchHeader = new SaleDispatchHeaderService(_unitOfWork).Find(filter);
+
+            var settings = new SaleDispatchSettingService(_unitOfWork).GetSaleDispatchSettingForDocument(SaleDispatchHeader.DocTypeId, SaleDispatchHeader.DivisionId, SaleDispatchHeader.SiteId);
+
+            string[] contraSites = null;
+            if (!string.IsNullOrEmpty(settings.filterContraSites)) { contraSites = settings.filterContraSites.Split(",".ToCharArray()); }
+            else { contraSites = new string[] { "NA" }; }
+
+            string[] contraDivisions = null;
+            if (!string.IsNullOrEmpty(settings.filterContraDivisions)) { contraDivisions = settings.filterContraDivisions.Split(",".ToCharArray()); }
+            else { contraDivisions = new string[] { "NA" }; }
+
+            string[] contraDocTypes = null;
+            if (!string.IsNullOrEmpty(settings.filterContraDocTypes)) { contraDocTypes = settings.filterContraDocTypes.Split(",".ToCharArray()); }
+            else { contraDocTypes = new string[] { "NA" }; }
+
+            int CurrentSiteId = (int)System.Web.HttpContext.Current.Session["SiteId"];
+            int CurrentDivisionId = (int)System.Web.HttpContext.Current.Session["DivisionId"];
+
+
+            //var list = (from p in db.ViewProdOrderBalanceForDispatch
+            //            join t in db.ProdOrderHeader on p.ProdOrderHeaderId equals t.ProdOrderHeaderId
+            //            join t2 in db.ProdOrderLine on p.ProdOrderLineId equals t2.ProdOrderLineId
+            //            join pt in db.Product on p.ProductId equals pt.ProductId into ProductTable
+            //            from ProductTab in ProductTable.DefaultIfEmpty()
+            //            join D1 in db.Dimension1 on p.Dimension1Id equals D1.Dimension1Id into Dimension1Table
+            //            from Dimension1Tab in Dimension1Table.DefaultIfEmpty()
+            //            join D2 in db.Dimension2 on p.Dimension2Id equals D2.Dimension2Id into Dimension2Table
+            //            from Dimension2Tab in Dimension2Table.DefaultIfEmpty()
+            //            where p.BuyerId == SaleDispatchHeader.SaleToBuyerId
+            //            && ((string.IsNullOrEmpty(term) ? 1 == 1 : p.ProdOrderNo.ToLower().Contains(term.ToLower()))
+            //            || (string.IsNullOrEmpty(term) ? 1 == 1 : ProductTab.ProductName.ToLower().Contains(term.ToLower()))
+            //            || (string.IsNullOrEmpty(term) ? 1 == 1 : Dimension1Tab.Dimension1Name.ToLower().Contains(term.ToLower()))
+            //            || (string.IsNullOrEmpty(term) ? 1 == 1 : Dimension2Tab.Dimension2Name.ToLower().Contains(term.ToLower())))
+            //            && (string.IsNullOrEmpty(settings.filterContraSites) ? p.SiteId == CurrentSiteId : contraSites.Contains(p.SiteId.ToString()))
+            //            && (string.IsNullOrEmpty(settings.filterContraDivisions) ? p.DivisionId == CurrentDivisionId : contraDivisions.Contains(p.DivisionId.ToString()))
+            //            && (string.IsNullOrEmpty(settings.filterContraDocTypes) ? 1 == 1 : contraDocTypes.Contains(t.DocTypeId.ToString()))
+            //            orderby t.DocDate, t.DocNo
+            //            select new ComboBoxResult
+            //            {
+            //                text = ProductTab.ProductName,
+            //                id = p.ProdOrderLineId.ToString(),
+            //                TextProp1 = "Order No: " + p.ProdOrderNo.ToString(),
+            //                TextProp2 = "BalQty: " + p.BalanceQty.ToString(),
+            //                AProp1 = Dimension1Tab.Dimension1Name,
+            //                AProp2 = Dimension2Tab.Dimension2Name
+            //            });
+
+            //return list;
+
+
+            string mQry = @"SELECT H.ProdOrderLineId, H.ProdOrderNo, replace(convert(NVARCHAR,POH.DocDate,106),' ','/') AS ProdOrderDate, H.BalanceQty, P.ProductName, D1.Dimension1Name, D2.Dimension2Name  
+                        FROM web.ViewProdOrderBalanceForDispatch H WITH (Nolock)
+                        LEFT JOIN web.ProdOrderHeaders POH WITH (Nolock) ON POH.ProdOrderHeaderId = H.ProdOrderHeaderId 
+                        LEFT JOIN web.DocumentTypes DT WITH (Nolock) ON DT.DocumentTypeId = POH.DocTypeId
+                        LEFT JOIN web.Products P WITH (Nolock) ON P.ProductId = H.ProductId 
+                        LEFT JOIN web.Dimension1 D1 WITH (Nolock) ON D1.Dimension1Id = H.Dimension1Id 
+                        LEFT JOIN web.Dimension2 D2 WITH (Nolock) ON d2.Dimension2Id =H.Dimension2Id
+                        WHERE H.SiteId=" + SaleDispatchHeader.SiteId + @" AND H.DivisionId=" + SaleDispatchHeader.DivisionId + @" AND POH.BuyerId = " + SaleDispatchHeader.SaleToBuyerId + @"
+                        AND (P.ProductName + ' ' + DT.DocumentTypeShortName + '-' + H.ProdOrderNo + ' ' + isnull(D1.Dimension1Name, '') + ' ' + isnull(D2.Dimension2Name, ''))  LIKE '%" + term.ToLower() + "%'  ";
+
+            if (settings.filterProductTypes != null && settings.filterProductTypes != "")
+                mQry = mQry + "AND PG.ProductTypeId IN (@filterProductTypes) ";
+
+            IEnumerable<PendingProdOrderForDispatch> BalanceProdOrder = db.Database.SqlQuery<PendingProdOrderForDispatch>(mQry).ToList();
+
+
+            var c = from H in BalanceProdOrder
+                    select new ComboBoxResult
+                    {
+                        id = H.ProdOrderLineId.ToString(),
+                        text = H.ProdOrderNo,
+                        TextProp1 = "Balance :" + H.BalanceQty,
+                        TextProp2 = "Date :" + H.ProdOrderDate,
+                        AProp1 = H.ProductName + ((H.Dimension1Name == null) ? "" : "," + H.Dimension1Name) + ((H.Dimension2Name == null) ? "" : "," + H.Dimension2Name),
+                        AProp2 = ((H.Dimension2Name == null) ? "" : ",CN:" + H.Dimension2Name)
+                    };
+
+            return c.AsQueryable();
+        }
+
         public SaleDispatchLineViewModel GetSaleDispatchDetailBalance(int id)
         {
             return (from b in db.ViewSaleDispatchBalance
@@ -519,7 +609,7 @@ namespace Service
                         );
         }
 
-        public IEnumerable<ComboBoxResult> GetPendingStockInForDispatch(int SaleDispatchHeaderId, int GodownId, int ProductId, int? Dimension1Id, int? Dimension2Id, string term)
+        public IEnumerable<ComboBoxResult> GetPendingStockInForDispatch(int SaleDispatchHeaderId, int GodownId, int ProductId, int? Dimension1Id, int? Dimension2Id, int? ProdOrderLineId, string term)
         {
 
             var SaleDispatchHeader = new SaleDispatchHeaderService(_unitOfWork).Find(SaleDispatchHeaderId);
@@ -543,6 +633,7 @@ namespace Service
             SqlParameter SqlParameterGodownId = new SqlParameter("@GodownId", GodownId);
             SqlParameter SqlParameterDimension1Id = new SqlParameter("@Dimension1Id", Dimension1Id);
             SqlParameter SqlParameterDimension2Id = new SqlParameter("@Dimension2Id", Dimension2Id);
+            SqlParameter SqlParameterProdOrderLineId = new SqlParameter("@ProdOrderLineId", ProdOrderLineId);
 
             if (Dimension1Id == null)
             {
@@ -554,11 +645,14 @@ namespace Service
                 SqlParameterDimension2Id.Value = DBNull.Value;
             }
 
+            if (ProdOrderLineId == null)
+            {
+                SqlParameterProdOrderLineId.Value = DBNull.Value;
+            }
 
-            IEnumerable<PendingStockInForDispatch> PendingStockInForDispatch = db.Database.SqlQuery<PendingStockInForDispatch>("" + ConfigurationManager.AppSettings["DataBaseSchema"] + ".spGetHelpListPendingStockInForDispatch @SaleDispatchHeaderId, @GodownId, @ProductId, @Dimension1Id, @Dimension2Id", SqlParameterSaleDispatchHeaderId, SqlParameterGodownId, SqlParameterProductId, SqlParameterDimension1Id, SqlParameterDimension2Id).ToList();
+            IEnumerable<PendingStockInForDispatch> PendingStockInForDispatch = db.Database.SqlQuery<PendingStockInForDispatch>("" + ConfigurationManager.AppSettings["DataBaseSchema"] + ".spGetHelpListPendingStockInForDispatch @SaleDispatchHeaderId, @GodownId, @ProductId, @Dimension1Id, @Dimension2Id, @ProdOrderLineId", SqlParameterSaleDispatchHeaderId, SqlParameterGodownId, SqlParameterProductId, SqlParameterDimension1Id, SqlParameterDimension2Id, SqlParameterProdOrderLineId).ToList();
 
-
-            return (from p in PendingStockInForDispatch
+           return (from p in PendingStockInForDispatch
                     where (string.IsNullOrEmpty(settings.filterContraSites) ? p.SiteId == CurrentSiteId : contraSites.Contains(p.SiteId.ToString()))
                     && (string.IsNullOrEmpty(settings.filterContraDivisions) ? p.DivisionId == CurrentDivisionId : contraDivisions.Contains(p.DivisionId.ToString()))
                     && (string.IsNullOrEmpty(term) ? 1 == 1 : p.StockInNo.ToLower().Contains(term.ToLower()))
@@ -573,25 +667,7 @@ namespace Service
                     });
 
 
-            //return (from p in db.ViewStockInBalance
-            //        join pt in db.Product on p.ProductId equals pt.ProductId into ProductTable from ProductTab in ProductTable.DefaultIfEmpty()
-            //        join D1 in db.Dimension1 on p.Dimension1Id equals D1.Dimension1Id into Dimension1Table from Dimension1Tab in Dimension1Table.DefaultIfEmpty()
-            //        join D2 in db.Dimension2 on p.Dimension2Id equals D2.Dimension2Id into Dimension2Table from Dimension2Tab in Dimension2Table.DefaultIfEmpty()
-            //        where p.BalanceQty > 0
-            //        && p.PersonId == SaleDispatchHeader.SaleToBuyerId
-            //        && p.Dimension1Id == Dimension1Id
-            //        && (string.IsNullOrEmpty(settings.filterContraSites) ? p.SiteId == CurrentSiteId : contraSites.Contains(p.SiteId.ToString()))
-            //        && (string.IsNullOrEmpty(settings.filterContraDivisions) ? p.DivisionId == CurrentDivisionId : contraDivisions.Contains(p.DivisionId.ToString()))
-            //        && (string.IsNullOrEmpty(term) ? 1 == 1 : p.StockInNo.ToLower().Contains(term.ToLower()))
-            //        select new ComboBoxResult
-            //        {
-            //            id = p.StockInId.ToString(),
-            //            text = p.StockInNo,
-            //            TextProp1 = "Lot No :" + p.LotNo,
-            //            TextProp2 = "Balance :" + p.BalanceQty,
-            //            AProp1 = ProductTab.ProductName + ", " + Dimension1Tab.Dimension1Name + ", " + Dimension2Tab.Dimension2Name, 
-            //            AProp2 = "Date :" + p.StockInDate
-            //        });
+
         }
 
         
@@ -599,6 +675,17 @@ namespace Service
         public void Dispose()
         {
         }
+    }
+
+    public class PendingProdOrderForDispatch
+    {
+        public int ProdOrderLineId { get; set; }
+        public string ProdOrderNo { get; set; }
+        public string ProdOrderDate { get; set; }
+        public decimal BalanceQty { get; set; }
+        public string ProductName { get; set; }
+        public string Dimension1Name { get; set; }
+        public string Dimension2Name { get; set; }
     }
 
     public class PendingStockInForDispatch

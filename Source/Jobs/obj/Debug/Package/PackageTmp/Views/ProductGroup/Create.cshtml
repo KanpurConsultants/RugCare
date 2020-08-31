@@ -85,6 +85,19 @@
                     </div>
                 </div>
 
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.LedgerAccountId, "Ledger Account", new { @class = "control-label col-xs-4" })
+                            <div class="col-md-7 col-sm-10">
+                                @Html.TextBoxFor(m => m.LedgerAccountId, null, new { @class = "form-control col-xs-6 " })
+                                @Html.ValidationMessageFor(m => m.LedgerAccountId, null, new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
 
                 <div class="row">
                     <div class="col-md-6">
@@ -126,6 +139,7 @@
     $(document).ready(function () {
         CustomSelectFunction($("#DefaultSalesTaxProductCodeId"), '/ComboHelpList/GetSalesTaxProductCodes', '/ComboHelpList/SetSingleSalesTaxProductCode', ' ', false, 0);
         CustomSelectFunction($("#DefaultSalesTaxGroupProductId"), '/ComboHelpList/GetSalesTaxGroupProduct', '/ComboHelpList/SetSingleSalesTaxGroupProduct', ' ', false, 0);
+        CustomSelectFunction($("#LedgerAccountId"), '/ComboHelpList/GetLedgerAccounts', '/ComboHelpList/SetSingleLedgerAccount', ' ', false, 0);
     });
 
   var IsSaved=false;

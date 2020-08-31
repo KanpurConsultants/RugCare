@@ -31,6 +31,8 @@ namespace Model.Models
         public bool? isVisibleDimension1 { get; set; }
         public bool? isVisibleDimension2 { get; set; }
 
+        public bool? isVisibleSaleOrderLine { get; set; }
+
         public bool? isVisibleDimension3 { get; set; }
         public bool? isVisibleDimension4 { get; set; }
         public bool? isVisibleRate { get; set; }
@@ -81,7 +83,7 @@ namespace Model.Models
         public bool? isVisibleSalesExecutive { get; set; }
 
         public bool? isVisibleReason { get; set; }
-
+        public bool? isAllowDirectReceive { get; set; }
         public bool? CalculateDiscountOnRate { get; set; }
 
         public int? RetensionCostCenter { get; set; }

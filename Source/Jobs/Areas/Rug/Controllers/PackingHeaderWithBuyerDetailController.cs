@@ -300,6 +300,32 @@ namespace Jobs.Areas.Rug.Controllers
                         SaleInvoiceHeaderDetail saleinvoiceheaderdetail = new SaleInvoiceHeaderDetail();
                         SaleDispatchHeader saledispatchheader = new SaleDispatchHeader();
 
+                        var t= db.SaleInvoiceHeaderDetail.Where(m => m.SaleToBuyerId == svm.BuyerId && m.PrivateMark !=null).ToList();
+                        
+                        if (t != null && t.Count !=0)
+                        {
+                            var LastSaleInvoiceHeaderId = t.OrderByDescending(item => item.SaleInvoiceHeaderId).First();
+                            SaleInvoiceHeaderDetail LastSaleInvoice = db.SaleInvoiceHeaderDetail.Where(m => m.SaleInvoiceHeaderId == LastSaleInvoiceHeaderId.SaleInvoiceHeaderId).FirstOrDefault();
+                            SaleDispatchHeader LastSaleDispatch = db.SaleDispatchHeader.Where(m => m.SaleDispatchHeaderId == LastSaleInvoice.SaleDispatchHeaderId).FirstOrDefault();
+
+                            saleinvoiceheaderdetail.PrivateMark = LastSaleInvoice.PrivateMark;
+                            saleinvoiceheaderdetail.PortOfLoading = LastSaleInvoice.PortOfLoading;
+                            saleinvoiceheaderdetail.DestinationPort = LastSaleInvoice.DestinationPort;
+                            saleinvoiceheaderdetail.FinalPlaceOfDelivery = LastSaleInvoice.FinalPlaceOfDelivery;
+                            saleinvoiceheaderdetail.PreCarriageBy = LastSaleInvoice.PreCarriageBy;
+                            saleinvoiceheaderdetail.PlaceOfPreCarriage = LastSaleInvoice.PlaceOfPreCarriage;
+                            saleinvoiceheaderdetail.OtherRefrence = LastSaleInvoice.OtherRefrence;
+                            saleinvoiceheaderdetail.TermsOfSale = LastSaleInvoice.TermsOfSale;
+                            saleinvoiceheaderdetail.NotifyParty = LastSaleInvoice.NotifyParty;
+                            saleinvoiceheaderdetail.PaymentTermsId = LastSaleInvoice.PaymentTermsId;
+                            saleinvoiceheaderdetail.Tenor = LastSaleInvoice.Tenor;
+                            saleinvoiceheaderdetail.BuyerOtherthanConsignee = LastSaleInvoice.BuyerOtherthanConsignee;
+                            saleinvoiceheaderdetail.DescriptionOfGoods = LastSaleInvoice.DescriptionOfGoods;
+
+                            saledispatchheader.ShipToPartyAddress = LastSaleDispatch.ShipToPartyAddress;
+                            saledispatchheader.ShipMethodId = LastSaleDispatch.ShipMethodId;
+                        }
+
                         saleinvoiceheaderdetail.SiteId = svm.SiteId;
                         saleinvoiceheaderdetail.DivisionId = svm.DivisionId;
                         saleinvoiceheaderdetail.DocTypeId = (int)Setting.SaleInvoiceTypeId;
@@ -311,6 +337,9 @@ namespace Jobs.Areas.Rug.Controllers
                         saleinvoiceheaderdetail.Remark = svm.Remark;
                         saleinvoiceheaderdetail.SaleToBuyerId = svm.BuyerId;
                         saleinvoiceheaderdetail.BillToBuyerId = svm.BuyerId;
+
+                       
+
                         saleinvoiceheaderdetail.SaleDispatchHeaderId = saledispatchheader.SaleDispatchHeaderId;
                         saleinvoiceheaderdetail.CurrencyId = new CurrencyService(_unitOfWork).GetCurrencyByName("USD").ID;
                         saleinvoiceheaderdetail.PaymentTermsId = new PaymentTermsService(_unitOfWork).GetPaymentTermsByName("D.A.").PaymentTermsId;

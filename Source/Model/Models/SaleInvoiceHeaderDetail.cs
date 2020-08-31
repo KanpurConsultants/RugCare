@@ -20,7 +20,7 @@ namespace Model.Models
         public DateTime BLDate { get; set; }
 
         [Display(Name = "Private Mark")]
-        [MaxLength(20)]
+        [MaxLength(50)]
         public string PrivateMark { get; set; }
 
         [Display(Name = "Port Of Loading")]

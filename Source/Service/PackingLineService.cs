@@ -196,6 +196,8 @@ namespace Service
             IEnumerable<PackingLineViewModel> packinglineviewmodel = (from L in db.PackingLine
                                                                       join P in db.Product on L.ProductId equals P.ProductId into ProductTable
                                                                       from Producttab in ProductTable.DefaultIfEmpty()
+                                                                      join PLE in db.PackingLineExtended on L.PackingLineId  equals PLE.PackingLineId into PLETable
+                                                                      from PLEtab in PLETable.DefaultIfEmpty()
                                                                       join S in db.SaleOrderLine on L.SaleOrderLineId equals S.SaleOrderLineId into SaleOrderLineTable
                                                                       from SaleOrderLineTab in SaleOrderLineTable.DefaultIfEmpty()
                                                                       join SEL in db.SaleEnquiryLine on SaleOrderLineTab.ReferenceDocLineId equals SEL.SaleEnquiryLineId into SELTable
@@ -219,6 +221,7 @@ namespace Service
                                                                           ProductId = L.ProductId,
                                                                           ProductName = Producttab.ProductName,
                                                                           BuyerSKUName = SELETab.BuyerSpecification+"-"+ SELETab.BuyerSpecification1 + "-" + SELETab.BuyerSpecification2 + "-" + SELETab.BuyerSpecification3,
+                                                                          Specification= L.DealUnitId == "FT2" ? Math.Round(PLEtab.Length.Value,2).ToString().Substring(0, Math.Round(PLEtab.Length.Value, 2).ToString().Length-2) + "X"+ Math.Round(PLEtab.Width.Value, 2).ToString().Substring(0, Math.Round(PLEtab.Width.Value, 2).ToString().Length - 2) : Math.Round(PLEtab.Length.Value, 0).ToString().Substring(0, Math.Round(PLEtab.Length.Value, 0).ToString().Length - 5) + "X" + Math.Round(PLEtab.Width.Value, 0).ToString().Substring(0, Math.Round(PLEtab.Width.Value, 0).ToString().Length - 5),
                                                                           Qty = L.Qty,
                                                                           SaleOrderLineId = L.SaleOrderLineId,
                                                                           SaleOrderNo = SaleOrderHeaderTab.DocNo,
@@ -231,6 +234,7 @@ namespace Service
                                                                           NetWeight = L.NetWeight,
                                                                           Remark = L.Remark
                                                                       }).ToList();
+
 
             double x = 0;
             var p = packinglineviewmodel.OrderBy(sx => double.TryParse(sx.BaleNo, out x) ? x : 0);
@@ -1441,14 +1445,29 @@ namespace Service
                             LEFT JOIN web.Stocks S WITH (Nolock) ON S.StockId = H.StockInId 
                             LEFT JOIN web.Products P WITH (Nolock) ON P.ProductId = H.ProductId
                             LEFT JOIN web.ProductUids PU WITH (Nolock) ON PU.ProductUIDId = S.ProductUIDId
+                            LEFT JOIN web.ProductUids PU1 WITH (Nolock) ON PU1.ProductUidName = S.lotNo
                             LEFT JOIN web.ProductGroups PG WITH (Nolock) ON PG.ProductGroupId = P.ProductGroupId
                             LEFT JOIN web.StockHeaders SH WITH (Nolock) ON SH.StockHeaderId = S.StockHeaderId 
                             LEFT JOIN web.DocumentTypes DT WITH (Nolock) ON DT.DocumentTypeId = SH.DocTypeId
-                            WHERE H.BalanceQty > 0 AND S.GodownId =@GodownId 
+                            WHERE H.BalanceQty > 0 
+                            AND isnull(Isnull(PU.IsActive,PU1.IsActive),1) =1
                             AND (P.ProductName +' '+ DT.DocumentTypeShortName + '-' + H.StockInNo + ' '+ isnull(H.LotNo, '') + ' '+isnull(PU.LotNo, '') + ' '+ isnull(PU.ProductUidName, ''))  LIKE '%" + term.ToLower() + "%'  ";
 
-            if (settings.filterProductTypes != null && settings.filterProductTypes != "")
+
+                if (settings.filterProductTypes != null && settings.filterProductTypes != "")
                     mQry = mQry + "AND PG.ProductTypeId IN (@filterProductTypes) ";
+
+            var company = (from C in db.Company
+                           where C.CompanyId == 1
+                           select new
+                           {
+                               CompanyName = C.CompanyName
+                           }).ToList();
+
+            if (company.FirstOrDefault().CompanyName == "M/S BHADOHI CARPETS")
+                mQry = mQry + "AND S.GodownId in (1,2031) ";
+            else
+                mQry = mQry + "AND S.GodownId = @GodownId ";
 
             IEnumerable<StockInBalance> StockInBalanceViewModel = db.Database.SqlQuery<StockInBalance>(mQry).ToList();
 
@@ -1519,7 +1538,7 @@ namespace Service
                             LEFT JOIN web.ProductGroups PG ON PG.ProductGroupId = P.ProductGroupId
                             LEFT JOIN web.StockHeaders SH WITH (Nolock) ON SH.StockHeaderId = S.StockHeaderId 
                             LEFT JOIN web.DocumentTypes DT ON DT.DocumentTypeId = SH.DocTypeId
-                            WHERE H.BalanceQty > 0 AND S.GodownId =@GodownId AND SH.DocTypeId <> @DocTypeId 
+                            WHERE H.BalanceQty > 0 AND ISNULL(PU.IsActive,1) =1  AND S.GodownId =@GodownId AND SH.DocTypeId <> @DocTypeId 
                             AND (P.ProductName +' '+ DT.DocumentTypeShortName + '-' + H.StockInNo + ' '+ isnull(H.LotNo, '') + ' '+isnull(PU.LotNo, '') + ' '+ isnull(PU.ProductUidName, ''))  LIKE '%" + term.ToLower() + "%'  ";
 
             if (settings.filterProductTypes != null && settings.filterProductTypes != "")

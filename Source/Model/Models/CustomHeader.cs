@@ -17,7 +17,8 @@ namespace Model.Models
 
         [Key]        
         public int CustomHeaderId { get; set; }
-                        
+        public int? DocId { get; set; }
+
         [Display(Name = "Custom Type"),Required]
         [ForeignKey("DocType")]
         [Index("IX_CustomHeader_DocID", IsUnique = true, Order = 1)]

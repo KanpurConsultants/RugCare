@@ -194,7 +194,7 @@
                     if (data.ProdOrderLineIdList.indexOf(val.trim()) > -1 & val != " ") {
                         $(node).addClass('selected');
                     }
-                })                
+                })
 
             });
 
@@ -204,8 +204,9 @@
 
         }
 
-        function UpdateActionLink() {
-            $('a#Proceed').attr('href', '/DyeingOrderWizard/SummarizeProdOrderList');
+        function UpdateActionLink()
+        {
+            $('a#Proceed').attr('href', '/DyeingOrderWizard/SummarizeProdOrderList/' + @ViewBag.id);
         }
 
 

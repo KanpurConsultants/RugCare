@@ -687,7 +687,7 @@
                 cache: false,
                 type: "POST",
                 url: "@(Url.Action("GetStockInDetailJson"))",
-                data: { StockInId: $("#StockInId").val()},
+                data: { StockInId: $("#StockInId").val(), PackingHeaderId: $("#PackingHeaderId").val()},
                 success: function (data) {
                     if (data != null)
                     {
@@ -716,9 +716,10 @@
 
                         if (data.ProductUidId != null)
                         {
-                            $("#ProductUidId").val(data.ProductUidId);
-                            $("#ProductUidName").val(data.ProductUidName);
+                            $("#ProductUidId").val(data.ProductUidId);                           
                         }
+
+                        $("#ProductUidName").val(data.ProductUidName);
 
                         $("#ToProductUidName").val("");
                         $("#ProductUidName").attr('readonly', 'true');

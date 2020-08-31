@@ -115,6 +115,8 @@ namespace Service
                             Dimension4Name = p.Dimension4.Dimension4Name,
                             ProductUidId = p.ProductUidId,
                             ProductUidName = p.ProductUid.ProductUidName,
+                            SaleOrderLineId = p.SaleOrderLineId,
+                            SaleOrderDocNo = p.SaleOrderLine.SaleOrderHeader.DocNo,
                             ProdOrderLineId = p.ProdOrderLineId,
                             ProdOrderDocNo = p.ProdOrderLine.ProdOrderHeader.DocNo,
                             LotNo = p.LotNo,

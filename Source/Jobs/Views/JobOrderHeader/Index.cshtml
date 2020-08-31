@@ -56,8 +56,16 @@
         <hr style="margin-top:0px;margin-bottom:0px" />
         <input type="hidden" class="DocType_Id" value="@ViewBag.id">
         <div class="panel-info">            
-            <div class="btn-group">               
-                @Html.ActionLink(" ", "Create", "JobOrderHeader", new { @id = @ViewBag.id }, new { @class = "cbtn btn-circle glyphicon glyphicon-plus toolbar", @title = "Add New", @data_toggle = "tooltip" })
+            <div class="btn-group">                       
+                @if (ViewBag.IsDefaultCreateFromWizard == true)
+                {
+                    @Html.ActionLink(" ", "Wizard", "JobOrderHeader", new { @id = @ViewBag.id }, new { @class = "cbtn btn-circle glyphicon glyphicon-plus toolbar", @title = "Add New", @data_toggle = "tooltip" })
+                }
+                else
+                {
+                    @Html.ActionLink(" ", "Create", "JobOrderHeader", new { @id = @ViewBag.id }, new { @class = "cbtn btn-circle glyphicon glyphicon-plus toolbar", @title = "Add New", @data_toggle = "tooltip" })
+                }
+
                 @if (ViewBag.SqlProcDocumentPrint != null)
                 {
                 @Html.ActionLink(" ", "GeneratePrints", "JobOrderHeader", null, new { @class = "cbtn btn-circle glyphicon glyphicon-print", @title = "Print", @data_toggle = "tooltip", @id = "PrintRecordI", target = "_blank" })
@@ -74,7 +82,15 @@
                 <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1">
                 @if (ViewBag.WizardId != null)
                 {
-                <li><a href="@Url.Action("Wizard", "JobOrderHeader", new { @id = @ViewBag.id })"><span class="glyphicon glyphicon-random" onclick="$('#')"> </span>&nbsp;&nbsp;Wizard</a></li>
+                    if (ViewBag.IsDefaultCreateFromWizard == true)
+                    {
+                        <li><a href="@Url.Action("Create", "JobOrderHeader", new { @id = @ViewBag.id })"><span class="glyphicon glyphicon-random" onclick="$('#')"> </span>&nbsp;&nbsp;Create</a></li>
+                    }
+                    else
+                    {
+                        <li><a href="@Url.Action("Wizard", "JobOrderHeader", new { @id = @ViewBag.id })"><span class="glyphicon glyphicon-random" onclick="$('#')"> </span>&nbsp;&nbsp;Wizard</a></li>
+                    }
+
                 }
                 @if (ViewBag.ExportMenuId != null)
                 {
@@ -141,6 +157,7 @@
            columns.Add(m => m.ProcessName, (bool)(!(ViewBag.isVisibleProcessHeader ?? true))).Sortable(true).Titled("Process").Filterable(true).Sortable(true);
            columns.Add(m => m.CostCenterName, (bool)(!(ViewBag.isVisibleCostCenter ?? true))).Sortable(true).Titled("CostCenter").Filterable(true).Sortable(true);
            columns.Add(m => m.JobWorkerName).Sortable(true).Filterable(true).Titled(Partycaption);
+           columns.Add(m => m.OrderByName).Sortable(true).Titled("Order By").Filterable(true).Sortable(true);
            columns.Add(m => m.Remark).Sortable(true).Filterable(true).Titled("Remark");
            columns.Add().RenderValueAs(m => CustomHelpers.RenderTotal(m.TotalQty, m.DecimalPlaces)).Sanitized(false).Encoded(false).Titled("Total Qty");
            columns.Add().Sanitized(false).Encoded(false).RenderValueAs(m => CustomHelpers.RenderStatus(m.Status)).Titled("Status");

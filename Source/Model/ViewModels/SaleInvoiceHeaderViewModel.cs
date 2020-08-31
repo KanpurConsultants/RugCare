@@ -58,6 +58,8 @@ namespace Model.ViewModels
         public int PaymentTermsId { get; set; }
         public virtual PaymentTerms PaymentTerms { get; set; }
 
+        public int? Tenor { get; set; }
+
         [Display(Name = "Transporter"), MaxLength(250)]
         public string Transporter { get; set; }
 
@@ -79,7 +81,7 @@ namespace Model.ViewModels
         public DateTime BlDate { get; set; }
 
         [Display(Name = "Private Mark")]
-        [MaxLength(20)]
+        [MaxLength(50)]
         public string PrivateMark { get; set; }
 
         [Display(Name = "Port Of Loading")]

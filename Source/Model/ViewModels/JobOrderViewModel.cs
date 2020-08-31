@@ -225,6 +225,9 @@ namespace Model.ViewModel
         public int? ProdOrderLineId { get; set; }
         public string ProdOrderDocNo { get; set; }
 
+        public int? SaleOrderLineId { get; set; }
+        public string SaleOrderDocNo { get; set; }
+
         public int? OrderDocTypeId { get; set; }
         public int? OrderHeaderId { get; set; }
 

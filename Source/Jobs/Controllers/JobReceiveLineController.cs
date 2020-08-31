@@ -1067,7 +1067,7 @@ namespace Jobs.Controllers
                         //Saving BOMPOST Data
                         if (!string.IsNullOrEmpty(Settings.SqlProcConsumption))
                         {
-                            var BomPostList = _JobReceiveLineService.GetBomPostingDataForWeaving(item.ProductId, item.Dimension1Id, item.Dimension2Id, item.Dimension3Id, item.Dimension4Id, Header.ProcessId, item.PassQty, Header.DocTypeId, Settings.SqlProcConsumption, line.JobOrderLineId, line.Weight).ToList();
+                            var BomPostList = _JobReceiveLineService.GetBomPostingDataForWeaving(item.ProductId, item.Dimension1Id, item.Dimension2Id, item.Dimension3Id, item.Dimension4Id, Header.ProcessId, item.DocQty, Header.DocTypeId, Settings.SqlProcConsumption, line.JobOrderLineId, line.Weight).ToList();
 
                             foreach (var BomItem in BomPostList)
                             {

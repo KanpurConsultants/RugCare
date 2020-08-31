@@ -520,12 +520,14 @@
             var ReqBalQty = parseFloat($(this).find('#RequisitionQty').text()) || 0;
             var LineIssueQty = $Input.hasClass('number') ? eval(parseFloat($Input.val())) : parseFloat($Input.val());
 
-            if (LineIssueQty > ReqBalQty) {
+            if (LineIssueQty > ReqBalQty)
+            {
                 $(this).addClass('ModalRowValidationError')
                 ValidationMessage = "Qty Exceeding Balance Qty";
                 ValidationMessageCount++;
             }
-            else {
+            else
+            {
                 if ($(this).hasClass('ModalRowValidationError'))
                     $(this).removeClass('ModalRowValidationError');
             }
@@ -540,7 +542,8 @@
 
         var bal = (IssueQty) - (RequisitionQty);
 
-        if (bal > 0) {
+        if (bal > 0)
+        {
             if (!$('#modform').find('.modal-body #errormsg').length) {
                 $('#modform').find('.modal-body').prepend("<div class='alert alert-danger'><span id=errormsg >" + ValidationMessage + "</span></div>")
             }
@@ -548,7 +551,8 @@
                 $('#modform').find('#errormsg').text("Qty exceeding Required Qty");
             }
         }
-        else {
+        else
+        {
             if ($('#modform').find('.modal-body #errormsg').length && ValidationMessageCount == 0) {
                 $('#modform').find('#errormsg').parent().remove();
             }

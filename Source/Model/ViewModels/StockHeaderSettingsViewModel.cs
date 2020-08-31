@@ -40,6 +40,7 @@ namespace Model.ViewModel
         public bool isVisibleRate { get; set; }
         public bool isVisibleWeight { get; set; }
         public bool isVisibleSpecification { get; set; }
+        public bool isVisibleSaleOrderLine { get; set; }
         public bool isMandatoryRate { get; set; }
         public bool isEditableRate { get; set; }
         public bool isVisibleLotNo { get; set; }

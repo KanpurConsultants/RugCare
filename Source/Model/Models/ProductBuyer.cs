@@ -63,6 +63,7 @@ namespace Model.Models
         [ForeignKey("Dimension2")]
         public int? Dimension2Id { get; set; }
 
+        //public Decimal? Rate { get; set; }
 
         [Display(Name = "Created By")]
         public string CreatedBy { get; set; }

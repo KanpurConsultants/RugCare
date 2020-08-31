@@ -225,6 +225,11 @@
                                 @:/
                                 @Html.ActionLink("For Sale Order", Action, "SaleDispatchLine", new { id = @Model.SaleDispatchHeaderId, IsSaleBased = true }, new { data_modal = "", id = "btnCreate", @class = "toolbar", @title = "Add New", @data_toggle = "tooltip", @data_detailDisabled = "true" })
                             }
+                            @if (Model.SaleDispatchSettings.isVisibleForProdOrder)
+                            {
+                                @:/
+                                @Html.ActionLink("For Prod Order", Action, "SaleDispatchLine", new { id = @Model.SaleDispatchHeaderId, IsSaleBased = true }, new { data_modal = "", id = "btnCreate", @class = "toolbar", @title = "Add New", @data_toggle = "tooltip", @data_detailDisabled = "true" })
+                            }
                             </div>
                     <div class="btn-group right" style="padding-right:15px">
                         @if (Model.SaleDispatchSettings.isVisibleForSaleOrder)

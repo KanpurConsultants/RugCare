@@ -500,6 +500,7 @@ namespace Jobs.Areas.Rug.Controllers
                     saleinvoiceheaderdetail.FinalPlaceOfDelivery = svm.FinalPlaceOfDelivery;
                     saleinvoiceheaderdetail.KindsOfackages = svm.KindsOfackages;
                     saleinvoiceheaderdetail.InvoiceAmount = svm.InvoiceAmount;
+                    saleinvoiceheaderdetail.Tenor = svm.Tenor;
                     saleinvoiceheaderdetail.NotifyParty = svm.NotifyParty;
                     saleinvoiceheaderdetail.OrderDate = svm.OrderDate;
                     saleinvoiceheaderdetail.OrderNo = svm.OrderNo;
@@ -545,10 +546,16 @@ namespace Jobs.Areas.Rug.Controllers
                     saledispatchheader.ModifiedBy = User.Identity.Name;
                     _SaleDispatchHeaderService.Update(saledispatchheader);
 
-                    PackingLine PL = new PackingLineService(_unitOfWork).GetPackingLineForHeaderId((int)saledispatchheader.PackingHeaderId).First();
-                    PL.GrossWeight = (Decimal)svm.GrossWeight;
-                    PL.NetWeight = (Decimal)svm.NetWeight;
-                    new PackingLineService(_unitOfWork).Update(PL);
+                    var temp = new PackingLineService(_unitOfWork).GetPackingLineForHeaderId((int)saledispatchheader.PackingHeaderId).ToList();
+                    
+                    if (temp != null && temp.Count !=0)
+                    {
+                        PackingLine PL = temp.First();
+
+                        PL.GrossWeight = (Decimal)svm.GrossWeight;
+                        PL.NetWeight = (Decimal)svm.NetWeight;
+                        new PackingLineService(_unitOfWork).Update(PL);
+                    }
 
                     LogList.Add(new LogTypeViewModel
                     {
@@ -670,8 +677,11 @@ namespace Jobs.Areas.Rug.Controllers
             svm.Transporter = sd.Transporter;
             svm.DeliveryTermsId = sd.DeliveryTermsId;
             svm.ShipMethodId = sd.ShipMethodId.Value;
-            svm.GrossWeight = Weight.GrossWeight;
-            svm.NetWeight = Weight.NetWeight;
+            if (Weight != null)
+            {
+                svm.GrossWeight = Weight.GrossWeight;
+                svm.NetWeight = Weight.NetWeight;
+            }
             svm.Remark = sd.Remark;
             ViewBag.Mode = "Edit";
             PrepareViewBag(s.DocTypeId);

@@ -304,6 +304,7 @@
     <Compile Include="Areas\Rug\Controllers\WeavingReceiveTextImportController.cs" />
     <Compile Include="Areas\Rug\Controllers\ProductQualityConsumptionLineController.cs" />
     <Compile Include="Areas\Rug\Controllers\PackingUnitSetting.cs" />
+    <Compile Include="Controllers\ShipmentDetailController.cs" />
     <Compile Include="Controllers\DocumentTypeTimeExtensionRequestController.cs" />
     <Compile Include="Areas\Rug\Controllers\WeavingRetension.cs" />
     <Compile Include="Areas\Rug\Controllers\CostingHeaderController.cs" />
@@ -3747,6 +3748,10 @@
     <Content Include="Areas\Rug\Views\WeavingOrderInspectionWizard\Create.cshtml" />
     <Content Include="Areas\Rug\Views\WeavingOrderInspectionWizard\DocumentTypeList.cshtml" />
     <Content Include="Areas\Rug\Views\WeavingOrderInspectionWizard\OrderInspectionWizard.cshtml" />
+    <Content Include="Areas\Rug\Views\DyeingOrderWizard\_Filters.cshtml" />
+    <Content Include="Areas\Rug\Views\DyeingOrderWizard\CreateDyeingOrderFromProdOrder.cshtml" />
+    <Content Include="Areas\Rug\Views\DyeingOrderWizard\CreateDyeingOrderFromProdOrder1.cshtml" />
+    <Content Include="Areas\Rug\Views\DyeingOrderWizard\CreateWeavingOrder.cshtml" />
     <None Include="job_scheduling_data_2_0.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -5519,6 +5524,15 @@
     <Content Include="Views\JobOrderLineStatusUpdateWizard\PendingToSubmit.cshtml" />
     <Content Include="Views\JobOrderLineStatusUpdateWizard\JobOrderLineStatusUpdate.cshtml" />
     <Content Include="Views\JobOrderLineStatusUpdateWizard\RateListHeaderIndex.cshtml" />
+    <Content Include="Views\SaleDispatchLine\_CreateForProdOrder.cshtml" />
+    <Content Include="Views\ShipmentDetail\_Reason.cshtml" />
+    <Content Include="Views\ShipmentDetail\Create.cshtml" />
+    <Content Include="Views\ShipmentDetail\DocumentTypeList.cshtml" />
+    <Content Include="Views\ShipmentDetail\Index.cshtml" />
+    <Content Include="Views\ShipmentDetail\IndexDrawBack.cshtml" />
+    <Content Include="Views\ShipmentDetail\IndexLicense.cshtml" />
+    <Content Include="Views\ShipmentDetail\IndexPreShipment.cshtml" />
+    <Content Include="Views\ShipmentDetail\IndexPayment.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -20,6 +20,9 @@ namespace Model.ViewModel
         public decimal BalanceQty { get; set; }
         public string ProdOrderLineIdList { get; set; }
         public int ProdOrderLineId { get; set; }
+        public int ProductId { get; set; }
+        public int? Dimension1Id { get; set; }
+        public int? Dimension2Id { get; set; }
         public string ProdOrderNo { get; set; }
         public string ProdOrderDate { get; set; }
         public DateTime DocDate { get; set; }

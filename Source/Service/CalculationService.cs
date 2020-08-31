@@ -228,6 +228,11 @@ namespace Service
             int PersonAccountId = 6612;
             int LedgerHeaderId = 0;
 
+            int FixProcessLedgerAccountId = (from A in db.LedgerAccount where A.LedgerAccountName == "|Process|" select A.LedgerAccountId).FirstOrDefault();
+            int? ProcessId = LedgerHeaderViewModel.ProcessId;
+            int HeaderProcessLedgerAccountId = (from P in db.Process where P.ProcessId == ProcessId select P.AccountId).FirstOrDefault();
+
+
             if (LedgerHeaderViewModel.LedgerHeaderId == 0)
             {
                 LedgerHeader LedgerHeader = new LedgerHeader();
@@ -480,7 +485,11 @@ namespace Service
                     Ledger.CostCenterId = item.CostCenterId;
                 }
 
+                if (item.LedgerAccountId == FixProcessLedgerAccountId)
+                    Ledger.LedgerAccountId = HeaderProcessLedgerAccountId;
 
+                if (item.ContraLedgerAccountId == FixProcessLedgerAccountId)
+                    Ledger.ContraLedgerAccountId = HeaderProcessLedgerAccountId;
 
 
 
@@ -500,6 +509,11 @@ namespace Service
         {
             int PersonAccountId = 6612;
             int LedgerHeaderId = 0;
+
+
+            int FixProcessLedgerAccountId = (from A in db.LedgerAccount where A.LedgerAccountName == "|Process|" select A.LedgerAccountId).FirstOrDefault();
+            int? ProcessId = LedgerHeaderViewModel.ProcessId;
+            int HeaderProcessLedgerAccountId = (from P in db.Process where P.ProcessId == ProcessId select P.AccountId).FirstOrDefault(); 
 
             if (LedgerHeaderViewModel.LedgerHeaderId == 0)
             {
@@ -747,8 +761,11 @@ namespace Service
                     Ledger.CostCenterId = item.CostCenterId;
                 }
 
+                if (item.LedgerAccountId == FixProcessLedgerAccountId)
+                    Ledger.LedgerAccountId = HeaderProcessLedgerAccountId;
 
-
+                if (item.ContraLedgerAccountId == FixProcessLedgerAccountId)
+                    Ledger.ContraLedgerAccountId = HeaderProcessLedgerAccountId;
 
 
                 Ledger.AmtDr = item.AmtDr * (LedgerHeaderViewModel.ExchangeRate ?? 1);

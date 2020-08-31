@@ -107,7 +107,7 @@ namespace Service
             JobReceiveHeader.SiteId = pt.SiteId;
             JobReceiveHeader.ProcessId = pt.ProcessId;
             JobReceiveHeader.JobWorkerId = pt.JobWorkerId;
-            JobReceiveHeader.JobWorkerDocNo = pt.DocNo;
+            JobReceiveHeader.JobWorkerDocNo = pt.JobWorkerDocNo;
             JobReceiveHeader.JobReceiveById = pt.JobReceiveById;
             JobReceiveHeader.GodownId = pt.GodownId;
             JobReceiveHeader.Remark = pt.Remark;
@@ -596,7 +596,7 @@ namespace Service
             JobReceiveHeader.DocNo = pt.DocNo;
             JobReceiveHeader.DocDate = pt.DocDate;
             JobReceiveHeader.JobWorkerId = pt.JobWorkerId;
-            JobReceiveHeader.JobWorkerDocNo = pt.DocNo;
+            JobReceiveHeader.JobWorkerDocNo = pt.JobWorkerDocNo;
             JobReceiveHeader.JobReceiveById = pt.JobReceiveById;
             JobReceiveHeader.GodownId = pt.GodownId;
             JobReceiveHeader.Remark = pt.Remark;
@@ -885,7 +885,7 @@ namespace Service
                     Max(H.GodownId) AS GodownId, Max(H.JobWorkerId) AS JobWorkerId,  
                     Min(L.ProductUidId) AS ProductUidId,   Min(PU.ProductUidName) AS ProductUidName, 
                     Max(L.ProductUidId) AS ToProductUidId,   Max(PU.ProductUidName) AS ToProductUidName,   
-                    Max(JOL.ProductId) AS ProductId,
+                    Max(JOL.ProductId) AS ProductId, Max(H.JobWorkerDocNo) AS JobWorkerDocNo,
                     Max(P.ProductName) AS ProductName,  Max(L.LotNo) AS LotNo,  sum(L.Qty) AS Qty,    Max(P.UnitId) AS UnitId, 
                     Max(L.DealUnitId) AS DealUnitId,   Max(RQ.UnitConversionMultiplier) AS UnitConversionMultiplier,
                     sum(RQ.DealQty) AS DealQty, sum(L.Weight) AS Weight, Max(U.DecimalPlaces) AS UnitDecimalPlaces, Max(DU.DecimalPlaces) AS   DealUnitDecimalPlaces ,

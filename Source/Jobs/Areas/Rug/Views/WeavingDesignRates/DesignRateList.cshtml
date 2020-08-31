@@ -330,7 +330,6 @@
     }
 
     function GenerateFiltersForHtml() {
-
         var html = "";
         html += Filters.WizardType ? "<strong>Type:</strong> <span class='label label-danger'> " + Filters.WizardType + " </span>" : "";
         html += Filters.ProductCategory.length > 0 ? "<strong>Construction:</strong>" + $.map(Filters.ProductCategory, function (val, i) { return ("<span class='label label-danger'>" + val.text + "</span>") }).join(' ') : "";

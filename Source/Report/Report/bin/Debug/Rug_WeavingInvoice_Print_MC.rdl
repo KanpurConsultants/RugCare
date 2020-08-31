@@ -2179,7 +2179,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!DueAmount.Value-Fields!TDS.Value -Fields!Advance.Value-Fields!taxAmount.Value</Value>
+                                  <Value>=Fields!DueAmount.Value-Fields!TDS.Value -Fields!Advance.Value+Fields!taxAmount.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -2513,7 +2513,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=sum(Fields!DueAmount.Value-Fields!TDS.Value -Fields!Advance.Value-Fields!taxAmount.Value)</Value>
+                                  <Value>=sum(Fields!DueAmount.Value-Fields!TDS.Value -Fields!Advance.Value+Fields!taxAmount.Value)</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -4294,7 +4294,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=sum(Fields!DueAmount.Value-Fields!TDS.Value -Fields!Advance.Value-Fields!taxAmount.Value)</Value>
+                                  <Value>=sum(Fields!DueAmount.Value-Fields!TDS.Value -Fields!Advance.Value+Fields!taxAmount.Value)</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -8446,7 +8446,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Code.RupeesToWord(Sum(Fields!DueAmount.Value, "DsMain")-Sum(Fields!TDS.Value, "DsMain")-Sum(Fields!Advance.Value, "DsMain")-Sum(Fields!RetAmount.Value, "DsMain"))</Value>
+                                  <Value>=Code.RupeesToWord(Sum(Fields!DueAmount.Value, "DsMain")-Sum(Fields!TDS.Value, "DsMain")-Sum(Fields!Advance.Value, "DsMain")-Sum(Fields!taxAmount.Value, "DsMain"))</Value>
                                   <Style />
                                 </TextRun>
                               </TextRuns>

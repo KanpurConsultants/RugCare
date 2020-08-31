@@ -30,6 +30,7 @@ namespace Service
         IQueryable<ProdOrderHeaderViewModel> GetProdOrderHeaderList(int id, string Uname);
         IQueryable<ProdOrderHeaderViewModel> GetProdOrderHeaderListPendingToSubmit(int id, string Uname);
         IQueryable<ProdOrderHeaderViewModel> GetProdOrderHeaderListPendingToReview(int id, string Uname);
+        ProdOrderHeader Find_ByReferenceDocId(int ReferenceDocTypeId, int ReferenceDocId);
         Task<IEquatable<ProdOrderHeader>> GetAsync();
         Task<ProdOrderHeader> FindAsync(int id);
         int NextId(int id);
@@ -283,6 +284,10 @@ namespace Service
                         ).FirstOrDefault();
         }
 
+        public ProdOrderHeader Find_ByReferenceDocId(int ReferenceDocTypeId, int ReferenceDocId)
+        {
+            return _unitOfWork.Repository<ProdOrderHeader>().Query().Get().Where(m => m.ReferenceDocTypeId == ReferenceDocTypeId && m.ReferenceDocId == ReferenceDocId).FirstOrDefault();
+        }
 
         public IEnumerable<ProdOrderHeaderViewModel> GetProdOrdersForDocumentType( string term,int DocHeaderId,string ProcName)//DocTypeId
         {

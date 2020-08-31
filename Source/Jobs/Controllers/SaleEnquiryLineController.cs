@@ -414,6 +414,18 @@ namespace Jobs.Controllers
                     _SaleEnquiryLineService.Update(temp1);
 
 
+                    ProdOrderLine POL = new ProdOrderLineService(_unitOfWork).Find_ByReferenceDocLineId(header.DocTypeId, svm.SaleEnquiryLineId);
+                    if (POL != null)
+                    {
+                        POL.DueDate = svm.DueDate;
+                        POL.ProductId = (int)svm.ProductId;
+                        POL.Qty = svm.Qty;
+                        POL.Remark = svm.Remark;
+                        POL.ModifiedDate = DateTime.Now;
+                        POL.ModifiedBy = User.Identity.Name;
+                        new ProdOrderLineService(_unitOfWork).Update(POL);
+                    }
+
                     SaleOrderLine SOL = new SaleOrderLineService(_unitOfWork).Find_ByReferenceDocLineId(header.DocTypeId,svm.SaleEnquiryLineId);
                     if (SOL!=null)
                     {
@@ -436,6 +448,8 @@ namespace Jobs.Controllers
                     Extended.BuyerSpecification1 = svm.BuyerSpecification1;
                     Extended.BuyerSpecification2 = svm.BuyerSpecification2;
                     Extended.BuyerSpecification3 = svm.BuyerSpecification3;
+                    Extended.BuyerSku = svm.BuyerSku;
+                    Extended.BuyerUpcCode = svm.BuyerUpcCode;
                     new SaleEnquiryLineExtendedService(_unitOfWork).Update(Extended);
 
 
@@ -729,6 +743,13 @@ namespace Jobs.Controllers
             List<LogTypeViewModel> LogList = new List<LogTypeViewModel>();
             SaleEnquiryLine SaleEnquiryLine = _SaleEnquiryLineService.Find(vm.SaleEnquiryLineId);
             SaleEnquiryHeader header = new SaleEnquiryHeaderService(_unitOfWork).Find(SaleEnquiryLine.SaleEnquiryHeaderId);
+
+            ProdOrderLine POL = new ProdOrderLineService(_unitOfWork).Find_ByReferenceDocLineId(header.DocTypeId, vm.SaleEnquiryLineId);
+            if (POL != null)
+            {
+                new ProdOrderLineStatusService(_unitOfWork).Delete(POL.ProdOrderLineId);
+                new ProdOrderLineService(_unitOfWork).Delete(POL.ProdOrderLineId);
+            }
 
             SaleOrderLine SOL = new SaleOrderLineService(_unitOfWork).Find_ByReferenceDocLineId(header.DocTypeId, vm.SaleEnquiryLineId);
             if (SOL != null)

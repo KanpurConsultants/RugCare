@@ -283,7 +283,9 @@ namespace Service
                     System.Web.HttpContext.Current.Session["SalaryLineReferenceList"] = SalaryLineReferenceViewModel;
 
                     if (CompanyName == "Bhadohi Carpets")
-                        mQry = @"SELECT 0 As SalaryHeaderId, E.PersonID AS EmployeeId, E.Name+','+E.Suffix AS EmployeeName, Convert(int,E.Code) AS Code, 1.00 AS Days, isnull(VSalaryLine.Amount,0) as BasicPay, 
+                        mQry = @"SELECT 0 As SalaryHeaderId, E.PersonID AS EmployeeId, E.Name+','+E.Suffix AS EmployeeName, 
+                        --Convert(INTEGER,E.Code) AS Code,
+                        Try_parse(E.Code AS int) AS Code, 1.00 AS Days, isnull(VSalaryLine.Amount,0) as BasicPay, 
                         --Round(VSalaryLine.Amount*TR.Percentage/100,0) AS TDS,
                         ceiling(VSalaryLine.Amount*TR.Percentage/100) AS TDS,
                         isnull((SELECT DueAmt - TdsOnAmt FROM web.FGetTds ( E.PersonID)),0) AS TDSBaseValue, 
@@ -945,19 +947,19 @@ namespace Service
         {
             SqlParameter SqlParameterLedgerAccountId = new SqlParameter("@LedgerAccountId", LedgerAccountId);
 
-            mQry = @"SELECT L.LedgerId, IsNull(L.AmtCr,0) - IsNull(VAdj.AdjustedAmount,0) As Amount
+            mQry = @"SELECT L.LedgerId, IsNull(L.AmtCr,0) + IsNull(VAdj.AdjustedAmount,0) As Amount
 	                    FROM Web.Ledgers L 
 	                    LEFT JOIN Web.LedgerLines LL ON L.LedgerLineId = LL.LedgerLineId
 	                    LEFT JOIN Web.LedgerHeaders H ON L.LedgerHeaderId = H.LedgerHeaderId
 	                    LEFT JOIN Web.DocumentTypes D ON H.DocTypeId = D.DocumentTypeId
 	                    LEFT JOIN (
-		                    SELECT La.CrLedgerId, Sum(La.Amount) AS AdjustedAmount
+		                    SELECT La.DrLedgerId, Sum(La.Amount) AS AdjustedAmount
 		                    FROM Web.LedgerAdjs La
-		                    GROUP BY La.CrLedgerId
-	                    ) AS VAdj ON L.LedgerId = VAdj.CrLedgerId
+		                    GROUP BY La.DrLedgerId
+	                    ) AS VAdj ON L.LedgerId = VAdj.DrLedgerId
 	                    WHERE L.LedgerAccountId = @LedgerAccountId
                         AND H.AdjustmentType ='" + LedgerHeaderAdjustmentTypeConstants.CreditNote + @"'
-                        AND IsNull(L.AmtCr,0) - IsNull(VAdj.AdjustedAmount,0) > 0 ";
+                        AND IsNull(L.AmtCr,0) + IsNull(VAdj.AdjustedAmount,0) > 0 ";
 
             IEnumerable<OtherAdditionLedgerIdList> SalaryWizardResultViewModel = db.Database.SqlQuery<OtherAdditionLedgerIdList>(mQry, SqlParameterLedgerAccountId).ToList();
 

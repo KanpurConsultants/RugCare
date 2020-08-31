@@ -60,6 +60,8 @@ namespace Model.Models
         [MaxLength(50)]
         public string CostCenterCaption { get; set; }
 
+        public bool? IsDefaultCreateFromWizard { get; set; }
+
         [MaxLength(50)]
         public string SpecificationCaption { get; set; }
 

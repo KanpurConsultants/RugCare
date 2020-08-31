@@ -200,7 +200,7 @@ namespace Model.ViewModel
         public Decimal PenaltyRate { get; set; }
         public decimal Weight { get; set; }
 
-        [Display(Name = "Lot No."), MaxLength(10)]
+        [Display(Name = "Lot No."), MaxLength(20)]
         public string LotNo { get; set; }
 
         public int? StockId { get; set; }

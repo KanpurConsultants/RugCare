@@ -1173,6 +1173,13 @@ namespace Jobs.Controllers
                 return HttpNotFound();
             }
 
+            CostCenter c = db.CostCenter.Where(m => m.CostCenterId == temp.CostCenterId).FirstOrDefault();
+            if (c != null)
+            {
+                if (c.Status == (int)StatusConstants.Closed)
+                    temp.LockReason = "Cost Center is Closed !";
+            }
+
             #region DocTypeTimeLineValidation
             try
             {
@@ -1369,6 +1376,34 @@ namespace Jobs.Controllers
                 }
 
 
+                if (ProdUid != null && ProdUid != 0)
+                {
+                    ProductUid ProductUid = new ProductUidService(_unitOfWork).Find((int)ProdUid);
+
+                    if (ProductUid != null && ProductUid.GenDocId == vm.StockHeaderId && ProductUid.GenDocTypeId == header.DocTypeId && ProductUid.GenLineId == vm.StockLineId)
+                    {
+                        ProductUid.ObjectState = Model.ObjectState.Deleted;
+                        db.ProductUid.Remove(ProductUid);
+
+                        try
+                        {
+                            if (EventException)
+                                throw new Exception();
+
+                            db.SaveChanges();
+                        }
+
+                        catch (Exception ex)
+                        {
+                            string message = _exception.HandleException(ex);
+                            TempData["CSEXCL"] += message;
+                            ViewBag.LineMode = "Delete";
+                            var settings = new StockHeaderSettingsService(_unitOfWork).GetStockHeaderSettingsForDocument(header.DocTypeId, header.DivisionId, header.SiteId);
+                            vm.StockHeaderSettings = Mapper.Map<StockHeaderSettings, StockHeaderSettingsViewModel>(settings);
+                            return PartialView("_Create", vm);
+                        }
+                    }
+                }
 
                 LogActivity.LogActivityDetail(LogVm.Map(new ActiivtyLogViewModel
                 {

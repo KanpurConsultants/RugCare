@@ -715,7 +715,7 @@ namespace Jobs.Controllers
 
 
                         List<CalculationProductViewModel> ChargeRates = new CalculationProductService(_unitOfWork).GetChargeRates(CalculationId, Header.DocTypeId, Header.SiteId, Header.DivisionId,
-                            Header.ProcessId, item.SalesTaxGroupPersonId, item.SalesTaxGroupProductId).ToList();
+                            Header.ProcessId, item.SalesTaxGroupPersonId, item.SalesTaxGroupProductId, item.ProductId ).ToList();
                         if (ChargeRates != null)
                         {
                             LineChargeRates.Add(new LineChargeRates { LineId = line.JobInvoiceLineId, ChargeRates = ChargeRates });

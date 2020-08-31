@@ -2179,7 +2179,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!DueAmount.Value-Fields!TDS.Value -Fields!Advance.Value-Fields!taxAmount.Value</Value>
+                                  <Value>=Fields!DueAmount.Value-Fields!TDS.Value -Fields!Advance.Value+Fields!taxAmount.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -2513,7 +2513,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=sum(Fields!DueAmount.Value-Fields!TDS.Value -Fields!Advance.Value-Fields!taxAmount.Value)</Value>
+                                  <Value>=sum(Fields!DueAmount.Value-Fields!TDS.Value -Fields!Advance.Value+Fields!taxAmount.Value)</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -4294,7 +4294,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=sum(Fields!DueAmount.Value-Fields!TDS.Value -Fields!Advance.Value-Fields!taxAmount.Value)</Value>
+                                  <Value>=sum(Fields!DueAmount.Value-Fields!TDS.Value -Fields!Advance.Value+Fields!taxAmount.Value)</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -4328,6 +4328,7 @@
                           </Style>
                         </Textbox>
                         <ColSpan>3</ColSpan>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell />
@@ -8465,7 +8466,6 @@
                           </Style>
                         </Textbox>
                         <ColSpan>2</ColSpan>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell />

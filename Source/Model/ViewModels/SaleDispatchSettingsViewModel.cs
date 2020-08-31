@@ -57,6 +57,7 @@ namespace Model.ViewModel
         public bool isVisibleBaleNo { get; set; }
         public bool isVisibleDiscountPer { get; set; }
         public bool isVisibleForSaleOrder { get; set; }
+        public bool isVisibleForProdOrder { get; set; }
         public bool isVisibleWeight { get; set; }
 
         public bool IsMandatoryStockIn { get; set; }
