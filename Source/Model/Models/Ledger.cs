@@ -51,6 +51,15 @@ namespace Model.Models
         [MaxLength(250)]
         public string Narration { get; set; }
 
+        [MaxLength(50)]
+        public string PassedBy { get; set; }
+
+        [Display(Name = "PassedAmount")]
+        public Decimal? PassedAmount { get; set; }
+
+        [Display(Name = "Reconcilied By")]
+        public string ReconciliedBy { get; set; }
+
         public DateTime? BankDate { get; set; }
 
         public string ContraText { get; set; }

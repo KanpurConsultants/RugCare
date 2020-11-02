@@ -168,7 +168,7 @@ namespace Model.ViewModel
         public bool? Reviewed { get; set; }
         public int? ReviewCount { get; set; }
         public string LockReason { get; set; }
-
+        public Decimal? Reading { get; set; }
         public decimal? TotalQty { get; set; }
         public int? DecimalPlaces { get; set; }
 

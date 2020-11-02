@@ -42,7 +42,7 @@ namespace Model.Models
         public bool? isVisiblePartyDocNo { get; set; }
         public bool? isVisiblePartyDocDate { get; set; }
         public bool? isVisibleLedgerAdj { get; set; }
-
+        public bool? isVisiblePassedBy { get; set; }
 
         public bool? isVisibleReferenceDocId { get; set; }
         public bool? isVisibleReferenceDocTypeId { get; set; }

@@ -32,6 +32,7 @@ namespace Model.Models
         public Decimal Weight { get; set; }
         public Decimal ? LossQty { get; set; }
         public Decimal? Rate { get; set; }
+        public Decimal? NonCountedQty { get; set; }
 
         [Display(Name = "Created By")]
         public string CreatedBy { get; set; }

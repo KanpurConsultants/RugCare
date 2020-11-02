@@ -109,6 +109,15 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-1" for="IsHold">IsHold</label>
+                                <div class="col-md-7 col-sm-10">
+                                    <input class="form-control col-xs-6" id="IsHold" name="IsHold" type="text" readonly="readonly">
+                                    <span class="field-validation-valid text-danger" data-valmsg-for="IsHold" data-valmsg-replace="true"></span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -328,6 +337,7 @@
                     $('#Godown').val(data.Godown);
                     $('#Status').val(data.Status);
                     $('#Qty').val(data.Qty);
+                    $('#IsHold').val(data.IsHold);
                     $('#ProductQuality').val(data.ProductQuality);
                     $('#ProductStdSize').val(data.ProductStdSize);
                     $('#Buyer').val(data.Buyer);
@@ -342,6 +352,7 @@
                     $('#Godown').val("");
                     $('#Status').val("");
                     $('#Qty').val("");
+                    $('#IsHold').val("");
                     $('#ProductQuality').val("");
                     $('#ProductStdSize').val("");
                     $('#Buyer').val("");

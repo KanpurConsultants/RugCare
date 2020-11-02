@@ -25,6 +25,7 @@
                 @Html.HiddenFor(m => m.StockHeaderSettings.isVisibleLotNo)
                 @Html.HiddenFor(m => m.StockHeaderSettings.isVisibleDimension1)
                 @Html.HiddenFor(m => m.StockHeaderSettings.isVisibleDimension2)
+                @Html.HiddenFor(m => m.StockHeaderSettings.ExcessAllowedPer)
                 <div class="form-horizontal modal-body">
 
                     <div style="padding-right:15px">
@@ -254,6 +255,7 @@
                 @Html.HiddenFor(m => m.StockHeaderSettings.isVisibleLotNo)
                 @Html.HiddenFor(m => m.StockHeaderSettings.isVisibleDimension1)
                 @Html.HiddenFor(m => m.StockHeaderSettings.isVisibleDimension2)
+                @Html.HiddenFor(m => m.StockHeaderSettings.ExcessAllowedPer)
                 <div class="form-horizontal modal-body">
 
                     <div style="padding-right:15px">
@@ -505,9 +507,15 @@
         var maxDeclaces = 0;
         var ValidationMessage = "";
         var ValidationMessageCount = 0;
+        var ValidationExtraMessage = "";
+        var ValidationExtraMessageCount = 0;
+        var ExcessAllowedPer = '@Model.StockHeaderSettings.ExcessAllowedPer';
+        var Cnt = 0;
+        var AdminSetting = '@ViewBag.AdminSetting';
 
         $('.row.crow.grid-body', '.modal-body').each(function () {
             var $Input = $(this).find('input.IssueQty');
+            Cnt++;
 
             if ($Input.val()) {
                 Issue += $Input.hasClass('number') ? parseFloat(eval($Input.val())) : parseFloat($Input.val());
@@ -520,17 +528,31 @@
             var ReqBalQty = parseFloat($(this).find('#RequisitionQty').text()) || 0;
             var LineIssueQty = $Input.hasClass('number') ? eval(parseFloat($Input.val())) : parseFloat($Input.val());
 
-            if (LineIssueQty > ReqBalQty)
+            //alert(ExcessAllowedPer);
+
+            if (ExcessAllowedPer != "" && ExcessAllowedPer >= 0 )
             {
-                $(this).addClass('ModalRowValidationError')
-                ValidationMessage = "Qty Exceeding Balance Qty";
-                ValidationMessageCount++;
+                if (LineIssueQty > Math.ceil((ReqBalQty + ReqBalQty * ExcessAllowedPer / 100) * 10) / 10)
+                {
+                    alert("Qty should not be greater than " + Math.ceil((ReqBalQty + ReqBalQty * ExcessAllowedPer / 100) * 10) / 10 + " in Sr " + Cnt);
+                    $(this).addClass('ModalRowValidationError')
+                    ValidationExtraMessage = "Extra Material is not Allowed";
+                    ValidationExtraMessageCount++;
+                }
             }
             else
             {
-                if ($(this).hasClass('ModalRowValidationError'))
-                    $(this).removeClass('ModalRowValidationError');
+                if (LineIssueQty > ReqBalQty) {
+                    $(this).addClass('ModalRowValidationError')
+                    ValidationMessage = "Qty Exceeding Balance Qty";
+                    ValidationMessageCount++;
+                }
+                else {
+                    if ($(this).hasClass('ModalRowValidationError'))
+                        $(this).removeClass('ModalRowValidationError');
+                }
             }
+
         })
 
         $('#IssueQty', '.modal-body').text(Issue.toFixed(maxDeclaces));
@@ -542,21 +564,36 @@
 
         var bal = (IssueQty) - (RequisitionQty);
 
-        if (bal > 0)
+        if (ExcessAllowedPer != "" && ExcessAllowedPer >= 0)
         {
-            if (!$('#modform').find('.modal-body #errormsg').length) {
-                $('#modform').find('.modal-body').prepend("<div class='alert alert-danger'><span id=errormsg >" + ValidationMessage + "</span></div>")
+            //alert(AdminSetting);
+            if (ValidationExtraMessageCount > 0 && AdminSetting == "False")
+            {
+                $('#modform').find('#errormsg').text("Extra Material is not Allowed");
+                $('#submit').attr("disabled", "disabled");
             }
-            else {
-                $('#modform').find('#errormsg').text("Qty exceeding Required Qty");
+            else
+            {
+                $('#submit').removeAttr("disabled");
             }
         }
         else
         {
-            if ($('#modform').find('.modal-body #errormsg').length && ValidationMessageCount == 0) {
-                $('#modform').find('#errormsg').parent().remove();
+            if (bal > 0) {
+                if (!$('#modform').find('.modal-body #errormsg').length) {
+                    $('#modform').find('.modal-body').prepend("<div class='alert alert-danger'><span id=errormsg >" + ValidationMessage + "</span></div>")
+                }
+                else {
+                    $('#modform').find('#errormsg').text("Qty exceeding Required Qty");
+                }
+            }
+            else {
+                if ($('#modform').find('.modal-body #errormsg').length && ValidationMessageCount == 0) {
+                    $('#modform').find('#errormsg').parent().remove();
+                }
             }
         }
+
         CalculateTotal();
 
     })
@@ -565,8 +602,7 @@
         var Receipt = 0;
 
         var maxDeclaces = 0;
-        $('.row.crow.grid-body', '.modal-body').each(function ()
-        {
+        $('.row.crow.grid-body', '.modal-body').each(function () {
             var $Input = $(this).find('input.IssueQty');
             if ($Input.val()) {
                 Receipt += $Input.hasClass('number') ? parseFloat(eval($Input.val())) : parseFloat($Input.val());
@@ -579,30 +615,26 @@
 
         $('#IssueQty', '.modal-body').text(Receipt.toFixed(maxDeclaces));
 
-        $('.row.grid-body', '.modal-body').each(function ()
-        {
+        $('.row.grid-body', '.modal-body').each(function () {
             var Receipt1 = 0;
             var $Hidiv = $(this).closest('div.row');
             var ProductGroup = $Hidiv.find('.PGN').val() || 0;
             //alert(ProductGroup);
-        $('.row.crow.grid-body', '.modal-body').each(function ()
-        {
-            var $Hidiv = $(this).closest('div.row.crow');
-            var ProductGroup1 = $Hidiv.find('.PGN').val() || 0;
-            //alert(ProductGroup1);
-            var $Input = $(this).find('input.IssueQty');
-            if ($Input.val())
-            {
-                if (ProductGroup == ProductGroup1)
-                {
-                    Receipt1 += $Input.hasClass('number') ? parseFloat(eval($Input.val())) : parseFloat($Input.val());
+            $('.row.crow.grid-body', '.modal-body').each(function () {
+                var $Hidiv = $(this).closest('div.row.crow');
+                var ProductGroup1 = $Hidiv.find('.PGN').val() || 0;
+                //alert(ProductGroup1);
+                var $Input = $(this).find('input.IssueQty');
+                if ($Input.val()) {
+                    if (ProductGroup == ProductGroup1) {
+                        Receipt1 += $Input.hasClass('number') ? parseFloat(eval($Input.val())) : parseFloat($Input.val());
+                    }
                 }
-            }
 
-        })
+            })
 
 
-        $('#' + ProductGroup).text(Receipt1.toFixed(maxDeclaces));
+            $('#' + ProductGroup).text(Receipt1.toFixed(maxDeclaces));
         })
 
     }

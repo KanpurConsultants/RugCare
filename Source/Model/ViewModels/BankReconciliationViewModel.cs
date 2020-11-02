@@ -21,7 +21,10 @@ namespace Model.ViewModels
         public DateTime? ChqDate { get; set; }
         public Decimal? AmtDr { get; set; }
         public Decimal? AmtCr { get; set; }
+        public Decimal? PassedAmt { get; set; }
         public DateTime? BankDate { get; set; }
+        public string PassedBy { get; set; }
+        
     }
 
     public class BankReconciliationIndexViewModel

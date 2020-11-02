@@ -31,7 +31,7 @@ namespace Service
         IQueryable<StockHeaderViewModel> GetStockHeaderListPendingToSubmit(int DocTypeId, string UName);
         IQueryable<StockHeaderViewModel> GetStockHeaderListPendingToReview(int DocTypeId, string UName);
         StockHeaderViewModel GetStockHeader(int id);
-
+        IQueryable<ComboBoxResult> GetGodown(int Id, string term);
         void UpdateStockHeader(StockHeaderViewModel S);
         string GetPersonName(int id);
         IQueryable<ComboBoxResult> GetCustomPerson(int Id, string term, int? ProcessId = null);
@@ -105,6 +105,38 @@ namespace Service
             int x;
             var maxVal = _unitOfWork.Repository<StockHeader>().Query().Get().Select(i => i.DocNo).DefaultIfEmpty().ToList().Select(sx => int.TryParse(sx, out x) ? x : 0).Max();
             return (maxVal + 1).ToString();
+        }
+
+        public IQueryable<ComboBoxResult> GetGodown(int Id, string term)
+        {
+            int DocTypeId = Id;
+            int SiteId = (int)System.Web.HttpContext.Current.Session["SiteId"];
+            int DivisionId = (int)System.Web.HttpContext.Current.Session["DivisionId"];
+
+            var settings = new StockHeaderSettingsService(_unitOfWork).GetStockHeaderSettingsForDocument(DocTypeId, DivisionId, SiteId);
+
+            string[] ContraGodowns = null;
+            if (!string.IsNullOrEmpty(settings.filterContraGodowns)) { ContraGodowns = settings.filterContraGodowns.Split(",".ToCharArray()); }
+            else { ContraGodowns = new string[] { "NA" }; }
+
+            string DivIdStr = "|" + DivisionId.ToString() + "|";
+            string SiteIdStr = "|" + SiteId.ToString() + "|";
+
+            var list = (from p in db.Godown
+                        where 1 == 1
+                        && (string.IsNullOrEmpty(term) ? 1 == 1 : (p.GodownName.ToLower().Contains(term.ToLower())))
+                        && (string.IsNullOrEmpty(settings.filterContraGodowns) ? p.SiteId == SiteId : ContraGodowns.Contains(p.GodownId.ToString()))
+                        && (p.IsActive == null ? 1 == 1 : p.IsActive == true)
+                        group new { p } by new { p.GodownId } into Result
+                        orderby Result.Max(m => m.p.GodownName)
+                        select new ComboBoxResult
+                        {
+                            id = Result.Key.GodownId.ToString(),
+                            text = Result.Max(m => m.p.GodownName),
+                        }
+              );
+
+            return list;
         }
 
         public IQueryable<StockHeaderViewModel> GetStockHeaderList(int DocTypeId, string UName)
@@ -216,6 +248,7 @@ namespace Service
                         TransportId = SHTTab.TransportId,
                         TransportName = SHTTab.Transport.Name,
                         VehicleNo = SHTTab.VehicleNo,
+                        Reading = SHTTab.Reading,
                         LrNo = SHTTab.LrNo,
                         LrDate = SHTTab.LrDate,
                         EWayBillNo = SHTTab.EWayBillNo,

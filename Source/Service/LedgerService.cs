@@ -166,6 +166,7 @@ namespace Service
                         ReferenceDocNo = tab2.DocNo,
                         ReferenceDocTypeId = p.ReferenceDocTypeId,
                         ReferenceDocId = p.ReferenceDocId,
+                        PassedBy = p.PassedBy,
                         ChqNo = p.ChqNo,
                         ChqDate = p.ChqDate,
                         DueDate = p.DueDate,

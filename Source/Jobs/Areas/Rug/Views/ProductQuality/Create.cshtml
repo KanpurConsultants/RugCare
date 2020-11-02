@@ -91,6 +91,16 @@
 
                     <div class="col-md-6">
                         <div class="form-group" style="margin-top:15px">
+                            @Html.LabelFor(model => model.NonCountedQty, "NonCountedQty", new { @class = "control-label col-md-4 col-sm-2" })
+                            <div class="col-md-7 col-sm-10">
+                                @Html.TextBoxFor(m => m.NonCountedQty, null, new { @class = "form-control col-xs-6" })
+                                @Html.ValidationMessageFor(m => m.NonCountedQty, null, new { @class = "has-error" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group" style="margin-top:15px">
                             @Html.LabelFor(model => model.IsActive, "Is Active", new { @class = "control-label col-md-4 col-sm-2" })
                             <div class="col-md-7 col-sm-10" style=" padding-top:4px">
                                 @Html.CheckBoxFor(m => m.IsActive, new { @class = "checkbox col-xs-1" })

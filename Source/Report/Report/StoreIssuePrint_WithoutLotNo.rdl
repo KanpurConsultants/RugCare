@@ -957,6 +957,120 @@
                 </TablixCell>
               </TablixCells>
             </TablixRow>
+            <TablixRow>
+              <Height>0.25in</Height>
+              <TablixCells>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox2">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>Machine</Value>
+                              <Style>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontSize>9pt</FontSize>
+                                <FontWeight>Bold</FontWeight>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox1</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>None</Style>
+                        </Border>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="BuyerName9">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>:</Value>
+                              <Style>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontSize>9pt</FontSize>
+                                <FontWeight>Bold</FontWeight>
+                                <Format>0.0000;(0.0000);'-'</Format>
+                                <Color>#4d4d4d</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>BuyerName</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>None</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>Black</Color>
+                          <Style>None</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="MachineName2">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!MachineName.Value</Value>
+                              <Style>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontSize>9pt</FontSize>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Left</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>MachineName</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>None</Style>
+                        </Border>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+              </TablixCells>
+            </TablixRow>
           </TablixRows>
         </TablixBody>
         <TablixColumnHierarchy>
@@ -971,12 +1085,17 @@
             <TablixMember />
             <TablixMember />
             <TablixMember />
+            <TablixMember>
+              <Visibility>
+                <Hidden>=iif(Fields!MachineName.Value="",true,false)</Hidden>
+              </Visibility>
+            </TablixMember>
           </TablixMembers>
         </TablixRowHierarchy>
         <DataSetName>DsMain</DataSetName>
         <Top>0.64341in</Top>
         <Left>8.71992in</Left>
-        <Height>0.65522in</Height>
+        <Height>0.90522in</Height>
         <Width>2.35758in</Width>
         <ZIndex>6</ZIndex>
         <Style>
@@ -2955,6 +3074,120 @@
                 </TablixCell>
               </TablixCells>
             </TablixRow>
+            <TablixRow>
+              <Height>0.25in</Height>
+              <TablixCells>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox1">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>Machine</Value>
+                              <Style>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontSize>9pt</FontSize>
+                                <FontWeight>Bold</FontWeight>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox1</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>None</Style>
+                        </Border>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="BuyerName7">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>:</Value>
+                              <Style>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontSize>9pt</FontSize>
+                                <FontWeight>Bold</FontWeight>
+                                <Format>0.0000;(0.0000);'-'</Format>
+                                <Color>#4d4d4d</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>BuyerName</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>None</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>Black</Color>
+                          <Style>None</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="MachineName">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!MachineName.Value</Value>
+                              <Style>
+                                <FontFamily>Tahoma</FontFamily>
+                                <FontSize>9pt</FontSize>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Left</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>MachineName</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>None</Style>
+                        </Border>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+              </TablixCells>
+            </TablixRow>
           </TablixRows>
         </TablixBody>
         <TablixColumnHierarchy>
@@ -2969,12 +3202,17 @@
             <TablixMember />
             <TablixMember />
             <TablixMember />
+            <TablixMember>
+              <Visibility>
+                <Hidden>=iif(Fields!MachineName.Value="",true,false)</Hidden>
+              </Visibility>
+            </TablixMember>
           </TablixMembers>
         </TablixRowHierarchy>
         <DataSetName>DsMain</DataSetName>
         <Top>0.65591in</Top>
         <Left>3.10869in</Left>
-        <Height>0.65522in</Height>
+        <Height>0.90522in</Height>
         <Width>2.35758in</Width>
         <ZIndex>11</ZIndex>
         <Style>
@@ -4584,7 +4822,7 @@
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
     <DataSource Name="Purchase">
-      <DataSourceReference>DataSourceMain</DataSourceReference>
+      <DataSourceReference>DSBC</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
       <rd:DataSourceID>727bb65e-cc51-4d28-a097-a8ea7d087931</rd:DataSourceID>
     </DataSource>
@@ -4599,7 +4837,7 @@
           </QueryParameter>
         </QueryParameters>
         <CommandType>StoredProcedure</CommandType>
-        <CommandText>Web.spRep_StockIssuePrint</CommandText>
+        <CommandText>web.spRep_StockIssuePrint</CommandText>
       </Query>
       <Fields>
         <Field Name="StockHeaderId">
@@ -4610,36 +4848,12 @@
           <DataField>Name</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="MobileNo">
-          <DataField>MobileNo</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="SlipNo">
-          <DataField>SlipNo</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="DATE">
-          <DataField>DATE</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
-        </Field>
         <Field Name="Address">
           <DataField>Address</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="GodownName">
-          <DataField>GodownName</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="LotNo">
-          <DataField>LotNo</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="UnitName">
-          <DataField>UnitName</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Remark">
-          <DataField>Remark</DataField>
+        <Field Name="MobileNo">
+          <DataField>MobileNo</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="TinNo">
@@ -4650,59 +4864,91 @@
           <DataField>GatePassHeaderId</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
-        <Field Name="Dimension1Id">
-          <DataField>Dimension1Id</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
+        <Field Name="SlipNo">
+          <DataField>SlipNo</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="DATE">
+          <DataField>DATE</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="GodownName">
+          <DataField>GodownName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="ProductName">
           <DataField>ProductName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="MachineName">
+          <DataField>MachineName</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Qty">
           <DataField>Qty</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
-        <Field Name="Dimension2Id">
-          <DataField>Dimension2Id</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="SiteId">
-          <DataField>Siteid</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="HeaderRemark">
-          <DataField>HeaderRemark</DataField>
+        <Field Name="LotNo">
+          <DataField>LotNo</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="DivisionId">
-          <DataField>DivisionId</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
+        <Field Name="UnitName">
+          <DataField>UnitName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="DecimalPlaces">
           <DataField>DecimalPlaces</DataField>
           <rd:TypeName>System.Byte</rd:TypeName>
         </Field>
-        <Field Name="ReportName">
-          <DataField>ReportName</DataField>
+        <Field Name="Remark">
+          <DataField>Remark</DataField>
           <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="HeaderRemark">
+          <DataField>HeaderRemark</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Siteid">
+          <DataField>Siteid</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="DivisionId">
+          <DataField>DivisionId</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
         <Field Name="ReportTitle">
           <DataField>ReportTitle</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="SubReportProcList">
-          <DataField>SubReportProcList</DataField>
+        <Field Name="ReportName">
+          <DataField>ReportName</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="SubReportProcList">
+          <DataField>SubReportProcList</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="StockLineId">
+          <DataField>StockLineId</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Sr">
+          <DataField>Sr</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Status">
+          <DataField>Status</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="WeightCaption">
+          <DataField>WeightCaption</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Weight">
+          <DataField>Weight</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
       </Fields>
-      <rd:DataSetInfo>
-        <rd:DataSetName>Purchase</rd:DataSetName>
-        <rd:SchemaPath>E:\Satyam\SuryaIndia\SuryaIndia\SuppliorModule_V1\Source\Surya.Planning.Reports\Reports\Purchase.xsd</rd:SchemaPath>
-        <rd:TableName>ProcPurchaseInvoicePrint</rd:TableName>
-        <rd:TableAdapterFillMethod>Fill</rd:TableAdapterFillMethod>
-        <rd:TableAdapterGetDataMethod>GetData</rd:TableAdapterGetDataMethod>
-        <rd:TableAdapterName>ProcPurchaseInvoicePrintTableAdapter</rd:TableAdapterName>
-      </rd:DataSetInfo>
     </DataSet>
   </DataSets>
   <ReportParameters>

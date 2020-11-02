@@ -44,32 +44,32 @@ namespace Jobs.Controllers
 
             try
             {
-                //var JobReceive = (from H in db.JobReceiveHeader
-                //                join D in db.DocumentType on H.DocTypeId equals D.DocumentTypeId into DocumentTypeTable
-                //                from DocumentTypeTab in DocumentTypeTable.DefaultIfEmpty()
-                //                where H.JobReceiveHeaderId == EventArgs.DocId
-                //                select new { DocTypeName = DocumentTypeTab.DocumentTypeName, Status = H.Status }).FirstOrDefault();
+                var JobReceive = (from H in db.JobReceiveHeader
+                                  join D in db.DocumentType on H.DocTypeId equals D.DocumentTypeId into DocumentTypeTable
+                                  from DocumentTypeTab in DocumentTypeTable.DefaultIfEmpty()
+                                  where H.JobReceiveHeaderId == EventArgs.DocId
+                                  select new { DocTypeName = DocumentTypeTab.DocumentTypeName, Status = H.Status }).FirstOrDefault();
 
-                //if (JobReceive.DocTypeName == "Map Order Receive" )
-                //{
-                //    using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
-                //    {
-                //        sqlConnection.Open();
+                if (JobReceive.DocTypeName == "Blend Receive")
+                {
+                    using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
+                    {
+                        sqlConnection.Open();
 
 
-                //        using (SqlCommand cmd = new SqlCommand("Web.SpCreate_ProductUid_FromTracemapReceive"))
-                //        {
-                //            cmd.CommandType = CommandType.StoredProcedure;
-                //            cmd.Connection = sqlConnection;
-                //            cmd.Parameters.AddWithValue("@JobReceiveHeaderId", Id);
-                //            cmd.CommandTimeout = 1000;
-                //            //cmd.Connection.Open();
-                //            cmd.ExecuteNonQuery();
-                //            //cmd.Connection.Close();
-                //        }
+                        using (SqlCommand cmd = new SqlCommand("Web.SpPost_ConsumptionByMaterialIssued"))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Connection = sqlConnection;
+                            cmd.Parameters.AddWithValue("@JobReceiveHeaderId", Id);
+                            cmd.CommandTimeout = 1000;
+                            //cmd.Connection.Open();
+                            cmd.ExecuteNonQuery();
+                            //cmd.Connection.Close();
+                        }
 
-                //    }
-                //}
+                    }
+                }
             }
 
             catch (Exception ex)

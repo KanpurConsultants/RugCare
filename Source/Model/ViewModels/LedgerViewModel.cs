@@ -120,7 +120,7 @@ namespace Model.ViewModels
         [ForeignKey("CostCenter"), Display(Name = "Cost Center")]
         public int? CostCenterId { get; set; }
         public string CostCenterName{ get; set; }
-
+        public string PassedBy { get; set; }
         public decimal Amount { get; set; }
         public decimal AmountCr { get; set; }
         public decimal AmountDr { get; set; }

@@ -321,6 +321,7 @@ namespace Jobs.Controllers
                     LedgerLine.BaseValue = svm.BaseValue;
                     LedgerLine.ReferenceId = svm.ReferenceId;
                     LedgerLine.ProductUidId = svm.ProductUidId;
+                    LedgerLine.PassedBy = svm.PassedBy;
                     LedgerLine.ReferenceDocTypeId = svm.ReferenceDocTypeId;
                     LedgerLine.ReferenceDocId = svm.ReferenceDocId;
                     LedgerLine.DrCr = svm.DrCr;
@@ -548,6 +549,7 @@ namespace Jobs.Controllers
                     LedgerLine.ChqNo = svm.ChqNo;
                     LedgerLine.CostCenterId = svm.CostCenterId;
                     LedgerLine.Remark = svm.Remark;
+                    LedgerLine.PassedBy = svm.PassedBy;
                     LedgerLine.ChqDate = svm.ChqDate;
                     LedgerLine.DueDate = svm.DueDate;
                     LedgerLine.BaseRate = svm.BaseRate;
@@ -1279,6 +1281,30 @@ namespace Jobs.Controllers
                 JsonRequestBehavior = JsonRequestBehavior.AllowGet
             };
         }
+
+        public JsonResult GetPassedBy(string searchTerm, int pageSize, int pageNum, int filter)//filter:PersonId
+        {
+
+            LedgerHeader Ledger = new LedgerHeaderService(_unitOfWork).Find(filter);
+
+            var Settings = new LedgerSettingService(_unitOfWork).GetLedgerSettingForDocument(Ledger.DocTypeId, Ledger.DivisionId, Ledger.SiteId);
+
+            var temp = new LedgerLineService(_unitOfWork).GetPassedBy(searchTerm, Settings.filterDocTypeCostCenter, Settings.filterPersonProcessLines).Skip(pageSize * (pageNum - 1)).Take(pageSize).ToList();
+
+            var count = new LedgerLineService(_unitOfWork).GetPassedBy(searchTerm, Settings.filterDocTypeCostCenter, Settings.filterPersonProcessLines).Count();
+
+            ComboBoxPagedResult Data = new ComboBoxPagedResult();
+            Data.Results = temp;
+            Data.Total = count;
+
+            return new JsonpResult
+            {
+                Data = Data,
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet
+            };
+        }
+
+
 
         public JsonResult GetProductUidValidation(string ProductUID)
         {

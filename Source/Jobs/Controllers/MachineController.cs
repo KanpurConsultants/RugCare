@@ -63,11 +63,12 @@ namespace Jobs.Controllers
                   return View("~/Views/Shared/PermissionDenied.cshtml").Warning("You don't have permission to do this task.");
               }
 
-            int GoDownId = (int)System.Web.HttpContext.Current.Session["DefaultGodownId"];
             ProductUid vm = new ProductUid();
+
+            if (System.Web.HttpContext.Current.Session["DefaultGodownId"] != null)
+                vm.CurrenctGodownId = (int)System.Web.HttpContext.Current.Session["DefaultGodownId"];
             vm.IsActive = true;
             vm.GenDocTypeId = id;
-            vm.CurrenctGodownId = GoDownId;
             ViewBag.id = id;
             ViewBag.Name = new DocumentTypeService(_unitOfWork).Find(id).DocumentTypeName;
             return View("Create",vm);

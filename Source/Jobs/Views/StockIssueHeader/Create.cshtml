@@ -262,6 +262,17 @@
                                 </div>
                             </div>
 
+                            <div class="col-md-6" style='display:@(Model.StockHeaderSettings.isVisibleReading?"":"none")'>
+                                @Html.HiddenFor(m => m.StockHeaderSettings.isVisibleReading)
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Reading, "Reading", new { @class = "control-label col-md-4 col-sm-2" })
+                                    <div class="col-md-7 col-sm-10">
+                                        @Html.TextBoxFor(m => m.Reading, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.Reading, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="col-md-6">
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.Remark, "Remark", new { @class = "control-label col-md-4 col-sm-2" })
@@ -607,7 +618,7 @@
         //CustomSelectFunction($("#PersonId"), '/StockIssueHeader/GetCustomPerson', '/ComboHelpList/SetSinglePerson', ' ', false, 1,$('#DocTypeId').val());
         CustomSelectFunctionWithMultipleFilters($("#PersonId"), '/StockIssueHeader/GetCustomPerson', '/ComboHelpList/SetSinglePerson', ' ', false, 0,$('#DocTypeId').val(),$('#ProcessId').val());
         //CustomSelectFunctionForPerson($("#PersonId"), '/StockIssueHeader/GetCustomPerson', '/ComboHelpList/SetSinglePerson', ' ', false, 1,$('#DocTypeId').val(),$('#ProcessId').val());
-        CustomSelectFunction($("#GodownId"), '/ComboHelpList/GetGodown', '/ComboHelpList/SetSingleGodown', ' ', false, 0);
+        CustomSelectFunction($("#GodownId"), '/StockIssueHeader/GetGodown', '/ComboHelpList/SetSingleGodown', ' ', false, 0,$('#DocTypeId').val());
         CustomSelectFunction($("#CostCenterId"), '/ComboHelpList/GetCostCenter', '/ComboHelpList/SetSingleCostCenter', ' ', false, 0);
         CustomSelectFunction($("#MachineId"), '/ComboHelpList/GetMachine', '/ComboHelpList/SetSingleMachine', ' ', false, 0);
         CustomSelectFunction($("#TransportId"), '/ComboHelpList/GetTransporters', '/ComboHelpList/SetSingleTransporter', ' ', false, 0);

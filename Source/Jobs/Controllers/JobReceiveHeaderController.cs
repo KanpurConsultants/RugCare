@@ -142,6 +142,9 @@ namespace Jobs.Controllers
             vm.SiteId = (int)System.Web.HttpContext.Current.Session["SiteId"];
             vm.CreatedDate = DateTime.Now;
 
+            List<DocumentTypeHeaderAttributeViewModel> tem = new DocumentTypeService(_unitOfWork).GetDocumentTypeHeaderAttribute(id).ToList();
+            vm.DocumentTypeHeaderAttributes = tem;
+
             //Getting Settings
             var settings = new JobReceiveSettingsService(_unitOfWork).GetJobReceiveSettingsForDocument(id, vm.DivisionId, vm.SiteId);
 
@@ -210,6 +213,43 @@ namespace Jobs.Controllers
 
             if (vm.JobWorkerDocDate > vm.DocDate)
                 ModelState.AddModelError("JobWorkerDocDate", "Party Doc Date can not be greater then Receive Date.");
+
+            if (vm.DocumentTypeHeaderAttributes != null)
+            {
+                foreach (var pta in vm.DocumentTypeHeaderAttributes)
+                {
+                    if (pta.DataType == "Number")
+                    {
+                        if (pta.Value != null)
+                        {
+                            var count = pta.Value.Count(x => x == '.');
+                            if (count > 1)
+                                ModelState.AddModelError("", pta.Name + " should be a numeric value.");
+                            else
+                            {
+                                if (pta.Value.Replace(".", "").All(char.IsDigit) == false)
+                                    ModelState.AddModelError("", pta.Name + " should be a numeric value.");
+                            }
+                        }
+                    }
+                    else if (pta.DataType == "Date")
+                    {
+                        if (pta.Value != null)
+                        {
+                            DateTime dDate;
+                            if (DateTime.TryParse(pta.Value, out dDate))
+                            {
+                                String.Format("{0:d/MM/yyyy}", dDate);
+                            }
+                            else
+                            {
+                                ModelState.AddModelError("", pta.Name + " should be a Date value.");
+                            }
+                        }
+                    }
+
+                }
+            }
 
             #region DocTypeTimeLineValidation
 
@@ -300,8 +340,115 @@ namespace Jobs.Controllers
                         DocStatus = header.Status,
                     }));
 
+                    #region CustomRecord
+                    if (vm.DocumentTypeHeaderAttributes != null)
+                    {
+                        List<LogTypeViewModel> LogList = new List<LogTypeViewModel>();
+                        CustomHeader Customheaderdetail = new CustomHeader();
 
-                    return RedirectToAction("Modify", new { id = header.JobReceiveHeaderId }).Success("Data saved successfully");
+                        Customheaderdetail.SiteId = vm.SiteId;
+                        Customheaderdetail.DivisionId = vm.DivisionId;
+                        Customheaderdetail.DocDate = vm.DocDate;
+                        Customheaderdetail.DocNo = vm.DocNo;
+                        Customheaderdetail.DocTypeId = vm.DocTypeId;
+                        Customheaderdetail.DocId  = header.JobReceiveHeaderId;
+
+                        Customheaderdetail.CreatedDate = DateTime.Now;
+                        Customheaderdetail.ModifiedDate = DateTime.Now;
+                        Customheaderdetail.CreatedBy = User.Identity.Name;
+                        Customheaderdetail.ModifiedBy = User.Identity.Name;
+                        Customheaderdetail.Status = (int)StatusConstants.Drafted;
+                        Customheaderdetail.ObjectState = Model.ObjectState.Added;
+                        new CustomHeaderService(_unitOfWork).Create(Customheaderdetail);
+
+                            try
+                            {
+                                _unitOfWork.Save();
+                            }
+
+                            catch (Exception ex)
+                            {
+                                string message = _exception.HandleException(ex);
+                                TempData["CSEXC"] += message;
+                                PrepareViewBag(vm.DocTypeId);
+                                ViewBag.Mode = "Add";
+                                return View("Create", vm);
+                            }
+
+                            LogActivity.LogActivityDetail(LogVm.Map(new ActiivtyLogViewModel
+                            {
+                                DocTypeId = Customheaderdetail.DocTypeId,
+                                DocId = Customheaderdetail.CustomHeaderId,
+                                ActivityType = (int)ActivityTypeContants.Added,
+                                DocNo = Customheaderdetail.DocNo,
+                                DocDate = Customheaderdetail.DocDate,
+                                DocStatus = Customheaderdetail.Status,
+                            }));
+
+                            foreach (var pta in vm.DocumentTypeHeaderAttributes)
+                        {
+
+                            CustomHeaderAttributes CustomHeaderAttribute = (from A in db.CustomHeaderAttributes
+                                                                            where A.HeaderTableId == Customheaderdetail.CustomHeaderId && A.DocumentTypeHeaderAttributeId == pta.DocumentTypeHeaderAttributeId
+                                                                            select A).FirstOrDefault();
+
+                            if (CustomHeaderAttribute != null)
+                            {
+                                CustomHeaderAttribute.Value = pta.Value;
+                                CustomHeaderAttribute.ObjectState = Model.ObjectState.Modified;
+                                _unitOfWork.Repository<CustomHeaderAttributes>().Add(CustomHeaderAttribute);
+                            }
+                            else
+                            {
+                                CustomHeaderAttributes pa = new CustomHeaderAttributes()
+                                {
+                                    Value = pta.Value,
+                                    HeaderTableId = Customheaderdetail.CustomHeaderId,
+                                    DocumentTypeHeaderAttributeId = pta.DocumentTypeHeaderAttributeId,
+                                };
+                                pa.ObjectState = Model.ObjectState.Added;
+                                _unitOfWork.Repository<CustomHeaderAttributes>().Add(pa);
+                            }
+                        }
+
+
+                        LogList.Add(new LogTypeViewModel
+                        {
+                            //ExObj = ExRec,
+                            Obj = Customheaderdetail,
+                        });
+
+                        XElement Modifications = new ModificationsCheckService().CheckChanges(LogList);
+
+                        try
+                        {
+                            _unitOfWork.Save();
+                        }
+
+                        catch (Exception ex)
+                        {
+                            string message = _exception.HandleException(ex);
+                            TempData["CSEXC"] += message;
+                            PrepareViewBag(vm.DocTypeId);
+                            ViewBag.Mode = "Edit";
+                            return View("Create", vm);
+                        }
+
+                        LogActivity.LogActivityDetail(LogVm.Map(new ActiivtyLogViewModel
+                        {
+                            DocTypeId = Customheaderdetail.DocTypeId,
+                            DocId = Customheaderdetail.CustomHeaderId,
+                            ActivityType = (int)ActivityTypeContants.Modified,
+                            DocNo = Customheaderdetail.DocNo,
+                            xEModifications = Modifications,
+                            DocDate = Customheaderdetail.DocDate,
+                            DocStatus = Customheaderdetail.Status,
+                        }));
+
+                    }
+                        #endregion
+
+                        return RedirectToAction("Modify", new { id = header.JobReceiveHeaderId }).Success("Data saved successfully");
                 }
                 #endregion
 
@@ -426,6 +573,109 @@ namespace Jobs.Controllers
                         DocStatus = temp.Status,
                     }));
 
+                    #region CustomRecord
+                    if (vm.DocumentTypeHeaderAttributes != null)
+                    {
+                         LogList = new List<LogTypeViewModel>();
+                        CustomHeader Customheaderdetail = db.CustomHeader.Where(m =>m.DocTypeId == vm.DocTypeId && m.DocId == vm.JobReceiveHeaderId).FirstOrDefault();
+
+
+                        Customheaderdetail.DocDate = vm.DocDate;
+                        Customheaderdetail.DocNo = vm.DocNo;
+
+                        Customheaderdetail.ModifiedDate = DateTime.Now;
+                        Customheaderdetail.ModifiedBy = User.Identity.Name;
+                        Customheaderdetail.Status = (int)StatusConstants.Drafted;
+                        Customheaderdetail.ObjectState = Model.ObjectState.Modified;
+                        new CustomHeaderService(_unitOfWork).Update(Customheaderdetail);
+
+                        try
+                        {
+                            _unitOfWork.Save();
+                        }
+
+                        catch (Exception ex)
+                        {
+                            string message = _exception.HandleException(ex);
+                            TempData["CSEXC"] += message;
+                            PrepareViewBag(vm.DocTypeId);
+                            ViewBag.Mode = "Add";
+                            return View("Create", vm);
+                        }
+
+                        LogActivity.LogActivityDetail(LogVm.Map(new ActiivtyLogViewModel
+                        {
+                            DocTypeId = Customheaderdetail.DocTypeId,
+                            DocId = Customheaderdetail.CustomHeaderId,
+                            ActivityType = (int)ActivityTypeContants.Added,
+                            DocNo = Customheaderdetail.DocNo,
+                            DocDate = Customheaderdetail.DocDate,
+                            DocStatus = Customheaderdetail.Status,
+                        }));
+
+                        foreach (var pta in vm.DocumentTypeHeaderAttributes)
+                        {
+
+                            CustomHeaderAttributes CustomHeaderAttribute = (from A in db.CustomHeaderAttributes
+                                                                            where A.HeaderTableId == Customheaderdetail.CustomHeaderId && A.DocumentTypeHeaderAttributeId == pta.DocumentTypeHeaderAttributeId
+                                                                            select A).FirstOrDefault();
+
+                            if (CustomHeaderAttribute != null)
+                            {
+                                CustomHeaderAttribute.Value = pta.Value;
+                                CustomHeaderAttribute.ObjectState = Model.ObjectState.Modified;
+                                _unitOfWork.Repository<CustomHeaderAttributes>().Add(CustomHeaderAttribute);
+                            }
+                            else
+                            {
+                                CustomHeaderAttributes pa = new CustomHeaderAttributes()
+                                {
+                                    Value = pta.Value,
+                                    HeaderTableId = Customheaderdetail.CustomHeaderId,
+                                    DocumentTypeHeaderAttributeId = pta.DocumentTypeHeaderAttributeId,
+                                };
+                                pa.ObjectState = Model.ObjectState.Added;
+                                _unitOfWork.Repository<CustomHeaderAttributes>().Add(pa);
+                            }
+                        }
+
+
+                        LogList.Add(new LogTypeViewModel
+                        {
+                            //ExObj = ExRec,
+                            Obj = Customheaderdetail,
+                        });
+
+                         Modifications = new ModificationsCheckService().CheckChanges(LogList);
+
+                        try
+                        {
+                            _unitOfWork.Save();
+                        }
+
+                        catch (Exception ex)
+                        {
+                            string message = _exception.HandleException(ex);
+                            TempData["CSEXC"] += message;
+                            PrepareViewBag(vm.DocTypeId);
+                            ViewBag.Mode = "Edit";
+                            return View("Create", vm);
+                        }
+
+                        LogActivity.LogActivityDetail(LogVm.Map(new ActiivtyLogViewModel
+                        {
+                            DocTypeId = Customheaderdetail.DocTypeId,
+                            DocId = Customheaderdetail.CustomHeaderId,
+                            ActivityType = (int)ActivityTypeContants.Modified,
+                            DocNo = Customheaderdetail.DocNo,
+                            xEModifications = Modifications,
+                            DocDate = Customheaderdetail.DocDate,
+                            DocStatus = Customheaderdetail.Status,
+                        }));
+
+                    }
+                    #endregion
+
                     return RedirectToAction("Index", new { id = temp.DocTypeId }).Success("Data saved successfully");
 
                 }
@@ -510,6 +760,15 @@ namespace Jobs.Controllers
         {
             ViewBag.IndexStatus = IndexType;
             JobReceiveHeaderViewModel pt = _JobReceiveHeaderService.GetJobReceiveHeader(id);
+            //Job Receive Settings
+            var settings = new JobReceiveSettingsService(_unitOfWork).GetJobReceiveSettingsForDocument(pt.DocTypeId, pt.DivisionId, pt.SiteId);
+
+            if (settings.isVisibleCustomHeaderAttribute==true)
+            {
+                var tem = new CustomHeaderService(_unitOfWork).GetDocumentHeaderAttributeByDocId(pt.DocTypeId, pt.JobReceiveHeaderId).ToList();            
+                pt.DocumentTypeHeaderAttributes = tem;
+            }
+
 
             if (pt.Status != (int)StatusConstants.Drafted)
                 if (new RolePermissionService(_unitOfWork).IsActionAllowed(UserRoles, pt.DocTypeId, pt.ProcessId, this.ControllerContext.RouteData.Values["controller"].ToString(), "Edit") == false)
@@ -542,8 +801,6 @@ namespace Jobs.Controllers
             {
                 return RedirectToAction("DetailInformation", new { id = id, IndexType = IndexType });
             }
-            //Job Receive Settings
-            var settings = new JobReceiveSettingsService(_unitOfWork).GetJobReceiveSettingsForDocument(pt.DocTypeId, pt.DivisionId, pt.SiteId);
 
             if (settings == null && UserRoles.Contains("SysAdmin"))
             {
@@ -1896,6 +2153,27 @@ namespace Jobs.Controllers
                 JsonRequestBehavior = JsonRequestBehavior.AllowGet
             };
         }
+
+        public ActionResult GetGodown(string searchTerm, int pageSize, int pageNum, int filter)//DocTypeId
+        {
+            var Query = _JobReceiveHeaderService.GetGodown(filter, searchTerm);
+            var temp = Query.Skip(pageSize * (pageNum - 1))
+                .Take(pageSize)
+                .ToList();
+
+            var count = Query.Count();
+
+            ComboBoxPagedResult Data = new ComboBoxPagedResult();
+            Data.Results = temp;
+            Data.Total = count;
+
+            return new JsonpResult
+            {
+                Data = Data,
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet
+            };
+        }
+
         public JsonResult IsDuplicatePartyDocNo(int PersonId, string PartyDocNo)
         {
             var temp = (from H in db.JobReceiveHeader

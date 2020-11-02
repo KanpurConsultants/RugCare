@@ -2621,6 +2621,18 @@ namespace Service
             if (!string.IsNullOrEmpty(settings.filterContraDivisions)) { contraDivisions = settings.filterContraDivisions.Split(",".ToCharArray()); }
             else { contraDivisions = new string[] { "NA" }; }
 
+            string[] ProductTypes = null;
+            if (!string.IsNullOrEmpty(settings.filterProductTypes)) { ProductTypes = settings.filterProductTypes.Split(",".ToCharArray()); }
+            else { ProductTypes = new string[] { "NA" }; }
+
+            string[] Products = null;
+            if (!string.IsNullOrEmpty(settings.filterProducts)) { Products = settings.filterProducts.Split(",".ToCharArray()); }
+            else { Products = new string[] { "NA" }; }
+
+            string[] ProductGroups = null;
+            if (!string.IsNullOrEmpty(settings.filterProductGroups)) { ProductGroups = settings.filterProductGroups.Split(",".ToCharArray()); }
+            else { ProductGroups = new string[] { "NA" }; }
+
             int CurrentSiteId = (int)System.Web.HttpContext.Current.Session["SiteId"];
             int CurrentDivisionId = (int)System.Web.HttpContext.Current.Session["DivisionId"];
 
@@ -2632,6 +2644,7 @@ namespace Service
                     from ProductTab in ProductTable.DefaultIfEmpty()
                     where p.BalanceQty > 0 && StockTab.GodownId == GodownId
                     && (ProductId == null || ProductId == 0 ? 1 == 1 : p.ProductId == ProductId)
+                    && (string.IsNullOrEmpty(settings.filterProductTypes) ? 1 == 1 : ProductTypes.Contains(ProductTab.ProductGroup.ProductTypeId.ToString()))
                     && (string.IsNullOrEmpty(settings.filterContraSites) ? p.SiteId == CurrentSiteId : contraSites.Contains(p.SiteId.ToString()))
                     && (string.IsNullOrEmpty(settings.filterContraDivisions) ? p.DivisionId == CurrentDivisionId : contraDivisions.Contains(p.DivisionId.ToString()))
                     && (string.IsNullOrEmpty(term) ? 1 == 1 : p.StockInNo.ToLower().Contains(term.ToLower())

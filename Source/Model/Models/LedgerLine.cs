@@ -77,6 +77,9 @@ namespace Model.Models
         [Display(Name = "Remark")]
         public string Remark { get; set; }
 
+        [MaxLength(50)]
+        public string PassedBy { get; set; }
+
         [Display(Name = "Lock Reason")]
         public string LockReason { get; set; }
 

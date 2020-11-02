@@ -610,7 +610,7 @@ namespace Jobs.Areas.Rug.Controllers
 
 
 
-                    if (C.isAllowAutoPlan == true || ( ProdORderLineId.Qty <= BalProdOrderLine.BalanceQty && ProdORderLineId.Qty > 0))
+                    if (C.isAllowAutoPlan == true || ( ProdORderLineId.Qty <= (BalProdOrderLine.BalanceQty + Settings.ExcessQtyAllowedPer* BalProdOrderLine.BalanceQty/100) && ProdORderLineId.Qty > 0))
                         if (((Settings.isVisibleRate == false || Settings.isVisibleRate == true)))
                         {
                             JobOrderLine line = new JobOrderLine();

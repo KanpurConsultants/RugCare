@@ -757,13 +757,14 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
 
             AddFields("ProductUids", "ProductUidSpecification", "NVARCHAR(Max)");
             AddFields("ProductUids", "StockStatus", "NVARCHAR(50)");
+            AddFields("ProductUids", "LastReading", "Decimal(18,4)");
 
             AddFields("SaleEnquiryLineExtendeds", "BuyerSku", "nvarchar(50)");
             AddFields("SaleEnquiryLineExtendeds", "BuyerUpcCode", "nvarchar(20)");
             AddFields("PackingLines", "PersonProductUidId", "Int", "PersonProductUids");
             AddFields("DocumentTypes", "DocumentNatureId", "Int", "DocumentNatures");
 
-
+            AddFields("StockHeaders", "Reading", "Decimal(18,4)");
             AddFields("JobInvoiceHeaders", "FinancierId", "INT");
             AddFields("JobInvoiceHeaders", "IsDocumentPrinted", "Bit");
             AddFields("JobInvoiceHeaders", "IsLedgerAdjusted", "Bit");
@@ -1842,6 +1843,7 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
 
             AddFields("JobOrderSettings", "isVisibleSaleOrderLine", "BIT");
             AddFields("StockHeaderSettings", "isVisibleSaleOrderLine", "BIT");
+            AddFields("StockHeaderSettings", "isVisibleReading", "BIT");
 
             AddFields("PackingLines", "SealNo", "nvarchar(Max)");
             AddFields("PackingLines", "RateRemark", "nvarchar(Max)");
@@ -2006,11 +2008,15 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
 
             AddFields("StockHeaderSettings", "isVisibleLossPer", "BIT");
             AddFields("StockHeaderSettings", "MaxLossPer", "DECIMAL (18, 4)");
+            AddFields("StockHeaderSettings", "ExcessAllowedPer", "DECIMAL (18, 4)");
 
             AddFields("StockHeaderSettings", "isAllowedNegativeStock", "BIT");
+            AddFields("StockHeaderSettings", "filterContraGodowns", "nvarchar(Max)");
 
             AddFields("DocumentTypeSettings", "ReferenceDocTypeCaption", "nvarchar(50)");
             AddFields("DocumentTypeSettings", "ReferenceDocIdCaption", "nvarchar(50)");
+
+            AddFields("JobReceiveSettings", "filterContraGodowns", "nvarchar(Max)");
 
             AddFields("LedgerSettings", "isVisibleReferenceDocId", "BIT");
             AddFields("LedgerSettings", "isVisibleReferenceDocTypeId", "BIT");
@@ -2318,6 +2324,9 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
 
             AddFields("LedgerAccountGroups", "Weightage", "TINYINT");
             AddFields("Ledgers", "Priority", "Int");
+            AddFields("Ledgers", "ReconciliedBy", "nvarchar(Max)");
+            AddFields("Ledgers", "PassedBy", "nvarchar(50)");
+            AddFields("Ledgers", "PassedAmount", "Decimal(18,4)");
 
             AddFields("ProductUids", "IsFinished", "Int");
 
@@ -2477,10 +2486,14 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
             AddFields("SaleDispatchReturnLines", "GodownId", "Int","Godowns");
             AddFields("SaleInvoiceSettings", "SaleInvoiceReturnDocTypeId", "Int", "DocumentTypes");
             AddFields("JobOrderSettings", "filterUnitConversionFors", "nvarchar(Max)");
+            AddFields("JobOrderSettings", "filterMachineTypes", "nvarchar(Max)");
+            AddFields("StockHeaderSettings", "filterMachineTypes", "nvarchar(Max)");
 
             AddFields("LedgerSettings", "isVisibleLineDrCr", "Bit");
+            AddFields("LedgerSettings", "isVisiblePassedBy", "Bit");
 
             AddFields("LedgerLines", "DrCr", "nvarchar(2)");
+            AddFields("LedgerLines", "PassedBy", "nvarchar(50)");
 
             AddFields("SaleDeliveryLines", "Sr", "int");
             AddFields("SaleDeliverySettings", "WizardMenuId", "int","Menus");
@@ -2944,6 +2957,9 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
             AddFields("SaleQuotationLines", "DiscountAmount", "Decimal(18,4)");
 
             AddFields("ProductQualities", "LossQty", "Decimal(18,4)");
+            AddFields("ProductQualities", "NonCountedQty", "Decimal(18,4)");
+            AddFields("Sizes", "NonCountedQty", "Decimal(18,4)");
+
 
             AddFields("SaleQuotationLines", "SalesTaxGroupProductId", "Int", "ChargeGroupProducts");
             AddFields("SaleQuotationSettings", "isVisibleSalesTaxGroupProduct", "Bit");
@@ -3116,6 +3132,7 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
             AddFields("JobReceiveSettings", "isAllowtoeditDealQty", "BIT");
             AddFields("JobReceiveSettings", "isAllowtoGenerateMultipleBarcode", "BIT");
             AddFields("JobReceiveSettings", "isVisibleLossPer", "BIT");
+            AddFields("JobReceiveSettings", "isVisibleCustomHeaderAttribute", "BIT");
             AddFields("JobReceiveSettings", "LossPerTolerance", "Decimal(18,4)");
 
             try

@@ -128,6 +128,7 @@ namespace Model.Models
 
         public int? ReferenceDocId { get; set; }
 
+        public Decimal? Reading { get; set; }
 
         [Display(Name = "Lock Reason")]
         public string LockReason { get; set; }

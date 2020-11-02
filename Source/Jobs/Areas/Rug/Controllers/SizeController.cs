@@ -247,6 +247,7 @@ namespace Jobs.Areas.Rug.Controllers
                     temp.Height = pt.Height;
                     temp.HeightFraction = pt.HeightFraction;
                     temp.Area = pt.Area;
+                    temp.NonCountedQty = pt.NonCountedQty;
                     temp.Perimeter = pt.Perimeter;
                     temp.IsActive = pt.IsActive;
                     temp.ModifiedDate = DateTime.Now;

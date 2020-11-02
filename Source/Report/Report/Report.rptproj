@@ -23,6 +23,14 @@
   </DataSets>
   <Reports>
     <ProjectItem>
+      <Name>ActivityLogReport.rdl</Name>
+      <FullPath>ActivityLogReport.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>ActivityLogReport1.rdl</Name>
+      <FullPath>ActivityLogReport1.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>AdvancePrint.rdl</Name>
       <FullPath>AdvancePrint.rdl</FullPath>
     </ProjectItem>
@@ -93,6 +101,10 @@
     <ProjectItem>
       <Name>BazarWiseLagatReport_Summary.rdl</Name>
       <FullPath>BazarWiseLagatReport_Summary.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>BlendFinalReport.rdl</Name>
+      <FullPath>BlendFinalReport.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>BranchBazarPenaltySubReport.rdl</Name>
@@ -602,6 +614,10 @@
     <ProjectItem>
       <Name>DailyPackingReview4.rdl</Name>
       <FullPath>DailyPackingReview4.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>DailyPaymentSummary.rdl</Name>
+      <FullPath>DailyPaymentSummary.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>DailyStockSummary.rdl</Name>
@@ -2205,6 +2221,10 @@
       <FullPath>PackingSummary.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>PackingSummary1.rdl</Name>
+      <FullPath>PackingSummary1.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>PartyWiseStockStatus.rdl</Name>
       <FullPath>PartyWiseStockStatus.rdl</FullPath>
     </ProjectItem>
@@ -3373,6 +3393,10 @@
       <FullPath>Rug_DyeingOrderPrint_BC.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Rug_DyeingOrderPrint_BC_DH.rdl</Name>
+      <FullPath>Rug_DyeingOrderPrint_BC_DH.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>Rug_DyeingOrderPrint_MC.rdl</Name>
       <FullPath>Rug_DyeingOrderPrint_MC.rdl</FullPath>
     </ProjectItem>
@@ -3423,6 +3447,10 @@
     <ProjectItem>
       <Name>Rug_FinishingReceive_Print.rdl</Name>
       <FullPath>Rug_FinishingReceive_Print.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Rug_FinishingReceive_Print_MC.rdl</Name>
+      <FullPath>Rug_FinishingReceive_Print_MC.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Rug_HisabOfPurja.rdl</Name>
@@ -4529,6 +4557,10 @@
       <FullPath>StoreIssuePrint.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>StoreIssuePrint_DieslIssue.rdl</Name>
+      <FullPath>StoreIssuePrint_DieslIssue.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>StoreIssuePrint_DoubleDimension.rdl</Name>
       <FullPath>StoreIssuePrint_DoubleDimension.rdl</FullPath>
     </ProjectItem>
@@ -4819,6 +4851,10 @@
     <ProjectItem>
       <Name>VisitorPass_1.rdl</Name>
       <FullPath>VisitorPass_1.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>VoucherPrint.rdl</Name>
+      <FullPath>VoucherPrint.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>WashingCancelPrint.rdl</Name>
@@ -5610,10 +5646,6 @@
     <ProjectItem>
       <Name>YearlyListOfPurja.rdl</Name>
       <FullPath>YearlyListOfPurja.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Rug_DyeingOrderPrint_BC_DH.rdl</Name>
-      <FullPath>Rug_DyeingOrderPrint_BC_DH.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>

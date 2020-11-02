@@ -52,14 +52,15 @@ namespace Model.Models
         public bool? isVisibleSaleOrderLine { get; set; }
         public bool? isVisibleLossPer { get; set; }
         public decimal? MaxLossPer { get; set; }
-
+        public decimal? ExcessAllowedPer { get; set; }
+        public bool? isVisibleReading { get; set; }
         public bool isPostedInStock { get; set; }
         public bool? isAllowedNegativeStock { get; set; }
         public bool? isPostedInStockProcess { get; set; }
         public bool? isPostedInLedger { get; set; }
         public bool? isProductHelpFromStockProcess { get; set; }
         public bool? isVisibleReferenceDocId { get; set; }
-
+        public string filterContraGodowns { get; set; }
         public bool? isMandatoryProductUID { get; set; }
 
 

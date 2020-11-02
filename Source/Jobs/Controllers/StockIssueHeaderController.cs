@@ -348,6 +348,7 @@ namespace Jobs.Controllers
                     temp.PersonId = s.PersonId;
                     temp.ProcessId = s.ProcessId;
                     temp.GodownId = s.GodownId;
+                    temp.Reading = s.Reading;
                     temp.Remark = s.Remark;
                     temp.TransportId = svm.TransportId;
                     temp.VehicleNo = svm.VehicleNo;
@@ -473,6 +474,26 @@ namespace Jobs.Controllers
             PrepareViewBag(svm.DocTypeId);
             ViewBag.Mode = "Add";
             return View("Create", svm);
+        }
+
+        public ActionResult GetGodown(string searchTerm, int pageSize, int pageNum, int filter)//DocTypeId
+        {
+            var Query = _StockHeaderService.GetGodown(filter, searchTerm);
+            var temp = Query.Skip(pageSize * (pageNum - 1))
+                .Take(pageSize)
+                .ToList();
+
+            var count = Query.Count();
+
+            ComboBoxPagedResult Data = new ComboBoxPagedResult();
+            Data.Results = temp;
+            Data.Total = count;
+
+            return new JsonpResult
+            {
+                Data = Data,
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet
+            };
         }
 
         [HttpGet]

@@ -1392,6 +1392,25 @@ namespace Jobs.Controllers
             };
         }
 
+        public ActionResult GetGodown(string searchTerm, int pageSize, int pageNum, int filter)//DocTypeId
+        {
+            var Query = _StockHeaderService.GetGodown(filter, searchTerm);
+            var temp = Query.Skip(pageSize * (pageNum - 1))
+                .Take(pageSize)
+                .ToList();
+
+            var count = Query.Count();
+
+            ComboBoxPagedResult Data = new ComboBoxPagedResult();
+            Data.Results = temp;
+            Data.Total = count;
+
+            return new JsonpResult
+            {
+                Data = Data,
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet
+            };
+        }
 
         public ActionResult Import(int id)//Document Type Id
         {

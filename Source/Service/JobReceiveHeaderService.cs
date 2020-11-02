@@ -40,6 +40,7 @@ namespace Service
         int PrevId(int id);
         string GetMaxDocNo();
         IEnumerable<WeavingReceiveWizardViewModel> GetJobOrdersForWeavingReceiveWizard(int DocTypeId);
+        IQueryable<ComboBoxResult> GetGodown(int Id, string term);
         IQueryable<ComboBoxResult> GetCustomPerson(int Id, string term);
 		IQueryable<ComboBoxResult> GetCustomPerson_WithProcess(int Id, string term, int? ProcessId = null);
     }
@@ -347,6 +348,38 @@ namespace Service
                 }
             }
 
+        }
+
+        public IQueryable<ComboBoxResult> GetGodown(int Id, string term)
+        {
+            int DocTypeId = Id;
+            int SiteId = (int)System.Web.HttpContext.Current.Session["SiteId"];
+            int DivisionId = (int)System.Web.HttpContext.Current.Session["DivisionId"];
+
+            var settings = new JobReceiveSettingsService(_unitOfWork).GetJobReceiveSettingsForDocument(DocTypeId, DivisionId, SiteId);
+
+            string[] ContraGodowns = null;
+            if (!string.IsNullOrEmpty(settings.filterContraGodowns)) { ContraGodowns = settings.filterContraGodowns.Split(",".ToCharArray()); }
+            else { ContraGodowns = new string[] { "NA" }; }
+
+            string DivIdStr = "|" + DivisionId.ToString() + "|";
+            string SiteIdStr = "|" + SiteId.ToString() + "|";
+
+            var list = (from p in db.Godown
+                        where 1==1
+                        && (string.IsNullOrEmpty(term) ? 1 == 1 : (p.GodownName.ToLower().Contains(term.ToLower())))
+                        && (string.IsNullOrEmpty(settings.filterContraGodowns) ? p.SiteId == SiteId : ContraGodowns.Contains(p.GodownId.ToString()))
+                        && (p.IsActive == null ? 1 == 1 : p.IsActive == true)
+                        group new { p } by new { p.GodownId } into Result
+                        orderby Result.Max(m => m.p.GodownName)
+                        select new ComboBoxResult
+                        {
+                            id = Result.Key.GodownId.ToString(),
+                            text = Result.Max(m => m.p.GodownName),
+                        }
+              );
+
+            return list;
         }
 
         public IQueryable<ComboBoxResult> GetCustomPerson(int Id, string term)

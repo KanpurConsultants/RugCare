@@ -140,6 +140,7 @@ namespace Jobs.Areas.Rug.Controllers
                     temp.LossQty = pt.LossQty;
                     temp.Weight = pt.Weight;
                     temp.Rate = pt.Rate;
+                    temp.NonCountedQty = pt.NonCountedQty;
                     temp.IsActive = pt.IsActive;
                     temp.ModifiedDate = DateTime.Now;
                     temp.ModifiedBy = User.Identity.Name;

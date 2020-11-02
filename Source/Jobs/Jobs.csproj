@@ -304,6 +304,7 @@
     <Compile Include="Areas\Rug\Controllers\WeavingReceiveTextImportController.cs" />
     <Compile Include="Areas\Rug\Controllers\ProductQualityConsumptionLineController.cs" />
     <Compile Include="Areas\Rug\Controllers\PackingUnitSetting.cs" />
+    <Compile Include="Controllers\BankReconciliation1Controller.cs" />
     <Compile Include="Controllers\ShipmentDetailController.cs" />
     <Compile Include="Controllers\DocumentTypeTimeExtensionRequestController.cs" />
     <Compile Include="Areas\Rug\Controllers\WeavingRetension.cs" />
@@ -5533,6 +5534,13 @@
     <Content Include="Views\ShipmentDetail\IndexLicense.cshtml" />
     <Content Include="Views\ShipmentDetail\IndexPreShipment.cshtml" />
     <Content Include="Views\ShipmentDetail\IndexPayment.cshtml" />
+    <Content Include="Views\BankReconciliation1\_Filters.cshtml" />
+    <Content Include="Views\BankReconciliation1\BankReconciliation.cshtml" />
+    <Content Include="Views\BankReconciliation1\Delete.cshtml" />
+    <Content Include="Views\BankReconciliation1\Edit.cshtml" />
+    <Content Include="Views\BankReconciliation1\Index.cshtml" />
+    <Content Include="Views\BankReconciliation1\PendingToApprove.cshtml" />
+    <Content Include="Views\BankReconciliation1\PendingToSubmit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

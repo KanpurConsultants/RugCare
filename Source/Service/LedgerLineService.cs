@@ -34,6 +34,7 @@ namespace Service
         IEnumerable<LedgerLine> FindByLedgerHeader(int id);
         IQueryable<ComboBoxResult> GetLedgerAccounts(string term, string AccGroups, string ExcludeAccGroups, string Process);
         IQueryable<ComboBoxResult> GetCostCenters(string term, string DocTypes, string Process);
+        IQueryable<ComboBoxResult> GetPassedBy(string term, string DocTypes, string Process);       
         IQueryable<ComboBoxResult> GetLedgerIds_Adusted(int? Id, string Nature, int filter3, string term);
         LedgersViewModel GetLastTransactionDetail(int LedgerHeaderId);
     }
@@ -297,6 +298,31 @@ namespace Service
             return temp;
         }
 
+        public IQueryable<ComboBoxResult> GetPassedBy(string term, string DocTypes, string Process)
+        {
+
+            var UserRole = db.Roles.Where(m => m.Name == "Managing Director").FirstOrDefault();
+            var Users = (from L in db.UserRole
+                        join U in db.Users on L.UserId equals U.Id into UTable
+                        from UTab in UTable.DefaultIfEmpty()
+                        where UTab.UserName != null && L.RoleId == UserRole.Id
+                        && (string.IsNullOrEmpty(term) ? 1 == 1 : UTab.UserName.ToLower().Contains(term.ToLower()))
+                         group new { UTab } by new { UTab.UserName } into Result
+                        select new
+                        {
+                            User = Result.Key
+                        });
+
+
+            var temp = (from p in Users
+                        orderby p.User
+                        select new ComboBoxResult
+                        {
+                            text = p.User.UserName,
+                            id = p.User.UserName.ToString(),
+                        });
+            return temp;
+        }
 
         public IQueryable<ComboBoxResult> GetReferenceDocIds(int Id, string term)
         {

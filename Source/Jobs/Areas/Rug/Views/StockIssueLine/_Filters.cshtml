@@ -19,6 +19,7 @@
                 @Html.AntiForgeryToken()
                 @Html.HiddenFor(m => m.PersonId)
                 @Html.HiddenFor(model => model.StockHeaderId)
+
                 <input type="hidden" name="All" value="" id="All"/>
 
                 <div class="row">
@@ -87,7 +88,15 @@
                 </div>
 
                 <div class="modal-footer " style="padding: 19px 20px 0 20px; border-top:1px solid #8E8888">
+
+                    @if (ViewBag.ExcessAllowedPer >= 0 && ViewBag.AdminSetting == "False")
+                    {
+                    }
+                    else
+                    {
                     <button class="btn custom" type="submit" id="Allsubmit"><h2 style="margin:0px" title="Proceed"><span class="glyphicon glyphicon-arrow-right black"></span> </h2><div>All</div></button>
+                    }
+
                     <button class="btn custom" type="submit" id="submit"><h2 style="margin:0px" title="Proceed"><span class="glyphicon glyphicon-arrow-right black"></span> </h2><div>Pending</div></button>
                 </div>
 

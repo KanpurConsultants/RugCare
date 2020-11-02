@@ -36,6 +36,7 @@ namespace Model.Models
         public bool? isVisibleLotNo { get; set; }
         public bool? isVisibleLoss { get; set; }
         public bool? isVisibleLossPer { get; set; }
+        public bool? isVisibleCustomHeaderAttribute { get; set; }
         public decimal? LossPerTolerance { get; set; }        
         public bool? isVisibleRate { get; set; }
         public bool? isVisibleSpecification { get; set; }
@@ -108,6 +109,7 @@ namespace Model.Models
         public string filterProductGroups { get; set; }
         public string filterProducts { get; set; }
         public string filterContraDocTypes { get; set; }
+        public string filterContraGodowns { get; set; }
 
         [ForeignKey("Process")]
         public int ProcessId { get; set; }

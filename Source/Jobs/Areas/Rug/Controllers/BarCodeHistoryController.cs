@@ -135,7 +135,7 @@ namespace Jobs.Areas.Rug.Controllers
             BarCodeGenDetails Rec = db.Database.SqlQuery<BarCodeGenDetails>("EXECUTE Web.GetBarCodeGenData @p0", new SqlParameter("@p0", ProductUid)).FirstOrDefault();
 
             if (Rec != null)
-                return Json(new { Success = true, DocNo = Rec.GenDocNo, DocDate = Rec.GenDocDate, DocType = Rec.DocumentTypeName, Person = Rec.Name, Product = Rec.ProductName, Godown = Rec.Godown, Status = Rec.Status, Qty = Rec.Qty, ProductQuality = Rec.ProductQuality, ProductStdSize = Rec.ProductStdSize, Buyer = Rec.Buyer, SaleOrderNo = Rec.SaleOrderNo }, JsonRequestBehavior.AllowGet);
+                return Json(new { Success = true, DocNo = Rec.GenDocNo, DocDate = Rec.GenDocDate, DocType = Rec.DocumentTypeName, Person = Rec.Name, Product = Rec.ProductName, Godown = Rec.Godown, Status = Rec.Status, Qty = Rec.Qty, IsHold = Rec.IsHold, ProductQuality = Rec.ProductQuality, ProductStdSize = Rec.ProductStdSize, Buyer = Rec.Buyer, SaleOrderNo = Rec.SaleOrderNo }, JsonRequestBehavior.AllowGet);
             else
                 return Json(new { Success = false }, JsonRequestBehavior.AllowGet);
 
@@ -154,6 +154,7 @@ namespace Jobs.Areas.Rug.Controllers
             public string SaleOrderNo { get; set; }
             public string Status { get; set; }
             public string Godown { get; set; }
+            public string IsHold { get; set; }
             public string Qty { get; set; }
 
         }

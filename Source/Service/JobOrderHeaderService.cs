@@ -41,6 +41,7 @@ namespace Service
         void UpdateProdUidJobWorkers(ref ApplicationDbContext context, JobOrderHeader Header);
         string ValidateCostCenter(int DocTypeId, int HeaderId, int JobWorkerId, string CostCenterName);
         JobOrderLineProgressViewModel GetLineProgressDetail(int JobOrderLineId);
+        IQueryable<ComboBoxResult> GetMachine(int Id, string term);
         IQueryable<ComboBoxResult> GetCustomPerson(int Id, string term);
 		IQueryable<ComboBoxResult> GetCustomPerson_WithProcess(int Id, string term, int? ProcessId = null);
         IEnumerable<DocumentTypeHeaderAttributeViewModel> GetDocumentHeaderAttribute(int id);
@@ -791,6 +792,36 @@ namespace Service
             return list;
         }
 
+        public IQueryable<ComboBoxResult> GetMachine(int Id, string term)
+        {
+            int DocTypeId = Id;
+            int SiteId = (int)System.Web.HttpContext.Current.Session["SiteId"];
+            int DivisionId = (int)System.Web.HttpContext.Current.Session["DivisionId"];
+
+            var settings = new JobOrderSettingsService(_unitOfWork).GetJobOrderSettingsForDocument(DocTypeId, DivisionId, SiteId);
+
+            string[] MachineTypes = null;
+            if (!string.IsNullOrEmpty(settings.filterMachineTypes)) { MachineTypes = settings.filterMachineTypes.Split(",".ToCharArray()); }
+            else { MachineTypes = new string[] { "NA" }; }
+
+
+            var list = (from p in db.ProductUid
+                        join g in db.Godown on p.CurrenctGodownId equals g.GodownId
+                        where g.SiteId == SiteId
+                        && (string.IsNullOrEmpty(term) ? 1 == 1 : (p.ProductUidName.ToLower().Contains(term.ToLower())))
+                        && (string.IsNullOrEmpty(settings.filterMachineTypes) ? 1 == 1 : MachineTypes.Contains(p.ProductId.ToString()))
+                        && (p.IsActive == null ? 1 == 1 : p.IsActive == true)
+                        group new { p } by new { p.ProductUIDId } into Result
+                        orderby Result.Max(m => m.p.ProductUidName)
+                        select new ComboBoxResult
+                        {
+                            id = Result.Key.ProductUIDId.ToString(),
+                            text = Result.Max(m => m.p.ProductUidName),
+                        }
+              );
+
+            return list;
+        }
 
         public IEnumerable<DocumentTypeHeaderAttributeViewModel> GetDocumentHeaderAttribute(int id)
         {

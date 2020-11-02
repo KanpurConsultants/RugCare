@@ -1333,7 +1333,7 @@ namespace Jobs.Areas.Rug.Controllers
                 StockViewModel_Issue.SiteId = packingheader.SiteId;
                 StockViewModel_Issue.CurrencyId = null;
                 StockViewModel_Issue.HeaderProcessId = null;
-                StockViewModel_Issue.PersonId = null;
+                StockViewModel_Issue.PersonId = packingheader.BuyerId;
                 StockViewModel_Issue.ProductId = packingline.ProductId;
                 StockViewModel_Issue.ProductUidId = packingline.ProductUidId;
                 StockViewModel_Issue.HeaderFromGodownId = null;

@@ -8059,6 +8059,7 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
+                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
@@ -8318,6 +8319,7 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
+                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
@@ -8577,6 +8579,7 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
+                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
@@ -8836,6 +8839,7 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
+                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
@@ -9390,6 +9394,9 @@
                 <SortExpression>
                   <Value>=Fields!ProductName.Value</Value>
                 </SortExpression>
+                <SortExpression>
+                  <Value>=Fields!Sr.Value</Value>
+                </SortExpression>
               </SortExpressions>
               <TablixMembers>
                 <TablixMember>
@@ -9400,7 +9407,10 @@
                   </Group>
                   <SortExpressions>
                     <SortExpression>
-                      <Value>=Fields!shade.Value</Value>
+                      <Value>=Fields!ProductName.Value</Value>
+                    </SortExpression>
+                    <SortExpression>
+                      <Value>=Fields!Sr.Value</Value>
                     </SortExpression>
                   </SortExpressions>
                   <TablixMembers>
@@ -9412,12 +9422,20 @@
                       </Group>
                       <SortExpressions>
                         <SortExpression>
-                          <Value>=Fields!LineRemark.Value</Value>
+                          <Value>=Fields!ProductName.Value</Value>
+                        </SortExpression>
+                        <SortExpression>
+                          <Value>=Fields!Sr.Value</Value>
                         </SortExpression>
                       </SortExpressions>
                       <TablixMembers>
                         <TablixMember>
                           <Group Name="Details2" />
+                          <SortExpressions>
+                            <SortExpression>
+                              <Value>=Fields!Sr.Value</Value>
+                            </SortExpression>
+                          </SortExpressions>
                           <TablixMembers>
                             <TablixMember />
                           </TablixMembers>
@@ -10672,7 +10690,6 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox18</rd:DefaultName>
-          <Top>0in</Top>
           <Left>5.51807in</Left>
           <Height>0.20556in</Height>
           <Width>1.90256in</Width>
@@ -10715,7 +10732,6 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox19</rd:DefaultName>
-          <Top>0in</Top>
           <Left>3.08465in</Left>
           <Height>0.21944in</Height>
           <Width>2.29999in</Width>
@@ -10774,7 +10790,6 @@
             </Textbox>
           </ReportItems>
           <KeepTogether>true</KeepTogether>
-          <Top>0in</Top>
           <Left>0.05493in</Left>
           <Height>0.25in</Height>
           <Width>2.84986in</Width>
@@ -11007,6 +11022,10 @@
         <Field Name="Status">
           <DataField>Status</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Sr">
+          <DataField>Sr</DataField>
+          <rd:TypeName>System.Int64</rd:TypeName>
         </Field>
       </Fields>
       <rd:DataSetInfo>

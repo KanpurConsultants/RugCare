@@ -21,6 +21,7 @@ namespace Model.ViewModel
         public int DivisionId { get; set; }
         public string DivisionName { get; set; }
         public bool isVisibleMachine { get; set; }
+        public bool isVisibleReading { get; set; }
         public bool isVisibleTransportDetail { get; set; }
         public bool isMandatoryMachine { get; set; }
         public bool isVisibleHeaderCostCenter { get; set; }
@@ -36,7 +37,7 @@ namespace Model.ViewModel
         public bool isVisibleProdOrder { get; set; }
         public bool isVisibleLossPer { get; set; }
         public decimal? MaxLossPer { get; set; }
-
+        public decimal? ExcessAllowedPer { get; set; }
         public bool isVisibleRate { get; set; }
         public bool isVisibleWeight { get; set; }
         public bool isVisibleSpecification { get; set; }

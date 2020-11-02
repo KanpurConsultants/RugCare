@@ -55,6 +55,8 @@ namespace Model.Models
 
         public decimal Perimeter { get; set; }
 
+        public Decimal? NonCountedQty { get; set; }
+
         [Display(Name = "Is Active ?")]
         public Boolean IsActive { get; set; }
 

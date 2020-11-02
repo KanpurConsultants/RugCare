@@ -1052,6 +1052,8 @@ namespace Jobs.Controllers
                 {
                     JobReturnLine Line = Mapper.Map<JobReturnLineViewModel, JobReturnLine>(svm);
 
+                    var JobReceiveLine = new JobReceiveLineService(_unitOfWork).Find(Line.JobReceiveLineId);
+
                     if (svm.JobReceiveSettings.isPostedInStock)
                     {
                         StockViewModel StockViewModel = new StockViewModel();
@@ -1079,10 +1081,10 @@ namespace Jobs.Controllers
                         StockViewModel.Rate = null;
                         StockViewModel.ExpiryDate = null;
                         StockViewModel.Specification = svm.Specification;
-                        StockViewModel.Dimension1Id = svm.Dimension1Id;
-                        StockViewModel.Dimension2Id = svm.Dimension2Id;
-                        StockViewModel.Dimension3Id = svm.Dimension3Id;
-                        StockViewModel.Dimension4Id = svm.Dimension4Id;
+                        StockViewModel.Dimension1Id = JobReceiveLine.Dimension1Id;
+                        StockViewModel.Dimension2Id = JobReceiveLine.Dimension2Id;
+                        StockViewModel.Dimension3Id = JobReceiveLine.Dimension3Id;
+                        StockViewModel.Dimension4Id = JobReceiveLine.Dimension4Id;
                         StockViewModel.Remark = Line.Remark;
                         StockViewModel.ProductUidId = svm.ProductUidId;
                         StockViewModel.Status = Header.Status;
@@ -1195,16 +1197,10 @@ namespace Jobs.Controllers
                     new JobReceiveLineStatusService(_unitOfWork).UpdateJobReceiveQtyOnReturn(Line.JobReceiveLineId, Line.JobReturnLineId, Header.DocDate, Line.Qty, ref db);
 
 
-
-
-                    var JobReceiveLine = new JobReceiveLineService(_unitOfWork).Find(Line.JobReceiveLineId);
-
                     if (JobReceiveLine.ProductUidId.HasValue && JobReceiveLine.ProductUidId > 0)
                     {
                         ProductUid Uid = new ProductUidService(_unitOfWork).Find(JobReceiveLine.ProductUidId.Value);
-
-
-
+                        
                         Line.ProductUidLastTransactionDocId = Uid.LastTransactionDocId;
                         Line.ProductUidLastTransactionDocDate = Uid.LastTransactionDocDate;
                         Line.ProductUidLastTransactionDocNo = Uid.LastTransactionDocNo;

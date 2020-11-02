@@ -49,6 +49,7 @@ namespace Service
         //IQueryable<ComboBoxResult> GetCustomPerson(int Id, string term);
         IQueryable<ComboBoxResult> GetDocIdHelpList(int DocTypeId, string term);//PurchaseOrderHeaderId
         IEnumerable<DocumentTypeHeaderAttributeViewModel> GetDocumentHeaderAttribute(int id);
+        IEnumerable<DocumentTypeHeaderAttributeViewModel> GetDocumentHeaderAttributeByDocId(int DocTypeId, int DocId);
         //string GetNarration(int CustomHeaderId);
     }
     public class CustomHeaderService : ICustomHeaderService
@@ -314,6 +315,8 @@ namespace Service
         {
             return _unitOfWork.Repository<CustomHeader>().Find(id);
         }
+
+
         //public IQueryable<CustomHeaderIndexViewModel> GetCustomHeaderList(int id, string Uname)
         //{
         //    var DivisionId = (int)System.Web.HttpContext.Current.Session["DivisionId"];
@@ -632,6 +635,27 @@ namespace Service
             var temp = from Dta in db.DocumentTypeHeaderAttribute
                        join Ha in db.CustomHeaderAttributes on Dta.DocumentTypeHeaderAttributeId equals Ha.DocumentTypeHeaderAttributeId into HeaderAttributeTable
                        from HeaderAttributeTab in HeaderAttributeTable.Where(m => m.HeaderTableId == id).DefaultIfEmpty()
+                       where (Dta.DocumentTypeId == Header.DocTypeId)
+                       orderby Dta.Sr
+                       select new DocumentTypeHeaderAttributeViewModel
+                       {
+                           ListItem = Dta.ListItem,
+                           DataType = Dta.DataType,
+                           Value = HeaderAttributeTab.Value,
+                           Name = Dta.Name,
+                           DocumentTypeHeaderAttributeId = Dta.DocumentTypeHeaderAttributeId,
+                       };
+
+            return temp;
+        }
+
+        public IEnumerable<DocumentTypeHeaderAttributeViewModel> GetDocumentHeaderAttributeByDocId(int DocTypeId, int DocId)
+        {
+            var Header = db.CustomHeader.Where(m =>m.DocTypeId == DocTypeId && m.DocId == DocId).FirstOrDefault();
+
+            var temp = from Dta in db.DocumentTypeHeaderAttribute
+                       join Ha in db.CustomHeaderAttributes on Dta.DocumentTypeHeaderAttributeId equals Ha.DocumentTypeHeaderAttributeId into HeaderAttributeTable
+                       from HeaderAttributeTab in HeaderAttributeTable.Where(m => m.HeaderTableId == Header.CustomHeaderId).DefaultIfEmpty()
                        where (Dta.DocumentTypeId == Header.DocTypeId)
                        orderby Dta.Sr
                        select new DocumentTypeHeaderAttributeViewModel

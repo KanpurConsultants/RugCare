@@ -1057,7 +1057,7 @@
             $(document).find('a#btnCreateF').removeAttr('href').removeAttr('data-modal').attr("disabled","disabled");
 
         CustomSelectFunction($("#JobWorkerId"), '/JobOrderHeader/GetCustomPerson', '/ComboHelpList/SetSinglePerson', ' ', false, 0,$('#DocTypeId').val());
-        CustomSelectFunction($("#MachineId"), '/ComboHelpList/GetMachine', '/ComboHelpList/SetSingleMachine', ' ', false, 0);
+        CustomSelectFunction($("#MachineId"), '/JobOrderHeader/GetMachine', '/ComboHelpList/SetSingleMachine', ' ', false, 0,$('#DocTypeId').val());
         CustomSelectFunction($("#BillToPartyId"), '/JobOrderHeader/GetCustomPerson', '/ComboHelpList/SetSinglePerson', ' ', false, 0,$('#DocTypeId').val());
         CustomSelectFunction($("#OrderById"), '/ComboHelpList/GetEmployeeWithProcess', '/ComboHelpList/SetSingleEmployee', ' ', false, 0, $('#ProcessId').val());
         CustomSelectFunction($("#GodownId"), '/ComboHelpList/GetGodown', '/ComboHelpList/SetSingleGodown', ' ', false, 0);

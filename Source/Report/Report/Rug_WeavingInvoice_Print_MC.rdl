@@ -4328,7 +4328,6 @@
                           </Style>
                         </Textbox>
                         <ColSpan>3</ColSpan>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell />
@@ -8446,7 +8445,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Code.RupeesToWord(Sum(Fields!DueAmount.Value, "DsMain")-Sum(Fields!TDS.Value, "DsMain")-Sum(Fields!Advance.Value, "DsMain")-Sum(Fields!taxAmount.Value, "DsMain"))</Value>
+                                  <Value>=Code.RupeesToWord(Sum(Fields!PayableAmount.Value, "DsMain"))</Value>
                                   <Style />
                                 </TextRun>
                               </TextRuns>
@@ -8466,6 +8465,7 @@
                           </Style>
                         </Textbox>
                         <ColSpan>2</ColSpan>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell />

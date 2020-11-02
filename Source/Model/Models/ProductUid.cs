@@ -130,6 +130,7 @@ namespace Model.Models
         public ICollection<PackingLine> PackingLine { get; set; }
 
         public int? SaleOrderLineId { get; set; }
+        public Decimal? LastReading { get; set; }
 
         [MaxLength(50)]
         public string OMSId { get; set; }

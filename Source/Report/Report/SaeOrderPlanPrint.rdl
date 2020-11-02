@@ -761,25 +761,25 @@
         <TablixBody>
           <TablixColumns>
             <TablixColumn>
-              <Width>1.26181in</Width>
+              <Width>2.04293in</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>1.01389in</Width>
+              <Width>0.7781in</Width>
             </TablixColumn>
             <TablixColumn>
               <Width>0.67651in</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>0.86806in</Width>
+              <Width>0.73337in</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>0.90972in</Width>
+              <Width>0.71782in</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>0.90972in</Width>
+              <Width>0.75347in</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>0.78472in</Width>
+              <Width>0.72222in</Width>
             </TablixColumn>
             <TablixColumn>
               <Width>1.02683in</Width>
@@ -801,7 +801,7 @@
                               <Value>Product</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -841,7 +841,7 @@
                               <Value>Required</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -856,7 +856,7 @@
                               <Value>Pcs</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -898,7 +898,7 @@
                               <Value>Unit </Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -938,7 +938,7 @@
                               <Value>Prod Plan</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -953,7 +953,7 @@
                               <Value>Pcs</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -995,7 +995,7 @@
                               <Value>Purch Plan</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -1010,7 +1010,7 @@
                               <Value>Pcs</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -1052,7 +1052,7 @@
                               <Value>Stock Plan</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -1067,7 +1067,7 @@
                               <Value>Pcs</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -1109,7 +1109,7 @@
                               <Value>Due Date</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -1151,7 +1151,7 @@
                               <Value>Remark</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -1196,7 +1196,7 @@
                               <Value>=Fields!ProductName.Value</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -1227,11 +1227,11 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=FormatNumber(Fields!RequiredQty.Value,Fields!DecimalPlaces.Value)</Value>
+                              <Value>=Fields!RequiredQty.Value</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>9pt</FontSize>
-                                <Format>0.00;(0.00);'-'</Format>
+                                <FontSize>8pt</FontSize>
+                                <Format>0;- 0;'-'</Format>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -1267,7 +1267,7 @@
                               <Value>=Fields!UnitName.Value</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -1298,11 +1298,11 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=FormatNumber(Fields!ProdPlanQty.Value,Fields!DecimalPlaces.Value)</Value>
+                              <Value>=Fields!ProdPlanQty.Value</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>9pt</FontSize>
-                                <Format>0.00;(0.00);'-'</Format>
+                                <FontSize>8pt</FontSize>
+                                <Format>0;- 0;'-'</Format>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -1324,6 +1324,7 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
+                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
@@ -1335,11 +1336,11 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=FormatNumber(Fields!PurchPlanQty.Value,Fields!DecimalPlaces.Value)</Value>
+                              <Value>=Fields!PurchPlanQty.Value</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>9pt</FontSize>
-                                <Format>0.00;(0.00);'-'</Format>
+                                <FontSize>8pt</FontSize>
+                                <Format>0;- 0;'-'</Format>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -1361,6 +1362,7 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
+                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
@@ -1372,11 +1374,11 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=FormatNumber(Fields!StockPlanQty.Value,Fields!DecimalPlaces.Value)</Value>
+                              <Value>=Fields!StockPlanQty.Value</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>9pt</FontSize>
-                                <Format>0.00;(0.00);'-'</Format>
+                                <FontSize>8pt</FontSize>
+                                <Format>0;- 0;'-'</Format>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -1398,6 +1400,7 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
+                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
@@ -1412,7 +1415,7 @@
                               <Value>=Fields!LineDueDate.Value</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <Format>dd/MMM/yyyy</Format>
                               </Style>
                             </TextRun>
@@ -1449,7 +1452,7 @@
                               <Value>=Fields!LineRemark.Value</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -1488,7 +1491,7 @@
                               <Value>Total Pcs</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -1519,19 +1522,19 @@
                 </TablixCell>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="Textbox137">
+                    <Textbox Name="Textbox10">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Formatnumber(Sum(Fields!RequiredQty.Value),Fields!DecimalPlaces.Value)</Value>
+                              <Value>=Sum(Fields!RequiredQty.Value)</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
-                                <Format>0.00;(0.00);'-'</Format>
+                                <Format>0;- 0;'-'</Format>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -1540,7 +1543,7 @@
                           </Style>
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>Textbox137</rd:DefaultName>
+                      <rd:DefaultName>Textbox10</rd:DefaultName>
                       <Style>
                         <Border>
                           <Style>None</Style>
@@ -1568,7 +1571,7 @@
                               <Value />
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -1599,19 +1602,19 @@
                 </TablixCell>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="Textbox143">
+                    <Textbox Name="Textbox2">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Formatnumber(Sum(Fields!ProdPlanQty.Value),Fields!DecimalPlaces.Value)</Value>
+                              <Value>=Sum(Fields!ProdPlanQty.Value)</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
-                                <Format>0.00;(0.00);'-'</Format>
+                                <Format>0;- 0;'-'</Format>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -1620,7 +1623,7 @@
                           </Style>
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>Textbox143</rd:DefaultName>
+                      <rd:DefaultName>Textbox2</rd:DefaultName>
                       <Style>
                         <Border>
                           <Style>None</Style>
@@ -1634,23 +1637,24 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
+                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="Textbox146">
+                    <Textbox Name="Textbox3">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Formatnumber(Sum(Fields!PurchPlanQty.Value),Fields!DecimalPlaces.Value)</Value>
+                              <Value>=Sum(Fields!PurchPlanQty.Value)</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
-                                <Format>0.00;(0.00);'-'</Format>
+                                <Format>0;- 0;'-'</Format>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -1659,7 +1663,7 @@
                           </Style>
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>Textbox146</rd:DefaultName>
+                      <rd:DefaultName>Textbox3</rd:DefaultName>
                       <Style>
                         <Border>
                           <Style>None</Style>
@@ -1673,23 +1677,24 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
+                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="Textbox149">
+                    <Textbox Name="Textbox5">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Formatnumber(Sum(Fields!StockPlanQty.Value),Fields!DecimalPlaces.Value)</Value>
+                              <Value>=Sum(Fields!StockPlanQty.Value)</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
-                                <Format>0.00;(0.00);'-'</Format>
+                                <Format>0;- 0;'-'</Format>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -1698,7 +1703,7 @@
                           </Style>
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>Textbox149</rd:DefaultName>
+                      <rd:DefaultName>Textbox5</rd:DefaultName>
                       <Style>
                         <Border>
                           <Style>None</Style>
@@ -1712,6 +1717,7 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
+                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
@@ -1726,7 +1732,7 @@
                               <Value />
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -1767,7 +1773,7 @@
                               <Value />
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -1811,7 +1817,7 @@
                               <Value>Total Sq. Yard</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -1852,7 +1858,7 @@
                               <Value>=Microsoft.VisualBasic.Strings.Formatnumber(Sum(Fields!RequiredArea.Value), 4)</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                                 <Format>0.00;(0.00);'-'</Format>
                               </Style>
@@ -1891,7 +1897,7 @@
                               <Value />
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -1932,7 +1938,7 @@
                               <Value>=Microsoft.VisualBasic.Strings.Formatnumber(Sum(Fields!ProdPlanArea.Value), 4)</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                                 <Format>0.00;(0.00);'-'</Format>
                               </Style>
@@ -1971,7 +1977,7 @@
                               <Value>=Microsoft.VisualBasic.Strings.Formatnumber(Sum(Fields!PurchPlanArea.Value), 4)</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                                 <Format>0.00;(0.00);'-'</Format>
                               </Style>
@@ -2010,7 +2016,7 @@
                               <Value>=Microsoft.VisualBasic.Strings.Formatnumber(Sum(Fields!StockPlanArea.Value), 4)</Value>
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                                 <Format>0.00;(0.00);'-'</Format>
                               </Style>
@@ -2049,7 +2055,7 @@
                               <Value />
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -2090,7 +2096,7 @@
                               <Value />
                               <Style>
                                 <FontFamily>Tahoma</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -2161,6 +2167,9 @@
                   <KeepWithGroup>Before</KeepWithGroup>
                 </TablixMember>
                 <TablixMember>
+                  <Visibility>
+                    <Hidden>true</Hidden>
+                  </Visibility>
                   <KeepWithGroup>Before</KeepWithGroup>
                 </TablixMember>
               </TablixMembers>
@@ -2171,7 +2180,7 @@
         <Top>1.325in</Top>
         <Left>0.04237in</Left>
         <Height>1.10417in</Height>
-        <Width>7.45126in</Width>
+        <Width>7.45125in</Width>
         <ZIndex>3</ZIndex>
         <Style>
           <Border>
@@ -3467,4 +3476,3 @@ PtQeVUENmewh02zjEWZuZuLElNvBS6gDSXQMHP8A5UE5f6lWFPkR2q6ZG8HZI8xgvruK93SMJUsHJ61z
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
   <rd:ReportID>f1b70379-da78-4ea9-bab5-cbb93d10df58</rd:ReportID>
 </Report>
-

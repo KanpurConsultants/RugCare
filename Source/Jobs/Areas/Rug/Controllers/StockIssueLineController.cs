@@ -49,6 +49,7 @@ namespace Jobs.Areas.Rug.Controllers
             LogVm.ControllerName = System.Web.HttpContext.Current.Request.RequestContext.RouteData.GetRequiredString("controller");
             LogVm.ActionName = System.Web.HttpContext.Current.Request.RequestContext.RouteData.GetRequiredString("action");
             LogVm.User = System.Web.HttpContext.Current.Request.RequestContext.HttpContext.User.Identity.Name;
+            UserRoles = (List<string>)System.Web.HttpContext.Current.Session["Roles"];
         }
 
 
@@ -56,8 +57,13 @@ namespace Jobs.Areas.Rug.Controllers
         public ActionResult _ForRequisition(int id, int sid)
         {
             RequisitionFiltersForIssue vm = new RequisitionFiltersForIssue();
+            
+
             StockHeader Header = new StockHeaderService(_unitOfWork).Find(id);
             vm.DocumentTypeSettings = new DocumentTypeSettingsService(_unitOfWork).GetDocumentTypeSettingsForDocument(Header.DocTypeId);
+            StockHeaderSettings Settings = new StockHeaderSettingsService(_unitOfWork).GetStockHeaderSettingsForDocument(Header.DocTypeId, Header.DivisionId, Header.SiteId);
+            ViewBag.ExcessAllowedPer = Settings.ExcessAllowedPer;
+            ViewBag.AdminSetting = UserRoles.Contains("Admin").ToString();
             vm.StockHeaderId = id;
             vm.PersonId = sid;
             return PartialView("_Filters", vm);
@@ -103,6 +109,7 @@ namespace Jobs.Areas.Rug.Controllers
             //Getting Settings           
             var Header = new StockHeaderService(_unitOfWork).Find(vm.StockHeaderId);
             svm.StockHeaderSettings = Mapper.Map<StockHeaderSettings, StockHeaderSettingsViewModel>(new StockHeaderSettingsService(_unitOfWork).GetStockHeaderSettingsForDocument(Header.DocTypeId, Header.DivisionId, Header.SiteId));
+            ViewBag.AdminSetting = UserRoles.Contains("Admin").ToString();
             return PartialView("_Results", svm);
 
         }
@@ -168,9 +175,9 @@ namespace Jobs.Areas.Rug.Controllers
             {
 
                 //System.Web.HttpContext.Current.Session["JobOrderBomMaterialIssue"] = vm;
+                ViewBag.AdminSetting = UserRoles.Contains("Admin").ToString();
 
-                List<StockLineViewModel> temp = _StockLineService.GetBOMDetailForProducts(vm).ToList();
-
+                List<StockLineViewModel> temp = _StockLineService.GetBOMDetailForProducts(vm).ToList();                
                 StockMasterDetailModel svm = new StockMasterDetailModel();
                 svm.StockLineViewModel = temp;       
                 var Header = new StockHeaderService(_unitOfWork).Find((int)vm.StockIssueForProductsFilterViewModel[0].StockHeaderId);
@@ -222,6 +229,7 @@ namespace Jobs.Areas.Rug.Controllers
                             ModelState.AddModelError("", "Negative Stock is not Allowed");
                         }
                     }
+
                 }
             }
 
