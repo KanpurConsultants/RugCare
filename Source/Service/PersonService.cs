@@ -341,6 +341,7 @@ namespace Service
                                                          IsSisterConcern = BusinessEntityTab.IsSisterConcern,
                                                          CreaditDays = BusinessEntityTab.CreaditDays,
                                                          CreaditLimit = BusinessEntityTab.CreaditLimit,
+                                                         OrderBalanceLimit = BusinessEntityTab.OrderBalanceLimit,
                                                          GuarantorId = BusinessEntityTab.GuarantorId,
                                                          IsActive = b.IsActive,
                                                          LedgerAccountGroupId = AccountTab.LedgerAccountGroupId,

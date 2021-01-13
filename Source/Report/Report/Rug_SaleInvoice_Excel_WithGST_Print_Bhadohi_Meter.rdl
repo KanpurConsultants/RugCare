@@ -546,7 +546,6 @@
                       </Style>
                     </Textbox>
                     <ColSpan>4</ColSpan>
-                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell />
@@ -4464,7 +4463,7 @@
                             <TextRun>
                               <Value>=iif(Fields!InvoiceAmount.Value &gt; 0,
                                 Fields!InvoiceAmount.Value,Sum(Fields!TotalAmountInr.Value, "DsMain")) +
-                                Fields!Freight.Value+Fields!Insurance.Value-Fields!Insurance.Value</Value>
+                                Fields!Freight.Value+Fields!Insurance.Value-Fields!Insurance.Value-Fields!Deduction.Value</Value>
                               <Style>
                                 <FontFamily>tahoma</FontFamily>
                                 <FontSize>7pt</FontSize>

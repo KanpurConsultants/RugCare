@@ -982,7 +982,29 @@ namespace Jobs.Controllers
                 }
             }
 
-            if (svm.JobOrderLineId <= 0)
+            BusinessEntity BE = new BusinessEntityService(_unitOfWork).Find(temp.JobWorkerId);
+            if (BE.OrderBalanceLimit != null)
+            {
+                    var CLed = (from H in db.ViewJobOrderBalance
+                                join L in db.JobOrderLine on H.JobOrderLineId equals L.JobOrderLineId into LTable
+                                from LTab in LTable.DefaultIfEmpty()
+                                where H.JobWorkerId == temp.JobWorkerId && H.JobOrderLineId != svm.JobOrderLineId
+                                group new { H, LTab } by new { H.JobWorkerId } into Result
+                                select new
+                                {
+                                    JobWorkerId = Result.Key.JobWorkerId,
+                                    BalanceQty = Result.Sum(m => m.H.BalanceQty),
+                                    BalanceDealQty = Result.Sum(m => m.H.BalanceQty*m.LTab.UnitConversionMultiplier)
+                                }).ToList().FirstOrDefault();
+
+                if (CLed.BalanceDealQty + svm.DealQty  > BE.OrderBalanceLimit)
+                {
+                    ModelState.AddModelError("Qty", "total Order Qty can not be More than " + BE.OrderBalanceLimit.ToString());
+                }
+
+            }
+
+                if (svm.JobOrderLineId <= 0)
             {
                 ViewBag.LineMode = "Create";
             }
@@ -1726,17 +1748,20 @@ namespace Jobs.Controllers
                         if (JW.IsSisterConcern == true)
                         {
                             ProdOrderLine POL = db.ProdOrderLine.Where(m => m.ReferenceDocLineId == svm.JobOrderLineId && m.ReferenceDocTypeId == temp.DocTypeId).FirstOrDefault();
-                            POL.ProductId = svm.ProductId;
-                            POL.Qty = svm.Qty;
-                            POL.Remark = svm.Remark;
-                            POL.Dimension1Id = svm.Dimension1Id;
-                            POL.Dimension2Id = svm.Dimension2Id;
-                            POL.LockReason = svm.Remark;
-                            POL.Specification = svm.Specification;
-                            POL.ModifiedBy = User.Identity.Name;
-                            POL.ModifiedDate = DateTime.Now;
-                            POL.ObjectState = Model.ObjectState.Modified;
-                            db.ProdOrderLine.Add(POL);
+                            if (POL != null)
+                            {
+                                POL.ProductId = svm.ProductId;
+                                POL.Qty = svm.Qty;
+                                POL.Remark = svm.Remark;
+                                POL.Dimension1Id = svm.Dimension1Id;
+                                POL.Dimension2Id = svm.Dimension2Id;
+                                POL.LockReason = svm.Remark;
+                                POL.Specification = svm.Specification;
+                                POL.ModifiedBy = User.Identity.Name;
+                                POL.ModifiedDate = DateTime.Now;
+                                POL.ObjectState = Model.ObjectState.Modified;
+                                db.ProdOrderLine.Add(POL);
+                            }
                         }
                     }
 

@@ -39,6 +39,7 @@ namespace Jobs.Controllers
         IExceptionHandlingService _exception;
 
         List<string> UserRoles = new List<string>();
+        ActiivtyLogViewModel LogVm = new ActiivtyLogViewModel();
 
         public PersonController(IPersonService PersonService, IBusinessEntityService BusinessEntityService, IAccountService AccountService, IPersonRegistrationService PersonRegistrationService, IPersonAddressService PersonAddressService, IPersonProcessService PersonProcessService, IPersonRoleService PersonRoleService, IUnitOfWork unitOfWork, IExceptionHandlingService exec)
         {
@@ -182,7 +183,6 @@ namespace Jobs.Controllers
             p.TdsGroupId = settings.DefaultTdsGroupId;
             p.SalesTaxGroupPartyId = settings.DefaultSalesTaxGroupPartyId;
             p.Code = new PersonService(_unitOfWork).FGetNewCode(p.DocTypeId, CurrentDivisionId, CurrentSiteId, settings.SqlProcPersonCode);
-
 
             return View("Create", p);
         }
@@ -643,11 +643,18 @@ namespace Jobs.Controllers
                     }
 
                     #endregion
-         
 
 
-
-
+                    LogActivity.LogActivityDetail(new ActiivtyLogViewModel
+                    {
+                        DocTypeId = person.DocTypeId,
+                        DocId = person.PersonID,
+                        ActivityType = (int)ActivityTypeContants.Added,
+                        DocNo = person.Code,
+                        DocDate = person.CreatedDate,
+                        CreatedDate = person.CreatedDate,
+                        User = User.Identity.Name,
+                    });
 
                     //return RedirectToAction("Create").Success("Data saved successfully");
                     return RedirectToAction("Edit", new { id = person.PersonID, DocTypeId = PersonVm.DocTypeId }).Success("Data saved Successfully");
@@ -662,6 +669,7 @@ namespace Jobs.Controllers
                     BusinessEntity businessentity = Mapper.Map<PersonViewModel, BusinessEntity>(PersonVm);
                     PersonAddress personaddress = _PersonAddressService.Find(PersonVm.PersonAddressID);
                     LedgerAccount account = _AccountService.Find(PersonVm.AccountId);
+                    Boolean AccountAc = account.IsActive;
                     PersonRegistration PersonPan = _PersonRegistrationService.Find(PersonVm.PersonRegistrationPanNoID ?? 0);
                     PersonRegistration PersonCst = _PersonRegistrationService.Find(PersonVm.PersonRegistrationCstNoID ?? 0);
                     PersonRegistration PersonGst = _PersonRegistrationService.Find(PersonVm.PersonRegistrationGstNoID ?? 0);
@@ -733,6 +741,7 @@ namespace Jobs.Controllers
 
                     account.LedgerAccountName = person.Name;
                     account.LedgerAccountSuffix = person.Suffix;
+                    account.IsActive = person.IsActive;
                     account.LedgerAccountGroupId = PersonVm.LedgerAccountGroupId; 
                     account.ModifiedDate = DateTime.Now;
                     account.ModifiedBy = User.Identity.Name;
@@ -964,14 +973,35 @@ namespace Jobs.Controllers
                         return View("Create", PersonVm);
                     }
 
-                    LogActivity.LogActivityDetail(new ActiivtyLogViewModel
+                    
+
+                    if (AccountAc != PersonVm.IsActive)
                     {
-                        DocTypeId = PersonVm.DocTypeId,
-                        DocId = PersonVm.PersonID,
-                        ActivityType = (int)ActivityTypeContants.Modified,                       
-                        DocNo = PersonVm.Name,
-                        xEModifications = Modifications,                        
-                    });
+                        LogActivity.LogActivityDetail(new ActiivtyLogViewModel
+                        {
+                            DocTypeId = PersonVm.DocTypeId,
+                            DocId = PersonVm.PersonID,
+                            ActivityType = (int)ActivityTypeContants.Modified,
+                            DocNo = PersonVm.Name,
+                            DocDate = DateTime.Now,
+                            User = User.Identity.Name,
+                            DocLineId = PersonVm.IsActive == true ? 1 : 0,
+                            xEModifications = Modifications,
+                        });
+                    }
+                    else
+                    {
+                        LogActivity.LogActivityDetail(new ActiivtyLogViewModel
+                        {
+                            DocTypeId = PersonVm.DocTypeId,
+                            DocId = PersonVm.PersonID,
+                            ActivityType = (int)ActivityTypeContants.Modified,
+                            DocNo = PersonVm.Name,
+                            DocDate = DateTime.Now,
+                            User = User.Identity.Name,
+                            xEModifications = Modifications,
+                        });
+                    }
                     //End of Saving ActivityLog
 
 

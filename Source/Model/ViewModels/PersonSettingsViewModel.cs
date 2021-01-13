@@ -33,6 +33,7 @@ namespace Model.ViewModel
         public bool isVisibleTdsGroup { get; set; }
         public bool isVisibleCreditDays { get; set; }
         public bool isVisibleCreditLimit { get; set; }
+        public bool isVisibleOrderBalanceLimit { get; set; }
         public bool isVisibleWorkInDivision { get; set; }
         public bool isVisibleWorkInBranch { get; set; }
         public bool isVisibleTags { get; set; }

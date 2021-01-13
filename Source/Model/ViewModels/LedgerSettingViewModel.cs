@@ -45,6 +45,7 @@ namespace Model.ViewModel
 
         public bool IsAutoDocNo { get; set; }
         public bool isAllowedToChangeLedgerAccount { get; set; }
+        public bool isOnlyForClosedCostCenter { get; set; }
         public bool isVisibleAdjustmentType { get; set; }
         public bool isVisiblePaymentFor { get; set; }
         public bool isVisiblePartyDocNo { get; set; }

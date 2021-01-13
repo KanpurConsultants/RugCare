@@ -74,6 +74,7 @@ namespace Jobs.Controllers
         {
             var Product = _ProductService.GetProductListForMaterial(Id);
             ViewBag.id = Id;
+            ViewBag.Name = new ProductTypeService(_unitOfWork).Find(Id).ProductTypeName;
             return View(Product);
         }
 
@@ -100,6 +101,7 @@ namespace Jobs.Controllers
             p.ProductGroupId = db.ProductGroups.Where(m => m.ProductTypeId == Id).FirstOrDefault().ProductGroupId;
             p.IsActive = true;
             PrepareViewBag();
+            ViewBag.Name = new ProductTypeService(_unitOfWork).Find(Id).ProductTypeName;
             ViewBag.id = Id;
             p.MapType = "Full";
             return View("Create", p);

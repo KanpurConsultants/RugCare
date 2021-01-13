@@ -257,29 +257,29 @@
         if ($Block.find('.LossQty').val() == 0)
         {
             $Block.find('.ReceiveQty').val(qty.toFixed(DecPlaces));
-            if ($Block.find('.ProductGroupLossPer').val() != null && $Block.find('.ProductGroupLossPer').val() != 0)
-            {
-                var ProductGroupLossPer = parseFloat($Block.find('.ProductGroupLossPer').val());
-                var ProductGroupLoss = ProductGroupLossPer * qty / 100;
-                $Block.find('.PassQty').val((qty - ProductGroupLoss).toFixed(DecPlaces));
-            }
-            else
-            {
+            //if ($Block.find('.ProductGroupLossPer').val() != null && $Block.find('.ProductGroupLossPer').val() != 0)
+            //{
+            //    var ProductGroupLossPer = parseFloat($Block.find('.ProductGroupLossPer').val());
+            //    var ProductGroupLoss = ProductGroupLossPer * qty / 100;
+            //    $Block.find('.PassQty').val((qty - ProductGroupLoss).toFixed(DecPlaces));
+            //}
+            //else
+            //{
                 $Block.find('.PassQty').val(qty.toFixed(DecPlaces));
-            }
+            //}
         }
         else
         {
             $Block.find('.ReceiveQty').val(parseFloat(qty - $Block.find('.LossQty').val()).toFixed(DecPlaces));
-            if ($Block.find('.ProductGroupLossPer').val() != null && $Block.find('.ProductGroupLossPer').val() != 0) {
-                var ProductGroupLossPer = parseFloat($Block.find('.ProductGroupLossPer').val());
-                var ProductGroupLoss = ProductGroupLossPer * qty / 100;
-                $Block.find('.PassQty').val((qty - ProductGroupLoss).toFixed(DecPlaces));
-            }
-            else
-            {
+            //if ($Block.find('.ProductGroupLossPer').val() != null && $Block.find('.ProductGroupLossPer').val() != 0) {
+            //    var ProductGroupLossPer = parseFloat($Block.find('.ProductGroupLossPer').val());
+            //    var ProductGroupLoss = ProductGroupLossPer * qty / 100;
+            //    $Block.find('.PassQty').val((qty - ProductGroupLoss).toFixed(DecPlaces));
+            //}
+            //else
+            //{
                 $Block.find('.PassQty').val(qty.toFixed(DecPlaces));
-            }
+            //}
         }
 
         ValidateData(this);

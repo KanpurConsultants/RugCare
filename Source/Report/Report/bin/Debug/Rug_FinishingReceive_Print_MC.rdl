@@ -2249,7 +2249,6 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
-                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
               </TablixCells>
@@ -2324,28 +2323,11 @@
                     <Rectangle Name="Rectangle1">
                       <ReportItems>
                         <Rectangle Name="Rectangle2">
-                          <ReportItems>
-                            <Subreport Name="WashingReceiveSizePrint">
-                              <ReportName>WashingReceiveSizePrint</ReportName>
-                              <Top>0.03333in</Top>
-                              <Left>0.04167in</Left>
-                              <Height>0.4375in</Height>
-                              <Width>7.7067in</Width>
-                              <Visibility>
-                                <Hidden>true</Hidden>
-                              </Visibility>
-                              <Style>
-                                <Border>
-                                  <Style>None</Style>
-                                </Border>
-                              </Style>
-                            </Subreport>
-                          </ReportItems>
                           <KeepTogether>true</KeepTogether>
                           <Top>0.05312in</Top>
                           <Left>0.06274in</Left>
                           <Height>0.47708in</Height>
-                          <Width>7.77844in</Width>
+                          <Width>7.7768in</Width>
                           <Style>
                             <Border>
                               <Style>None</Style>

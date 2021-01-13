@@ -307,8 +307,21 @@ namespace Jobs.Controllers
 
             p.TermsAndConditions = settings.TermsAndConditions;
 
+
             PrepareViewBag(id);
-            p.OrderById = new EmployeeService(_unitOfWork).GetEmloyeeForUser(User.Identity.GetUserId());
+            
+
+            var LastTrRec = (from H in context.JobOrderHeader
+                             where H.SiteId == p.SiteId && H.DivisionId == p.DivisionId && H.DocTypeId == p.DocTypeId && H.CreatedBy == User.Identity.Name
+                             orderby H.JobOrderHeaderId descending
+                             select new
+                             {
+                                 OrderById = H.OrderById,
+                             }).FirstOrDefault();
+            if (LastTrRec != null)
+                p.OrderById = LastTrRec.OrderById;
+            else
+                p.OrderById = new EmployeeService(_unitOfWork).GetEmloyeeForUser(User.Identity.GetUserId());
 
             if (settings.isVisibleGodown == true && System.Web.HttpContext.Current.Session["DefaultGodownId"] != null)
                 p.GodownId = (int)System.Web.HttpContext.Current.Session["DefaultGodownId"];
@@ -319,6 +332,7 @@ namespace Jobs.Controllers
             }
             else
                 p.DueDate = DateTime.Now;
+
             p.DocNo = new DocumentTypeService(_unitOfWork).FGetNewDocNo("DocNo", ConfigurationManager.AppSettings["DataBaseSchema"] + ".JobOrderHeaders", p.DocTypeId, p.DocDate, p.DivisionId, p.SiteId);
             ViewBag.Mode = "Add";
             ViewBag.Name = new DocumentTypeService(_unitOfWork).Find(id).DocumentTypeName;

@@ -33,9 +33,9 @@ namespace Service
       //  LedgerLine FindByLedgerHeader(int id);
         IEnumerable<LedgerLine> FindByLedgerHeader(int id);
         IQueryable<ComboBoxResult> GetLedgerAccounts(string term, string AccGroups, string ExcludeAccGroups, string Process);
-        IQueryable<ComboBoxResult> GetCostCenters(string term, string DocTypes, string Process);
+        IQueryable<ComboBoxResult> GetCostCenters(string term, string DocTypes, string Process, Boolean ? isOnlyForClosedCostCenter = null);
         IQueryable<ComboBoxResult> GetPassedBy(string term, string DocTypes, string Process);       
-        IQueryable<ComboBoxResult> GetLedgerIds_Adusted(int? Id, string Nature, int filter3, string term);
+        IQueryable<ComboBoxResult> GetLedgerIds_Adusted(int? Id, string Nature, int LedgerHeaderId, string term, int? CostCenterId=null);
         LedgersViewModel GetLastTransactionDetail(int LedgerHeaderId);
     }
 
@@ -267,7 +267,7 @@ namespace Service
             return GroupedRec;
         }
 
-        public IQueryable<ComboBoxResult> GetCostCenters(string term, string DocTypes, string Process)
+        public IQueryable<ComboBoxResult> GetCostCenters(string term, string DocTypes, string Process, Boolean ? isOnlyForClosedCostCenter =null)
         {
 
             string[] ContraDocTypes = null;
@@ -288,7 +288,8 @@ namespace Service
                         && (string.IsNullOrEmpty(Process) ? 1 == 1 : ContraProcess.Contains(p.ProcessId.ToString()))
                         && (string.IsNullOrEmpty(p.SiteId.ToString()) ? 1 == 1 : p.SiteId==SiteId )
                         && (string.IsNullOrEmpty(p.DivisionId.ToString()) ? 1 == 1 : p.DivisionId==DivisionId )
-                        && p.IsActive == true
+                        && (isOnlyForClosedCostCenter ==true ? p.Status ==5 : p.IsActive == true)
+                        //&& p.IsActive == true
                         orderby p.CostCenterName
                         select new ComboBoxResult
                         {
@@ -350,9 +351,9 @@ namespace Service
         }
 
 
-        public IQueryable<ComboBoxResult> GetLedgerIds_Adusted(int? Id, string Nature, int filter3, string term)
+        public IQueryable<ComboBoxResult> GetLedgerIds_Adusted(int? Id, string Nature, int LedgerHeaderId, string term, int? CostCenterId)
         {
-            var Header = new LedgerHeaderService(_unitOfWork).Find(filter3);
+            var Header = new LedgerHeaderService(_unitOfWork).Find(LedgerHeaderId);
 
             int CurrentSiteId = (int)System.Web.HttpContext.Current.Session["SiteId"];
             int CurrentDivisionId = (int)System.Web.HttpContext.Current.Session["DivisionId"];
@@ -381,6 +382,7 @@ namespace Service
                     || string.IsNullOrEmpty(term) ? 1 == 1 : p.PartyDocNo.ToLower().Contains(term.ToLower())
                     || string.IsNullOrEmpty(term) ? 1 == 1 : p.CostCenterName.ToLower().Contains(term.ToLower())
                     || string.IsNullOrEmpty(term) ? 1 == 1 : p.LedgerAccountName.ToLower().Contains(term.ToLower()))
+                    && ( CostCenterId ==null ? 1 == 1 : p.CostCenterId==CostCenterId )
                     select new ComboBoxResult
                     {
                         id = p.LedgerId.ToString(),

@@ -370,6 +370,16 @@ namespace Jobs.Areas.Rug.Controllers
             p.ProcessId = settings.ProcessId;
             PrepareViewBag();
             p.DocTypeId = id;
+            var LastTrRec = (from H in db.JobOrderHeader
+                             where H.SiteId == p.SiteId && H.DivisionId == p.DivisionId && H.DocTypeId == p.DocTypeId && H.CreatedBy == User.Identity.Name
+                             orderby H.JobOrderHeaderId descending
+                             select new
+                             {
+                                 OrderById = H.OrderById,
+                             }).FirstOrDefault();
+            if (LastTrRec != null)
+                p.OrderById = LastTrRec.OrderById;
+
             p.DocNo = new DocumentTypeService(_unitOfWork).FGetNewDocNo("DocNo", ConfigurationManager.AppSettings["DataBaseSchema"] + ".JobOrderHeaders", p.DocTypeId, p.DocDate, p.DivisionId, p.SiteId);
             if (p.JobOrderSettings.isVisibleCostCenter)
             {

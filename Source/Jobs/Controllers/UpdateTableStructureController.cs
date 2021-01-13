@@ -684,6 +684,7 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
             AddFields("LedgerAccountGroups", "PLNature", "NVARCHAR (20)");
             AddFields("LedgerAccountGroups", "PLSr", "INT");
             AddFields("LedgerAccountGroups", "LedgerAccountGroupNature", "NVARCHAR (10)");
+            AddFields("LedgerAccountGroups", "CreaditLimit", "Decimal(18,4)");
 
             AddFields("ProductUidHeaders", "GenLineId", "INT");
 
@@ -758,6 +759,8 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
             AddFields("ProductUids", "ProductUidSpecification", "NVARCHAR(Max)");
             AddFields("ProductUids", "StockStatus", "NVARCHAR(50)");
             AddFields("ProductUids", "LastReading", "Decimal(18,4)");
+
+            AddFields("ProductProcesses", "LossPer", "Decimal(18,4)");
 
             AddFields("SaleEnquiryLineExtendeds", "BuyerSku", "nvarchar(50)");
             AddFields("SaleEnquiryLineExtendeds", "BuyerUpcCode", "nvarchar(20)");
@@ -849,6 +852,7 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
             AddFields("LedgerSettings", "isAllowedToChangeLedgerAccount", "BIT NOT NULL DEFAULT(0)");
             AddFields("LedgerSettings", "isPrintinLetterhead", "BIT");
             AddFields("LedgerSettings", "isVisibleDueDate", "BIT");
+            AddFields("LedgerSettings", "isOnlyForClosedCostCenter", "BIT");
             AddFields("LedgerSettings", "isVisibleQty", "BIT NOT NULL DEFAULT(0)");
             AddFields("LedgerSettings", "isVisibleDealQty", "BIT NOT NULL DEFAULT(0)");
             AddFields("LedgerSettings", "isVisibleRate", "BIT NOT NULL DEFAULT(0)");
@@ -2277,6 +2281,7 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
             AddFields("PersonSettings", "isMandatoryAadharNo", "BIT");
             AddFields("PersonSettings", "isVisiblePersonAddressDetail", "BIT");
             AddFields("PersonSettings", "isVisiblePersonOpeningDetail", "BIT");
+            AddFields("PersonSettings", "isVisibleOrderBalanceLimit", "BIT");
 
 
             AddFields("JobInvoiceSettings", "isVisibleSalesTaxGroupProduct", "BIT");
@@ -2959,7 +2964,7 @@ CREATE INDEX [IX_DocumentTypeHeaderAttributeId]
             AddFields("ProductQualities", "LossQty", "Decimal(18,4)");
             AddFields("ProductQualities", "NonCountedQty", "Decimal(18,4)");
             AddFields("Sizes", "NonCountedQty", "Decimal(18,4)");
-
+            AddFields("BusinessEntities", "OrderBalanceLimit", "Decimal(18,4)");
 
             AddFields("SaleQuotationLines", "SalesTaxGroupProductId", "Int", "ChargeGroupProducts");
             AddFields("SaleQuotationSettings", "isVisibleSalesTaxGroupProduct", "Bit");

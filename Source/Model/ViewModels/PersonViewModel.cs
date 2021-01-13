@@ -102,6 +102,7 @@ namespace Model.ViewModels
         public int? CreaditDays { get; set; }
 
         public Decimal? CreaditLimit { get; set; }
+        public Decimal? OrderBalanceLimit { get; set; }        
 
         public int PersonAddressID { get; set; }
 

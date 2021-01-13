@@ -287,7 +287,7 @@ namespace Service
                         --Convert(INTEGER,E.Code) AS Code,
                         Try_parse(E.Code AS int) AS Code, 1.00 AS Days, isnull(VSalaryLine.Amount,0) as BasicPay, 
                         --Round(VSalaryLine.Amount*TR.Percentage/100,0) AS TDS,
-                        ceiling(VSalaryLine.Amount*TR.Percentage/100) AS TDS,
+                        ceiling(isnull(VSalaryLine.Amount*TR.Percentage/100,0)) AS TDS,
                         isnull((SELECT DueAmt - TdsOnAmt FROM web.FGetTds ( E.PersonID)),0) AS TDSBaseValue, 
                         IsNull(VCNT.CNTAmount,0) AS Additions, IsNull(VCNT.CNTAmount,0) AS XAdditions, IsNull(VDBT.DBTAmount,0) AS Deductions, IsNull(VDBT.DBTAmount,0) AS XDeductions,
                         isnull(VSalaryLine.RetensionAmount,0) as RetensionAmount, IsNull(VLoan.LoanEMI,0) AS LoanEMI, IsNull(VAdvance.Advance,0) AS Advance, IsNull(VLoan.LoanEMI,0) AS XLoanEMI, IsNull(VAdvance.Advance,0) AS XAdvance, @DocDate As DocDate, 
@@ -395,9 +395,11 @@ namespace Service
                     " WHERE PP.PersonId IS NOT NULL " +
                     " AND P.DepartmentId IN (SELECT Items FROM [dbo].[Split] (@DepartmentId, ',')) ) " : "") +
                     " AND VSalaryLine.PersonId IS NOT NULL Order By E.Name+','+E.Suffix ";
-                                        
+
                     else
-                        mQry = @"SELECT 0 As SalaryHeaderId, E.PersonID AS EmployeeId, E.Name+','+E.Suffix AS EmployeeName, Convert(int,E.Code) AS Code, 1.00 AS Days, isnull(VSalaryLine.Amount,0) as BasicPay, isnull((SELECT TDSAmount FROM web.FGetTds ( E.PersonID)),0) AS TDS, isnull((SELECT DueAmt - TdsOnAmt FROM web.FGetTds ( E.PersonID)),0) AS TDSBaseValue, 
+                        mQry = @"SELECT 0 As SalaryHeaderId, E.PersonID AS EmployeeId, E.Name+','+E.Suffix AS EmployeeName,  CASE WHEN  isnumeric(E.Code) = 1 THEN Convert(int,E.Code) ELSE 0 end AS Code, 1.00 AS Days, isnull(VSalaryLine.Amount,0) as BasicPay, 
+                        isnull((SELECT TDSAmount FROM web.FGetTds ( E.PersonID)),0) AS TDS, 
+                        isnull((SELECT DueAmt - TdsOnAmt FROM web.FGetTds ( E.PersonID)),0) AS TDSBaseValue, 
                         IsNull(VCNT.CNTAmount,0) AS Additions, IsNull(VCNT.CNTAmount,0) AS XAdditions, IsNull(VDBT.DBTAmount,0) AS Deductions, IsNull(VDBT.DBTAmount,0) AS XDeductions,
                         isnull(VSalaryLine.RetensionAmount,0) as RetensionAmount, IsNull(VLoan.LoanEMI,0) AS LoanEMI, IsNull(VAdvance.Advance,0) AS Advance, IsNull(VLoan.LoanEMI,0) AS XLoanEMI, IsNull(VAdvance.Advance,0) AS XAdvance, @DocDate As DocDate, 
                         @DocTypeId As DocTypeId, @WagesPayType AS WagesPayType, @Remark As HeaderRemark, Convert(Decimal(18,4),DAY(EOMONTH(@DocDate))) - IsNull(VSunday.NoOfSundays,0) AS MonthDays
@@ -509,7 +511,7 @@ namespace Service
                 else
                 {
                     System.Web.HttpContext.Current.Session["SalaryLineReferenceList"] = null;
-                    mQry = @"SELECT 0 As SalaryHeaderId, E.PersonID AS EmployeeId, P.Name+','+P.Suffix AS EmployeeName, Convert(int,P.Code) AS Code, Convert(Decimal(18,4),DAY(EOMONTH(@DocDate))) - IsNull(VSunday.NoOfSundays,0) AS Days, Isnull(E.BasicSalary,0) as BasicPay, 
+                    mQry = @"SELECT 0 As SalaryHeaderId, E.PersonID AS EmployeeId, P.Name+','+P.Suffix AS EmployeeName, CASE WHEN  isnumeric(E.Code) = 1 THEN Convert(int,E.Code) ELSE 0 end AS Code, Convert(Decimal(18,4),DAY(EOMONTH(@DocDate))) - IsNull(VSunday.NoOfSundays,0) AS Days, Isnull(E.BasicSalary,0) as BasicPay, 
                         0.00 AS TDS, 0.00 AS TDSBaseValue, IsNull(VCNT.CNTAmount,0) AS Additions, IsNull(VCNT.CNTAmount,0) AS XAdditions, IsNull(VDBT.DBTAmount,0) AS Deductions, IsNull(VDBT.DBTAmount,0) AS XDeductions,
                         0.00 as RetensionAmount, IsNull(VLoan.LoanEMI,0) AS LoanEMI, IsNull(VAdvance.Advance,0) AS Advance, IsNull(VLoan.LoanEMI,0) AS XLoanEMI, IsNull(VAdvance.Advance,0) AS XAdvance, @DocDate As DocDate, 
                         @DocTypeId As DocTypeId, @WagesPayType AS WagesPayType, @Remark As HeaderRemark, Convert(Decimal(18,4),DAY(EOMONTH(@DocDate))) - IsNull(VSunday.NoOfSundays,0) AS MonthDays

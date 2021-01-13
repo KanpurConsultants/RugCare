@@ -254,6 +254,8 @@ namespace Jobs.Areas.Rug.Controllers
 
             int ProdOrderLineId = ProdOrderLin.ProdOrderLineId;
 
+
+
             if (System.Web.HttpContext.Current.Session["DefaultGodownId"] != null)
             { 
             p.GodownId = (int)System.Web.HttpContext.Current.Session["DefaultGodownId"];
@@ -299,7 +301,18 @@ namespace Jobs.Areas.Rug.Controllers
             else
                 p.DueDate = DateTime.Now;
 
-            p.OrderById = new EmployeeService(_unitOfWork).GetEmloyeeForUser(User.Identity.GetUserId());
+            var LastTrRec = (from H in db.JobOrderHeader
+                             where H.SiteId == p.SiteId && H.DivisionId == p.DivisionId && H.DocTypeId == id && H.CreatedBy == User.Identity.Name
+                             orderby H.JobOrderHeaderId descending
+                             select new
+                             {
+                                 OrderById = H.OrderById,
+                             }).FirstOrDefault();
+            if (LastTrRec != null)
+                p.OrderById = LastTrRec.OrderById;
+            else
+                p.OrderById = new EmployeeService(_unitOfWork).GetEmloyeeForUser(User.Identity.GetUserId());
+
             p.UnitConversionForId = settings.UnitConversionForId;
             p.ProcessId = settings.ProcessId;
             p.DealUnitId = settings.DealUnitId;
@@ -383,6 +396,43 @@ namespace Jobs.Areas.Rug.Controllers
             {
                 ModelState.AddModelError("DueDate", "DueDate should not be less than " + svm.DocDate.ToString());
             }
+
+            BusinessEntity BE = new BusinessEntityService(_unitOfWork).Find(svm.JobWorkerId);
+            if (BE.OrderBalanceLimit != null)
+            {
+                var CLed = (from H in db.ViewJobOrderBalance
+                            join L in db.JobOrderLine on H.JobOrderLineId equals L.JobOrderLineId into LTable
+                            from LTab in LTable.DefaultIfEmpty()
+                            where H.JobWorkerId == svm.JobWorkerId 
+                            group new { H, LTab } by new { H.JobWorkerId } into Result
+                            select new
+                            {
+                                JobWorkerId = Result.Key.JobWorkerId,
+                                BalanceQty = Result.Sum(m => m.H.BalanceQty),
+                                BalanceDealQty = Result.Sum(m => m.H.BalanceQty * m.LTab.UnitConversionMultiplier)
+                            }).ToList().FirstOrDefault();
+
+                
+
+                    var Ord = (from H in ProdOrdersAndQtys
+                               //join L in db.JobOrderLine on H.JobOrderLineId equals L.JobOrderLineId into LTable
+                               // from LTab in LTable.DefaultIfEmpty()
+                                group new { H } by new { H.DocTypeId } into Result
+                                select new
+                                {
+                                    DocTypeId = Result.Key.DocTypeId,
+                                    OrdQty = Result.Sum(m => m.H.BalanceQty),
+                                    OrdDealQty = Result.Sum(m => m.H.BalanceQty * m.H.UnitConversionMultiplier)
+                                }).ToList().FirstOrDefault();
+
+                if (CLed.BalanceDealQty + Ord.OrdDealQty > BE.OrderBalanceLimit)
+                {
+                    ModelState.AddModelError("JobWorkerId", "total Order Qty can not be More than " + BE.OrderBalanceLimit.ToString());
+                    
+                }
+
+            }
+
 
             if (svm.Rate <= 0 && svm.JobOrderSettings.isMandatoryRate)
                 ModelState.AddModelError("Rate", "Rate field is required");
@@ -469,7 +519,7 @@ namespace Jobs.Areas.Rug.Controllers
 
                         }
 
-                        BusinessEntity BE = new BusinessEntityService(_unitOfWork).Find(s.JobWorkerId);
+                        //BusinessEntity BE = new BusinessEntityService(_unitOfWork).Find(s.JobWorkerId);
                         s.SalesTaxGroupPersonId = BE.SalesTaxGroupPartyId;
 
                         s.CreatedDate = DateTime.Now;

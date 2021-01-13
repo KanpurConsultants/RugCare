@@ -146,6 +146,7 @@ namespace Jobs.Controllers
                 LedgerHeader.DocNo = new DocumentTypeService(_unitOfWork).FGetNewDocNo("DocNo", ConfigurationManager.AppSettings["DataBaseSchema"] + ".LedgerHeaders", dt.DocumentTypeId, (DateTime)BankDate, DivisionId, SiteId);
                 LedgerHeader.LedgerAccountId = L.LedgerAccountId;
                 LedgerHeader.LockReason  = "Auto Generated From Petty Cash Hisab !";
+                LedgerHeader.Status  = 1  ;
                 LedgerHeader.CreatedDate = DateTime.Now;
                 LedgerHeader.ModifiedDate = DateTime.Now;
                 LedgerHeader.CreatedBy = User.Identity.Name;

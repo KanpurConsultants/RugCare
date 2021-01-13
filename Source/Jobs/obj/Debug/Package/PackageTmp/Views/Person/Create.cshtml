@@ -407,6 +407,17 @@
                                 </div>
                             </div>
 
+                            <div class="col-md-6" style="display:@(Model.PersonSettings.isVisibleOrderBalanceLimit ? "" : "none")">
+                                @Html.HiddenFor(m => m.PersonSettings.isVisibleOrderBalanceLimit)
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.OrderBalanceLimit, "Order Balance Limit", new { @class = "control-label col-xs-4" })
+                                    <div class="col-xs-6">
+                                        @Html.TextBoxFor(m => m.OrderBalanceLimit, new { @class = "form-control col-xs-6 " })
+                                        @Html.ValidationMessageFor(model => model.OrderBalanceLimit)
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="col-md-6" style="display:@(Model.PersonSettings.isVisibleWorkInDivision ? "" : "none")">
                                 @Html.HiddenFor(m => m.PersonSettings.isVisibleWorkInDivision)
                                 <div class="form-group">

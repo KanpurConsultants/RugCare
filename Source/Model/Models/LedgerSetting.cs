@@ -55,6 +55,7 @@ namespace Model.Models
         public string filterExcludeLedgerAccountGroupLines { get; set; }
         public string filterDocTypeCostCenter { get; set; }
         public string filterContraDocTypes { get; set; }
+        public bool? isOnlyForClosedCostCenter { get; set; }
         public string filterContraSites { get; set; }
         public string filterContraDivisions { get; set; }
 

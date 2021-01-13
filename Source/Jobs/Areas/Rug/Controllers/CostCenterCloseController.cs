@@ -134,216 +134,216 @@ namespace Jobs.Areas.Rug.Controllers
                 string TempDocNo = "";
 
 
-                foreach (var item in CostCenters)
-                {
+                //foreach (var item in CostCenters)
+                //{
 
-                    itemcount = itemcount + 1;
-                    int PurjaAmountTransferDocTypeId = 717;
-                    int LedgerAccountId = (int)item.LedgerAccountId;
-                    LedgerHeader Header = new LedgerHeader();
-
-
-
-                    Header.CreatedBy = User.Identity.Name;
-                    Header.CreatedDate = DateTime.Now;
-                    Header.DivisionId = (int)item.DivisionId;
-                    Header.SiteId = (int)item.SiteId;
-                    Header.DivisionId = (int)item.DivisionId;
-                    Header.DocDate = CloseDate;
-                    Header.PaymentFor = CloseDate;
-                    Header.ProcessId = ProcessId;
-                    //Header.DocDate = (DateTime)item.CloseDate;
-                    //Header.PaymentFor = item.CloseDate;
-                    Header.DocTypeId = PurjaAmountTransferDocTypeId;
-                    Header.CostCenterId = item.CostCenterId;
-                    // Header.DocHeaderId = StokHeader.StockHeaderId;
-                    DocNo = new DocumentTypeService(_unitOfWork).FGetNewDocNo("DocNo", ConfigurationManager.AppSettings["DataBaseSchema"] + ".LedgerHeaders", Header.DocTypeId, Header.DocDate, Header.DivisionId, Header.SiteId); 
-
-
-                    TempDocNo = DocNo.Substring(0, 2) + "-" + (Convert.ToInt32(DocNo.Substring(DocNo.IndexOf("-") + 1)) + itemcount - 1).ToString().PadLeft(4, '0').ToString();
-                    DocNo = TempDocNo;
+                //    itemcount = itemcount + 1;
+                //    int PurjaAmountTransferDocTypeId = 717;
+                //    int LedgerAccountId = (int)item.LedgerAccountId;
+                //    LedgerHeader Header = new LedgerHeader();
 
 
 
-                    Header.LedgerHeaderId = -itemcount;
-                    Header.DocNo = DocNo;
-                    Header.LedgerAccountId = LedgerAccountId;
-                    Header.ModifiedBy = User.Identity.Name;
-                    Header.ModifiedDate = DateTime.Now;
-                    //Header.Remark = StokHeader.Remark;
-                    Header.Status = (int)StatusConstants.Locked;
-                    Header.ObjectState = Model.ObjectState.Added;
-                    db.LedgerHeader.Add(Header);
+                //    Header.CreatedBy = User.Identity.Name;
+                //    Header.CreatedDate = DateTime.Now;
+                //    Header.DivisionId = (int)item.DivisionId;
+                //    Header.SiteId = (int)item.SiteId;
+                //    Header.DivisionId = (int)item.DivisionId;
+                //    Header.DocDate = CloseDate;
+                //    Header.PaymentFor = CloseDate;
+                //    Header.ProcessId = ProcessId;
+                //    //Header.DocDate = (DateTime)item.CloseDate;
+                //    //Header.PaymentFor = item.CloseDate;
+                //    Header.DocTypeId = PurjaAmountTransferDocTypeId;
+                //    Header.CostCenterId = item.CostCenterId;
+                //    // Header.DocHeaderId = StokHeader.StockHeaderId;
+                //    DocNo = new DocumentTypeService(_unitOfWork).FGetNewDocNo("DocNo", ConfigurationManager.AppSettings["DataBaseSchema"] + ".LedgerHeaders", Header.DocTypeId, Header.DocDate, Header.DivisionId, Header.SiteId); 
 
 
-                    decimal Amount = Math.Round((decimal)item.AmountDr - (decimal)item.AmountCr, 0, MidpointRounding.AwayFromZero);
-                    decimal RoundOffAmount = Amount - ((decimal)item.AmountDr - (decimal)item.AmountCr);
-
-                    if (Amount != 0)
-                    {
-
-                        //Postingcontra LedgerRecord;;
-                        LedgerLine Ledgerline = new LedgerLine();
-                        Ledgerline.LedgerHeaderId = Header.LedgerHeaderId;
-                        Ledgerline.LedgerAccountId = LedgerAccountId;
-                        Ledgerline.Amount = Amount;
-                        Ledgerline.CostCenterId = item.RetensionCostCenter;
-                        Ledgerline.CreatedDate = DateTime.Now;
-                        Ledgerline.ModifiedDate = DateTime.Now;
-                        Ledgerline.CreatedBy = User.Identity.Name;
-                        //Ledgerline.Remark = svm.Remark;
-                        Ledgerline.ModifiedBy = User.Identity.Name;
-                        Ledgerline.ObjectState = Model.ObjectState.Added;
-
-
-                        db.LedgerLine.Add(Ledgerline);
-
-
-                        //Postingcontra LedgerRecord;;
-                        Ledger Ledger = new Ledger();
-
-                        Ledger.AmtDr = Amount < 0 ? Math.Abs(Amount) : 0;
-                        Ledger.AmtCr = Amount < 0 ? 0 : Math.Abs(Amount);
-                        Ledger.LedgerHeaderId = Header.LedgerHeaderId;
-                        Ledger.LedgerAccountId = LedgerAccountId;
-                        Ledger.CostCenterId = item.CostCenterId;
-                        Ledger.ContraLedgerAccountId = LedgerAccountId;
-                        Ledger.ObjectState = Model.ObjectState.Added;
-                        db.Ledger.Add(Ledger);
-                        //new LedgerService(_unitOfWork).Create(Ledger);
+                //    TempDocNo = DocNo.Substring(0, 2) + "-" + (Convert.ToInt32(DocNo.Substring(DocNo.IndexOf("-") + 1)) + itemcount - 1).ToString().PadLeft(4, '0').ToString();
+                //    DocNo = TempDocNo;
 
 
 
-                        //Postingcontra LedgerRecord;;
-                        Ledger ContraLedger = new Ledger();
-                        ContraLedger.AmtCr = Amount;
-                        ContraLedger.AmtDr = Amount < 0 ? 0 : Math.Abs(Amount);
-                        ContraLedger.AmtCr = Amount < 0 ? Math.Abs(Amount) : 0;
-                        ContraLedger.LedgerHeaderId = Header.LedgerHeaderId;
-                        ContraLedger.LedgerAccountId = LedgerAccountId;
-                        ContraLedger.CostCenterId = item.RetensionCostCenter;
-                        ContraLedger.ContraLedgerAccountId = LedgerAccountId;
-                        ContraLedger.ObjectState = Model.ObjectState.Added;
-                        //new LedgerService(_unitOfWork).Create(ContraLedger);
-                        db.Ledger.Add(ContraLedger);
+                //    Header.LedgerHeaderId = -itemcount;
+                //    Header.DocNo = DocNo;
+                //    Header.LedgerAccountId = LedgerAccountId;
+                //    Header.ModifiedBy = User.Identity.Name;
+                //    Header.ModifiedDate = DateTime.Now;
+                //    //Header.Remark = StokHeader.Remark;
+                //    Header.Status = (int)StatusConstants.Locked;
+                //    Header.ObjectState = Model.ObjectState.Added;
+                //    db.LedgerHeader.Add(Header);
 
-                    }
+
+                //    decimal Amount = Math.Round((decimal)item.AmountDr - (decimal)item.AmountCr, 0, MidpointRounding.AwayFromZero);
+                //    decimal RoundOffAmount = Amount - ((decimal)item.AmountDr - (decimal)item.AmountCr);
+
+                //    if (Amount != 0)
+                //    {
+
+                //        //Postingcontra LedgerRecord;;
+                //        LedgerLine Ledgerline = new LedgerLine();
+                //        Ledgerline.LedgerHeaderId = Header.LedgerHeaderId;
+                //        Ledgerline.LedgerAccountId = LedgerAccountId;
+                //        Ledgerline.Amount = Amount;
+                //        Ledgerline.CostCenterId = item.RetensionCostCenter;
+                //        Ledgerline.CreatedDate = DateTime.Now;
+                //        Ledgerline.ModifiedDate = DateTime.Now;
+                //        Ledgerline.CreatedBy = User.Identity.Name;
+                //        //Ledgerline.Remark = svm.Remark;
+                //        Ledgerline.ModifiedBy = User.Identity.Name;
+                //        Ledgerline.ObjectState = Model.ObjectState.Added;
+
+
+                //        db.LedgerLine.Add(Ledgerline);
+
+
+                //        //Postingcontra LedgerRecord;;
+                //        Ledger Ledger = new Ledger();
+
+                //        Ledger.AmtDr = Amount < 0 ? Math.Abs(Amount) : 0;
+                //        Ledger.AmtCr = Amount < 0 ? 0 : Math.Abs(Amount);
+                //        Ledger.LedgerHeaderId = Header.LedgerHeaderId;
+                //        Ledger.LedgerAccountId = LedgerAccountId;
+                //        Ledger.CostCenterId = item.CostCenterId;
+                //        Ledger.ContraLedgerAccountId = LedgerAccountId;
+                //        Ledger.ObjectState = Model.ObjectState.Added;
+                //        db.Ledger.Add(Ledger);
+                //        //new LedgerService(_unitOfWork).Create(Ledger);
+
+
+
+                //        //Postingcontra LedgerRecord;;
+                //        Ledger ContraLedger = new Ledger();
+                //        ContraLedger.AmtCr = Amount;
+                //        ContraLedger.AmtDr = Amount < 0 ? 0 : Math.Abs(Amount);
+                //        ContraLedger.AmtCr = Amount < 0 ? Math.Abs(Amount) : 0;
+                //        ContraLedger.LedgerHeaderId = Header.LedgerHeaderId;
+                //        ContraLedger.LedgerAccountId = LedgerAccountId;
+                //        ContraLedger.CostCenterId = item.RetensionCostCenter;
+                //        ContraLedger.ContraLedgerAccountId = LedgerAccountId;
+                //        ContraLedger.ObjectState = Model.ObjectState.Added;
+                //        //new LedgerService(_unitOfWork).Create(ContraLedger);
+                //        db.Ledger.Add(ContraLedger);
+
+                //    }
 
                     
 
-                    if (RoundOffAmount != 0)
-                    {
-                        ROitemcount = ROitemcount + 1;
+                //    if (RoundOffAmount != 0)
+                //    {
+                //        ROitemcount = ROitemcount + 1;
 
-                        LedgerHeader ROLHeader = new LedgerHeader();
+                //        LedgerHeader ROLHeader = new LedgerHeader();
 
-                        int RODocType = 0;
-                        int RoundOffAccountId = 6660;
+                //        int RODocType = 0;
+                //        int RoundOffAccountId = 6660;
 
-                        if (RoundOffAmount > 0)
-                            RODocType = 785;//dr
-                        else
-                            RODocType = 786;//cr
-
-
-                        ROLHeader.CreatedBy = User.Identity.Name;
-                        ROLHeader.CreatedDate = DateTime.Now;
-                        ROLHeader.DivisionId = (int)item.DivisionId;
-                        ROLHeader.SiteId = (int)item.SiteId;
-                        ROLHeader.DivisionId = (int)item.DivisionId;
-                        ROLHeader.DocDate = CloseDate;
-                        ROLHeader.PaymentFor = CloseDate;
-                        ROLHeader.ProcessId = ProcessId;
-                        ROLHeader.DocTypeId = RODocType;
-                        ROLHeader.CostCenterId = item.CostCenterId;
-                        DocNo = new DocumentTypeService(_unitOfWork).FGetNewDocNo("DocNo", ConfigurationManager.AppSettings["DataBaseSchema"] + ".LedgerHeaders", ROLHeader.DocTypeId, ROLHeader.DocDate, ROLHeader.DivisionId, ROLHeader.SiteId); ;
+                //        if (RoundOffAmount > 0)
+                //            RODocType = 785;//dr
+                //        else
+                //            RODocType = 786;//cr
 
 
-                        TempDocNo = DocNo.Substring(0, 2) + "-" + (Convert.ToInt32(DocNo.Substring(DocNo.IndexOf("-") + 1)) + ROitemcount - 1).ToString().PadLeft(4, '0').ToString();
-                        DocNo = TempDocNo;
-
-                        ROLHeader.LedgerHeaderId = +ROitemcount;
-                        ROLHeader.DocNo = DocNo;
-                        ROLHeader.LedgerAccountId = RoundOffAccountId;
-                        ROLHeader.ModifiedBy = User.Identity.Name;
-                        ROLHeader.ModifiedDate = DateTime.Now;
-                        ROLHeader.Remark = "On Cost Center Closing";
-                        ROLHeader.Status = (int)StatusConstants.Locked;
-                        ROLHeader.ObjectState = Model.ObjectState.Added;
-
-                        db.LedgerHeader.Add(ROLHeader);
+                //        ROLHeader.CreatedBy = User.Identity.Name;
+                //        ROLHeader.CreatedDate = DateTime.Now;
+                //        ROLHeader.DivisionId = (int)item.DivisionId;
+                //        ROLHeader.SiteId = (int)item.SiteId;
+                //        ROLHeader.DivisionId = (int)item.DivisionId;
+                //        ROLHeader.DocDate = CloseDate;
+                //        ROLHeader.PaymentFor = CloseDate;
+                //        ROLHeader.ProcessId = ProcessId;
+                //        ROLHeader.DocTypeId = RODocType;
+                //        ROLHeader.CostCenterId = item.CostCenterId;
+                //        DocNo = new DocumentTypeService(_unitOfWork).FGetNewDocNo("DocNo", ConfigurationManager.AppSettings["DataBaseSchema"] + ".LedgerHeaders", ROLHeader.DocTypeId, ROLHeader.DocDate, ROLHeader.DivisionId, ROLHeader.SiteId); ;
 
 
+                //        TempDocNo = DocNo.Substring(0, 2) + "-" + (Convert.ToInt32(DocNo.Substring(DocNo.IndexOf("-") + 1)) + ROitemcount - 1).ToString().PadLeft(4, '0').ToString();
+                //        DocNo = TempDocNo;
 
-                        //Postingcontra LedgerRecord;;
-                        LedgerLine Ledgerline1 = new LedgerLine();
-                        Ledgerline1.LedgerHeaderId = ROLHeader.LedgerHeaderId;
-                        Ledgerline1.LedgerAccountId = LedgerAccountId;
-                        Ledgerline1.Amount = Math.Abs(RoundOffAmount);
-                        Ledgerline1.CostCenterId = item.CostCenterId;
-                        Ledgerline1.CreatedDate = DateTime.Now;
-                        Ledgerline1.ModifiedDate = DateTime.Now;
-                        Ledgerline1.CreatedBy = User.Identity.Name;
-                        //Ledgerline.Remark = svm.Remark;
-                        Ledgerline1.ModifiedBy = User.Identity.Name;
-                        Ledgerline1.ObjectState = Model.ObjectState.Added;
+                //        ROLHeader.LedgerHeaderId = +ROitemcount;
+                //        ROLHeader.DocNo = DocNo;
+                //        ROLHeader.LedgerAccountId = RoundOffAccountId;
+                //        ROLHeader.ModifiedBy = User.Identity.Name;
+                //        ROLHeader.ModifiedDate = DateTime.Now;
+                //        ROLHeader.Remark = "On Cost Center Closing";
+                //        ROLHeader.Status = (int)StatusConstants.Locked;
+                //        ROLHeader.ObjectState = Model.ObjectState.Added;
 
-
-                        db.LedgerLine.Add(Ledgerline1);
-
-
-                        #region CSEUpdate
-                        var CSE = db.CostCenterStatusExtended.Find(item.CostCenterId);
-
-                        if (RODocType == 785)
-                        {
-                            CSE.DebitAmount = (CSE.DebitAmount ?? 0) + Math.Abs(RoundOffAmount);
-                        }
-                        else if (RODocType == 786)
-                        {
-                            CSE.CreditAmount = (CSE.CreditAmount ?? 0) + Math.Abs(RoundOffAmount);
-                        }
-
-                        CSE.ObjectState = Model.ObjectState.Modified;
-                        db.CostCenterStatusExtended.Add(CSE);
-                        #endregion
+                //        db.LedgerHeader.Add(ROLHeader);
 
 
 
-                        //Postingcontra LedgerRecord;;
-                        Ledger Ledger1 = new Ledger();
+                //        //Postingcontra LedgerRecord;;
+                //        LedgerLine Ledgerline1 = new LedgerLine();
+                //        Ledgerline1.LedgerHeaderId = ROLHeader.LedgerHeaderId;
+                //        Ledgerline1.LedgerAccountId = LedgerAccountId;
+                //        Ledgerline1.Amount = Math.Abs(RoundOffAmount);
+                //        Ledgerline1.CostCenterId = item.CostCenterId;
+                //        Ledgerline1.CreatedDate = DateTime.Now;
+                //        Ledgerline1.ModifiedDate = DateTime.Now;
+                //        Ledgerline1.CreatedBy = User.Identity.Name;
+                //        //Ledgerline.Remark = svm.Remark;
+                //        Ledgerline1.ModifiedBy = User.Identity.Name;
+                //        Ledgerline1.ObjectState = Model.ObjectState.Added;
+
+
+                //        db.LedgerLine.Add(Ledgerline1);
+
+
+                //        #region CSEUpdate
+                //        var CSE = db.CostCenterStatusExtended.Find(item.CostCenterId);
+
+                //        if (RODocType == 785)
+                //        {
+                //            CSE.DebitAmount = (CSE.DebitAmount ?? 0) + Math.Abs(RoundOffAmount);
+                //        }
+                //        else if (RODocType == 786)
+                //        {
+                //            CSE.CreditAmount = (CSE.CreditAmount ?? 0) + Math.Abs(RoundOffAmount);
+                //        }
+
+                //        CSE.ObjectState = Model.ObjectState.Modified;
+                //        db.CostCenterStatusExtended.Add(CSE);
+                //        #endregion
 
 
 
-                        Ledger1.AmtDr = RoundOffAmount > 0 ? Math.Abs(RoundOffAmount) : 0;
-                        Ledger1.AmtCr = RoundOffAmount < 0 ? Math.Abs(RoundOffAmount) : 0;
-                        Ledger1.LedgerHeaderId = ROLHeader.LedgerHeaderId;
-                        Ledger1.LedgerAccountId = LedgerAccountId;
-                        Ledger1.CostCenterId = item.CostCenterId;
-                        Ledger1.ContraLedgerAccountId = RoundOffAccountId;
-                        Ledger1.ObjectState = Model.ObjectState.Added;
-                        db.Ledger.Add(Ledger1);
-                        //new LedgerService(_unitOfWork).Create(Ledger);
+                //        //Postingcontra LedgerRecord;;
+                //        Ledger Ledger1 = new Ledger();
 
 
 
-                        //Postingcontra LedgerRecord;;
-                        Ledger ContraLedger1 = new Ledger();
-                        ContraLedger1.AmtDr = RoundOffAmount < 0 ? Math.Abs(RoundOffAmount) : 0;
-                        ContraLedger1.AmtCr = RoundOffAmount > 0 ? Math.Abs(RoundOffAmount) : 0;
-                        ContraLedger1.LedgerHeaderId = ROLHeader.LedgerHeaderId;
-                        ContraLedger1.LedgerAccountId = RoundOffAccountId;
-                        ContraLedger1.ContraLedgerAccountId = LedgerAccountId;
-                        ContraLedger1.ObjectState = Model.ObjectState.Added;
-                        //new LedgerService(_unitOfWork).Create(ContraLedger);
-                        db.Ledger.Add(ContraLedger1);
+                //        Ledger1.AmtDr = RoundOffAmount > 0 ? Math.Abs(RoundOffAmount) : 0;
+                //        Ledger1.AmtCr = RoundOffAmount < 0 ? Math.Abs(RoundOffAmount) : 0;
+                //        Ledger1.LedgerHeaderId = ROLHeader.LedgerHeaderId;
+                //        Ledger1.LedgerAccountId = LedgerAccountId;
+                //        Ledger1.CostCenterId = item.CostCenterId;
+                //        Ledger1.ContraLedgerAccountId = RoundOffAccountId;
+                //        Ledger1.ObjectState = Model.ObjectState.Added;
+                //        db.Ledger.Add(Ledger1);
+                //        //new LedgerService(_unitOfWork).Create(Ledger);
 
 
 
-                    }
+                //        //Postingcontra LedgerRecord;;
+                //        Ledger ContraLedger1 = new Ledger();
+                //        ContraLedger1.AmtDr = RoundOffAmount < 0 ? Math.Abs(RoundOffAmount) : 0;
+                //        ContraLedger1.AmtCr = RoundOffAmount > 0 ? Math.Abs(RoundOffAmount) : 0;
+                //        ContraLedger1.LedgerHeaderId = ROLHeader.LedgerHeaderId;
+                //        ContraLedger1.LedgerAccountId = RoundOffAccountId;
+                //        ContraLedger1.ContraLedgerAccountId = LedgerAccountId;
+                //        ContraLedger1.ObjectState = Model.ObjectState.Added;
+                //        //new LedgerService(_unitOfWork).Create(ContraLedger);
+                //        db.Ledger.Add(ContraLedger1);
 
 
-                }
+
+                //    }
+
+
+                //}
 
 
 

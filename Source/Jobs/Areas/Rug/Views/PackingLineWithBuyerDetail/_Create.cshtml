@@ -713,10 +713,13 @@
                             $("#FromProcessId").select2('data', { id: '', text: ''});
                         }
 
-
                         if (data.ProductUidId != null)
                         {
                             $("#ProductUidId").val(data.ProductUidId);                           
+                        }
+                        else
+                        {
+                            $("#ProductUidId").val(""); 
                         }
 
                         $("#ProductUidName").val(data.ProductUidName);

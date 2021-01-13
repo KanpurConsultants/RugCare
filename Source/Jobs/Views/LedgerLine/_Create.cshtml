@@ -42,6 +42,7 @@
                 @Html.HiddenFor(m => m.ProductUidId)
                 @Html.HiddenFor(m => m.DocumentCategoryId)
                 @Html.HiddenFor(m => m.LedgerSetting.isAllowedToChangeLedgerAccount)
+                @Html.HiddenFor(m => m.LedgerSetting.isOnlyForClosedCostCenter)
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
 
@@ -273,17 +274,17 @@
         $('#DrCr').change(function()
         {
             Nature = $('#DrCr').val().toString().toUpperCase()
-            CustomSelectFunctionForLedgerId_Adjusted($("#SupplementaryForLedgerId"), '/LedgerLine/GetLedgerIds_Supplementary', '/ComboHelpList/SetSingleLedger', ' ', false, 0, $('#LedgerAccountId','.modal-body').val(),Nature, $('#LedgerHeaderId', '.modal-body').val());
+            CustomSelectFunctionForLedgerId_Adjusted($("#SupplementaryForLedgerId"), '/LedgerLine/GetLedgerIds_Supplementary', '/ComboHelpList/SetSingleLedger', ' ', false, 0, $('#LedgerAccountId','.modal-body').val(),Nature, $('#LedgerHeaderId', '.modal-body').val(),$('#CostCenterId', '.modal-body').val());
         })
 
         CustomSelectFunction($("#LedgerAccountId"), '/LedgerLine/GetLedgerAccount', '/ComboHelpList/SetSingleAccount', ' ', false, 0,$('#LedgerHeaderId','.modal-body').val());
         CustomSelectFunction($("#CostCenterId"), '/LedgerLine/GetCostCenters', '/ComboHelpList/SetSingleCostCenter', ' ', false, 0,$('#LedgerHeaderId','.modal-body').val());
         CustomSelectFunction($("#PassedBy"), '/LedgerLine/GetPassedBy', '/ComboHelpList/SetSingleUsers', ' ', false, 0,$('#LedgerHeaderId','.modal-body').val());
-        CustomSelectFunctionForLedgerId_Adjusted($("#ReferenceId"), '/LedgerLine/GetLedgerIds_Adusted', '/ComboHelpList/SetSingleLedger', ' ', false, 0, $('#LedgerAccountId','.modal-body').val(),Nature, $('#LedgerHeaderId', '.modal-body').val());
+        CustomSelectFunctionForLedgerId_Adjusted($("#ReferenceId"), '/LedgerLine/GetLedgerIds_Adusted', '/ComboHelpList/SetSingleLedger', ' ', false, 0, $('#LedgerAccountId','.modal-body').val(),Nature, $('#LedgerHeaderId', '.modal-body').val(),$('#CostCenterId', '.modal-body').val());
         CustomSelectFunction($("#ReferenceDocTypeId"), '/ComboHelpList/GetDocumentType', '/ComboHelpList/SetDocumentType', ' ', false, 0);
         CustomSelectFunctionForReference($("#ReferenceDocId"), '/LedgerLine/GetReferenceDocIds', '/LedgerLine/SetSingleReferenceDocIds', ' ', false, 0,$("#ReferenceDocTypeId").val());
 
-        CustomSelectFunctionForLedgerId_Adjusted($("#SupplementaryForLedgerId"), '/LedgerLine/GetLedgerIds_Supplementary', '/ComboHelpList/SetSingleLedger', ' ', false, 0, $('#LedgerAccountId','.modal-body').val(),Nature, $('#LedgerHeaderId', '.modal-body').val());
+        CustomSelectFunctionForLedgerId_Adjusted($("#SupplementaryForLedgerId"), '/LedgerLine/GetLedgerIds_Supplementary', '/ComboHelpList/SetSingleLedger', ' ', false, 0, $('#LedgerAccountId','.modal-body').val(),Nature, $('#LedgerHeaderId', '.modal-body').val(),$('#CostCenterId', '.modal-body').val());
 
 
         $('.datepicker').datepicker({
@@ -298,8 +299,14 @@
             if ('@Model.LedgerSetting.isAllowedToChangeLedgerAccount' != "True")
                 $("#CostCenterId").select2("data", { id: "", text: "" });
 
-            CustomSelectFunctionForLedgerId_Adjusted($("#ReferenceId"), '/LedgerLine/GetLedgerIds_Adusted', '/ComboHelpList/SetSingleLedger', ' ', false, 0, $('#LedgerAccountId','.modal-body').val(),Nature, $('#LedgerHeaderId', '.modal-body').val());
-            CustomSelectFunctionForLedgerId_Adjusted($("#SupplementaryForLedgerId"), '/LedgerLine/GetLedgerIds_Supplementary', '/ComboHelpList/SetSingleLedger', ' ', false, 0, $('#LedgerAccountId','.modal-body').val(),Nature, $('#LedgerHeaderId', '.modal-body').val());
+            CustomSelectFunctionForLedgerId_Adjusted($("#ReferenceId"), '/LedgerLine/GetLedgerIds_Adusted', '/ComboHelpList/SetSingleLedger', ' ', false, 0, $('#LedgerAccountId','.modal-body').val(),Nature, $('#LedgerHeaderId', '.modal-body').val(),$('#CostCenterId', '.modal-body').val());
+            CustomSelectFunctionForLedgerId_Adjusted($("#SupplementaryForLedgerId"), '/LedgerLine/GetLedgerIds_Supplementary', '/ComboHelpList/SetSingleLedger', ' ', false, 0, $('#LedgerAccountId','.modal-body').val(),Nature, $('#LedgerHeaderId', '.modal-body').val(),$('#CostCenterId', '.modal-body').val());
+        })
+
+        $('#CostCenterId').change(function()
+        {            
+            CustomSelectFunctionForLedgerId_Adjusted($("#ReferenceId"), '/LedgerLine/GetLedgerIds_Adusted', '/ComboHelpList/SetSingleLedger', ' ', false, 0, $('#LedgerAccountId','.modal-body').val(),Nature, $('#LedgerHeaderId', '.modal-body').val(),$('#CostCenterId', '.modal-body').val());
+            CustomSelectFunctionForLedgerId_Adjusted($("#SupplementaryForLedgerId"), '/LedgerLine/GetLedgerIds_Supplementary', '/ComboHelpList/SetSingleLedger', ' ', false, 0, $('#LedgerAccountId','.modal-body').val(),Nature, $('#LedgerHeaderId', '.modal-body').val(),$('#CostCenterId', '.modal-body').val());
         })
 
         $('#ReferenceDocTypeId').change(function()
@@ -307,7 +314,7 @@
             CustomSelectFunctionForReference($("#ReferenceDocId"), '/LedgerLine/GetReferenceDocIds', '/LedgerLine/SetSingleReferenceDocIds', ' ', false, 0,$("#ReferenceDocTypeId").val());
         })
 
-        function CustomSelectFunctionForLedgerId_Adjusted(ElementId, GetAction, SetAction, placehold, IsMultiple, MinLength, filterid, filter2id, filter3id) {
+        function CustomSelectFunctionForLedgerId_Adjusted(ElementId, GetAction, SetAction, placehold, IsMultiple, MinLength, filterid, filter2id, filter3id,filter4id) {
             var geturl = GetAction;
             //The url we will send our get request to
             var attendeeUrl = GetAction;
@@ -336,6 +343,7 @@
                             filter: filterid,
                             filter2: filter2id,
                             filter3: filter3id,
+                            filter4: filter4id,
                         };
                     },
                     results: function (data, page) {

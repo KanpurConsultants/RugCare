@@ -1177,26 +1177,25 @@
                 </TablixCell>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="Textbox61">
+                    <Textbox Name="Textbox177">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value />
+                              <Value>Specification</Value>
                               <Style>
-                                <FontFamily>tahoma</FontFamily>
+                                <FontFamily>Tahoma</FontFamily>
                                 <FontSize>9pt</FontSize>
+                                <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
                           </TextRuns>
-                          <Style>
-                            <TextAlign>Left</TextAlign>
-                          </Style>
+                          <Style />
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>Textbox61</rd:DefaultName>
+                      <rd:DefaultName>Textbox174</rd:DefaultName>
                       <Style>
                         <Border>
                           <Style>None</Style>
@@ -1211,26 +1210,28 @@
                 </TablixCell>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="Textbox95">
+                    <Textbox Name="Textbox89">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value />
+                              <Value>:</Value>
                               <Style>
-                                <FontFamily>tahoma</FontFamily>
+                                <FontFamily>Tahoma</FontFamily>
                                 <FontSize>9pt</FontSize>
+                                <FontWeight>Bold</FontWeight>
+                                <Color>#4d4d4d</Color>
                               </Style>
                             </TextRun>
                           </TextRuns>
                           <Style>
-                            <TextAlign>Left</TextAlign>
+                            <TextAlign>Center</TextAlign>
                           </Style>
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>Textbox95</rd:DefaultName>
+                      <rd:DefaultName>Textbox60</rd:DefaultName>
                       <Style>
                         <Border>
                           <Style>None</Style>
@@ -1245,16 +1246,16 @@
                 </TablixCell>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="Textbox103">
+                    <Textbox Name="OrderByName2">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value />
+                              <Value>=Max(Fields!Specification.Value)</Value>
                               <Style>
-                                <FontFamily>tahoma</FontFamily>
+                                <FontFamily>Tahoma</FontFamily>
                                 <FontSize>9pt</FontSize>
                               </Style>
                             </TextRun>
@@ -1264,7 +1265,7 @@
                           </Style>
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>Textbox103</rd:DefaultName>
+                      <rd:DefaultName>OrderByName</rd:DefaultName>
                       <Style>
                         <Border>
                           <Style>None</Style>
@@ -4767,7 +4768,6 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox18</rd:DefaultName>
-          <Top>0in</Top>
           <Left>5.51807in</Left>
           <Height>0.20556in</Height>
           <Width>1.90256in</Width>
@@ -4810,7 +4810,6 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox19</rd:DefaultName>
-          <Top>0in</Top>
           <Left>3.08465in</Left>
           <Height>0.21944in</Height>
           <Width>2.29999in</Width>
@@ -4869,7 +4868,6 @@
             </Textbox>
           </ReportItems>
           <KeepTogether>true</KeepTogether>
-          <Top>0in</Top>
           <Left>0.05493in</Left>
           <Height>0.25in</Height>
           <Width>2.84986in</Width>
@@ -5058,6 +5056,10 @@
         <Field Name="DeliveryUnitDecimalPlace">
           <DataField>DeliveryUnitDecimalPlace</DataField>
           <rd:TypeName>System.Byte</rd:TypeName>
+        </Field>
+        <Field Name="Specification">
+          <DataField>Specification</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="NetAmount">
           <DataField>NetAmount</DataField>

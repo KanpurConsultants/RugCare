@@ -54,7 +54,7 @@ namespace Model.Models
         [ForeignKey("ProductRateGroup")]
         public int? ProductRateGroupId { get; set; }
         public virtual ProductRateGroup ProductRateGroup { get; set; }
-
+        public Decimal? LossPer { get; set; }
 
         [Display(Name = "QA Group")]
         [ForeignKey("QAGroup")]

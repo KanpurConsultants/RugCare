@@ -256,7 +256,7 @@
             var List = "";
             var test34 = table.$('input, select').serialize();
             $.each(test, function (index, value) {
-                arr.push({ ProdOrderLineId: value.ProdOrderLineId, Qty: value.Qty, BalanceQty: value.BalanceQty, RefDocTypeId: value.RefDocTypeId, RefDocLineId: value.RefDocLineId, DesignName: value.DesignName, Size: value.Size, Colour: value.Colour, Rate: value.Rate, Incentive: value.Incentive, Loss: value.Loss });
+                arr.push({ ProdOrderLineId: value.ProdOrderLineId, Qty: value.Qty, BalanceQty: value.BalanceQty,  UnitConversionMultiplier: value.AreaPerPc,  RefDocTypeId: value.RefDocTypeId, RefDocLineId: value.RefDocLineId, DesignName: value.DesignName, Size: value.Size, Colour: value.Colour, Rate: value.Rate, Incentive: value.Incentive, Loss: value.Loss });
             })
 
             //alert($(this).attr('href'));

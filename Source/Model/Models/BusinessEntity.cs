@@ -50,6 +50,7 @@ namespace Model.Models
         public int? CreaditDays { get; set; }
 
         public Decimal? CreaditLimit { get; set; }
+        public Decimal? OrderBalanceLimit { get; set; }
 
         [MaxLength(100)]
         public string DivisionIds { get; set; }

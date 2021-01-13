@@ -486,8 +486,18 @@ namespace Jobs.Controllers
                     }
 
                     #endregion
+                    ActiivtyLogViewModel LogVm = new ActiivtyLogViewModel();
 
-
+                    LogActivity.LogActivityDetail(new ActiivtyLogViewModel
+                    {
+                        DocTypeId = person.DocTypeId,
+                        DocId = person.PersonID,
+                        ActivityType = (int)ActivityTypeContants.Added,
+                        DocNo = person.Code,
+                        DocDate = person.CreatedDate,
+                        CreatedDate = person.CreatedDate,
+                        User = User.Identity.Name,
+                    });
 
                     //return RedirectToAction("Create").Success("Data saved successfully");
                     return RedirectToAction("Edit", new { id = Employee.EmployeeId }).Success("Data saved Successfully");
@@ -500,6 +510,7 @@ namespace Jobs.Controllers
                     Employee Employee = Mapper.Map<EmployeeViewModel, Employee>(EmployeeVm);
                     PersonAddress personaddress = _PersonAddressService.Find(EmployeeVm.PersonAddressID);
                     LedgerAccount account = _AccountService.Find(EmployeeVm.AccountId);
+                    Boolean AccountAc = account.IsActive;
                     PersonRegistration PersonPan = _PersonRegistrationService.Find(EmployeeVm.PersonRegistrationPanNoID);
                     
                     StringBuilder logstring = new StringBuilder();                 
@@ -630,17 +641,45 @@ namespace Jobs.Controllers
 
 
                     ////Saving Activity Log::
-                    ActivityLog al = new ActivityLog()
-                    {
-                        ActivityType = (int)ActivityTypeContants.Modified,
-                        DocId = EmployeeVm.EmployeeId,
-                        Narration = logstring.ToString(),
-                        CreatedDate = DateTime.Now,
-                        CreatedBy = User.Identity.Name,
-                        //DocTypeId = new DocumentTypeService(_unitOfWork).FindByName(TransactionDocCategoryConstants.ProcessSequence).DocumentTypeId,
+                    //ActivityLog al = new ActivityLog()
+                    //{
+                    //    ActivityType = (int)ActivityTypeContants.Modified,
+                    //    DocId = EmployeeVm.EmployeeId,
+                    //    Narration = logstring.ToString(),
+                    //    CreatedDate = DateTime.Now,
+                    //    CreatedBy = User.Identity.Name,
+                    //    //DocTypeId = new DocumentTypeService(_unitOfWork).FindByName(TransactionDocCategoryConstants.ProcessSequence).DocumentTypeId,
 
-                    };
-                    new ActivityLogService(_unitOfWork).Create(al);
+                    //};
+
+
+                    if (AccountAc != EmployeeVm.IsActive)
+                    {
+                        LogActivity.LogActivityDetail(new ActiivtyLogViewModel
+                        {
+                            DocTypeId = EmployeeVm.DocTypeId,
+                            DocId = EmployeeVm.PersonId,
+                            ActivityType = (int)ActivityTypeContants.Modified,
+                            DocNo = EmployeeVm.Name,
+                            DocDate = DateTime.Now,
+                            User = User.Identity.Name,
+                            DocLineId = EmployeeVm.IsActive == true ? 1 : 0
+                        });
+                    }
+                    else
+                    {
+                        LogActivity.LogActivityDetail(new ActiivtyLogViewModel
+                        {
+                            DocTypeId = EmployeeVm.DocTypeId,
+                            DocId = EmployeeVm.PersonId,
+                            ActivityType = (int)ActivityTypeContants.Modified,
+                            DocNo = EmployeeVm.Name,
+                            DocDate = DateTime.Now,
+                            User = User.Identity.Name
+                        });
+                    }
+
+                    //new ActivityLogService(_unitOfWork).Create(al);
                     //End of Saving ActivityLog
 
                     try

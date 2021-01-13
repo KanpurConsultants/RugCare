@@ -172,6 +172,16 @@ namespace Jobs.Controllers
                 vm.GodownId = (int)System.Web.HttpContext.Current.Session["DefaultGodownId"];
 
 
+            var LastTrRec = (from H in db.JobReceiveHeader
+                             where H.SiteId == vm.SiteId && H.DivisionId == vm.DivisionId && H.DocTypeId == id && H.CreatedBy == User.Identity.Name
+                             orderby H.JobReceiveHeaderId descending
+                             select new
+                             {
+                                 OrderById = H.JobReceiveById,
+                             }).FirstOrDefault();
+            if (LastTrRec != null)
+                vm.JobReceiveById = LastTrRec.OrderById;
+
 
             vm.DocDate = DateTime.Now;
             vm.DocTypeId = id;

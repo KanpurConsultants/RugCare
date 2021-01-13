@@ -281,7 +281,59 @@ namespace Jobs.Controllers
                             ModelState.AddModelError("CostCenterId", "The CostCenterId is Invalid");
                         }
                     }
+
+                    if (svm.LedgerSetting.isOnlyForClosedCostCenter == true)
+                    {
+                        var CLed = (from H in db.Ledger 
+                                       where H.CostCenterId == svm.CostCenterId && H.LedgerAccountId == svm.LedgerAccountId
+                                       group new { H } by new { H.CostCenterId } into Result
+                                       select new
+                                       {
+                                           CostCenterId = Result.Key.CostCenterId,
+                                           BalAmt = Result.Sum(m => m.H.AmtDr)-Result.Sum(m => m.H.AmtCr)
+                                       }).ToList().FirstOrDefault();
+
+                        if (CLed.BalAmt + svm.Amount > 0)
+                        {
+                            ModelState.AddModelError("Amount", "Amount can not be More than "+ CLed.BalAmt.ToString());
+                        }
+                    }
                 }
+
+                LedgerAccount LA = new LedgerAccountService(_unitOfWork).Find((int)svm.LedgerAccountId);
+                LedgerAccountGroup LAG = new LedgerAccountGroupService(_unitOfWork).Find((int)LA.LedgerAccountGroupId);
+
+                if (LAG.CreaditLimit != null)
+                {
+
+
+                    Decimal CreaditLimit = (Decimal) LAG.CreaditLimit;
+
+                    if (LA.PersonId != null)
+                    { 
+                        BusinessEntity BE = db.BusinessEntity.Where(m => m.PersonID == LA.PersonId).FirstOrDefault();
+                        if (BE.CreaditLimit != null)
+                            CreaditLimit = (Decimal) BE.CreaditLimit;
+                    }
+
+                    var Led = (from H in db.Ledger
+                               where H.LedgerAccountId == svm.LedgerAccountId && H.LedgerLineId !=svm.LedgerLineId
+                               group new { H } by new { H.LedgerAccountId } into Result
+                               select new
+                               {
+                                   LedgerAccountId = Result.Key.LedgerAccountId,
+                                   BalAmt = Result.Sum(m => m.H.AmtDr) - Result.Sum(m => m.H.AmtCr)
+                               }).ToList().FirstOrDefault();
+
+                    if (Led != null)
+                    {
+                        if (Led.BalAmt + svm.Amount > CreaditLimit)
+                        {
+                            ModelState.AddModelError("Amount", "total Creadit Amount can not be More than " + CreaditLimit.ToString());
+                        }
+                    }
+                }
+
             }
 
             bool BeforeSave = true;
@@ -902,17 +954,21 @@ namespace Jobs.Controllers
         private ActionResult _Delete(int id)
         {
             LedgersViewModel temp = _LedgerService.GetLedgerVm(id);
+            LedgerHeader H = new LedgerHeaderService(_unitOfWork).Find(temp.LedgerHeaderId);
 
             if (temp == null)
             {
                 return HttpNotFound();
             }
 
+            //Getting Settings
+            var settings = new LedgerSettingService(_unitOfWork).GetLedgerSettingForDocument(H.DocTypeId, H.DivisionId, H.SiteId);
+
             CostCenter c = db.CostCenter.Where(m => m.CostCenterId == temp.CostCenterId).FirstOrDefault();
             if (c != null)
-            {
-                if (c.Status == (int)StatusConstants.Closed)
-                    temp.LockReason = "Cost Center is Closed !";
+            {                
+                    if (c.Status == (int)StatusConstants.Closed)
+                        temp.LockReason = "Cost Center is Closed !";
             }
 
             #region DocTypeTimeLineValidation
@@ -936,13 +992,10 @@ namespace Jobs.Controllers
             if ((TimePlanValidation || Continue))
                 ViewBag.LineMode = "Delete";
 
-            LedgerHeader H = new LedgerHeaderService(_unitOfWork).Find(temp.LedgerHeaderId);
-
             PrepareViewBag(temp.LedgerHeaderId);
             ViewBag.AccountType = new LedgerHeaderService(_unitOfWork).GetLedgerAccountType(temp.ContraLedgerAccountId ?? 0);
 
-            //Getting Settings
-            var settings = new LedgerSettingService(_unitOfWork).GetLedgerSettingForDocument(H.DocTypeId, H.DivisionId, H.SiteId);
+
             temp.LedgerSetting = Mapper.Map<LedgerSetting, LedgerSettingViewModel>(settings);
             temp.DocumentTypeSettings = new DocumentTypeSettingsService(_unitOfWork).GetDocumentTypeSettingsForDocument(H.DocTypeId);
             return PartialView("_Create", temp);
@@ -1267,9 +1320,9 @@ namespace Jobs.Controllers
 
             var Settings = new LedgerSettingService(_unitOfWork).GetLedgerSettingForDocument(Ledger.DocTypeId, Ledger.DivisionId, Ledger.SiteId);
 
-            var temp = new LedgerLineService(_unitOfWork).GetCostCenters(searchTerm, Settings.filterDocTypeCostCenter, Settings.filterPersonProcessLines).Skip(pageSize * (pageNum - 1)).Take(pageSize).ToList();
+            var temp = new LedgerLineService(_unitOfWork).GetCostCenters(searchTerm, Settings.filterDocTypeCostCenter, Settings.filterPersonProcessLines, Settings.isOnlyForClosedCostCenter).Skip(pageSize * (pageNum - 1)).Take(pageSize).ToList();
 
-            var count = new LedgerLineService(_unitOfWork).GetCostCenters(searchTerm, Settings.filterDocTypeCostCenter, Settings.filterPersonProcessLines).Count();
+            var count = new LedgerLineService(_unitOfWork).GetCostCenters(searchTerm, Settings.filterDocTypeCostCenter, Settings.filterPersonProcessLines, Settings.isOnlyForClosedCostCenter).Count();
 
             ComboBoxPagedResult Data = new ComboBoxPagedResult();
             Data.Results = temp;
@@ -1604,9 +1657,9 @@ namespace Jobs.Controllers
             return PartialView("_LedgerAdj_Single", s);
         }
 
-        public ActionResult GetLedgerIds_Adusted(string searchTerm, int pageSize, int pageNum, int? filter, string filter2, int filter3)//DocTypeId
+        public ActionResult GetLedgerIds_Adusted(string searchTerm, int pageSize, int pageNum, int? filter, string filter2, int filter3, int? filter4)//DocTypeId
         {
-            var Query = new LedgerLineService(_unitOfWork).GetLedgerIds_Adusted(filter, filter2, filter3, searchTerm);
+            var Query = new LedgerLineService(_unitOfWork).GetLedgerIds_Adusted(filter, filter2, filter3, searchTerm, filter4);
             var temp = Query.Skip(pageSize * (pageNum - 1))
                 .Take(pageSize)
                 .ToList();

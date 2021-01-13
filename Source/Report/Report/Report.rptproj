@@ -944,6 +944,10 @@
       <FullPath>DyeingReceipt_SingleDimensionPrint_WithLot.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>DyeingReceipt_SingleDimensionPrint_WithoutPassQty.rdl</Name>
+      <FullPath>DyeingReceipt_SingleDimensionPrint_WithoutPassQty.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>DyeingReceiptPrint.rdl</Name>
       <FullPath>DyeingReceiptPrint.rdl</FullPath>
     </ProjectItem>
@@ -2237,6 +2241,10 @@
       <FullPath>PaymentPrint.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>PaymentPrint_PettyCash.rdl</Name>
+      <FullPath>PaymentPrint_PettyCash.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>PaymentSummary.rdl</Name>
       <FullPath>PaymentSummary.rdl</FullPath>
     </ProjectItem>
@@ -2309,8 +2317,16 @@
       <FullPath>PeriodicWashingOrderStatus1.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>PersonActivity.rdl</Name>
+      <FullPath>PersonActivity.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>PersonRateGroup.rdl</Name>
       <FullPath>PersonRateGroup.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>PettyCashPrint_BC.rdl</Name>
+      <FullPath>PettyCashPrint_BC.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>PhysicalStock.rdl</Name>
@@ -3397,6 +3413,10 @@
       <FullPath>Rug_DyeingOrderPrint_BC_DH.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Rug_DyeingOrderPrint_BC1.rdl</Name>
+      <FullPath>Rug_DyeingOrderPrint_BC1.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>Rug_DyeingOrderPrint_MC.rdl</Name>
       <FullPath>Rug_DyeingOrderPrint_MC.rdl</FullPath>
     </ProjectItem>
@@ -3453,8 +3473,8 @@
       <FullPath>Rug_FinishingReceive_Print_MC.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Rug_HisabOfPurja.rdl</Name>
-      <FullPath>Rug_HisabOfPurja.rdl</FullPath>
+      <Name>Rug_HisabOfPurja-old.rdl</Name>
+      <FullPath>Rug_HisabOfPurja-old.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Rug_HisabOfPurja_Bhadohi.rdl</Name>
@@ -5646,6 +5666,10 @@
     <ProjectItem>
       <Name>YearlyListOfPurja.rdl</Name>
       <FullPath>YearlyListOfPurja.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Rug_HisabOfPurja.rdl</Name>
+      <FullPath>Rug_HisabOfPurja.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>
